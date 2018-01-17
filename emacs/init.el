@@ -36,19 +36,8 @@
 ;;; completions
 (use-package ivy
   :ensure t
-  :diminish ivy-mode
-  :init
-  (setq ivy-height 8)
-  (setq ivy-use-virtual-buffers t
-	    ivy-current-matching nil
-	    ivy-minibuffer-faces nil
-	    ivy-fixed-height-minibuffer t
-	    ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-  :bind (:map ivy-minibuffer-map
-		  ("C-j" . ivy-immediate-done)
-		  ("RET" . ivy-alt-done))
   :config
-  (add-hook 'after-init-hook 'ivy-mode))
+  (ivy-mode +1))
 
 
 (use-package counsel

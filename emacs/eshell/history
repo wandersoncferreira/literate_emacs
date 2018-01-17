@@ -3,3 +3,20 @@ git status
 git add .
 git commit -m 'ivy, counsel'
 git push
+ls
+cd .emacs.d/
+git status
+git add .
+git status
+ls
+find-file .gitignore
+git status
+git add .
+git status
+git reset
+git reset
+git status
+git add .
+git status
+git commit -m 'user interface'
+git push
