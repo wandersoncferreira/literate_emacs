@@ -1,16 +1,17 @@
 
 ;; ----- smex-history -----
 (
- eshell
+ company-mode
+ package-install
  cd
  5x5
  arp
  dbx
  dig
- erc
 )
 
 ;; ----- smex-data -----
 (
- (eshell . 1)
+ (package-install . 1)
+ (company-mode . 1)
 )
