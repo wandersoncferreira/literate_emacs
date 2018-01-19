@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 21:23:14 wandersonferreira"
+;; Time-stamp: "2018-01-19 21:25:34 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -268,7 +268,19 @@
   (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font bk/default-font))
 
+;;; abbreviation mode
+(use-package abbrev
+  :init
+  (setq save-abbrevs 'silently)
+  
+  (unless (file-exists-p abbrev-file-name)
+    (with-temp-buffer (write-file abbrev-file-name)))
 
+  (quietly-read-abbrev-file)
+  
+  :config
+  (add-hook 'prog-mode-hook #'abbrev-mode)
+  (add-hook 'text-mode-hook #'abbrev-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
