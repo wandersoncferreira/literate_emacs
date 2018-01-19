@@ -1,0 +1,13 @@
+;;; -*- coding: utf-8 -*-
+(("/Users/wandersonferreira/.emacs.d/"
+  (dired-filename . "/Users/wandersonferreira/.emacs.d/init.el"))
+ ("/Users/wandersonferreira/dotfiles/emacs/init.el" . 7552)
+ ("/Users/wandersonferreira/.emacs.d/elpa/flyspell-correct-20171205.940/flyspell-correct-autoloads.el" . 1620)
+ ("/Users/wandersonferreira/.emacs.d/elpa/magit-20180118.1423/magit-autoloads.el" . 70199)
+ ("/Users/wandersonferreira/.emacs.d/elpa/ghub-20180117.1249/ghub-autoloads.el" . 932)
+ ("/Users/wandersonferreira/.emacs.d/elpa/git-commit-20180118.507/git-commit-autoloads.el" . 1234)
+ ("/Users/wandersonferreira/.emacs.d/elpa/let-alist-1.0.5/let-alist-autoloads.el" . 1298)
+ ("/Users/wandersonferreira/.emacs.d/elpa/magit-popup-20180114.904/magit-popup-autoloads.el" . 287)
+ ("/Users/wandersonferreira/.emacs.d/elpa/dash-20180118.743/dash-autoloads.el" . 243)
+ ("/Users/wandersonferreira/.emacs.d/elpa/with-editor-20180111.433/with-editor-autoloads.el" . 287)
+ ("/Users/wandersonferreira/.emacs.d/elpa/async-20180103.2312/async-autoloads.el" . 4643))

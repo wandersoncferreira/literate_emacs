@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 07:29:40 wandersonferreira"
+;; Time-stamp: "2018-01-19 21:23:14 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -246,6 +246,29 @@
   :after python
   :config
   (elpy-enable))
+
+;;; Mac OSX specific settings
+(when isOSX
+  (require 'ls-lisp)
+  (setq ns-pop-up-frames nil
+        trash-directory "~/.Trash/emacs"
+        ls-lisp-use-insert-directory-program t
+        mac-redisplay-dont-reset-vscroll t
+        mac-mouse-wheel-smoth-scroll nil
+        mouse-wheel-scroll-amount '(5 ((shift) . 2))
+        mac-command-modifier 'meta
+        mac-option-modifier 'super
+        ns-function-modifier 'hyper
+        insert-directory-program "/usr/local/bin/gls"
+        epg-gpg-program "gpg"
+        epa-pinetry-mode 'loopback)
+
+  (setenv "GPG_AGENT_INFO" nil)
+  (add-to-list 'exec-path "/usr/local/bin")
+  (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+  (set-face-attribute 'default nil :font bk/default-font))
+
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
