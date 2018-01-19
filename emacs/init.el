@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 07:28:31 wandersonferreira"
+;; Time-stamp: "2018-01-19 07:29:40 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -69,6 +69,33 @@
               kept-old-versions 2
               create-lockfiles nil
               version-control t)
+
+;; functions to find functions =)
+(defun lgm/describe-func ()
+  "Jump to Elisp functions."
+  (interactive)
+  (describe-function (function-called-at-point)))
+
+(defun lgm/jump-to-elisp-func-def ()
+  "Jump to Elisp definitions."
+  (interactive)
+  (find-function (function-called-at-point)))
+
+(global-set-key (kbd "C-h C-j") 'lgm/jump-to-elisp-func-def)
+(global-set-key (kbd "C-h C-f") 'lgm/describe-func)
+
+;; smart `beginning-of-line'
+(defadvice move-beginning-of-line (around smarter-bol activate)
+  "Move to requested line if needed."
+  (let ((arg (or (ad-get-arg 0) 1)))
+    (when (/= arg 1)
+      (forward-line (1- arg))))
+  ;; Move to indentation on first call, then to actual BOL on second.
+  (let ((pos (point)))
+    (back-to-indentation)
+    (when (= pos (point))
+      ad-do-it)))
+
 
 ;; expand region
 (use-package expand-region
