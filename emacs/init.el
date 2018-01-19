@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-
+;; Time-stamp: "2018-01-19 07:25:07 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -25,8 +25,8 @@
 (when (display-graphic-p)
   (setq frame-title-format
 	    '((:eval (if (buffer-file-name)
-			 (abbreviate-file-name (buffer-file-name))
-		       "%b")))))
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b")))))
 
 ;; cursor like a thin bar. Idk why I got used to it.
 (when (display-graphic-p)
@@ -35,6 +35,136 @@
 ;; more info into the modeline
 (column-number-mode +1)
 (display-time-mode +1)
+
+;; there is a need to change some default behaviors
+(setq-default tab-always-indent 'complete
+              tab-width 4
+              indent-tabs-mode nil
+              require-final-newline t
+              auto-save-default nil
+              auto-save-list-file-prefix nil
+              set-mark-command-repeat-pop t
+              indicate-empty-lines t
+              truncate-partial-width-windows nil
+              kill-ring-max 100
+              search-whitespace-regexp ".*?"
+              x-select-enable-clipboard t
+              select-active-regions t
+              save-interprogram-paste-before-kill t
+              yank-pop-change-selection t
+              shift-select-mode nil
+              delete-by-moving-to-trash t
+              echo-keystrokes 0.1
+              recenter-positions '(top middle bottom))
+
+;; backup
+(setq-default backup-directory-alist `(("." . ,(expand-file-name user-emacs-directory "backup")))
+              backup-by-copying-when-linked t
+              delete-old-versions t
+              kept-new-versions 6
+              kept-old-versions 2
+              create-lockfiles nil
+              version-control t)
+
+;; expand region
+(use-package expand-region
+  :ensure t
+  :bind
+  ("C-=" . er/expand-region))
+
+;; pop to mark advice
+;; When popping the mark, continue popping until the cursor actually moves
+;; Also, if the last command was a copy -- skip past
+(defadvice pop-to-mark-command (around ensure-new-poisition activate)
+  "Continue popping until the cursor move."
+  (let ((p (point)))
+    (when (eq last-command 'save-region-or-current-line)
+      ad-do-it
+      ad-do-it
+      ad-do-it)
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
+
+;; alias
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; activate some modes
+(electric-pair-mode t)
+(add-hook 'after-init-hook #'delete-selection-mode)
+(add-hook 'after-init-hook #'pending-delete-mode)
+(global-auto-revert-mode t)
+(show-paren-mode t)
+(subword-mode t)
+
+;; emacs export path correctly
+(add-to-list 'exec-path "/usr/local/bin")
+(add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
+
+;; uniquify
+(setq uniquify-buffer-name-style 'reverse
+      uniquify-separator "/"
+      uniquify-after-kill-buffer-p t
+      uniquify-ignore-buffers-re "^\\*")
+
+;; saving all buffers from emacs when frame lose focus
+(add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+
+;; better movement around buffers
+(windmove-default-keybindings)
+
+;; outside border to make it better in fullscreen mode
+(add-to-list 'default-frame-alist '(internal-border-width . 2))
+
+;; narrowing commands
+(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-defun 'disabled nil)
+
+;; elisp be less conservative
+(setq max-specpdl-size (* 15 max-specpdl-size))
+(setq max-lisp-eval-depth (* 15 max-lisp-eval-depth))
+
+;; encoding
+(setq locale-coding-system 'utf-8) 
+(set-terminal-coding-system 'utf-8) 
+(set-keyboard-coding-system 'utf-8) 
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+;; time-stamp: " "
+(require 'time-stamp)
+(setq time-stamp-line-limit 20)
+(add-hook 'before-save-hook #'time-stamp)
+
+;; revert buffers
+(require 'autorevert)
+(add-hook 'after-init-hook 'global-auto-revert-mode)
+(setq global-auto-revert-non-file-buffers t
+      auto-revert-verbose nil)
+
+;; saveplace
+(if (version< emacs-version "25.1")
+    (progn
+      (require 'saveplace)
+      (setq-default save-place t))
+  (save-place-mode t)
+  (setq save-place-file "~/.emacs.d/saveplace.log"))
+
+;; savehist
+(setq savehist-file "~/.emacs.d/savehist.log")
+(savehist-mode 1)
+(setq history-length t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+	  '(kill-ring
+	    search-ring
+	    regexp-search-ring))
+
+(use-package magit
+  :ensure t
+  :commands (magit-status)
+  :bind
+  (("C-c m s" . magit-status)))
 
 
 ;;; completions
@@ -71,7 +201,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(delete-selection-mode nil)
- '(package-selected-packages (quote (elpy smex counsel ivy diminish use-package))))
+ '(package-selected-packages
+   (quote
+    (magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

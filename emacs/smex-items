@@ -1,17 +1,18 @@
 
 ;; ----- smex-history -----
 (
+ eval-buffer
  company-mode
  package-install
  cd
  5x5
  arp
  dbx
- dig
 )
 
 ;; ----- smex-data -----
 (
  (package-install . 1)
  (company-mode . 1)
+ (eval-buffer . 3)
 )
