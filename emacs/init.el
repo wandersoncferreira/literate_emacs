@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 07:25:07 wandersonferreira"
+;; Time-stamp: "2018-01-19 07:28:31 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -11,6 +11,10 @@
   (package-install 'use-package))
 
 (use-package diminish :ensure t :defer t)
+
+;;; constants
+(defconst isOSX (eq system-type 'darwin))
+(defconst isUnix (eq system-type 'gnu/linux))
 
 ;;; user interface
 (use-package base16-theme :ensure t)
@@ -160,11 +164,32 @@
 	    search-ring
 	    regexp-search-ring))
 
+;;; git
 (use-package magit
   :ensure t
   :commands (magit-status)
   :bind
   (("C-c m s" . magit-status)))
+
+
+;; flyspell
+(use-package flyspell
+  :init
+  (setq flyspell-issue-welcome-flag nil)
+  (setq-default ispell-list-command "list")
+  (if isOSX
+      (setq-default ispell-program-name "/usr/local/bin/aspell")
+    (setq-default ispell-program-name "/usr/bin/aspell"))
+  :config
+  
+  (use-package flyspell-correct
+    :ensure t
+    :after flyspell
+    :bind (:map flyspell-mode
+                ("C-;" . flyspell-correct-previous-word-generic)))
+  
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'text-mode-hook 'flyspell-mode))
 
 
 ;;; completions
@@ -203,7 +228,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (magit expand-region elpy smex counsel ivy diminish use-package))))
+    (flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
