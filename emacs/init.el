@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 23:28:31 wandersonferreira"
+;; Time-stamp: "2018-01-20 08:22:44 wanderson"
 
 ;;; packages
 (package-initialize)
@@ -270,6 +270,7 @@
 
 ;;; abbreviation mode
 (use-package abbrev
+  :diminish abbrev-mode
   :init
   (setq save-abbrevs 'silently)
   
@@ -337,6 +338,55 @@
   (add-hook 'after-init-hook #'shackle-mode))
 
 
+;; typographical editing
+(use-package typo
+  :ensure t
+  :diminish typo-global-mode
+  :config
+  (add-hook 'after-init-hook 'typo-global-mode))
+
+
+;;; shebang
+(use-package insert-shebang
+  :ensure t
+  :init
+  (setq insert-shebang-ignore-extensions '("txt" "org" "el")))
+
+
+;;; bash completions
+(add-hook 'shell-dynamic-complete-functions 'bash-completion-dynamic-complete)
+
+;;; tldr - concise man pages
+(use-package tldr
+  :ensure t
+  :init
+  (setq tldr-enabled-categories '("common" "linux" "osx")))
+
+
+;;; dumb-jump
+(use-package dumb-jump
+  :ensure t
+  :init
+  (setq dumb-jump-selector 'ivy)
+  :config
+  (bind-key* "M-g o" 'dumb-jump-go-other-window)
+  (bind-key* "M-g j" 'dumb-jump-go)
+  (bind-key* "M-g i" 'dumb-jump-go-prompt)
+  (bind-key* "M-g x" 'dumb-jump-go-prefer-external)
+  (bind-key* "M-g z" 'dumb-jump-go-prefer-external-other-window))
+
+;;; ace-link
+(use-package ace-link
+  :ensure t
+  :config
+  (ace-link-setup-default)
+  :bind (:map org-mode-map
+              ("M-o" . ace-link-org)))
+
+;;; restclient
+(use-package restclient :ensure t)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -345,7 +395,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
