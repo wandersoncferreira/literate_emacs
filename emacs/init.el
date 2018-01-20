@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 23:00:59 wandersonferreira"
+;; Time-stamp: "2018-01-19 23:28:31 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -318,6 +318,23 @@
   :config
   (add-hook 'deft-mode-hook (lambda () (visual-line-mode +1))))
 
+;;; avy
+(use-package avy
+  :ensure t
+  :config
+  (avy-setup-default)
+  :bind
+  ("C-:" . avy-goto-char-timer))
+
+
+;; shackles
+(use-package shackle
+  :ensure t
+  :init
+  (setq shackle-rules '((help-mode :select t)
+                        (compilation-mode :noselect t :align t :size 0.3)))
+  :config
+  (add-hook 'after-init-hook #'shackle-mode))
 
 
 (custom-set-variables
@@ -328,7 +345,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
