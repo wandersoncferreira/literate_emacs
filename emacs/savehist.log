@@ -3,8 +3,18 @@
 
 (setq savehist-minibuffer-history-variables '(file-name-history ivy-history counsel-M-x-history))
 (setq file-name-history '(#("/Users/wandersonferreira/.emacs.d/init.el" 0 41 (ivy-index 0))))
-(setq ivy-history '(#("recentf-fil" 0 11 (ivy-index 0)) #("recentf-max" 0 11 (ivy-index 0)) #("recentf-ma" 0 10 (ivy-index 1))))
-(setq kill-ring '("recentf-exclude '(\"^/tmp/\" \"^/ssh:\" \"\\\\.?ido\\\\.last$\" \"\\\\.revive$\" \"/TAGS$\"
+(setq ivy-history '(#("yas-min" 0 7 (ivy-index 0)) #("whitessty" 0 9 (ivy-index 1)) #("whitesaut" 0 9 (ivy-index 0)) #("whitesplinec" 0 12 (ivy-index 0)) #("white" 0 5 (ivy-index 0)) #("python-modehoo" 0 14 (ivy-index 0)) #("prog-mo" 0 7 (ivy-index 0)) #("recentf-fil" 0 11 (ivy-index 0)) #("recentf-max" 0 11 (ivy-index 0)) #("recentf-ma" 0 10 (ivy-index 1))))
+(setq counsel-M-x-history '(#("eval" 0 4 (ivy-index 1))))
+(setq kill-ring '(#("mode-set-explicitly" 0 5 (fontified t) 5 9 (fontified t) 9 19 (fontified t)) #("yafoldin" 0 8 (fontified t)) #("init
+  " 0 4 (fontified t face font-lock-builtin-face) 4 7 (fontified t)) #("
+" 0 1 (fontified t)) #("cleanup" 0 7 (fontified t)) #("mode-only-if-initially-clean" 0 5 (fontified t) 5 10 (fontified t) 10 13 (fontified t) 13 23 (fontified t) 23 28 (fontified t)) #("Setq " 0 5 (fontified t)) #("  :init
+  (set))
+" 0 2 (fontified t) 2 6 (fontified t face font-lock-builtin-face) 6 7 (face font-lock-builtin-face fontified nil) 7 8 (fontified nil) 8 10 (fontified t) 10 15 (fontified t) 15 16 (fontified t) 16 17 (fontified t)) #("mode-line" 0 5 (fontified t) 5 9 (fontified t)) #("ptyhon-m" 0 7 (fontified t) 7 8 (fontified t)) #("whitesp" 0 7 (fontified t face font-lock-constant-face)) #("paclage " 0 8 (fontified t)) ";; watch out words
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '((\"\\\\<\\\\(NOTE\\\\|FIXME\\\\|TODO\\\\|BUG\\\\|HACK\\\\|REFACTOR\\\\|THE HORROR\\\\)\"
+                                       1 font-lock-warning-face t)))))" "recentf-exclude '(\"^/tmp/\" \"^/ssh:\" \"\\\\.?ido\\\\.last$\" \"\\\\.revive$\" \"/TAGS$\"
               \"^/var/folders/.+$\")"))
 (setq search-ring '("python"))
 (setq regexp-search-ring 'nil)

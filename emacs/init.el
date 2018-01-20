@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 21:10:15 wandersonferreira"
+;; Time-stamp: "2018-01-20 21:18:37 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -700,6 +700,52 @@
   :config
   (add-hook 'after-init-hook 'recentf-mode))
 
+;;; programming mode
+;; watch out words
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(NOTE\\|FIXME\\|TODO\\|BUG\\|HACK\\|REFACTOR\\|THE HORROR\\)"
+                                       1 font-lock-warning-face t)))))
+
+(use-package goto-addr
+  :init
+  (setq goto-address-mail-face 'link)
+  :config
+  (add-hook 'prog-mode-hook 'goto-address-prog-mode))
+
+;; cleaning up the whitespaces
+(use-package whitespace-cleanup-mode
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'whitespace-cleanup-mode))
+
+(use-package whitespace
+  :init
+  (setq whitespace-line-column 150
+        whitespace-auto-cleanup t
+        whitespace-style '(face trailing lines space-before-tab empty
+                                indentation space-after-tab)))
+
+;;; folding code
+(use-package yafolding
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook (lambda () (yafolding-mode))))
+
+;; yasnippet
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+  (yas-global-mode +1)
+  :bind (:map yas-minor-mode-map
+              ("<tab>" . nil)
+              ("TAB" . nil)
+              ("M-i" . yas-expand)))
+
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -708,7 +754,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
