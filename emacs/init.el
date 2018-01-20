@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 08:22:44 wanderson"
+;; Time-stamp: "2018-01-20 08:35:31 wanderson"
 
 ;;; packages
 (package-initialize)
@@ -387,6 +387,74 @@
 (use-package restclient :ensure t)
 
 
+;;; company
+(use-package company
+  :ensure t
+  :preface
+  (defun bk/enable-company-mode ()
+    "Enables company-mode."
+    (company-mode +1)
+    (define-key (current-local-map) [remap hippie-expand] 'company-complete))
+  :init
+  (setq company-transformers '(company-sort-by-occurrence)
+        company-idle-delay nil
+        company-minimum-prefix-length 0
+        company-echo-delay 0)
+  :config
+  (add-hook 'prog-mode-hook 'bk/enable-company-mode)
+  :bind
+  ("M-o" . company-complete))
+
+(use-package company-flx
+  :ensure t
+  :after company
+  :config
+  (company-flx-mode +1))
+
+;;; dired --- really nice directory editing experience
+(use-package dired
+  :preface
+  (defun dired-back-to-top ()
+    "Function to jump dired to the right place at the top."
+    (interactive)
+    (goto-char (point-min))
+    (dired-next-line 4))
+
+  (defun dired-jump-to-bottom ()
+    "Function to jump dired to the right place at the bottom."
+    (interactive)
+    (goto-char (point-max))
+    (dired-next-line -1))
+  
+  :init
+
+  (setq dired-recursive-deletes 'top
+        dired-recursive-copies 'top
+        dired-dwim-target t
+        dired-listing-switches "-alGhvF --group-directories-first")
+  :config
+
+  (add-hook 'dired-mode-hook #'(lambda ()
+                                 (visual-line-mode 0)
+                                 (linum-mode 0)
+                                 (auto-revert-mode)))
+
+  (define-key dired-mode-map (vector 'remap 'end-of-buffer)
+    'dired-jump-to-bottom)
+
+  (define-key dired-mode-map (vector 'remap 'beginning-of-buffer)
+    'dired-back-to-top))
+
+;;; dired font lock
+(use-package diredfl
+  :ensure t
+  :config
+  (diredfl-global-mode +1))
+
+;; dired sort
+(use-package dired-sort
+  :ensure t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -395,7 +463,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
