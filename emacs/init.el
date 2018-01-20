@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 08:35:31 wanderson"
+;; Time-stamp: "2018-01-20 08:47:45 wanderson"
 
 ;;; packages
 (package-initialize)
@@ -62,13 +62,13 @@
               recenter-positions '(top middle bottom))
 
 ;; backup
-(setq-default backup-directory-alist `(("." . ,(expand-file-name user-emacs-directory "backup")))
-              backup-by-copying-when-linked t
-              delete-old-versions t
-              kept-new-versions 6
-              kept-old-versions 2
-              create-lockfiles nil
-              version-control t)
+(setq backup-directory-alist `(("." . ,(expand-file-name "backup" user-emacs-directory)))
+      backup-by-copying-when-linked t
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      create-lockfiles nil
+      version-control t)
 
 ;; functions to find functions =)
 (defun lgm/describe-func ()
@@ -390,18 +390,14 @@
 ;;; company
 (use-package company
   :ensure t
-  :preface
-  (defun bk/enable-company-mode ()
-    "Enables company-mode."
-    (company-mode +1)
-    (define-key (current-local-map) [remap hippie-expand] 'company-complete))
+  :diminish " CMP"
   :init
   (setq company-transformers '(company-sort-by-occurrence)
         company-idle-delay nil
         company-minimum-prefix-length 0
         company-echo-delay 0)
   :config
-  (add-hook 'prog-mode-hook 'bk/enable-company-mode)
+  (global-company-mode +1)
   :bind
   ("M-o" . company-complete))
 
