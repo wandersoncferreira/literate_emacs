@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 08:47:45 wanderson"
+;; Time-stamp: "2018-01-20 14:57:39 wanderson"
 
 ;;; packages
 (package-initialize)
@@ -124,6 +124,7 @@
 (add-hook 'after-init-hook #'delete-selection-mode)
 (add-hook 'after-init-hook #'pending-delete-mode)
 (global-auto-revert-mode t)
+(diminish 'auto-revert-mode)
 (show-paren-mode t)
 (subword-mode t)
 
@@ -243,6 +244,7 @@
 
 (use-package elpy
   :ensure t
+  :diminish elpy-mode
   :after python
   :config
   (elpy-enable))
@@ -451,6 +453,42 @@
 (use-package dired-sort
   :ensure t)
 
+
+;;; Go mode
+(use-package go-mode
+  :ensure t
+  :preface
+  
+  (defun bk/set-go-compiler ()
+    (if (not (string-match "go" compile-command))
+        (set (make-local-variable 'compile-command)
+             "go build -v && go test -v && go run"))
+    (local-set-key (kbd "M-p") 'compile))
+
+  :init
+  (if (not isOSX)
+      (progn
+        (add-to-list 'exec-path "/home/wanderson/go/bin")
+        (setenv "GOPATH" "/home/wanderson/go"))
+    (setenv "GOPATH" "/Users/wandersonferreira/go")
+    (add-to-list 'exec-path "/Users/wandersonferreira/go/bin"))
+
+  (setq gofmt-command "goimports")
+  
+  :config
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (add-hook 'go-mode-hook 'bk/set-go-compiler)
+  
+  :bind (:map go-mode-map
+              ("C-c C-r" . go-remove-unused-imports)
+              ("C-c i" . go-goto-imports)
+              ("M-." . godef-jump)
+              ("M-*" . pop-tag-mark)))
+
+
+
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -466,3 +504,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)

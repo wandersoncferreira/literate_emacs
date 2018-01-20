@@ -1,8 +1,27 @@
 ;;; -*- coding: utf-8 -*-
-(("/home/wanderson/dotfiles/emacs/"
+(("/home/wanderson/dotfiles/emacs/init.el" . 13674)
+ ("/home/wanderson/go/src/github.com/Captalys/Hubble/Cassandra/"
+  (dired-filename . "/home/wanderson/go/src/github.com/Captalys/Hubble/Cassandra/.."))
+ ("/home/wanderson/go/src/github.com/Captalys/Hubble/"
+  (dired-filename . "/home/wanderson/go/src/github.com/Captalys/Hubble/hubble"))
+ ("/home/wanderson/go/src/github.com/Captalys/Hubble/hubble/"
+  (dired-filename . "/home/wanderson/go/src/github.com/Captalys/Hubble/hubble/scripts"))
+ ("/home/wanderson/go/src/github.com/Captalys/Hubble/hubble/scripts/download_pp.py" . 1828)
+ ("/home/wanderson/go/src/github.com/Captalys/Hubble/Cassandra/cnes.go" . 15829)
+ ("/home/wanderson/go/src/github.com/Captalys/Hubble/Views/get.go" . 7776)
+ ("/home/wanderson/captalys/weddell/weddell/mais_saude/orm.py" . 15985)
+ ("/home/wanderson/dotfiles/scripts/opensuseUp.sh" . 133)
+ ("/home/wanderson/"
+  (dired-filename . "/home/wanderson/jhub.sh"))
+ ("/home/wanderson/jhub.sh" . 85)
+ ("/home/wanderson/dotfiles/"
+  (dired-filename . "/home/wanderson/dotfiles/scripts"))
+ ("/home/wanderson/dotfiles/scripts/"
+  (dired-filename . "/home/wanderson/dotfiles/scripts/ec"))
+ ("/home/wanderson/dotfiles/scripts/jHub.sh" . 21)
+ ("/home/wanderson/dotfiles/emacs/"
   (dired-filename . "/home/wanderson/dotfiles/emacs/init.el"))
  ("/home/wanderson/*message*-20180120-083531" . 6)
- ("/home/wanderson/dotfiles/emacs/init.el" . 12078)
  ("/home/wanderson/.emacs.d/elpa/dired-sort-20090208.2038/dired-sort-autoloads.el" . 254)
  ("/home/wanderson/.emacs.d/elpa/diredfl-20171014.1402/diredfl-autoloads.el" . 1226)
  ("/home/wanderson/.emacs.d/elpa/company-flx-20180102.2118/company-flx-autoloads.el" . 773)

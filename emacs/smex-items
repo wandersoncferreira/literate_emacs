@@ -1,20 +1,26 @@
 
 ;; ----- smex-history -----
 (
- company-complete
- hippie-expand
- eval-buffer
+ downcase-region
+ sort-lines
+ upcase-region
+ split-line
+ imenu
  company-mode
- package-install
- cd
- 5x5
+ eshell
 )
 
 ;; ----- smex-data -----
 (
  (package-install . 1)
- (company-mode . 1)
+ (company-mode . 2)
  (eval-buffer . 3)
  (hippie-expand . 1)
  (company-complete . 1)
+ (eshell . 1)
+ (imenu . 1)
+ (downcase-region . 2)
+ (split-line . 1)
+ (upcase-region . 1)
+ (sort-lines . 2)
 )

@@ -20,3 +20,8 @@ git add .
 git status
 git commit -m 'user interface'
 git push
+ls
+chmod a+x jHub.sh 
+chmod a+x opensuseUp.sh 
+ls
+cd
