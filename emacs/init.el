@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 21:18:37 wandersonferreira"
+;; Time-stamp: "2018-01-20 21:20:45 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -744,6 +744,66 @@
               ("TAB" . nil)
               ("M-i" . yas-expand)))
 
+;; json mode
+(use-package json-mode
+  :ensure t
+  :mode ("\\.json\\'" . json-mode)
+  :config
+  (add-hook 'json-mode-hook (lambda ()
+                              (make-local-variable 'js-indent-level)
+                              (setq js-indent-level 2))))
+
+;; rst mode
+(use-package rst
+  :ensure t
+  :config
+  (add-hook 'rst-mode-hook 'auto-fill-mode))
+
+
+;;; very smart way for dealing with line number
+;; line number
+(add-hook 'after-init-hook 'global-linum-mode)
+
+;; http://stackoverflow.com/questions/3875213/turning-on-linum-mode-when-in-python-c-mode
+(setq linum-mode-inhibit-modes-list '(eshell-mode
+                                      shell-mode
+                                      profiler-report-mode
+                                      ffip-diff-mode
+                                      dictionary-mode
+                                      erc-mode
+                                      dired-mode
+                                      help-mode
+                                      text-mode
+                                      fundamental-mode
+                                      inferior-python-mode
+                                      inferior-scheme-mode
+                                      ivy-occur-grep-mode ; for better performance
+                                      compilation-mode
+                                      Info-mode
+                                      calc-mode
+                                      calc-trail-mode
+                                      comint-mode
+                                      gnus-group-mode
+                                      inf-ruby-mode
+                                      org-mode
+                                      vc-git-log-edit-mode
+                                      log-edit-mode
+                                      term-mode
+                                      gnus-summary-mode
+                                      gnus-article-mode
+                                      calendar-mode))
+(defadvice linum-on (around linum-on-inhibit-for-modes)
+  "Stop the load of linum-mode for some major modes."
+  (unless (member major-mode linum-mode-inhibit-modes-list)
+    ad-do-it))
+(ad-activate 'linum-on)
+
+;; updated line number every second
+(setq linum-delay t)
+(setq linum-format "%4d ")
+(defadvice linum-schedule (around my-linum-schedule () activate)
+  (run-with-idle-timer 1 nil #'linum-update-current))
+
 
 
 (custom-set-variables
@@ -754,7 +814,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
