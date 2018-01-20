@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-19 21:25:34 wandersonferreira"
+;; Time-stamp: "2018-01-19 23:00:59 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -201,6 +201,7 @@
 
 ;; flyspell
 (use-package flyspell
+  :diminish flyspell-mode
   :init
   (setq flyspell-issue-welcome-flag nil)
   (setq-default ispell-list-command "list")
@@ -208,20 +209,19 @@
       (setq-default ispell-program-name "/usr/local/bin/aspell")
     (setq-default ispell-program-name "/usr/bin/aspell"))
   :config
-  
-  (use-package flyspell-correct
-    :ensure t
-    :after flyspell
-    :bind (:map flyspell-mode
-                ("C-;" . flyspell-correct-previous-word-generic)))
-  
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'text-mode-hook 'flyspell-mode))
 
+(use-package flyspell-correct
+    :ensure t
+    :after flyspell
+    :bind (:map flyspell-mode-map
+                ("C-;" . flyspell-correct-previous-word-generic)))
 
 ;;; completions
 (use-package ivy
   :ensure t
+  :diminish ivy-mode
   :config
   (ivy-mode +1))
 
@@ -282,6 +282,44 @@
   (add-hook 'prog-mode-hook #'abbrev-mode)
   (add-hook 'text-mode-hook #'abbrev-mode))
 
+
+;;; projectile
+(use-package projectile
+  :ensure t
+  :init
+  (setq projectile-enable-caching nil
+        projectile-completion-system 'ivy
+        projectile-sort-order 'recently-active
+        projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
+  :config
+  (def-projectile-commander-method ?d
+    "Open project root in dired."
+    (projectile-dired))
+  (projectile-global-mode +1))
+
+
+;;; ibuffer
+(add-hook 'ibuffer-hook (lambda ()
+                          (ibuffer-projectile-set-filter-groups)
+                          (unless (eq ibuffer-sorting-mode 'alphabetic)
+                            (ibuffer-do-sort-by-alphabetic))))
+
+;;; deft
+(use-package deft
+  :ensure t
+  :init
+  (setq deft-extensions '("org")
+        deft-default-extension "org"
+        deft-directory "~/Dropbox/notes"
+        deft-recursive t
+        deft-auto-save-interval 0)
+  :bind
+  ("<f6>" . deft)
+  :config
+  (add-hook 'deft-mode-hook (lambda () (visual-line-mode +1))))
+
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -290,7 +328,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
