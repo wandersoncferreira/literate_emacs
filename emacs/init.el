@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 21:20:45 wandersonferreira"
+;; Time-stamp: "2018-01-20 21:29:35 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -206,8 +206,56 @@
 (use-package magit
   :ensure t
   :commands (magit-status)
+  :init
+  (set-default 'magit-push-always-verify nil)
+  (set-default 'magit-revert-buffers 'silently)
+  (set-default 'magit-no-confirm '(stage-all-changes
+                                   unstage-all-changes))
   :bind
   (("C-c m s" . magit-status)))
+
+(defun my/magit-cursor-fix ()
+  "Fix the cursor on magit buffers."
+  (goto-char (point-min))
+  (when (looking-at "#")
+    (forward-line 2)))
+
+(defun bk/ignore-and-pull ()
+  "Function to ignore all the modified files in current repo and sync with upstream."
+  (interactive)
+  (magit-reset-hard "HEAD~1")
+  (magit-pull "origin/master" "-v")
+  (message "Your repository is synced with your master branch."))
+
+(defun bk/commit-pull-push ()
+  "Function to stage all modified fiels and sync with upstream."
+  (interactive)
+  (magit-stage-modified)
+  (let* ((msg-string (read-string "Commit message: ")))
+    (magit-commit (concat "-m " msg-string))
+    (magit-pull "origin/master" "-v")
+    (magit-push "master" "origin/master" "-v")
+    (message "Your repository is synced with the master branch.")))
+
+
+;;; gist
+(use-package gist
+  :ensure t
+  :init
+  (setq gist-list-format
+        '((id "Id" 10 nil identity)
+          (created "Created" 20 nil "%D %R")
+          (visibility "Visibility" 10 nil
+                      (lambda
+                        (public)
+                        (or
+                         (and public "public")
+                         "private")))
+          (description "Description" 60 nil identity)
+          (files "Files" 0 nil
+                 (lambda
+                   (files)
+                   (mapconcat 'identity files ", "))))))
 
 
 ;; flyspell
@@ -804,6 +852,27 @@
 (defadvice linum-schedule (around my-linum-schedule () activate)
   (run-with-idle-timer 1 nil #'linum-update-current))
 
+;;; highlights
+(use-package idle-highlight-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook (lambda () (idle-highlight-mode +1))))
+
+;; highlight numbers
+(use-package highlight-numbers
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'highlight-numbers-mode))
+
+;; volatile highlights
+(use-package volatile-highlights
+  :ensure t
+  :config
+  (add-hook 'after-init-hook #'volatile-highlights-mode))
+
+;; misc
+(setq track-eol t
+      line-move-visual nil)
 
 
 (custom-set-variables
@@ -814,7 +883,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
