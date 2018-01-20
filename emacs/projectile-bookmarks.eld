@@ -1,1 +1,1 @@
-("~/dotfiles/" "~/captalys/weddell/" "~/go/src/github.com/Captalys/Hubble/")
+("~/dotfiles/")

@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 14:57:39 wanderson"
+;; Time-stamp: "2018-01-20 21:10:15 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -15,10 +15,19 @@
 ;;; constants
 (defconst isOSX (eq system-type 'darwin))
 (defconst isUnix (eq system-type 'gnu/linux))
+(defconst isEmacs25 (>= emacs-major-version 25))
 
 ;;; user interface
 (use-package base16-theme :ensure t)
 (load-theme 'base16-google-light t)
+
+;; I don't like of too much things happening when I open Emacs
+(setq inhibit-splash-screen t
+      inhibit-startup-echo-area-message t
+      inhibit-startup-message t)
+
+(setq user-full-name "Wanderson Ferreira"
+      user-mail-address "iagwanderson@gmail.com")
 
 ;; removing distractive ui
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -127,6 +136,7 @@
 (diminish 'auto-revert-mode)
 (show-paren-mode t)
 (subword-mode t)
+(diminish 'subword-mode)
 
 ;; emacs export path correctly
 (add-to-list 'exec-path "/usr/local/bin")
@@ -214,23 +224,41 @@
   (add-hook 'text-mode-hook 'flyspell-mode))
 
 (use-package flyspell-correct
-    :ensure t
-    :after flyspell
-    :bind (:map flyspell-mode-map
-                ("C-;" . flyspell-correct-previous-word-generic)))
+  :ensure t
+  :after flyspell
+  :bind (:map flyspell-mode-map
+              ("C-;" . flyspell-correct-previous-word-generic)))
 
 ;;; completions
 (use-package ivy
   :ensure t
   :diminish ivy-mode
+  :init
+  (setq ivy-height 8
+        ivy-use-virtual-buffers t
+        ivy-current-matching nil
+        ivy-wrap t
+        ivy-count-format ""
+        ivy-initial-inputs-alist nil
+        ivy-fixed-height-minibuffer t
+        ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
   :config
-  (ivy-mode +1))
+  (ivy-mode +1)
+  :bind (:map ivy-minibuffer-map
+              ("C-j" . ivy-immediate-done)
+              ("RET" . ivy-alt-done)))
 
 
 (use-package counsel
   :ensure t
   :config
-  (use-package smex :ensure t :config (smex-initialize))
+
+  (use-package smex
+    :ensure t
+    :init
+    (setq smex-completion-system 'ivy)
+    :config (smex-initialize))
+  
   (add-hook 'after-init-hook 'counsel-mode)
   :bind
   (("M-x" . counsel-M-x)
@@ -248,6 +276,53 @@
   :after python
   :config
   (elpy-enable))
+
+(use-package pythonic
+  :ensure t
+  :after python
+  :preface
+  (defun set-right-python-environment ()
+    "Activate the right python env depending where I am."
+    (cond ((string= (system-name) "suse-captalys")
+           (pythonic-activate "~/miniconda3/envs/captalys")
+           (message "Python environment Captalys was activated!"))
+          ((string= (system-name) "Home")
+           (pythonic-activate "~/miniconda3")
+           (message "Python environment Miniconda Default was activated!"))
+          ((string= (system-name) "Wandersons-Air")
+           (pythonic-activate "~/miniconda3")
+           (message "Python environment Miniconda Default was activated!"))
+          ))
+  :config
+  (set-right-python-environment))
+
+(use-package electric-operator
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook #'electric-operator-mode))
+
+;; nice functions from lgmoneda! I am just renaming to improve the chance I will find it later. LOL
+(defun bk/python-shell-run ()
+  (interactive)
+  (when (get-buffer-process "*Python*")
+    (set-process-query-on-exit-flag (get-buffer-process "*Python*") nil)
+    (kill-process (get-buffer-process "*Python*"))
+    (sleep-for 0.5))
+  (run-python (python-shell-parse-command) nil nil)
+  (python-shell-send-buffer)
+  (unless (get-buffer-window "*Python*" t)
+    (python-shell-switch-to-shell)))
+
+(defun bk/python-shell-run-region ()
+  (interactive)
+  (python-shell-send-region (region-beginning) (region-end))
+  (python-shell-switch-to-shell))
+
+(eval-after-load "python"
+  '(progn
+     (define-key python-mode-map (kbd "C-c C-c") 'bk/python-shell-run)
+     (define-key python-mode-map (kbd "C-c C-r") 'bk/python-shell-run-region)
+     (define-key python-mode-map (kbd "C-c C-i") 'pyimport-insert-missing)))
 
 ;;; Mac OSX specific settings
 (when isOSX
@@ -486,8 +561,144 @@
               ("M-*" . pop-tag-mark)))
 
 
+;;; custom functions
+(defun bk/eval-buffer ()
+  "Function to evaluate the current buffer."
+  (interactive)
+  (eval-buffer)
+  (message "Your buffer was evaluated!"))
+
+(defun bk/duplicate-line ()
+  "Function to duplicate the current line."
+  (interactive)
+  (save-excursion
+    (let (line-text)
+      (goto-char (line-beginning-position))
+      (let ((beg (point)))
+        (goto-char (line-end-position))
+        (setq line-text (buffer-substring beg (point))))
+      (if (eobp)
+          (insert ?\n)
+        (forward-line))
+      (open-line 1)
+      (insert line-text))))
+
+(defun bk/mac-open-files ()
+  "Open files in OSX."
+  (interactive)
+  (shell-command (concat "open" (buffer-file-name))))
+
+(defun bk/nicklist-toggle ()
+  "Function to see the nicklist panel with all members logged in irc channel."
+  (interactive)
+  (let ((nicklist-buffer-name (format " *%s-nicklist*" (buffer-name))))
+	(if (get-buffer nicklist-buffer-name)
+	    (kill-buffer nicklist-buffer-name)
+	  (erc-nicklist))))
+
+(defun bk/indent-buffer ()
+  "Function to indent the whole buffer altogether."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun bk/nuke-all-buffers ()
+  "Delete all open buffers."
+  (interactive)
+  (mapc
+   (lambda (buffer)
+	 (kill-buffer buffer))
+   (buffer-list))
+  (delete-other-windows))
+
+(defun bk/delete-this-buffer-and-file ()
+  "Remove file connected to current buffer and kill buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+	    (buffer (current-buffer))
+	    (name (buffer-name)))
+	(if (not (and filename (file-exists-p filename)))
+	    (error "Buffer '%s' is not visiting a file!" name)
+	  (when (yes-or-no-p "Are you sure you want to remove this file? ")
+	    (delete-file filename)
+	    (kill-buffer buffer)
+	    (message "File '%s' successfully removed" filename)))))
+
+(defun bk/untabify-buffer ()
+  "Remove the tab character from buffer."
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun bk/create-scratch nil
+  "Create a new scratch buffer to work in."
+  (interactive)
+  (let ((n 0)
+	    bufname)
+	(while (progn
+             (setq bufname (concat "*scratch*"
+                                   (if (= n 0) "" (int-to-string n))
+                                   "*"))
+             (setq n (1+ n))
+             (get-buffer bufname)))
+	(switch-to-buffer (get-buffer-create bufname))
+	(emacs-lisp-mode)))
+
+;; extracted from Wiegley dotfiles
+(defun bk/normalize-file ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (whitespace-cleanup)
+    (delete-trailing-whitespace)
+    (goto-char (point-max))
+    (delete-blank-lines)
+    (set-buffer-file-coding-system 'unix)
+    (goto-char (point-min))
+    (while (re-search-forward "\r$" nil t)
+      (replace-match ""))
+    (set-buffer-file-coding-system 'utf-8)
+    (let ((require-final-newline t))
+      (save-buffer))))
 
 
+(defun bk/number-of-packages ()
+  "Function to return the number of active packages."
+  (interactive)
+  (let ((size (length package-activated-list)))
+    (message (concat "The number of activated packages are: " (number-to-string size)))))
+
+;;; Tramp mode
+(use-package tramp
+  :init
+  (setq tramp-default-method "ssh"
+        tramp-backup-directory-alist backup-directory-alist
+        tramp-use-ssh-controlmaster-options "ssh"))
+
+;;; load my secrets folder
+(let ((secrets-dir (concat user-emacs-directory "secrets/")))
+  (unless (file-exists-p secrets-dir)
+    (make-directory secrets-dir)))
+
+(defvar authinfo (concat user-emacs-directory "secrets/authinfo.gpg"))
+(defvar auth-sources '((:source "~/.emacs.d/secrets/authinfo.gpg")))
+
+(require 'netrc)
+(defun get-authinfo (host)
+  "Function to get login and password given a HOST name."
+  (let* ((entry (netrc-parse authinfo))
+         (hostentry (netrc-machine entry host)))
+    (when hostentry
+      hostentry)))
+
+;;; recentf
+(use-package recentf
+  :init
+  (setq recentf-max-menu-items 25
+        recentf-max-saved-items 1000
+        recentf-filename-handlers '(file-truename)
+        recentf-exclude '("^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
+                          "^/var/folders/.+$"))
+  :config
+  (add-hook 'after-init-hook 'recentf-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -497,7 +708,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
