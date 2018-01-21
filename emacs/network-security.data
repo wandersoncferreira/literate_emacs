@@ -1,3 +1,0 @@
-(
- (:id "sha1:94f6125eba090fc89a84c22c7b62660aa3541d44" :fingerprint "sha1:c9:4f:05:0e:50:48:da:fd:71:ee:ca:36:bf:ab:10:0a:52:70:16:99" :host "jorgenschaefer.github.io:443" :conditions (:insecure :unknown-ca :invalid))
-)
