@@ -1,6 +1,10 @@
-;;; Here be dragons!!
-;; Time-stamp: "2018-01-21 11:18:44 wandersonferreira"
+;;; package --- Emacs settings
+;;; Commentary:
 
+;; Here be dragons!!
+;; Time-stamp: "2018-01-21 11:24:00 wandersonferreira"
+
+;;; Code:
 
 ;; Garbage collector
 (let ((normal-gc (* 20 1024 1024))
@@ -899,6 +903,7 @@
 ;;; highlights
 (use-package idle-highlight-mode
   :ensure t
+  :diminish hi-lock-mode
   :config
   (add-hook 'prog-mode-hook (lambda () (idle-highlight-mode +1))))
 
@@ -1218,3 +1223,22 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; uptimes - monitor for how long Emacs has been running!
 (use-package uptimes
   :ensure t)
+
+;; helm-spotify-plus
+(use-package helm-spotify-plus
+  :ensure t)
+
+;;; mail
+(setq send-mail-function 'smtpmail-send-it)
+(setq smtpmail-auth-credentials (expand-file-name "~/.emacs.d/secrets/authinfo.gpg"))
+(setq smtpmail-smtp-server "smtp.gmail.com")
+(setq smtpmail-smtp-service 587)
+(setq starttls-extra-arguments nil
+	  starttls-gnutls-program "/usr/bin/gnutls-cli"
+	  starttls-use-gnutls t)
+(setq message-signature "Wanderson Ferreira
+    http://bartuka.com
+    Sent from Emacs")
+
+(provide 'init)
+;;; init.el ends here
