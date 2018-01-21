@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-21 15:16:17 wandersonferreira"
+;; Time-stamp: "2018-01-21 15:17:51 wandersonferreira"
 
 ;;; Code:
 
@@ -1508,6 +1508,11 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
                             ("web" :components ("images" "js" "css")))))
   :config
   (add-hook 'org-mode-hook 'org2jekyll-mode))
+
+
+;;; edit indirect
+(use-package edit-indirect
+  :ensure t)
 
 (provide 'init)
 ;;; init.el ends here
