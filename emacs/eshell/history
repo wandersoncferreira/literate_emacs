@@ -1,0 +1,49 @@
+cd
+ls
+clear
+
+ls
+cd go/src/
+ls
+cd github.com/
+ls
+rm -rf Hubble/
+ls
+git clone http://github.com/Captalys/Hubble
+ls
+cd Hubble/
+ls
+cd
+ranger
+brew
+ls
+ranger
+cd dotfiles/
+ls
+cd scripts/
+ls
+emacs goSetup.sh 
+ls
+ls
+cd ..
+ls
+go
+clear
+ls
+cd scri
+cd dotfiles/scripts/
+ls
+cd ..
+ls
+emacs ~/.bashrc
+emacs ~/.bash_profile
+ls
+cd
+ls
+rm -rf .bash_profile
+ln -s dotfiles/bash_profile .bash_profile
+sourceBash
+source ~/.bash_profile
+ls
+reload
+ls

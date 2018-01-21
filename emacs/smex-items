@@ -1,16 +1,18 @@
 
 ;; ----- smex-history -----
 (
+ bk/duplicate-line
+ shell-script-mode
+ package-install
  cd
  5x5
  arp
  dbx
- dig
- erc
- ert
 )
 
 ;; ----- smex-data -----
 (
- 
+ (bk/duplicate-line . 2)
+ (package-install . 1)
+ (shell-script-mode . 1)
 )

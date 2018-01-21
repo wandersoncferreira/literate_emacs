@@ -3,10 +3,82 @@
 
 (setq savehist-minibuffer-history-variables '(minibuffer-history buffer-name-history file-name-history ivy-history counsel-M-x-history))
 (setq minibuffer-history '("wandersoncferreira"))
-(setq file-name-history '("~/.emacs.d/init.el" #("/Users/wandersonferreira/.emacs.d/init.el" 0 41 (ivy-index 0))))
-(setq ivy-history '(#("eshell-kill" 0 11 (ivy-index 3)) #("eshell-where" 0 12 (ivy-index 0)) #("set-e" 0 5 (ivy-index 1)) #("window-sy" 0 9 (ivy-index 0)) #("exec-pa" 0 7 (ivy-index 0)) #("init" 0 4 (ivy-index 0)) #("magit-push-a" 0 12 (ivy-index 0)) #("after-in" 0 8 (ivy-index 1)) #("line-move" 0 9 (ivy-index 0)) #("prog-m" 0 6 (ivy-index 0)) #("yas-min" 0 7 (ivy-index 0)) #("whitessty" 0 9 (ivy-index 1)) #("whitesaut" 0 9 (ivy-index 0)) #("whitesplinec" 0 12 (ivy-index 0)) #("white" 0 5 (ivy-index 0)) #("python-modehoo" 0 14 (ivy-index 0)) #("prog-mo" 0 7 (ivy-index 0)) #("recentf-fil" 0 11 (ivy-index 0)) #("recentf-max" 0 11 (ivy-index 0)) #("recentf-ma" 0 10 (ivy-index 1))))
-(setq counsel-M-x-history '(#("packains" 0 8 (ivy-index 0)) #("bkeval" 0 6 (ivy-index 0)) #("eval" 0 4 (ivy-index 1))))
-(setq kill-ring '(#("eshell-destroy-buffer-when-process-dies" 0 7 (fontified t) 7 15 (fontified t) 15 22 (fontified t) 22 27 (fontified t) 27 35 (fontified t) 35 39 (fontified t)) #("init
+(setq file-name-history '(#("/Users/wandersonferreira/dotfiles/bash_profile" 0 46 (ivy-index 0)) "~/.emacs.d/init.el" #("/Users/wandersonferreira/.emacs.d/init.el" 0 41 (ivy-index 0))))
+(setq ivy-history '("*eshell*" #("eshel" 0 5 (ivy-index 0)) #("init" 0 4 (ivy-index 0)) #("go-mohoo" 0 8 (ivy-index 0)) #("mess" 0 4 (ivy-index 0)) #("eh" 0 2 (ivy-index 0)) #("eshell-hitor" 0 12 (ivy-index 2)) #("eshell-scro" 0 11 (ivy-index 0)) #("eshell-glocase" 0 14 (ivy-index 0)) #("eshell-outpufilter" 0 18 (ivy-index 1)) #("add-to-" 0 7 (ivy-index 1)) #("eshell-wa" 0 9 (ivy-index 2)) #("eshell-hacon" 0 12 (ivy-index 0)) #("eshell-hanan" 0 12 (ivy-index 0)) #("eshell-sa" 0 9 (ivy-index 0)) #("eshell-kill" 0 11 (ivy-index 3)) #("eshell-where" 0 12 (ivy-index 0)) #("set-e" 0 5 (ivy-index 1)) #("window-sy" 0 9 (ivy-index 0)) #("exec-pa" 0 7 (ivy-index 0)) #("magit-push-a" 0 12 (ivy-index 0)) #("after-in" 0 8 (ivy-index 1)) #("line-move" 0 9 (ivy-index 0)) #("prog-m" 0 6 (ivy-index 0)) #("yas-min" 0 7 (ivy-index 0)) #("whitessty" 0 9 (ivy-index 1)) #("whitesaut" 0 9 (ivy-index 0)) #("whitesplinec" 0 12 (ivy-index 0)) #("white" 0 5 (ivy-index 0)) #("python-modehoo" 0 14 (ivy-index 0)) #("prog-mo" 0 7 (ivy-index 0)) #("recentf-fil" 0 11 (ivy-index 0)) #("recentf-max" 0 11 (ivy-index 0)) #("recentf-ma" 0 10 (ivy-index 1))))
+(setq counsel-M-x-history '(#("bkdupl" 0 6 (ivy-index 0)) #("shellmo" 0 7 (ivy-index 1)) #("packains" 0 8 (ivy-index 0)) #("eval" 0 4 (ivy-index 1)) #("bkeval" 0 6 (ivy-index 0)) #("visual" 0 6 (ivy-index 0)) #("bkduple" 0 7 (ivy-index 0))))
+(setq kill-ring '("%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit" #("alias ll=
+" 0 5 (face font-lock-builtin-face fontified t) 5 6 (fontified t) 6 8 (face font-lock-variable-name-face fontified t) 8 9 (fontified t) 9 10 (fontified nil)) #("Unix" 0 4 (face font-lock-string-face fontified t)) #("Users" 0 5 (face font-lock-string-face fontified t)) #("Users" 0 5 (face font-lock-string-face fontified t)) #("wandersonwandersonferreira" 0 24 (face font-lock-string-face fontified t) 24 26 (face font-lock-string-face fontified t)) #("Users" 0 5 (face font-lock-string-face fontified t)) #("# added by Miniconda3 installer
+export PATH=\"/Users/wandersonferreira/miniconda3/bin:$PATH\"
+export PATH=\"/Users/wandersonferreira/dotfiles/scripts:$PATH\"
+export GOPATH=\"/Users/wandersonferreira/go\"
+" 0 2 (face font-lock-comment-delimiter-face fontified t) 2 3 (face font-lock-comment-face fontified t) 3 7 (face font-lock-comment-face fontified t) 7 11 (face font-lock-comment-face fontified t) 11 18 (face font-lock-comment-face fontified t) 18 32 (face font-lock-comment-face fontified t) 32 38 (face font-lock-builtin-face fontified t) 38 39 (fontified t) 39 43 (face font-lock-variable-name-face fontified t) 43 44 (fontified t) 44 51 (face font-lock-string-face fontified t) 51 61 (face font-lock-string-face fontified t) 61 78 (face font-lock-string-face fontified t) 78 79 (face font-lock-string-face fontified t) 79 91 (face font-lock-string-face fontified t) 91 92 (fontified t) 92 98 (face font-lock-builtin-face fontified t) 98 99 (fontified t) 99 103 (face font-lock-variable-name-face fontified t) 103 104 (fontified t) 104 127 (face font-lock-string-face fontified t) 127 153 (face font-lock-string-face fontified t) 153 154 (fontified t) 154 160 (face font-lock-builtin-face fontified t) 160 161 (fontified t) 161 167 (face font-lock-variable-name-face fontified t) 167 168 (fontified t) 168 186 (face font-lock-string-face fontified t) 186 187 (face font-lock-string-face fontified t) 187 197 (face font-lock-string-face fontified t) 197 198 (fontified t)) #("myScripts" 0 9 (face font-lock-string-face fontified t)) #("    alias magit='ec -e \"(magit-status \\\"$(pwd)\\\")\"'
+" 0 4 (fontified t) 4 9 (face font-lock-builtin-face fontified t) 9 10 (fontified t) 10 15 (face font-lock-variable-name-face fontified t) 15 16 (fontified t) 16 17 (face font-lock-string-face fontified t) 17 42 (fontified nil face font-lock-string-face) 42 45 (fontified nil face sh-quoted-exec) 45 51 (fontified nil face font-lock-string-face) 51 52 (fontified nil)) #("    alias goCaptalys=\"source activate captalys\"
+" 0 4 (fontified t) 4 9 (face font-lock-builtin-face fontified t) 9 10 (fontified t) 10 11 (face (idle-highlight font-lock-variable-name-face) fontified t) 11 20 (fontified nil face (idle-highlight font-lock-variable-name-face)) 20 21 (fontified nil) 21 47 (fontified nil face font-lock-string-face) 47 48 (fontified nil)) #("	alias ls=\"gls\"
+" 0 1 (fontified t) 1 3 (face (idle-highlight font-lock-builtin-face) fontified t) 3 6 (fontified nil face (idle-highlight font-lock-builtin-face)) 6 7 (fontified nil) 7 9 (fontified nil face font-lock-variable-name-face) 9 10 (fontified nil) 10 15 (fontified nil face font-lock-string-face) 15 16 (fontified nil)) #("    alias sourceBash=\"source ~/.bash_profile\"
+" 4 9 (face font-lock-builtin-face) 10 20 (face font-lock-variable-name-face) 21 22 (face font-lock-string-face) 22 45 (face font-lock-string-face)) #("if [ $(uname -s) == \"Darwin\" ]; then
+	alias ls=\"gls\"
+    alias sourceBash=\"source ~/.bash_profile\"
+    alias goFlock=\"source activate flock\"
+    alias errorFlock=\"cd ~/.flock/\"
+    alias projFlock=\"cd ~/github/Flock/\"
+    alias goCaptalys=\"source activate captalys\"
+    alias listAppStore=\"mdfind kMDItemAppStoreHasReceipt=1\"
+    alias upPythonPkg=\"twine upload dist/*\"
+    alias buildPythonPkg=\"python setup.py bdist_wheel\"
+    alias magit='ec -e \"(magit-status \\\"$(pwd)\\\")\"'
+fi
+
+
+# added by Miniconda3 installer
+export PATH=\"/Users/wandersonferreira/miniconda3/bin:$PATH\"
+export PATH=\"/Users/wandersonferreira/myScripts:$PATH\"
+export GOPATH=\"/Users/wandersonferreira/go\"
+" 0 2 (face font-lock-keyword-face fontified t) 2 7 (fontified t) 7 12 (face sh-quoted-exec fontified t) 12 20 (fontified t) 20 28 (face font-lock-string-face fontified t) 28 32 (fontified t) 32 36 (face font-lock-keyword-face fontified t) 36 38 (fontified t) 38 43 (face font-lock-builtin-face fontified t) 43 44 (fontified t) 44 46 (face font-lock-variable-name-face fontified t) 46 47 (fontified t) 47 52 (face font-lock-string-face fontified t) 52 57 (fontified t) 57 62 (face font-lock-builtin-face fontified t) 62 63 (fontified t) 63 73 (face font-lock-variable-name-face fontified t) 73 74 (fontified t) 74 98 (face font-lock-string-face fontified t) 98 103 (fontified t) 103 108 (face font-lock-builtin-face fontified t) 108 109 (fontified t) 109 116 (face font-lock-variable-name-face fontified t) 116 117 (fontified t) 117 140 (face font-lock-string-face fontified t) 140 145 (fontified t) 145 150 (face font-lock-builtin-face fontified t) 150 151 (fontified t) 151 161 (face font-lock-variable-name-face fontified t) 161 162 (fontified t) 162 176 (face font-lock-string-face fontified t) 176 181 (fontified t) 181 186 (face font-lock-builtin-face fontified t) 186 187 (fontified t) 187 196 (face font-lock-variable-name-face fontified t) 196 197 (fontified t) 197 217 (face font-lock-string-face fontified t) 217 222 (fontified t) 222 227 (face font-lock-builtin-face fontified t) 227 228 (fontified t) 228 238 (face font-lock-variable-name-face fontified t) 238 239 (fontified t) 239 265 (face font-lock-string-face fontified t) 265 270 (fontified t) 270 275 (face font-lock-builtin-face fontified t) 275 276 (fontified t) 276 288 (face font-lock-variable-name-face fontified t) 288 289 (fontified t) 289 325 (face font-lock-string-face fontified t) 325 330 (fontified t) 330 335 (face font-lock-builtin-face fontified t) 335 336 (fontified t) 336 347 (face font-lock-variable-name-face fontified t) 347 348 (fontified t) 348 369 (face font-lock-string-face fontified t) 369 374 (fontified t) 374 379 (face font-lock-builtin-face fontified t) 379 380 (fontified t) 380 394 (face font-lock-variable-name-face fontified t) 394 395 (fontified t) 395 424 (face font-lock-string-face fontified t) 424 429 (fontified t) 429 434 (face font-lock-builtin-face fontified t) 434 435 (fontified t) 435 440 (face font-lock-variable-name-face fontified t) 440 441 (fontified t) 441 467 (face font-lock-string-face fontified t) 467 470 (face sh-quoted-exec fontified t) 470 476 (face font-lock-string-face fontified t) 476 477 (fontified t) 477 479 (face font-lock-keyword-face fontified t) 479 482 (fontified t) 482 484 (face font-lock-comment-delimiter-face fontified t) 484 500 (face font-lock-comment-face fontified t) 500 514 (face font-lock-comment-face fontified t) 514 520 (face font-lock-builtin-face fontified t) 520 521 (fontified t) 521 525 (face font-lock-variable-name-face fontified t) 525 526 (fontified t) 526 573 (face font-lock-string-face fontified t) 573 574 (fontified t) 574 580 (face font-lock-builtin-face fontified t) 580 581 (fontified t) 581 585 (face font-lock-variable-name-face fontified t) 585 586 (fontified t) 586 628 (face font-lock-string-face fontified t) 628 629 (fontified t) 629 635 (face font-lock-builtin-face fontified t) 635 636 (fontified t) 636 642 (face font-lock-variable-name-face fontified t) 642 643 (fontified t) 643 672 (face font-lock-string-face fontified t) 672 673 (fontified t)) "path" #("path" 0 4 (fontified t face font-lock-constant-face)) #("ensure t
+  " 0 6 (face font-lock-builtin-face fontified t) 6 7 (fontified t) 7 11 (fontified t)) "dotfiles/scripts" "input" #("input" 0 5 (fontified t)) #("input" 0 5 (fontified t)) "(defun eshell-here ()
+  \"Open up a new shell in the directory associated with current buffer's file.
+The eshell is renamed to match that directory to make multiple eshell windows easier.\"
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name))
+                   default-directory))
+	     (height (/ (window-total-height) 2))
+	     (name   (car (last (split-string parent \"/\" t)))))
+	(split-window-vertically (- height))
+	(other-window 1)
+	(eshell \"new\")
+	(rename-buffer (concat \"*eshell: \" name \"*\"))
+	(insert (concat \"ls\"))
+	(eshell-send-input)))
+
+(global-set-key (kbd \"C-!\") 'eshell-here)
+
+(add-hook 'eshell-mode-hook
+	      (lambda ()
+            (add-to-list 'eshell-visual-commands \"htop\")
+            (add-to-list 'eshell-visual-commands \"ssh\")
+            (add-to-list 'eshell-visual-commands \"tail\")))
+
+(defun eshell/gst (&rest args)
+  \"Function to use magit status (ARGS).\"
+  (magit-status (pop args) nil)
+  (eshell/echo))
+
+;; non-zero value for line-spacing can mess up ansi-term and so.
+(add-hook 'term-mode-hook (lambda () (setq line-spacing 0)))
+
+;; finally load eshell on startup
+(add-hook 'emacs-startup-hook (lambda ()
+                                (let ((default-directory (getenv \"HOME\")))
+                                  (command-execute 'eshell))))
+
+;; some aliases
+(setq eshell-command-aliases-list
+      '((\"q\" \"exit\")
+        (\"l\" \"ls -1\")
+        (\"ll\" \"ls -l\")
+        (\"la\" \"ls -la\")))" "(eval-after-load 'em-term (lambda ()
+                            (setq eshell-visual-commands '(\"less\" \"more\" \"tmux\" \"htop\" \"top\" \"ranger\"))
+                            (setq eshell-visual-subcommands '((\"git\" \"log\" \"l\" \"diff\" \"show\")))))" #("eshell-destroy-buffer-when-process-dies" 0 7 (fontified t) 7 15 (fontified t) 15 22 (fontified t) 22 27 (fontified t) 27 35 (fontified t) 35 39 (fontified t)) #("init
   " 0 4 (fontified t face font-lock-constant-face) 4 7 (fontified t)) #("require '" 0 7 (fontified t face font-lock-keyword-face) 7 9 (fontified t)) #("eshel" 0 5 (fontified t face font-lock-comment-face)) #("copy-env" 0 5 (fontified t) 5 8 (fontified t)) "(defun set-exec-path-from-shell-PATH ()
   \"Set the environment variables.\"
   (let ((path-from-shell (replace-regexp-in-string
@@ -101,5 +173,5 @@
                                     '((\"\\\\<\\\\(NOTE\\\\|FIXME\\\\|TODO\\\\|BUG\\\\|HACK\\\\|REFACTOR\\\\|THE HORROR\\\\)\"
                                        1 font-lock-warning-face t)))))" "recentf-exclude '(\"^/tmp/\" \"^/ssh:\" \"\\\\.?ido\\\\.last$\" \"\\\\.revive$\" \"/TAGS$\"
               \"^/var/folders/.+$\")"))
-(setq search-ring '("git" "python"))
+(setq search-ring '("ring-" "GO" "linum" "eshell" "git" "python"))
 (setq regexp-search-ring 'nil)

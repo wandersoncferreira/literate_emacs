@@ -15,3 +15,6 @@ go get -u golang.org/x/tools/cmd/guru
 
 echo 'install go check'
 go get -u github.com/dougm/goflymake
+
+echo 'install go tags'
+go get -u github.com/jstemmer/gotags

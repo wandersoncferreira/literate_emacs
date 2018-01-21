@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 22:46:08 wandersonferreira"
+;; Time-stamp: "2018-01-21 10:13:00 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -48,6 +48,8 @@
 ;; more info into the modeline
 (column-number-mode +1)
 (display-time-mode +1)
+
+(setq ring-bell-function 'ignore)
 
 ;; there is a need to change some default behaviors
 (setq-default tab-always-indent 'complete
@@ -577,7 +579,7 @@
   :ensure t)
 
 
-;;; Go mode
+;;; GO MODE
 (use-package go-mode
   :ensure t
   :preface
@@ -601,6 +603,7 @@
   :config
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'bk/set-go-compiler)
+  (add-hook 'go-mode-hook 'flycheck-mode)
   
   :bind (:map go-mode-map
               ("C-c C-r" . go-remove-unused-imports)
@@ -608,6 +611,32 @@
               ("M-." . godef-jump)
               ("M-*" . pop-tag-mark)))
 
+;;; company go
+(use-package company-go
+  :ensure t
+  :after go-mode
+  :config
+  (add-hook 'go-mode-hook 'company-mode)
+  (add-to-list 'company-backends 'company-go))
+
+;; go stackstracer
+(use-package go-stacktracer :ensure t)
+
+;; go add tags
+(use-package go-add-tags :ensure t)
+
+;; enable go-eldoc
+(use-package go-eldoc
+  :ensure t
+  :diminish eldoc-mode
+  :config
+  (add-hook 'go-mode-hook 'go-eldoc-setup))
+
+;; gopath
+(use-package go-gopath :ensure t)
+
+;; direx
+(use-package go-direx :ensure t)
 
 ;;; custom functions
 (defun bk/eval-buffer ()
@@ -848,9 +877,9 @@
 
 ;; updated line number every second
 (setq linum-delay t)
-(setq linum-format "%4d ")
+(setq linum-format "%3d ")
 (defadvice linum-schedule (around my-linum-schedule () activate)
-  (run-with-idle-timer 1 nil #'linum-update-current))
+  (run-with-idle-timer 0.5 nil #'linum-update-current))
 
 ;;; highlights
 (use-package idle-highlight-mode
@@ -977,7 +1006,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (exec-path-from-shell gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (go-direx go-gopath go-eldoc go-add-tags go-stacktracer company-go exec-path-from-shell gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
