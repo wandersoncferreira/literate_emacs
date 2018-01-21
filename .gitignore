@@ -9,3 +9,15 @@
 
 # Undo-tree save-files
 *.~undo-tree
+
+# Emacs
+emacs/backup/
+emacs/elpa/
+emacs/var/
+emacs/recentf
+emacs/*.log
+emacs/*.data
+emacs/*.eld
+emacs/smex-items
+emacs/eshell/history
+emacs/eshell/lastdir
