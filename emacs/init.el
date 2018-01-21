@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-21 11:24:00 wandersonferreira"
+;; Time-stamp: "2018-01-21 15:16:17 wandersonferreira"
 
 ;;; Code:
 
@@ -16,12 +16,18 @@
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
 (use-package diminish :ensure t :defer t)
+
+;; I need this to work!
+(use-package org
+  :ensure org-plus-contrib)
 
 ;;; constants
 (defconst isOSX (eq system-type 'darwin))
@@ -615,11 +621,10 @@
   :config
   
   (use-package go-guru
-    :demand t)
+    :ensure t)
   
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'bk/set-go-compiler)
-  (add-hook 'go-mode-hook 'flycheck-mode)
   
   :bind (:map go-mode-map
               ("C-c C-r" . go-remove-unused-imports)
@@ -652,10 +657,6 @@
 
 ;; direx
 (use-package go-direx :ensure t)
-
-;; goflycheck
-(add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
-(require 'go-flycheck)
 
 ;;; custom functions
 (defun bk/eval-buffer ()
@@ -1120,14 +1121,27 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq erc-save-buffer-on-part t)
 (setq erc-hide-timestamps t)
 
-
 ;; Flycheck settings
 (use-package flycheck
   :ensure t
   :init
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (add-hook 'go-mode-hook 'flycheck-mode))
+
+;; goflycheck
+(add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
+(require 'go-flycheck)
+
+;;; markdown
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 ;; fix-words
 (use-package fix-word
@@ -1239,6 +1253,261 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq message-signature "Wanderson Ferreira
     http://bartuka.com
     Sent from Emacs")
+
+;;; grep-folder
+(add-to-list 'load-path "~/.emacs.d/site-packages/grep-folder")
+(require 'grep-folder)
+(setq grep-folder-setup-dirs '(("~/.emacs.d" . ("var/" "etc/" ".cask/" ".git/" "site-packages" "elpa/" "themes/"))
+                               ("~/myScripts")
+                               ("~/go/src/github.com/Captalys")))
+(setq grep-folder-setup-files '(("~/.emacs.d" . (".gitmodules"))))
+(global-set-key (kbd "C-c g") 'grep-folder)
+
+;;; Latex
+(defun bk/template-latex-simple ()
+  "Personal LaTeX template."
+  (interactive)
+  (insert "\\documentclass[11pt]{article}\n")
+  (insert "\\usepackage[brazilian]{babel}\n")
+  (insert "\\usepackage[utf8]{inputenc}\n")
+  (insert "\\usepackage[T1]{fontenc}\n")
+  (insert "\\usepackage{graphicx}\n")
+  (insert "\\usepackage{cite}\n")
+  (insert "\\title{INSERT YOUR TITLE HERE}\n")
+  (insert "\\author{Wanderson Ferreira}\n")
+  (insert "\\date{\\today}\n")
+  (insert "\\begin{document}\n")
+  (insert "\\maketitle\n\n\n")
+  (insert "\\bibliographystyle{plain}\n")
+  (insert "\\bibliography{NAME-BIB-FILE}\n")
+  (insert "\\end{document}\n\n")
+  (insert "This text will not show up in the output"))
+
+(setq TeX-parse-self t
+      TeX-electric-sub-and-superscript t
+      TeX-electric-math '("\\(" "\\)")
+      TeX-quote-after-quote t
+      TeX-clean-confirm nil
+      TeX-engine 'luatex
+      TeX-PDF-mode t
+      TeX-auto-save t
+	  TeX-parse-self t
+	  TeX-save-query nil)
+
+(require 'flymake)
+(defun flymake-get-tex-args (file-name)
+  "Function to capture errors in flymake FILE-NAME."
+  (list "pdflatex"
+	    (list "-file-line-error" "-draftmode" "-interacton=nonstopmode" file-name)))
+
+(add-hook 'LaTeX-mode-hook 'flymake-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-buffer)
+
+(if isOSX
+    (progn
+      (setq TeX-view-program-list
+            (quote
+             (("Skim"
+               (concat "/Applications/Skim.app/"
+                       "Contents/SharedSupport/displayline"
+                       " %n %o %b")))))
+      (setq TeX-view-program-selection
+            (quote (((output-dvi style-pstricks) "dvips and gv")
+                    (output-dvi "xdvi")
+                    (output-pdf "Skim")
+                    (output-html "xdg-open"))))))
+
+
+(require 'org)
+(setq-default org-confirm-babel-evaluate nil
+              org-return-follows-link t
+              org-log-done t
+              org-edit-timestamp-down-means-later t
+              org-catch-invisible-edits 'show
+              org-tags-column 100
+              org-startup-indented t
+              org-startup-folded t
+              org-cycle-separator-lines 0
+              org-image-actual-width nil)
+
+(add-to-list 'auto-mode-alist '("\\.txt$\'" . org-mode))
+(add-hook 'org-mode-hook (lambda () (flyspell-mode)))
+
+;; remove from the modeline
+(require 'org-indent)
+
+(require 'ob-scheme)
+(require 'ob-python)
+(require 'ob-emacs-lisp)
+(require 'ob-shell)
+(use-package ob-go :ensure t)
+
+(org-babel-do-load-languages
+ 'org-babel-do-load-languages
+ '((scheme . t)
+   (python . t)
+   (go . t)
+   (sh . t)
+   (emacs-lisp . t)))
+
+(eval-after-load 'org
+  '(add-to-list 'org-structure-template-alist
+                (list "em" (concat
+                            "#+BEGIN_SRC emacs-lisp\n"
+                            "?\n"
+                            "#+END_SRC"))))
+
+(eval-after-load 'org
+  '(add-to-list 'org-structure-template-alist
+                (list "sc" (concat
+                            "#+BEGIN_SRC scheme :tangle yes :noweb yes :results output\n"
+                            "?\n"
+                            "#+END_SRC"))))
+
+(eval-after-load 'org
+  '(add-to-list 'org-structure-template-alist
+                (list "pl" (concat
+                            "#+BEGIN_SRC python :noweb yes :tangle <FILENAME> :results output :exports both\n"
+                            "?\n"
+                            "#+END_SRC"
+                            ))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO"      :foreground "lightblue"    :weight bold)
+              ("NEXT"      :foreground "red"          :weight bold)
+              ("STARTED"   :foreground "red"          :weight bold)
+              ("DONE"      :foreground "forest green" :weight bold)
+              ("WAITING"   :foreground "orange"       :weight bold)
+              ("TEAM"      :foreground "orange"       :weight bold)
+              ("SOMEDAY"   :foreground "magenta"      :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+              ("QUOTE"     :foreground "red"          :weight bold)
+              ("QUOTED"    :foreground "magenta"      :weight bold)
+              ("APPROVED"  :foreground "forest green" :weight bold)
+              ("EXPIRED"   :foreground "forest green" :weight bold)
+              ("REJECTED"  :foreground "forest green" :weight bold)
+              ("OPEN"      :foreground "blue"         :weight bold)
+              ("CLOSED" :foreground "forest green" :weight bold))))
+(setq org-capture-templates
+      '(("n" "Note" entry (file+headline "~/Dropbox/Agenda/notes.org" "Notes")
+         "** Note: %?\n")
+        
+        ("l" "Link" entry (file+headline "~/Dropbox/Agenda/links.org" "Links")
+         "** %? %^L %^g \n%T" :prepend t)
+
+        ("t" "To Do Item" entry (file+headline "~/Dropbox/Agenda/todo.org" "To Do Items")
+         "** TODO %?\n" :prepend t)))
+
+(defun bk/org-notes ()
+  "Function to open my personal org notes file."
+  (interactive)
+  (find-file "~/Dropbox/Agenda/notes.org"))
+
+(defun bk/org-links ()
+  "Function to open all my personal links saved."
+  (interactive)
+  (find-file "~/Dropbox/Agenda/links.org"))
+
+;;;###autoload
+(defun bk/org-todo ()
+  "Function to open my `TODO' list."
+  (interactive)
+  (find-file "~/Dropbox/Agenda/todo.org"))
+
+(setq org-agenda-files '("~/Dropbox/Agenda"))
+
+;; org download package
+(use-package org-download
+  :ensure t
+  :init
+  (setq org-download-image-dir "~/Dropbox/ORGIMG"))
+
+(defun bk/meeting-notes ()
+  "Call this after creating an `org-mode' heading for where the notes for the meeting should be."
+  (interactive)
+  (outline-mark-subtree)
+  (narrow-to-region (region-beginning) (region-end))
+  (deactivate-mark)
+  (delete-other-windows)
+  (text-scale-set 1)
+  (fringe-mode 0)
+  (message "When finished taking your notes, run meeting-done."))
+
+(defun bk/meeting-done ()
+  "Attempt to undo the effects of taking meeting notes."
+  (interactive)
+  (widen)
+  (text-scale-set 0)
+  (fringe-mode 1)
+  (winner-undo))
+
+;; org reveal
+(use-package ox-reveal
+  :ensure t
+  :init
+  (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+  (setq org-reveal-mathjax t))
+
+;;; jekyll
+(use-package org2jekyll
+  :ensure t
+  :init
+  (custom-set-variables '(org2jekyll-blog-author "Wanderson Ferreira")
+                        '(org2jekyll-source-directory (expand-file-name "~/Dropbox/blogging"))
+                        '(org2jekyll-jekyll-directory (expand-file-name "~/wandersoncferreira.github.io"))
+                        '(org2jekyll-jekyll-drafts-dir "")
+                        '(org2jekyll-jekyll-posts-dir "_posts/")
+                        '(org-publish-project-alist
+                          `(("default"
+                             :base-directory ,(org2jekyll-input-directory)
+                             :base-extension "org"
+                             :publishing-directory ,(org2jekyll-output-directory)
+                             :publishing-function org-html-publish-to-html
+                             :headline-levels 4
+                             :section-numbers nil
+                             :with-toc nil
+                             :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+                             :html-preamble t
+                             :recursive t
+                             :make-index t
+                             :html-extension "html"
+                             :body-only t)
+                            ("post"
+                             :base-directory ,(org2jekyll-input-directory)
+                             :base-extension "org"
+                             :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
+                             :publishing-function org-html-publish-to-html
+                             :headline-levels 4
+                             :section-numbers nil
+                             :with-toc nil
+                             :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+                             :html-preamble t
+                             :recursive t
+                             :make-index t
+                             :html-extension "html"
+                             :body-only t)
+                            ("images"
+                             :base-directory ,(org2jekyll-input-directory "images")
+                             :base-extension "jpg\\|gif\\|png"
+                             :publishing-directory ,(org2jekyll-output-directory "images")
+                             :publishing-function org-publish-attachment
+                             :recursive t)
+                            ("js"
+                             :base-directory ,(org2jekyll-input-directory "js")
+                             :base-extension "js"
+                             :publishing-directory ,(org2jekyll-output-directory "js")
+                             :publishing-function org-publish-attachment
+                             :recursive t)
+                            ("css"
+                             :base-directory ,(org2jekyll-input-directory "css")
+                             :base-extension "css\\|el"
+                             :publishing-directory ,(org2jekyll-output-directory "css")
+                             :publishing-function org-publish-attachment
+                             :recursive t)
+                            ("web" :components ("images" "js" "css")))))
+  :config
+  (add-hook 'org-mode-hook 'org2jekyll-mode))
 
 (provide 'init)
 ;;; init.el ends here

@@ -1,0 +1,3 @@
+[submodule "emacs/site-packages/grep-folder"]
+	path = emacs/site-packages/grep-folder
+	url = http://github.com/wandersoncferreira/grep-folder
