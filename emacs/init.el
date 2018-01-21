@@ -1,5 +1,12 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-21 10:39:21 wandersonferreira"
+;; Time-stamp: "2018-01-21 11:18:44 wandersonferreira"
+
+
+;; Garbage collector
+(let ((normal-gc (* 20 1024 1024))
+      (init-gc (* 128 1024 1024)))
+  (setq gc-cons-threshold init-gc)
+  (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold normal-gc))))
 
 ;;; packages
 (package-initialize)
@@ -16,6 +23,11 @@
 (defconst isOSX (eq system-type 'darwin))
 (defconst isUnix (eq system-type 'gnu/linux))
 (defconst isEmacs25 (>= emacs-major-version 25))
+
+;; custom file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 ;;; user interface
 (use-package base16-theme :ensure t)
@@ -275,7 +287,6 @@
 
 (use-package flyspell-correct
   :ensure t
-  :after flyspell
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-correct-previous-word-generic)))
 
@@ -323,13 +334,11 @@
 (use-package elpy
   :ensure t
   :diminish elpy-mode
-  :after python
   :config
   (elpy-enable))
 
 (use-package pythonic
   :ensure t
-  :after python
   :preface
   (defun set-right-python-environment ()
     "Activate the right python env depending where I am."
@@ -517,7 +526,7 @@
 ;;; company
 (use-package company
   :ensure t
-  :diminish " CMP"
+  :diminish company-mode
   :init
   (setq company-transformers '(company-sort-by-occurrence)
         company-idle-delay nil
@@ -530,7 +539,6 @@
 
 (use-package company-flx
   :ensure t
-  :after company
   :config
   (company-flx-mode +1))
 
@@ -601,6 +609,10 @@
   (setq gofmt-command "goimports")
   
   :config
+  
+  (use-package go-guru
+    :demand t)
+  
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'bk/set-go-compiler)
   (add-hook 'go-mode-hook 'flycheck-mode)
@@ -614,7 +626,6 @@
 ;;; company go
 (use-package company-go
   :ensure t
-  :after go-mode
   :config
   (add-hook 'go-mode-hook 'company-mode)
   (add-to-list 'company-backends 'company-go))
@@ -637,6 +648,10 @@
 
 ;; direx
 (use-package go-direx :ensure t)
+
+;; goflycheck
+(add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
+(require 'go-flycheck)
 
 ;;; custom functions
 (defun bk/eval-buffer ()
@@ -782,7 +797,7 @@
 (add-hook 'prog-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
-                                    '(("\\<\\(NOTE\\|FIXME\\|TODO\\|BUG\\|HACK\\|REFACTOR\\|THE HORROR\\)"
+                                    '(("\\<\\(NOTE\\|FIXME\\|TODO\\|BUG\\|HACK\\|REFACTOR\\)"
                                        1 font-lock-warning-face t)))))
 
 (use-package goto-addr
@@ -896,6 +911,7 @@
 ;; volatile highlights
 (use-package volatile-highlights
   :ensure t
+  :diminish volatile-highlights-mode
   :config
   (add-hook 'after-init-hook #'volatile-highlights-mode))
 
@@ -995,23 +1011,210 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
         ("la" "ls -la")
         ("emacs" "find-file $1")))
 
-;;; let's always start on eshell?
-(eshell)
+;;; ERC
+(defvar site-packages
+  (expand-file-name "site-packages" user-emacs-directory))
+(add-to-list 'load-path (concat site-packages "/erc-extras") t)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(delete-selection-mode nil)
- '(package-selected-packages
-   (quote
-    (go-direx go-gopath go-eldoc go-add-tags go-stacktracer company-go exec-path-from-shell gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
+(erc-spelling-mode +1)
+(add-hook 'erc-mode-hook (lambda () (auto-fill-mode 0)))
+(make-variable-buffer-local 'erc-fill-column)
+(add-hook 'window-configuration-change-hook
+	      '(lambda ()
+             (save-excursion
+               (walk-windows
+                (lambda (w)
+                  (let ((buffer (window-buffer w)))
+                    (set-buffer buffer)
+                    (when (eq major-mode 'erc-mode)
+                      (setq erc-fill-column (- (window-width w) 2)))))))))
+
+;; stop starting all the channels
+;; (when (assoc "en0" (network-interface-list))
+;;   (erc :server "irc.freenode.net" :port 6667 :nick "bartuka"))
+
+(require 'erc)
+(require 'erc-track)
+(erc-track-mode +1)
+(setq erc-keywords '("machine" "bayesian" "cassandra" "bayes" "models" "scala"))
+(setq erc-track-exclude-server-buffer t)
+
+(defun bk/login-irc ()
+  "Connecting to my IRC account."
+  (let* ((hostentry (get-authinfo "irc.freenode.net"))
+	     (login (netrc-get hostentry "login"))
+	     (password (netrc-get hostentry "password")))
+	(setq erc-nick login)
+	(setq erc-password password)))
+
+(bk/login-irc)
+
+(setq erc-current-nick-highlight-type 'nick)
+(setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
+(setq erc-track-use-faces t)
+(setq erc-track-faces-priority-list
+	  '(erc-current-nick-face
+	    erc-keyword-face
+	    erc-direct-msg-face))
+(setq erc-track-priority-faces-only 'all)
+
+(require 'erc-services)
+(erc-services-mode)
+(setq erc-prompt-for-nickserv-password nil)
+(setq erc-prompt-for-password nil)
+
+
+(erc-autojoin-mode +1)
+(setq erc-autojoin-timing :ident)
+(setq erc-join-buffer 'bury)
+(setq erc-autojoin-channels-alist
+	  '(("freenode.net" "#sptk" "#emacs" "#go-nuts" "#tensorflow")))
+
+(erc-autojoin-after-ident "irc.freenode.net" "bartuka")
+(add-hook 'erc-nickserv-identified-hook 'erc-autojoin-after-ident)
+
+;; login in a buffer when people talk to me
+(setq erc-log-matches-flag t)
+(setq erc-log-matches-types-alist
+	  '((keyword . "### Keywords Log ###")
+	    (current-nick . "### Me Log ###")))
+
+(load-file (concat site-packages "/erc-extras/erc-nicklist.el"))
+(define-key erc-mode-map (kbd "<f7>") 'bk/nicklist-toggle)
+
+;; Smarter beep
+;; Remember to apt-get install mplayer!
+;; todo: no beep when buffer is visible
+(eval-when-compile
+  '(require 'cl))
+
+(add-hook 'erc-text-matched-hook 'erc-sound-if-not-server)
+(defun erc-sound-if-not-server (match-type nickuserhost msg)
+  "Beep when MATCH-TYPE NICKUSERHOST MSG were called."
+  (unless (or
+	       (string-match "Serv" nickuserhost)
+	       (string-match nickuserhost (erc-current-nick))
+	       (string-match "Server" nickuserhost))
+    (when (string= match-type "current-nick")
+      (start-process-shell-command "lolsound" nil "mplayer ~/.emacs.d/sounds/icq-message.wav"))
+    (message
+     (format "[%s|<%s:%s> %s]"
+             (format-time-string "%Hh%M" (date-to-time (current-time-string)))
+             (subseq nickuserhost 0 (string-match "!" nickuserhost))
+             (or (erc-default-target) "")
+             (subseq msg 0 (- (length msg) 1))
+             )
+     ;; Show msg for 20s
+     (run-with-timer 20 nil
+                     (lambda ()
+                       (message nil)))
+     )))
+
+;; logging is activated
+(require 'erc-log)
+(setq erc-save-buffer-on-part t)
+(setq erc-hide-timestamps t)
+
+
+;; Flycheck settings
+(use-package flycheck
+  :ensure t
+  :init
+  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
+
+;; fix-words
+(use-package fix-word
+  :ensure t
+  :bind
+  (("M-u" . fix-word-upcase)
+   ("M-l" . fix-word-downcase)
+   ("M-c" . fix-word-capitalize)))
+
+;;; KEYS
+
+;; org
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c n") 'org-search-view)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
+
+;; fullscreen
+(global-set-key (kbd "M-<f10>") 'toggle-frame-fullscreen)
+
+;; ibuffer
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+
+(global-set-key (kbd "C-x , b") 'bk/eval-buffer)
+(global-set-key (kbd "C-c d") 'bk/duplicate-line)
+(global-set-key (kbd "\C-x2") (lambda () (interactive)
+                                (split-window-vertically) (other-window 1)))
+(global-set-key (kbd "\C-x3")
+                (lambda () (interactive)
+                  (split-window-horizontally) (other-window 1)))
+
+;; describe personal bindings
+(global-set-key (kbd "C-h C-b") 'describe-personal-keybindings)
+
+;; repeat command like Vim
+(global-set-key (kbd "C-.") 'repeat)
+
+;; kill grep
+(defun bk/kill-grep ()
+  (interactive)
+  (kill-grep)
+  (message "Grep was killed!"))
+
+(global-set-key (kbd "C-c x") 'bk/kill-grep)
+
+;; go to eshell faster
+(defun bk/switch-to-eshell ()
+  (interactive)
+  (switch-to-buffer "*eshell*"))
+
+(global-set-key (kbd "C-c e") 'bk/switch-to-eshell)
+
+
+;;; SQL
+(defun my-sql-connect (product connection)
+  "Connect to sql using the encrypted passwords receive PRODUCT AND CONNECTION."
+  
+  (load-library "~/.emacs.d/secrets/databases.el.gpg")
+  (load-library "~/.emacs.d/secrets/dbpass.el.gpg")
+  
+  ;; update the password to the sql-connection-alist
+  (let ((connection-info (assoc connection sql-connection-alist))
+	    (sql-password (car (last (assoc connection my-sql-password)))))
+	(delete sql-password connection-info)
+	(nconc connection-info `((sql-password ,sql-password)))
+	(setq sql-connection-alist (assq-delete-all connection sql-connection-alist))
+	(add-to-list 'sql-connection-alist connection-info))
+
+  ;; connect to database
+  (setq sql-product product)
+  (sql-connect connection))
+
+(defun bk/mysql-AWS ()
+  "Function to connect to MySQL database in AWS."
+  (interactive)
+  (my-sql-connect 'mysql 'mysqlAWS)
+  (message "Connected to MySQL AWS database"))
+
+(use-package sqlup-mode
+  :ensure t
+  :config
+  (add-hook 'sql-mode-hook 'sqlup-mode)
+  (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
+
+
+;; server mode in Emacs
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
+;; uptimes - monitor for how long Emacs has been running!
+(use-package uptimes
+  :ensure t)

@@ -21,3 +21,4 @@ emacs/*.eld
 emacs/smex-items
 emacs/eshell/history
 emacs/eshell/lastdir
+emacs/.uptimes.el

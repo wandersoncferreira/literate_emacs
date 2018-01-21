@@ -18,3 +18,7 @@ go get -u github.com/dougm/goflymake
 
 echo 'install go tags'
 go get -u github.com/jstemmer/gotags
+
+echo 'install go oracle'
+go get -u golang.org/x/tools/cmd/oracle
+

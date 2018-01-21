@@ -1,0 +1,6 @@
+alias push git pull && git push
+alias q exit
+alias l ls -1
+alias ll ls -l
+alias la ls -la
+alias emacs find-file $1
