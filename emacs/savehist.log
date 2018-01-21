@@ -4,9 +4,52 @@
 (setq savehist-minibuffer-history-variables '(minibuffer-history buffer-name-history file-name-history ivy-history counsel-M-x-history))
 (setq minibuffer-history '("wandersoncferreira"))
 (setq file-name-history '("~/.emacs.d/init.el" #("/Users/wandersonferreira/.emacs.d/init.el" 0 41 (ivy-index 0))))
-(setq ivy-history '(#("after-in" 0 8 (ivy-index 1)) #("line-move" 0 9 (ivy-index 0)) #("prog-m" 0 6 (ivy-index 0)) #("init" 0 4 (ivy-index 0)) #("yas-min" 0 7 (ivy-index 0)) #("whitessty" 0 9 (ivy-index 1)) #("whitesaut" 0 9 (ivy-index 0)) #("whitesplinec" 0 12 (ivy-index 0)) #("white" 0 5 (ivy-index 0)) #("python-modehoo" 0 14 (ivy-index 0)) #("prog-mo" 0 7 (ivy-index 0)) #("recentf-fil" 0 11 (ivy-index 0)) #("recentf-max" 0 11 (ivy-index 0)) #("recentf-ma" 0 10 (ivy-index 1))))
-(setq counsel-M-x-history '(#("bkeval" 0 6 (ivy-index 0)) #("eval" 0 4 (ivy-index 1))))
-(setq kill-ring '(";; line number
+(setq ivy-history '(#("eshell-kill" 0 11 (ivy-index 3)) #("eshell-where" 0 12 (ivy-index 0)) #("set-e" 0 5 (ivy-index 1)) #("window-sy" 0 9 (ivy-index 0)) #("exec-pa" 0 7 (ivy-index 0)) #("init" 0 4 (ivy-index 0)) #("magit-push-a" 0 12 (ivy-index 0)) #("after-in" 0 8 (ivy-index 1)) #("line-move" 0 9 (ivy-index 0)) #("prog-m" 0 6 (ivy-index 0)) #("yas-min" 0 7 (ivy-index 0)) #("whitessty" 0 9 (ivy-index 1)) #("whitesaut" 0 9 (ivy-index 0)) #("whitesplinec" 0 12 (ivy-index 0)) #("white" 0 5 (ivy-index 0)) #("python-modehoo" 0 14 (ivy-index 0)) #("prog-mo" 0 7 (ivy-index 0)) #("recentf-fil" 0 11 (ivy-index 0)) #("recentf-max" 0 11 (ivy-index 0)) #("recentf-ma" 0 10 (ivy-index 1))))
+(setq counsel-M-x-history '(#("packains" 0 8 (ivy-index 0)) #("bkeval" 0 6 (ivy-index 0)) #("eval" 0 4 (ivy-index 1))))
+(setq kill-ring '(#("eshell-destroy-buffer-when-process-dies" 0 7 (fontified t) 7 15 (fontified t) 15 22 (fontified t) 22 27 (fontified t) 27 35 (fontified t) 35 39 (fontified t)) #("init
+  " 0 4 (fontified t face font-lock-constant-face) 4 7 (fontified t)) #("require '" 0 7 (fontified t face font-lock-keyword-face) 7 9 (fontified t)) #("eshel" 0 5 (fontified t face font-lock-comment-face)) #("copy-env" 0 5 (fontified t) 5 8 (fontified t)) "(defun set-exec-path-from-shell-PATH ()
+  \"Set the environment variables.\"
+  (let ((path-from-shell (replace-regexp-in-string
+                          \"[ \\t\\n]*$\"
+                          \"\"
+                          (shell-command-to-string \"$SHELL --login -i -c 'echo $PATH'\"))))
+    (setenv \"PATH\" path-from-shell)
+    (setq eshell-path-env path-from-shell) ; for eshell users
+    (setq exec-path (split-string path-from-shell path-separator))))" #("esh" 0 3 (fontified t face font-lock-constant-face)) "2017 Triumph Bobber" "(setq gist-list-format
+      '((id \"Id\" 10 nil identity)
+        (created \"Created\" 20 nil \"%D %R\")
+        (visibility \"Visibility\" 10 nil
+                    (lambda
+                      (public)
+                      (or
+                       (and public \"public\")
+                       \"private\")))
+        (description \"Description\" 60 nil identity)
+        (files \"Files\" 0 nil
+               (lambda
+                 (files)
+                 (mapconcat 'identity files \", \")))))" #("notes-popup" 0 6 (fontified t) 6 11 (fontified t)) #("current-to-upstream" 0 8 (fontified t) 8 11 (fontified t) 11 19 (fontified t)) #("magit-push" 0 6 (fontified t) 6 10 (fontified t)) "(defun my/magit-cursor-fix ()
+  \"Fix the cursor on magit buffers.\"
+  (goto-char (point-min))
+  (when (looking-at \"#\")
+    (forward-line 2)))
+
+(defun bk/ignore-and-pull ()
+  \"Function to ignore all the modified files in current repo and sync with upstream.\"
+  (interactive)
+  (magit-reset-hard \"HEAD~1\")
+  (magit-pull \"origin/master\" \"-v\")
+  (message \"Your repository is synced with your master branch.\"))
+
+(defun bk/commit-pull-push ()
+  \"Function to stage all modified fiels and sync with upstream.\"
+  (interactive)
+  (magit-stage-modified)
+  (let* ((msg-string (read-string \"Commit message: \")))
+    (magit-commit (concat \"-m \" msg-string))
+    (magit-pull \"origin/master\" \"-v\")
+    (magit-push \"master\" \"origin/master\" \"-v\")
+    (message \"Your repository is synced with the master branch.\")))" ";; line number
 (add-hook 'after-init-hook 'global-linum-mode)
 
  ;; http://stackoverflow.com/questions/3875213/turning-on-linum-mode-when-in-python-c-mode
@@ -58,5 +101,5 @@
                                     '((\"\\\\<\\\\(NOTE\\\\|FIXME\\\\|TODO\\\\|BUG\\\\|HACK\\\\|REFACTOR\\\\|THE HORROR\\\\)\"
                                        1 font-lock-warning-face t)))))" "recentf-exclude '(\"^/tmp/\" \"^/ssh:\" \"\\\\.?ido\\\\.last$\" \"\\\\.revive$\" \"/TAGS$\"
               \"^/var/folders/.+$\")"))
-(setq search-ring '("python"))
+(setq search-ring '("git" "python"))
 (setq regexp-search-ring 'nil)

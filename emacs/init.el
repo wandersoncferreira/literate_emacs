@@ -1,5 +1,5 @@
 ;;; Here be dragons!!
-;; Time-stamp: "2018-01-20 21:29:35 wandersonferreira"
+;; Time-stamp: "2018-01-20 22:46:08 wandersonferreira"
 
 ;;; packages
 (package-initialize)
@@ -874,6 +874,100 @@
 (setq track-eol t
       line-move-visual nil)
 
+;;; environment variable
+(use-package exec-path-from-shell
+  :ensure t
+  :preface
+  (defun set-exec-path-from-shell-PATH ()
+    "Set the environment variables."
+    (let ((path-from-shell (replace-regexp-in-string
+                            "[ \t\n]*$"
+                            ""
+                            (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+      (setenv "PATH" path-from-shell)
+      (setq eshell-path-env path-from-shell) ; for eshell users
+      (setq exec-path (split-string path-from-shell path-separator))))
+  :config
+  (exec-path-from-shell-initialize)
+  (when window-system (set-exec-path-from-shell-PATH)))
+
+;; eshell
+(use-package eshell
+  :init
+  (setq eshell-where-to-jump 'begin
+        eshell-kill-processes-on-exit t
+        eshell-destroy-buffer-when-process-dies t
+        eshell-glob-case-insensitive t
+        eshell-scroll-to-bottom-on-input t
+        eshell-scroll-to-bottom-on-output t
+        eshell-history-size 1024
+        eshell-error-if-no-glob t
+        eshell-save-history-on-exit t)
+  (ignore-errors
+    (dolist (i (list 'eshell-handle-ansi-color
+                     'eshell-handle-control-codes
+                     'eshell-watch-for-password-prompt))
+      (add-to-list 'eshell-output-filter-functions i)))
+  :config
+  (require 'em-smart))
+
+(defun eshell/clear ()
+  "Function to clear eshell buffer."
+  (let ((eshell-buffer-maximum-lines 0))
+    (eshell-truncate-buffer)))
+
+(eval-after-load 'em-term (lambda ()
+                            (setq eshell-visual-commands '("less" "more" "tmux" "htop" "top" "ranger"))
+                            (setq eshell-visual-subcommands '(("git" "log" "l" "diff" "show")))))
+
+
+(defun eshell-here ()
+  "Open up a new shell in the directory associated with current buffer's file.
+The eshell is renamed to match that directory to make multiple eshell windows easier."
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name))
+                   default-directory))
+	     (height (/ (window-total-height) 2))
+	     (name   (car (last (split-string parent "/" t)))))
+	(split-window-vertically (- height))
+	(other-window 1)
+	(eshell "new")
+	(rename-buffer (concat "*eshell: " name "*"))
+	(insert (concat "ls"))
+	(eshell-send-input)))
+
+(global-set-key (kbd "C-!") 'eshell-here)
+
+(add-hook 'eshell-mode-hook
+	      (lambda ()
+            (add-to-list 'eshell-visual-commands "htop")
+            (add-to-list 'eshell-visual-commands "ssh")
+            (add-to-list 'eshell-visual-commands "tail")))
+
+(defun eshell/gst (&rest args)
+  "Function to use magit status (ARGS)."
+  (magit-status (pop args) nil)
+  (eshell/echo))
+
+;; non-zero value for line-spacing can mess up ansi-term and so.
+(add-hook 'term-mode-hook (lambda () (setq line-spacing 0)))
+
+;; finally load eshell on startup
+(add-hook 'emacs-startup-hook (lambda ()
+                                (let ((default-directory (getenv "HOME")))
+                                  (command-execute 'eshell))))
+
+;; some aliases
+(setq eshell-command-aliases-list
+      '(("q" "exit")
+        ("l" "ls -1")
+        ("ll" "ls -l")
+        ("la" "ls -la")
+        ("emacs" "find-file $1")))
+
+;;; let's always start on eshell?
+(eshell)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -883,7 +977,7 @@
  '(delete-selection-mode nil)
  '(package-selected-packages
    (quote
-    (gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (exec-path-from-shell gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
