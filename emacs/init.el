@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-21 15:17:51 wandersonferreira"
+;; Time-stamp: "2018-01-21 18:46:06 wandersonferreira"
 
 ;;; Code:
 
@@ -34,10 +34,6 @@
 (defconst isUnix (eq system-type 'gnu/linux))
 (defconst isEmacs25 (>= emacs-major-version 25))
 
-;; custom file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 ;;; user interface
 (use-package base16-theme :ensure t)
@@ -657,6 +653,9 @@
 
 ;; direx
 (use-package go-direx :ensure t)
+
+;; go-playground
+(use-package go-playground :ensure t)
 
 ;;; custom functions
 (defun bk/eval-buffer ()
@@ -1513,6 +1512,11 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;;; edit indirect
 (use-package edit-indirect
   :ensure t)
+
+;; custom file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 (provide 'init)
 ;;; init.el ends here
