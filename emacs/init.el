@@ -2,15 +2,10 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-21 18:46:06 wandersonferreira"
+;; Time-stamp: "2018-01-22 20:48:44 wandersonferreira"
 
 ;;; Code:
 
-;; Garbage collector
-(let ((normal-gc (* 20 1024 1024))
-      (init-gc (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc)
-  (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold normal-gc))))
 
 ;;; packages
 (package-initialize)
