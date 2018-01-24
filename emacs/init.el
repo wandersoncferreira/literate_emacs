@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-22 20:48:44 wandersonferreira"
+;; Time-stamp: "2018-01-24 07:20:12 wanderson"
 
 ;;; Code:
 
@@ -32,7 +32,10 @@
 
 ;;; user interface
 (use-package base16-theme :ensure t)
-(load-theme 'base16-google-light t)
+(setq custom-safe-themes t)
+;; (load-theme 'base16-google-light t) ;; I also like this team, however is time to let the dark option grow a little more.
+
+(load-theme 'base16-dracula t)
 
 ;; I don't like of too much things happening when I open Emacs
 (setq inhibit-splash-screen t
@@ -326,6 +329,10 @@
   (("M-x" . counsel-M-x)
    ("C-x C-m" . counsel-M-x)))
 
+;; global visual line
+(global-visual-line-mode +1)
+(diminish 'visual-line-mode)
+
 ;;; Python mode
 (use-package python
   :mode ("\\.py$\\'" . python-mode)
@@ -335,6 +342,8 @@
 (use-package elpy
   :ensure t
   :diminish elpy-mode
+  :init
+  (delete `elpy-module-highlight-indentation elpy-modules)
   :config
   (elpy-enable))
 
