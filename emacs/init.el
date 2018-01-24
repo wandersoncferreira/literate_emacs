@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-24 07:20:12 wanderson"
+;; Time-stamp: "2018-01-24 17:01:24 wanderson"
 
 ;;; Code:
 
@@ -342,10 +342,9 @@
 (use-package elpy
   :ensure t
   :diminish elpy-mode
-  :init
-  (delete `elpy-module-highlight-indentation elpy-modules)
   :config
-  (elpy-enable))
+  (elpy-enable)
+    (delete `elpy-module-highlight-indentation elpy-modules))
 
 (use-package pythonic
   :ensure t
@@ -457,7 +456,7 @@
   :init
   (setq deft-extensions '("org")
         deft-default-extension "org"
-        deft-directory "~/Dropbox/notes"
+        deft-directory "~/dotfiles/notes"
         deft-recursive t
         deft-auto-save-interval 0)
   :bind
@@ -609,17 +608,8 @@
     (local-set-key (kbd "M-p") 'compile))
 
   :init
-  (if (not isOSX)
-      (progn
-        (add-to-list 'exec-path "/home/wanderson/go/bin")
-        (setenv "GOPATH" "/home/wanderson/go"))
-    (setenv "GOPATH" "/Users/wandersonferreira/go")
-    (add-to-list 'exec-path "/Users/wandersonferreira/go/bin"))
-
   (setq gofmt-command "goimports")
-  
   :config
-  
   (use-package go-guru
     :ensure t)
   
@@ -631,6 +621,15 @@
               ("C-c i" . go-goto-imports)
               ("M-." . godef-jump)
               ("M-*" . pop-tag-mark)))
+
+;; activate Go on Linux
+(when isUnix
+  (add-to-list 'exec-path "/home/wanderson/go/bin")
+  (setenv "GOPATH" "/home/wanderson/go"))
+
+(when isOSX
+  (add-to-list 'exec-path "/Users/wandersonferreira/go/bin")
+  (setenv "GOPATH" "/Users/wandersonferreira/go"))
 
 ;;; company go
 (use-package company-go
