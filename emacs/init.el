@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-24 17:01:24 wanderson"
+;; Time-stamp: "2018-01-25 21:17:26 wandersonferreira"
 
 ;;; Code:
 
@@ -33,9 +33,8 @@
 ;;; user interface
 (use-package base16-theme :ensure t)
 (setq custom-safe-themes t)
-;; (load-theme 'base16-google-light t) ;; I also like this team, however is time to let the dark option grow a little more.
+(load-theme 'base16-google-light t)
 
-(load-theme 'base16-dracula t)
 
 ;; I don't like of too much things happening when I open Emacs
 (setq inhibit-splash-screen t
@@ -49,6 +48,10 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+
+
+;; use dialog boxes
+(setq use-dialog-box nil)
 
 ;; improve the frame title in Emacs to show the path to file visited
 (when (display-graphic-p)
@@ -537,10 +540,9 @@
   :ensure t
   :diminish company-mode
   :init
-  (setq company-transformers '(company-sort-by-occurrence)
-        company-idle-delay nil
-        company-minimum-prefix-length 0
-        company-echo-delay 0)
+  (setq company-transformers '(company-sort-by-occurrence))
+  (setq company-require-match 'never)
+  (setq company-show-numbers t)
   :config
   (global-company-mode +1)
   :bind
@@ -903,7 +905,6 @@
 (defadvice linum-schedule (around my-linum-schedule () activate)
   (run-with-idle-timer 0.5 nil #'linum-update-current))
 
-;;; highlights
 (use-package idle-highlight-mode
   :ensure t
   :diminish hi-lock-mode
@@ -1375,22 +1376,6 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
                             "#+END_SRC"
                             ))))
 
-(setq org-todo-keyword-faces
-      (quote (("TODO"      :foreground "lightblue"    :weight bold)
-              ("NEXT"      :foreground "red"          :weight bold)
-              ("STARTED"   :foreground "red"          :weight bold)
-              ("DONE"      :foreground "forest green" :weight bold)
-              ("WAITING"   :foreground "orange"       :weight bold)
-              ("TEAM"      :foreground "orange"       :weight bold)
-              ("SOMEDAY"   :foreground "magenta"      :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold)
-              ("QUOTE"     :foreground "red"          :weight bold)
-              ("QUOTED"    :foreground "magenta"      :weight bold)
-              ("APPROVED"  :foreground "forest green" :weight bold)
-              ("EXPIRED"   :foreground "forest green" :weight bold)
-              ("REJECTED"  :foreground "forest green" :weight bold)
-              ("OPEN"      :foreground "blue"         :weight bold)
-              ("CLOSED" :foreground "forest green" :weight bold))))
 (setq org-capture-templates
       '(("n" "Note" entry (file+headline "~/Dropbox/Agenda/notes.org" "Notes")
          "** Note: %?\n")
@@ -1515,6 +1500,14 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;;; edit indirect
 (use-package edit-indirect
   :ensure t)
+
+
+;; i menu everywhere
+(use-package imenu-anywhere
+  :ensure t
+  :bind
+  ("C-c C-j" . ivy-imenu-anywhere)
+  ("C-c j" . ivy-imenu-anywhere))
 
 ;; custom file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
