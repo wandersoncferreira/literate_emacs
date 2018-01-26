@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-capture-last-stored"
+ (filename . "~/dotfiles/agenda/todo.org.gpg")
+ (front-context-string . "** TODO Terminar")
+ (rear-context-string . ":\n* To Do Items\n")
+ (position . 113))
+)

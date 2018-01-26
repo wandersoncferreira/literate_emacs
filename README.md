@@ -5,7 +5,3 @@ Configuration files
 
 # Installation
 
-``` shell
-
-```
-

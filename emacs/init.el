@@ -2,10 +2,13 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-25 21:17:26 wandersonferreira"
+;; Time-stamp: "2018-01-25 23:14:07 wandersonferreira"
 
 ;;; Code:
 
+;;; Garbage collector
+(setq gc-cons-threshold (* 10 1024 1024))
+(setq ac-redefinition-accept 'accept)
 
 ;;; packages
 (package-initialize)
@@ -25,9 +28,9 @@
   :ensure org-plus-contrib)
 
 ;;; constants
-(defconst isOSX (eq system-type 'darwin))
-(defconst isUnix (eq system-type 'gnu/linux))
-(defconst isEmacs25 (>= emacs-major-version 25))
+(defconst init-isOSX (eq system-type 'darwin))
+(defconst init-isUnix (eq system-type 'gnu/linux))
+(defconst init-isEmacs25 (>= emacs-major-version 25))
 
 
 ;;; user interface
@@ -66,6 +69,12 @@
 
 ;; more info into the modeline
 (column-number-mode +1)
+
+
+;;** time display
+(require 'time)
+(setq display-time-24hr-format t)
+(setq display-time-default-load-average nil)
 (display-time-mode +1)
 
 (setq ring-bell-function 'ignore)
@@ -81,6 +90,7 @@
               indicate-empty-lines t
               truncate-partial-width-windows nil
               kill-ring-max 100
+              truncate-lines t
               search-whitespace-regexp ".*?"
               x-select-enable-clipboard t
               select-active-regions t
@@ -154,6 +164,7 @@
 (add-hook 'after-init-hook #'delete-selection-mode)
 (add-hook 'after-init-hook #'pending-delete-mode)
 (global-auto-revert-mode t)
+(setq auto-revert-verbose nil)
 (diminish 'auto-revert-mode)
 (show-paren-mode t)
 (subword-mode t)
@@ -228,6 +239,7 @@
   :ensure t
   :commands (magit-status)
   :init
+  (setq magit-item-highlight-face 'bold)
   (set-default 'magit-push-always-verify nil)
   (set-default 'magit-revert-buffers 'silently)
   (set-default 'magit-no-confirm '(stage-all-changes
@@ -285,10 +297,12 @@
   :init
   (setq flyspell-issue-welcome-flag nil)
   (setq-default ispell-list-command "list")
-  (if isOSX
+  (if init-isOSX
       (setq-default ispell-program-name "/usr/local/bin/aspell")
     (setq-default ispell-program-name "/usr/bin/aspell"))
   :config
+  (progn
+    (define-key flyspell-mode-map (kbd "C-.") nil))
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'text-mode-hook 'flyspell-mode))
 
@@ -396,7 +410,7 @@
      (define-key python-mode-map (kbd "C-c C-i") 'pyimport-insert-missing)))
 
 ;;; Mac OSX specific settings
-(when isOSX
+(when init-isOSX
   (require 'ls-lisp)
   (setq ns-pop-up-frames nil
         trash-directory "~/.Trash/emacs"
@@ -438,12 +452,13 @@
   :init
   (setq projectile-enable-caching nil
         projectile-completion-system 'ivy
+        projectile-indexing-method 'alien
+        projectile-verbose nil
         projectile-sort-order 'recently-active
         projectile-mode-line '(:eval (format " Proj[%s]" (projectile-project-name))))
+  (setq projectile-switch-project-action
+        (lambda () (dired (projectile-project-root))))
   :config
-  (def-projectile-commander-method ?d
-    "Open project root in dired."
-    (projectile-dired))
   (projectile-global-mode +1))
 
 
@@ -548,6 +563,32 @@
   :bind
   ("M-o" . company-complete))
 
+;; using digits to select company-mode candidates
+;; piece of code extracted from oremacs!! This guy o.O
+(defun ora-company-number ()
+  "Forward to `company-complete-number'.
+Unless the number is potentially part of the candidate.
+In that case, insert the number."
+  (interactive)
+  (let* ((k (this-command-keys))
+         (re (concat "^" company-prefix k)))
+    (if (cl-find-if (lambda (s) (string-match re s))
+                    company-candidates)
+        (self-insert-command 1)
+      (company-complete-number (string-to-number k)))))
+
+(let ((map company-active-map))
+  (mapc
+   (lambda (x)
+     (define-key map (format "%d" x) 'ora-company-number))
+   (number-sequence 0 9))
+  (define-key map " " (lambda ()
+                        (interactive)
+                        (company-abort)
+                        (self-insert-command 1)))
+  (define-key map (kbd "<return>") nil))
+
+;;; company flx matching
 (use-package company-flx
   :ensure t
   :config
@@ -625,11 +666,11 @@
               ("M-*" . pop-tag-mark)))
 
 ;; activate Go on Linux
-(when isUnix
+(when init-isUnix
   (add-to-list 'exec-path "/home/wanderson/go/bin")
   (setenv "GOPATH" "/home/wanderson/go"))
 
-(when isOSX
+(when init-isOSX
   (add-to-list 'exec-path "/Users/wandersonferreira/go/bin")
   (setenv "GOPATH" "/Users/wandersonferreira/go"))
 
@@ -838,12 +879,33 @@
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
+  :init
+  (setq yas-verbosity 0)
+  (setq yas-triggers-in-field t)
   :config
   (yas-global-mode +1)
   :bind (:map yas-minor-mode-map
               ("<tab>" . nil)
               ("TAB" . nil)
               ("M-i" . yas-expand)))
+
+(use-package yasnippet-snippets
+  :ensure t)
+
+;; try
+(use-package try :ensure t)
+
+;; powerline
+(use-package powerline
+  :ensure t
+  :init
+  (setq powerline-display-buffer-size nil
+        powerline-display-mule-info nil
+        powerline-display-hud nil)
+  :config
+  (when (display-graphic-p)
+    (powerline-default-theme)
+    (remove-hook 'focus-out-hook 'powerline-unset-selected-window)))
 
 ;; json mode
 (use-package json-mode
@@ -1307,7 +1369,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-buffer)
 
-(if isOSX
+(if init-isOSX
     (progn
       (setq TeX-view-program-list
             (quote
@@ -1377,38 +1439,38 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
                             ))))
 
 (setq org-capture-templates
-      '(("n" "Note" entry (file+headline "~/Dropbox/Agenda/notes.org" "Notes")
+      '(("n" "Note" entry (file+headline "~/dotfiles/agenda/notes.org" "Notes")
          "** Note: %?\n")
         
-        ("l" "Link" entry (file+headline "~/Dropbox/Agenda/links.org" "Links")
+        ("l" "Link" entry (file+headline "~/dotfiles/agenda/links.org.gpg" "Links")
          "** %? %^L %^g \n%T" :prepend t)
 
-        ("t" "To Do Item" entry (file+headline "~/Dropbox/Agenda/todo.org" "To Do Items")
+        ("t" "To Do Item" entry (file+headline "~/dotfiles/agenda/todo.org.gpg" "To Do Items")
          "** TODO %?\n" :prepend t)))
 
 (defun bk/org-notes ()
   "Function to open my personal org notes file."
   (interactive)
-  (find-file "~/Dropbox/Agenda/notes.org"))
+  (find-file "~/dotfiles/agenda/notes.org"))
 
 (defun bk/org-links ()
   "Function to open all my personal links saved."
   (interactive)
-  (find-file "~/Dropbox/Agenda/links.org"))
+  (find-file "~/dotfiles/agenda/links.org.gpg"))
 
 ;;;###autoload
 (defun bk/org-todo ()
   "Function to open my `TODO' list."
   (interactive)
-  (find-file "~/Dropbox/Agenda/todo.org"))
+  (find-file "~/dotfiles/agenda/todo.org.gpg"))
 
-(setq org-agenda-files '("~/Dropbox/Agenda"))
+(setq org-agenda-files '("~/dotfiles/agenda"))
 
 ;; org download package
 (use-package org-download
   :ensure t
   :init
-  (setq org-download-image-dir "~/Dropbox/ORGIMG"))
+  (setq org-download-image-dir "~/ORGIMG"))
 
 (defun bk/meeting-notes ()
   "Call this after creating an `org-mode' heading for where the notes for the meeting should be."
@@ -1441,7 +1503,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :ensure t
   :init
   (custom-set-variables '(org2jekyll-blog-author "Wanderson Ferreira")
-                        '(org2jekyll-source-directory (expand-file-name "~/Dropbox/blogging"))
+                        '(org2jekyll-source-directory (expand-file-name "~/blogging"))
                         '(org2jekyll-jekyll-directory (expand-file-name "~/wandersoncferreira.github.io"))
                         '(org2jekyll-jekyll-drafts-dir "")
                         '(org2jekyll-jekyll-posts-dir "_posts/")
@@ -1516,3 +1578,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 (provide 'init)
 ;;; init.el ends here
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars)
+;; End:
