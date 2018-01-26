@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-25 23:14:07 wandersonferreira"
+;; Time-stamp: "2018-01-26 00:39:30 wandersonferreira"
 
 ;;; Code:
 
@@ -25,7 +25,9 @@
 
 ;; I need this to work!
 (use-package org
-  :ensure org-plus-contrib)
+  :ensure org-plus-contrib
+  :mode ("\\.org$\'" . org-mode)
+  :defer t)
 
 ;;; constants
 (defconst init-isOSX (eq system-type 'darwin))
@@ -274,21 +276,7 @@
 ;;; gist
 (use-package gist
   :ensure t
-  :init
-  (setq gist-list-format
-        '((id "Id" 10 nil identity)
-          (created "Created" 20 nil "%D %R")
-          (visibility "Visibility" 10 nil
-                      (lambda
-                        (public)
-                        (or
-                         (and public "public")
-                         "private")))
-          (description "Description" 60 nil identity)
-          (files "Files" 0 nil
-                 (lambda
-                   (files)
-                   (mapconcat 'identity files ", "))))))
+  :commands gist)
 
 
 ;; flyspell
@@ -352,39 +340,42 @@
 
 ;;; Python mode
 (use-package python
+  :ensure t
   :mode ("\\.py$\\'" . python-mode)
   :init
-  (setq python-shell-completion-native-enable nil))
-
-(use-package elpy
-  :ensure t
-  :diminish elpy-mode
+  (setq python-shell-completion-native-enable nil)
   :config
-  (elpy-enable)
+
+  (use-package elpy
+    :ensure t
+    :diminish elpy-mode
+    :commands elpy-enable
+    :config
+    (elpy-enable)
     (delete `elpy-module-highlight-indentation elpy-modules))
 
-(use-package pythonic
-  :ensure t
-  :preface
-  (defun set-right-python-environment ()
-    "Activate the right python env depending where I am."
-    (cond ((string= (system-name) "suse-captalys")
-           (pythonic-activate "~/miniconda3/envs/captalys")
-           (message "Python environment Captalys was activated!"))
-          ((string= (system-name) "Home")
-           (pythonic-activate "~/miniconda3")
-           (message "Python environment Miniconda Default was activated!"))
-          ((string= (system-name) "Wandersons-Air")
-           (pythonic-activate "~/miniconda3")
-           (message "Python environment Miniconda Default was activated!"))
-          ))
-  :config
-  (set-right-python-environment))
+  (use-package pythonic
+    :ensure t
+    :preface
+    (defun set-right-python-environment ()
+      "Activate the right python env depending where I am."
+      (cond ((string= (system-name) "suse-captalys")
+             (pythonic-activate "~/miniconda3/envs/captalys")
+             (message "Python environment Captalys was activated!"))
+            ((string= (system-name) "Home")
+             (pythonic-activate "~/miniconda3")
+             (message "Python environment Miniconda Default was activated!"))
+            ((string= (system-name) "Wandersons-Air")
+             (pythonic-activate "~/miniconda3")
+             (message "Python environment Miniconda Default was activated!"))
+            ))
+    :config
+    (set-right-python-environment))
 
-(use-package electric-operator
-  :ensure t
-  :config
-  (add-hook 'python-mode-hook #'electric-operator-mode))
+  (use-package electric-operator
+    :ensure t
+    :config
+    (add-hook 'python-mode-hook #'electric-operator-mode)))
 
 ;; nice functions from lgmoneda! I am just renaming to improve the chance I will find it later. LOL
 (defun bk/python-shell-run ()
@@ -490,13 +481,13 @@
   :bind
   ("C-:" . avy-goto-char-timer))
 
-
 ;; shackles
 (use-package shackle
   :ensure t
   :init
   (setq shackle-rules '((help-mode :select t)
-                        (compilation-mode :noselect t :align t :size 0.3)))
+                        (compilation-mode :noselect t :align t :size 0.3)
+                        (special-mode-hook :select t :align t :size 0.3)))
   :config
   (add-hook 'after-init-hook #'shackle-mode))
 
@@ -554,39 +545,34 @@
 (use-package company
   :ensure t
   :diminish company-mode
+  :preface
+  (defun ora-company-number ()
+    "Forward to `company-complete-number'.
+Unless the number is potentially part of the candidate.
+In that case, insert the number."
+    (interactive)
+    (let* ((k (this-command-keys))
+           (re (concat "^" company-prefix k)))
+      (if (cl-find-if (lambda (s) (string-match re s))
+                      company-candidates)
+          (self-insert-command 1)
+        (company-complete-number (string-to-number k)))))
   :init
   (setq company-transformers '(company-sort-by-occurrence))
   (setq company-require-match 'never)
   (setq company-show-numbers t)
   :config
-  (global-company-mode +1)
-  :bind
-  ("M-o" . company-complete))
-
-;; using digits to select company-mode candidates
-;; piece of code extracted from oremacs!! This guy o.O
-(defun ora-company-number ()
-  "Forward to `company-complete-number'.
-Unless the number is potentially part of the candidate.
-In that case, insert the number."
-  (interactive)
-  (let* ((k (this-command-keys))
-         (re (concat "^" company-prefix k)))
-    (if (cl-find-if (lambda (s) (string-match re s))
-                    company-candidates)
-        (self-insert-command 1)
-      (company-complete-number (string-to-number k)))))
-
-(let ((map company-active-map))
-  (mapc
-   (lambda (x)
-     (define-key map (format "%d" x) 'ora-company-number))
-   (number-sequence 0 9))
-  (define-key map " " (lambda ()
-                        (interactive)
-                        (company-abort)
-                        (self-insert-command 1)))
-  (define-key map (kbd "<return>") nil))
+  (let ((map company-active-map))
+    (mapc
+     (lambda (x)
+       (define-key map (format "%d" x) 'ora-company-number))
+     (number-sequence 0 9))
+    (define-key map " " (lambda ()
+                          (interactive)
+                          (company-abort)
+                          (self-insert-command 1)))
+    (define-key map (kbd "<return>") nil))
+  (global-company-mode +1))
 
 ;;; company flx matching
 (use-package company-flx
@@ -890,7 +876,8 @@ In that case, insert the number."
               ("M-i" . yas-expand)))
 
 (use-package yasnippet-snippets
-  :ensure t)
+  :ensure t
+  :defer 4)
 
 ;; try
 (use-package try :ensure t)
@@ -1087,7 +1074,9 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (expand-file-name "site-packages" user-emacs-directory))
 (add-to-list 'load-path (concat site-packages "/erc-extras") t)
 
-(erc-spelling-mode +1)
+(eval-after-load 'erc-mode
+  (lambda () (erc-spelling-mode +1)))
+
 (add-hook 'erc-mode-hook (lambda () (auto-fill-mode 0)))
 (make-variable-buffer-local 'erc-fill-column)
 (add-hook 'window-configuration-change-hook
@@ -1118,7 +1107,11 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 	(setq erc-nick login)
 	(setq erc-password password)))
 
-(bk/login-irc)
+(defun bk/start-ERC ()
+  "Function to start the ERC service."
+  (interactive)
+  (bk/login-irc)
+  (erc))
 
 (setq erc-current-nick-highlight-type 'nick)
 (setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
@@ -1392,9 +1385,16 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
               org-catch-invisible-edits 'show
               org-tags-column 100
               org-startup-indented t
+              org-completion-use-ido t
               org-startup-folded t
               org-cycle-separator-lines 0
               org-image-actual-width nil)
+
+;; interactions
+(setq org-file-apps
+      '((auto-mode . emacs)
+        ("\\.x?html?\\'" . "firefox %s")
+        ("\\.pdf\\'" . "evince \"%s\"")))
 
 (add-to-list 'auto-mode-alist '("\\.txt$\'" . org-mode))
 (add-hook 'org-mode-hook (lambda () (flyspell-mode)))
@@ -1561,8 +1561,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;;; edit indirect
 (use-package edit-indirect
-  :ensure t)
-
+  :ensure t
+  :commands edit-indirect)
 
 ;; i menu everywhere
 (use-package imenu-anywhere
@@ -1570,6 +1570,15 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :bind
   ("C-c C-j" . ivy-imenu-anywhere)
   ("C-c j" . ivy-imenu-anywhere))
+
+;; ranger
+(use-package ranger
+  :ensure t)
+
+;; emacs profiling
+(use-package esup
+  :ensure t
+  :commands esup)
 
 ;; custom file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
