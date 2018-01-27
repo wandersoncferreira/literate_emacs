@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-27 00:25:26 wandersonferreira"
+;; Time-stamp: "2018-01-27 00:29:59 wandersonferreira"
 
 ;;; Code:
 
@@ -16,7 +16,7 @@
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
-
+;; installing the `use-package' if not enabled!
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -59,7 +59,6 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-
 
 ;; use dialog boxes
 (setq use-dialog-box nil)
@@ -349,39 +348,37 @@
   :ensure t
   :mode ("\\.py$\\'" . python-mode)
   :init
-  (setq python-shell-completion-native-enable nil)
+  (setq python-shell-completion-native-enable nil))
+
+(use-package elpy
+  :ensure t
+  :diminish elpy-mode
   :config
+  (elpy-enable)
+  (delete `elpy-module-highlight-indentation elpy-modules))
 
-  (use-package elpy
-    :ensure t
-    :diminish elpy-mode
-    :commands elpy-enable
-    :config
-    (elpy-enable)
-    (delete `elpy-module-highlight-indentation elpy-modules))
+(use-package pythonic
+  :ensure t
+  :preface
+  (defun set-right-python-environment ()
+    "Activate the right python env depending where I am."
+    (cond ((string= (system-name) "suse-captalys")
+           (pythonic-activate "~/miniconda3/envs/captalys")
+           (message "Python environment Captalys was activated!"))
+          ((string= (system-name) "Home")
+           (pythonic-activate "~/miniconda3")
+           (message "Python environment Miniconda Default was activated!"))
+          ((string= (system-name) "Wandersons-Air")
+           (pythonic-activate "~/miniconda3")
+           (message "Python environment Miniconda Default was activated!"))
+          ))
+  :config
+  (set-right-python-environment))
 
-  (use-package pythonic
-    :ensure t
-    :preface
-    (defun set-right-python-environment ()
-      "Activate the right python env depending where I am."
-      (cond ((string= (system-name) "suse-captalys")
-             (pythonic-activate "~/miniconda3/envs/captalys")
-             (message "Python environment Captalys was activated!"))
-            ((string= (system-name) "Home")
-             (pythonic-activate "~/miniconda3")
-             (message "Python environment Miniconda Default was activated!"))
-            ((string= (system-name) "Wandersons-Air")
-             (pythonic-activate "~/miniconda3")
-             (message "Python environment Miniconda Default was activated!"))
-            ))
-    :config
-    (set-right-python-environment))
-
-  (use-package electric-operator
-    :ensure t
-    :config
-    (add-hook 'python-mode-hook #'electric-operator-mode)))
+(use-package electric-operator
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook #'electric-operator-mode))
 
 ;; nice functions from lgmoneda! I am just renaming to improve the chance I will find it later. LOL
 (defun bk/python-shell-run ()
@@ -959,12 +956,6 @@ In that case, insert the number."
 (setq linum-format "%3d ")
 (defadvice linum-schedule (around my-linum-schedule () activate)
   (run-with-idle-timer 0.5 nil #'linum-update-current))
-
-(use-package idle-highlight-mode
-  :ensure t
-  :diminish hi-lock-mode
-  :config
-  (add-hook 'prog-mode-hook (lambda () (idle-highlight-mode +1))))
 
 ;; highlight numbers
 (use-package highlight-numbers
