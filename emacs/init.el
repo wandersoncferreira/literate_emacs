@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-27 00:29:59 wandersonferreira"
+;; Time-stamp: "2018-01-27 00:30:48 wandersonferreira"
 
 ;;; Code:
 
@@ -884,18 +884,6 @@ In that case, insert the number."
 
 ;; try
 (use-package try :ensure t)
-
-;; powerline
-(use-package powerline
-  :ensure t
-  :init
-  (setq powerline-display-buffer-size nil
-        powerline-display-mule-info nil
-        powerline-display-hud nil)
-  :config
-  (when (display-graphic-p)
-    (powerline-default-theme)
-    (remove-hook 'focus-out-hook 'powerline-unset-selected-window)))
 
 ;; json mode
 (use-package json-mode
