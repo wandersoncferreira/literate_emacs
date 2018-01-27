@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-27 00:42:15 wandersonferreira"
+;; Time-stamp: "2018-01-27 10:51:52 wandersonferreira"
 
 ;;; Code:
 
@@ -356,7 +356,8 @@
 (global-visual-line-mode +1)
 (diminish 'visual-line-mode)
 
-;;; Python mode
+;;; Python mode:
+
 (use-package python
   :ensure t
   :mode ("\\.py$\\'" . python-mode)
@@ -416,7 +417,8 @@
      (define-key python-mode-map (kbd "C-c C-r") 'bk/python-shell-run-region)
      (define-key python-mode-map (kbd "C-c C-i") 'pyimport-insert-missing)))
 
-;;; Mac OSX specific settings
+;;; Mac OSX specific settings:
+
 (when init-isOSX
   (require 'ls-lisp)
   (setq ns-pop-up-frames nil
@@ -437,7 +439,8 @@
   (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font bk/default-font))
 
-;;; abbreviation mode
+;;; Abbreviation mode:
+
 (use-package abbrev
   :diminish abbrev-mode
   :init
@@ -453,7 +456,8 @@
   (add-hook 'text-mode-hook #'abbrev-mode))
 
 
-;;; projectile
+;;; Projectile:
+
 (use-package projectile
   :ensure t
   :init
@@ -469,13 +473,15 @@
   (projectile-global-mode +1))
 
 
-;;; ibuffer
+;;; Ibuffer:
+
 (add-hook 'ibuffer-hook (lambda ()
                           (ibuffer-projectile-set-filter-groups)
                           (unless (eq ibuffer-sorting-mode 'alphabetic)
                             (ibuffer-do-sort-by-alphabetic))))
 
-;;; deft
+;;; Deft:
+
 (use-package deft
   :ensure t
   :init
@@ -489,7 +495,8 @@
   :config
   (add-hook 'deft-mode-hook (lambda () (visual-line-mode +1))))
 
-;;; avy
+;;; Avy:
+
 (use-package avy
   :ensure t
   :config
@@ -516,24 +523,27 @@
   (add-hook 'after-init-hook 'typo-global-mode))
 
 
-;;; shebang
+;;; Shebang:
+
 (use-package insert-shebang
   :ensure t
   :init
   (setq insert-shebang-ignore-extensions '("txt" "org" "el")))
 
 
-;;; bash completions
+;;; Bash Completions:
 (add-hook 'shell-dynamic-complete-functions 'bash-completion-dynamic-complete)
 
-;;; tldr - concise man pages
+;;; Tldr - concise man pages:
+
 (use-package tldr
   :ensure t
   :init
   (setq tldr-enabled-categories '("common" "linux" "osx")))
 
 
-;;; dumb-jump
+;;; Dumb-jump:
+
 (use-package dumb-jump
   :ensure t
   :init
@@ -545,19 +555,21 @@
   (bind-key* "M-g x" 'dumb-jump-go-prefer-external)
   (bind-key* "M-g z" 'dumb-jump-go-prefer-external-other-window))
 
-;;; ace-link
+;;; Ace-link:
+
 (use-package ace-link
   :ensure t
   :config
   (ace-link-setup-default)
   :bind (:map org-mode-map
-              ("M-o" . ace-link-org)))
+              ("M-o" . ace-link-Org)))
 
-;;; restclient
+;;; Restclient:
 (use-package restclient :ensure t)
 
 
-;;; company
+;;; Company mode:
+
 (use-package company
   :ensure t
   :diminish company-mode
@@ -590,13 +602,13 @@ In that case, insert the number."
     (define-key map (kbd "<return>") nil))
   (global-company-mode +1))
 
-;;; company flx matching
+;; company flx matching
 (use-package company-flx
   :ensure t
   :config
   (company-flx-mode +1))
 
-;;; dired --- really nice directory editing experience
+;;; Dired --- really nice directory editing experience:
 (use-package dired
   :preface
   (defun dired-back-to-top ()
@@ -630,18 +642,23 @@ In that case, insert the number."
   (define-key dired-mode-map (vector 'remap 'beginning-of-buffer)
     'dired-back-to-top))
 
-;;; dired font lock
+;; dired font lock
 (use-package diredfl
   :ensure t
   :config
   (diredfl-global-mode +1))
+
+;; direx
+(use-package go-direx :ensure t)
+
 
 ;; dired sort
 (use-package dired-sort
   :ensure t)
 
 
-;;; GO MODE
+;;; GO mode:
+
 (use-package go-mode
   :ensure t
   :preface
@@ -676,7 +693,7 @@ In that case, insert the number."
   (add-to-list 'exec-path "/Users/wandersonferreira/go/bin")
   (setenv "GOPATH" "/Users/wandersonferreira/go"))
 
-;;; company go
+;; company go
 (use-package company-go
   :ensure t
   :config
@@ -699,13 +716,10 @@ In that case, insert the number."
 ;; gopath
 (use-package go-gopath :ensure t)
 
-;; direx
-(use-package go-direx :ensure t)
-
 ;; go-playground
 (use-package go-playground :ensure t)
 
-;;; custom functions
+;;; Custom functions:
 (defun bk/eval-buffer ()
   "Function to evaluate the current buffer."
   (interactive)
@@ -810,14 +824,14 @@ In that case, insert the number."
   (let ((size (length package-activated-list)))
     (message (concat "The number of activated packages are: " (number-to-string size)))))
 
-;;; Tramp mode
+;;; Tramp mode:
 (use-package tramp
   :init
   (setq tramp-default-method "ssh"
         tramp-backup-directory-alist backup-directory-alist
         tramp-use-ssh-controlmaster-options "ssh"))
 
-;;; load my secrets folder
+;;; Load Secrets:
 (let ((secrets-dir (concat user-emacs-directory "secrets/")))
   (unless (file-exists-p secrets-dir)
     (make-directory secrets-dir)))
@@ -833,7 +847,7 @@ In that case, insert the number."
     (when hostentry
       hostentry)))
 
-;;; recentf
+;;; Recentf:
 (use-package recentf
   :init
   (setq recentf-max-menu-items 25
@@ -844,13 +858,26 @@ In that case, insert the number."
   :config
   (add-hook 'after-init-hook 'recentf-mode))
 
-;;; programming mode
+;;; Programming mode:
 ;; watch out words
 (add-hook 'prog-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(NOTE\\|FIXME\\|TODO\\|BUG\\|HACK\\|REFACTOR\\)"
                                        1 font-lock-warning-face t)))))
+
+;; highlight numbers
+(use-package highlight-numbers
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'highlight-numbers-mode))
+
+;; volatile highlights
+(use-package volatile-highlights
+  :ensure t
+  :diminish volatile-highlights-mode
+  :config
+  (add-hook 'after-init-hook #'volatile-highlights-mode))
 
 (use-package goto-addr
   :init
@@ -871,13 +898,13 @@ In that case, insert the number."
         whitespace-style '(face trailing lines space-before-tab empty
                                 indentation space-after-tab)))
 
-;;; folding code
+;; folding code
 (use-package yafolding
   :ensure t
   :config
   (add-hook 'prog-mode-hook (lambda () (yafolding-mode))))
 
-;; yasnippet
+;;; Yasnippet:
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
@@ -895,10 +922,10 @@ In that case, insert the number."
   :ensure t
   :defer 4)
 
-;; try
+;;; Try:
 (use-package try :ensure t)
 
-;; json mode
+;;; Json mode:
 (use-package json-mode
   :ensure t
   :mode ("\\.json\\'" . json-mode)
@@ -907,15 +934,15 @@ In that case, insert the number."
                               (make-local-variable 'js-indent-level)
                               (setq js-indent-level 2))))
 
-;; rst mode
+;;; Rst mode:
 (use-package rst
   :ensure t
   :config
   (add-hook 'rst-mode-hook 'auto-fill-mode))
 
 
-;;; very smart way for dealing with line number
-;; line number
+;;; Line number:
+;; very smart way for dealing with line number
 (add-hook 'after-init-hook 'global-linum-mode)
 
 ;; http://stackoverflow.com/questions/3875213/turning-on-linum-mode-when-in-python-c-mode
@@ -958,24 +985,12 @@ In that case, insert the number."
 (defadvice linum-schedule (around my-linum-schedule () activate)
   (run-with-idle-timer 0.5 nil #'linum-update-current))
 
-;; highlight numbers
-(use-package highlight-numbers
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'highlight-numbers-mode))
-
-;; volatile highlights
-(use-package volatile-highlights
-  :ensure t
-  :diminish volatile-highlights-mode
-  :config
-  (add-hook 'after-init-hook #'volatile-highlights-mode))
 
 ;; misc
 (setq track-eol t
       line-move-visual nil)
 
-;;; environment variable
+;;; Environment variables:
 (use-package exec-path-from-shell
   :ensure t
   :preface
@@ -992,7 +1007,7 @@ In that case, insert the number."
   (exec-path-from-shell-initialize)
   (when window-system (set-exec-path-from-shell-PATH)))
 
-;; eshell
+;;; Eshell:
 (use-package eshell
   :init
   (setq eshell-where-to-jump 'begin
@@ -1067,7 +1082,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
         ("la" "ls -la")
         ("emacs" "find-file $1")))
 
-;;; ERC
+;;; ERC mode:
 (defvar site-packages
   (expand-file-name "site-packages" user-emacs-directory))
 (add-to-list 'load-path (concat site-packages "/erc-extras") t)
@@ -1177,7 +1192,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq erc-save-buffer-on-part t)
 (setq erc-hide-timestamps t)
 
-;; Flycheck settings
+;;; Flycheck settings:
+
 (use-package flycheck
   :ensure t
   :init
@@ -1190,7 +1206,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
 (require 'go-flycheck)
 
-;;; markdown
+;;; Markdown mode:
+
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -1199,7 +1216,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-;; fix-words
+;;; Fix-words:
+
 (use-package fix-word
   :ensure t
   :bind
@@ -1207,7 +1225,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
    ("M-l" . fix-word-downcase)
    ("M-c" . fix-word-capitalize)))
 
-;;; KEYS
+;;; Global keybindings:
 
 ;; org
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -1235,7 +1253,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (global-set-key (kbd "C-h C-b") 'describe-personal-keybindings)
 
 ;; repeat command like Vim
-(global-set-key (kbd "C-.") 'repeat)
+(global-set-key (kbd "C-.") 'repeat-complex-command)
 
 ;; kill grep
 (defun bk/kill-grep ()
@@ -1253,7 +1271,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (global-set-key (kbd "C-c e") 'bk/switch-to-eshell)
 
 
-;;; SQL
+;;; SQL mode:
+
 (defun my-sql-connect (product connection)
   "Connect to sql using the encrypted passwords receive PRODUCT AND CONNECTION."
   
@@ -1285,20 +1304,22 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
 
 
-;; server mode in Emacs
+;;; Server mode in Emacs:
+
 (require 'server)
 (unless (server-running-p)
   (server-start))
 
-;; uptimes - monitor for how long Emacs has been running!
+;;; Uptimes - monitor for how long Emacs has been running!:
 (use-package uptimes
   :ensure t)
 
-;; helm-spotify-plus
+;;; helm-spotify-plus:
 (use-package helm-spotify-plus
   :ensure t)
 
-;;; mail
+;;; Mail settings:
+
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-auth-credentials (expand-file-name "~/.emacs.d/secrets/authinfo.gpg"))
 (setq smtpmail-smtp-server "smtp.gmail.com")
@@ -1310,7 +1331,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
     http://bartuka.com
     Sent from Emacs")
 
-;;; grep-folder
+;;; grep-folder:
+
 (add-to-list 'load-path "~/.emacs.d/site-packages/grep-folder")
 (require 'grep-folder)
 (setq grep-folder-setup-dirs '(("~/.emacs.d" . ("var/" "etc/" ".cask/" ".git/" "site-packages" "elpa/" "themes/"))
@@ -1319,7 +1341,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq grep-folder-setup-files '(("~/.emacs.d" . (".gitmodules"))))
 (global-set-key (kbd "C-c g") 'grep-folder)
 
-;;; Latex
+;;; Latex settings:
+
 (defun bk/template-latex-simple ()
   "Personal LaTeX template."
   (interactive)
@@ -1374,6 +1397,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
                     (output-pdf "Skim")
                     (output-html "xdg-open"))))))
 
+
+;;; Org mode settings:
 
 (require 'org)
 (setq-default org-confirm-babel-evaluate nil
@@ -1496,7 +1521,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
   (setq org-reveal-mathjax t))
 
-;;; jekyll
+;;; Jekyll - Blogging made easy!:
+
 (use-package org2jekyll
   :ensure t
   :init
@@ -1557,35 +1583,36 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (add-hook 'org-mode-hook 'org2jekyll-mode))
 
 
-;;; edit indirect
+;;; Edit indirect:
+
 (use-package edit-indirect
   :ensure t
   :commands edit-indirect)
 
-;; i menu everywhere
+;;; imenu everywhere:
+
 (use-package imenu-anywhere
   :ensure t
   :bind
   ("C-c C-j" . ivy-imenu-anywhere)
   ("C-c j" . ivy-imenu-anywhere))
 
-;; ranger
+;;; Ranger:
 (use-package ranger
   :ensure t)
 
-;; emacs profiling
+;;; emacs profiling:
 (use-package esup
   :ensure t
   :commands esup)
 
-;; custom file
+;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 (provide 'init)
 ;;; init.el ends here
-
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars)
 ;; End:
