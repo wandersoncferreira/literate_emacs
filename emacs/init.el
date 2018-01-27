@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-26 00:39:30 wandersonferreira"
+;; Time-stamp: "2018-01-27 00:25:26 wandersonferreira"
 
 ;;; Code:
 
@@ -34,11 +34,17 @@
 (defconst init-isUnix (eq system-type 'gnu/linux))
 (defconst init-isEmacs25 (>= emacs-major-version 25))
 
+;; load custom themes
+(setq custom-theme-directory (concat user-emacs-directory "themes"))
+(dolist
+    (path (directory-files custom-theme-directory t "\\w+"))
+  (when (file-directory-p path)
+    (add-to-list 'custom-theme-load-path path)))
 
 ;;; user interface
 (use-package base16-theme :ensure t)
 (setq custom-safe-themes t)
-(load-theme 'base16-google-light t)
+(load-theme 'default-black t)
 
 
 ;; I don't like of too much things happening when I open Emacs
