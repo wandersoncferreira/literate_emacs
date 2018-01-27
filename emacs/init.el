@@ -2,15 +2,15 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-27 00:30:48 wandersonferreira"
+;; Time-stamp: "2018-01-27 00:42:15 wandersonferreira"
 
 ;;; Code:
 
-;;; Garbage collector
+;;; Garbage collector:
 (setq gc-cons-threshold (* 10 1024 1024))
 (setq ac-redefinition-accept 'accept)
 
-;;; packages
+;;; Packages:
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
@@ -23,13 +23,22 @@
 
 (use-package diminish :ensure t :defer t)
 
+;; emacs outline mode
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (make-local-variable 'outline-regexp)
+            (setq outline-regexp "^;;; ")
+            (make-local-variable 'outline-heading-end-regexp)
+            (setq outline-heading-end-regexp ":\n")
+            (outline-minor-mode +1)))
+
 ;; I need this to work!
 (use-package org
   :ensure org-plus-contrib
   :mode ("\\.org$\'" . org-mode)
   :defer t)
 
-;;; constants
+;;; Constants:
 (defconst init-isOSX (eq system-type 'darwin))
 (defconst init-isUnix (eq system-type 'gnu/linux))
 (defconst init-isEmacs25 (>= emacs-major-version 25))
@@ -41,7 +50,8 @@
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
 
-;;; user interface
+;;; User Interface:
+
 (use-package base16-theme :ensure t)
 (setq custom-safe-themes t)
 (load-theme 'default-black t)
@@ -241,7 +251,8 @@
 	    search-ring
 	    regexp-search-ring))
 
-;;; git
+;;; Git:
+
 (use-package magit
   :ensure t
   :commands (magit-status)
@@ -278,7 +289,8 @@
     (message "Your repository is synced with the master branch.")))
 
 
-;;; gist
+;;; Gist:
+
 (use-package gist
   :ensure t
   :commands gist)
@@ -304,7 +316,8 @@
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-correct-previous-word-generic)))
 
-;;; completions
+;;; Completions:
+
 (use-package ivy
   :ensure t
   :diminish ivy-mode
@@ -488,7 +501,7 @@
 (use-package shackle
   :ensure t
   :init
-  (setq shackle-rules '((help-mode :select t)
+  (setq shackle-rules '((help-mode :select t :align t :size 0.3)
                         (compilation-mode :noselect t :align t :size 0.3)
                         (special-mode-hook :select t :align t :size 0.3)))
   :config
