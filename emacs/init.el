@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 19:29:27 wandersonferreira"
+;; Time-stamp: "2018-01-28 19:45:27 wandersonferreira"
 
 ;;; Code:
 
@@ -31,13 +31,14 @@
 (setq load-prefer-newer t)
 
 ;; emacs outline mode
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (make-local-variable 'outline-regexp)
-            (setq outline-regexp "^;;; ")
-            (make-local-variable 'outline-heading-end-regexp)
-            (setq outline-heading-end-regexp ":\n")
-            (outline-minor-mode +1)))
+(use-package outline
+  :diminish outline-minor-mode
+  :init
+  (setq-default outline-regexp "^;;; ")
+  (setq-default outline-heading-end-regexp ":\n")
+  :config
+  (outline-minor-mode))
+
 
 ;; I need this to work!
 (use-package org
@@ -84,6 +85,7 @@
 
 ;; use dialog boxes
 (setq use-dialog-box nil)
+(setq use-file-dialog nil)
 
 ;; improve the frame title in Emacs to show the path to file visited
 (when (display-graphic-p)
@@ -110,6 +112,10 @@
 
 (setq ring-bell-function 'ignore)
 
+;; setup minibuffer
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode +1)
+
 ;; there is a need to change some default behaviors
 (setq-default tab-always-indent 'complete
               tab-width 4
@@ -118,9 +124,12 @@
               auto-save-default nil
               auto-save-list-file-prefix nil
               set-mark-command-repeat-pop t
+              register-preview-delay nil
               indicate-empty-lines t
               truncate-partial-width-windows nil
               kill-ring-max 100
+              global-mark-ring-max 200
+              message-log-max 1000
               truncate-lines t
               search-whitespace-regexp ".*?"
               x-select-enable-clipboard t
@@ -208,9 +217,16 @@
 (global-auto-revert-mode t)
 (setq auto-revert-verbose nil)
 (diminish 'auto-revert-mode)
-(show-paren-mode t)
 (subword-mode t)
 (diminish 'subword-mode)
+
+;; show parenthesis mode
+(use-package paren
+  :init
+  (setq show-paren-ring-bell-on-mismatch t)
+  :config
+  (show-paren-mode +1))
+
 
 ;; emacs export path correctly
 (add-to-list 'exec-path "/usr/local/bin")
@@ -242,6 +258,9 @@
 
 ;; remove selected region if typing
 (pending-delete-mode +1)
+
+;; disable bidi
+(setq-default bidi-display-reordering nil)
 
 ;; elisp be less conservative
 (setq max-specpdl-size (* 15 max-specpdl-size))
@@ -283,6 +302,14 @@
 	  '(kill-ring
 	    search-ring
 	    regexp-search-ring))
+
+;; ediff
+(use-package ediff
+  :config
+  (progn
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    (setq ediff-split-window-function 'split-window-horizontally)))
+
 
 ;; Minibuffer editing - more space
 ;; this binds C-M-e in the minibuffer so that you can edit the contents of the minibuffer before submitting it.
@@ -717,6 +744,7 @@ In that case, insert the number."
 
   (setq dired-recursive-deletes 'top
         dired-recursive-copies 'top
+        dired-auto-revert-buffer t
         dired-dwim-target t
         dired-listing-switches "-alGhvF --group-directories-first")
   :config
@@ -1464,8 +1492,10 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;;; Server mode in Emacs:
 
 (require 'server)
-(unless (server-running-p)
-  (server-start))
+(add-hook 'after-init-hook (lambda ()
+                             (unless (or (daemonp) (server-running-p))
+                               (server-start)
+                               (setq server-raise-frame t))))
 
 ;;; Uptimes - monitor for how long Emacs has been running!:
 (use-package uptimes
@@ -1831,6 +1861,17 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;; restart emacs
 (use-package restart-emacs :ensure t)
+
+
+;; golden ratio
+(use-package golden-ratio
+  :diminish golden-ratio-mode
+  :ensure t
+  :init
+  (setq golden-ratio-recenter t)
+  :config
+  (golden-ratio-mode +1))
+
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
