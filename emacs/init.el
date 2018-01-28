@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 09:46:39 wandersonferreira"
+;; Time-stamp: "2018-01-28 09:58:58 wandersonferreira"
 
 ;;; Code:
 
@@ -217,6 +217,13 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
+
+;; case regions
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+;; remove selected region if typing
+(pending-delete-mode +1)
 
 ;; elisp be less conservative
 (setq max-specpdl-size (* 15 max-specpdl-size))
@@ -780,20 +787,25 @@ With PREFIX-argument, use ISO format."
   (eval-buffer)
   (message "Your buffer was evaluated!"))
 
-(defun bk/duplicate-line ()
-  "Function to duplicate the current line."
-  (interactive)
-  (save-excursion
-    (let (line-text)
-      (goto-char (line-beginning-position))
-      (let ((beg (point)))
-        (goto-char (line-end-position))
-        (setq line-text (buffer-substring beg (point))))
-      (if (eobp)
-          (insert ?\n)
-        (forward-line))
-      (open-line 1)
-      (insert line-text))))
+(defun bk/duplicate-current-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
+If there's no region, the current line will be duplicated. However, if
+there's a region, all lines that region covers will be duplicated."
+  (interactive "p")
+  (let (beg end (origin (point)))
+    (if (and (region-active-p) (> (point) (mark)))
+        (exchange-point-and-mark))
+    (setq beg (line-beginning-position))
+    (if (region-active-p)
+        (exchange-point-and-mark))
+    (setq end (line-end-position))
+    (let ((region (buffer-substring-no-properties beg end)))
+      (dotimes (i arg)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point)))
+      (goto-char (+ origin (* (length region) arg) arg)))))
 
 (defun bk/mac-open-files ()
   "Open files in OSX."
@@ -821,6 +833,19 @@ With PREFIX-argument, use ISO format."
 	 (kill-buffer buffer))
    (buffer-list))
   (delete-other-windows))
+
+(defun bk/dired-open-marked-files ()
+  "Open marked files."
+  (interactive)
+  (let ((distinguish-one-marked nil))
+    (mapc 'find-file
+          (dired-map-over-marks (dired-get-file-for-visit)
+                                current-prefix-arg))))
+
+(defun bk/beautiful-json (beg end)
+  "Function to fix JSON objects between region BEG and END."
+  (interactive "r")
+  (shell-command-on-region beg end "python -mjson.tool" (current-buffer) 'replace))
 
 (defun bk/delete-this-buffer-and-file ()
   "Remove file connected to current buffer and kill buffer."
@@ -974,6 +999,9 @@ With PREFIX-argument, use ISO format."
   :ensure t
   :config
   (add-hook 'python-mode-hook 'whitespace-cleanup-mode))
+
+;; aliases
+(defalias 'dtw 'delete-trailing-whitespace)
 
 (use-package whitespace
   :init
@@ -1328,7 +1356,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 
 (global-set-key (kbd "C-x , b") 'bk/eval-buffer)
-(global-set-key (kbd "C-c d") 'bk/duplicate-line)
+(global-set-key (kbd "C-c d") 'bk/duplicate-current-line-or-region)
 (global-set-key (kbd "\C-x2") (lambda () (interactive)
                                 (split-window-vertically) (other-window 1)))
 (global-set-key (kbd "\C-x3")
