@@ -1,0 +1,72 @@
+Machine Learning, Technical Debt, and You (Google)
+
+
+* Entanglement
+ - Ml systems are machines for mixing data together
+ - Generally not possible to make isolate changes
+ - CACE: Change Anything Change Everything
+ - Applies to features, signals, parameter settings, regularization, sampling...
+
+* Hidden feedback loops
+ - Real-world systems often end up influencing their own training data
+ - Can result in gradual changes that are not immediately visible, very hard to detect or debug
+
+* Undeclared consumers
+
+ - Use of output signal should be carefully controlled
+ - Potential for hidden feedback loops
+ - Worse, tight coupling of expected behavior
+   - Undeclared consumers adapt to your errors
+   - May react very badly to "fixes"
+   - Making improvements suddenly painful
+
+
+* Dependency Debt
+
+ - Data dependencies cost more than code dependencies
+   - Are you an undeclared consumer of system X?
+ - Unstable dependencies
+ - Legacy features
+ - Bundled features
+ - Epsilon features
+
+
+* Correction / Calibration cascade
+
+- Model A exists, but doesn't predict perfectly in some Cases A'
+  - Just add a calibration layer, right?
+
+* System level considerations
+
+- The cool part of ML: Model
+- The rest of ML
+  - Data Collection
+  - Feature Extraction
+  - Data Verification
+  - Process management tools
+  - Configuration
+  - Analysis tools
+  - Monitoring
+  - Machine Resource management
+  - Serving infrastructure
+
+* Glue Code
+
+- Need to solve ML problem quickly
+- Re-use is good. Let's use an existing ML tools
+- But to use it, need to get data in and out
+- Just write some glue code to do that
+- But the package doesn't quite do what we need
+- So add some more glue code
+- Oh wait, we need to automatically verify
+- And update
+- And checkpoint
+- And ....
+
+* Pipeline jungles
+
+- Complicated series of jobs that run in special sequences
+- Common smells:
+  - Many different jobs
+  - Use of (many?!) different languages
+  - Special language for managing the pipeline

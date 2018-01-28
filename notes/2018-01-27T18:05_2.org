@@ -1,0 +1,33 @@
+A guided tour of Emacs
+
+
+Beyond just being able to edit plain text files, Emacs includes special features to help you write in many different human languages and programming/markup languages... as well as tools for compiling, running, and testing programs.
+
+    - Emacs can compare two files and highlight their differences (M-x ediff)
+    - Emacs is a file manager (M-x dired)
+    - Emacs can read news, mail, and RSS feeds (M-x gnus)
+
+
+* The power of text manipulation
+
+ M-x dired invokes /Dired/, the file manager mode, on a directory of your choice. Then C-x C-q switches to /Editable Dired/ mode. In this mode, changing the filenames in the right-hand column and then typing /C-x C-s/ renames the indicated files.
+
+ 
+* Moving around in buffers
+
+ You can use the /prefix argument/ to save time: /C-u/ followed by a number and a movement command repeats that command the specified number of times.
+
+
+* Mark
+
+ Emacs remembers something called the /mark/, which is a previous cursor position. You can set mark to indicate a particular place in your buffer so you can return to it easily. *C-x C-x* at a later time will return point to mark.
+
+ Emacs saves many previous values of the mark for you. You can cycle through the /mark ring/, which contains the last 16 marks you've set in the current buffer.
+
+ C-u C-SPC  ----- Cycle through mark ring
+
+
+
+* Editing remote files
+
+Emacs can edit remote file transparently (as if they were local) using a feature called Tramp.

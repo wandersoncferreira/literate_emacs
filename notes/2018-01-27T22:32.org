@@ -1,0 +1,14 @@
+Probability Distributions
+
+
+     Lets quickly recall what a probability distribution is: Let Z be some random variable. Then associated with Z is a /probability distribution function/ that assigns probabilities to the different outcomes Z can take.
+
+     We can divide random variables into three classifications:
+
+     - Z *is discrete*: Discrete random variables may only assume values on a specified list.
+     - Z *is continuous*
+     - Z *is mixed*: Mixed random variables assign probabilities to both discrete and continuous random variables, i.e. it is a combination of the above two categories.
+
+* Discrete case
+
+ If Z is discrete, then its distribution is called a /probability mass function/

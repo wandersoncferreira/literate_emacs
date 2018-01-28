@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-27 10:51:52 wandersonferreira"
+;; Time-stamp: "2018-01-27 21:44:28 wandersonferreira"
 
 ;;; Code:
 
@@ -428,8 +428,6 @@
         mac-mouse-wheel-smoth-scroll nil
         mouse-wheel-scroll-amount '(5 ((shift) . 2))
         mac-command-modifier 'meta
-        mac-option-modifier 'super
-        ns-function-modifier 'hyper
         insert-directory-program "/usr/local/bin/gls"
         epg-gpg-program "gpg"
         epa-pinetry-mode 'loopback)
@@ -824,6 +822,22 @@ In that case, insert the number."
   (let ((size (length package-activated-list)))
     (message (concat "The number of activated packages are: " (number-to-string size)))))
 
+;; write your own lookup command
+(require 'browse-url)
+(defun bk/lookup-wikipedia ()
+  "Look up the word under cursor in Wikipedia."
+  (interactive)
+  (let (word)
+    (setq word
+          (if (use-region-p)
+              (buffer-substring-no-properties (region-beginning)
+                                              (region-end))
+            (current-word)))
+    (setq word (replace-regexp-in-string " " "_" word))
+    (browse-url (concat "http://en.wikipedia.org/wiki/" word))))
+
+(global-set-key (kbd "<f8>") 'bk/lookup-wikipedia)
+
 ;;; Tramp mode:
 (use-package tramp
   :init
@@ -1087,9 +1101,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (expand-file-name "site-packages" user-emacs-directory))
 (add-to-list 'load-path (concat site-packages "/erc-extras") t)
 
-(eval-after-load 'erc-mode
-  (lambda () (erc-spelling-mode +1)))
-
+(erc-spelling-mode +1)
 (add-hook 'erc-mode-hook (lambda () (auto-fill-mode 0)))
 (make-variable-buffer-local 'erc-fill-column)
 (add-hook 'window-configuration-change-hook
@@ -1120,8 +1132,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 	(setq erc-nick login)
 	(setq erc-password password)))
 
-(defun bk/start-ERC ()
-  "Function to start the ERC service."
+(defun bk/ERC ()
+  "Start the ERC correctly."
   (interactive)
   (bk/login-irc)
   (erc))

@@ -11,6 +11,7 @@
    (quote
     ("b8929cff63ffc759e436b0f0575d15a8ad7658932f4b2c99415f3dde09b32e97" default)))
  '(delete-selection-mode nil)
+ '(ns-alternate-modifier (quote none))
  '(org-publish-project-alist
    (\`
     (("default" :base-directory

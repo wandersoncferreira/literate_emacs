@@ -1,0 +1,30 @@
+Bayesian Inference in Practice
+
+
+* Are frequentist methods incorrect then?
+
+ No.
+ Frequentist methods are still useful or state-of-the-art in many areas. Tools such as least squares linear regression, LASSO regression, and expectation-maximization algorithms are all powerful and fast. Bayesian methods complement these techniques by solving problems that these approaches cannot.
+
+
+ The much more difficult analytic problems involve "medium data" and /really small/ data.
+
+ #+BEGIN_SRC python :noweb yes :tangle updating_coin.py :results output :exports both
+   import numpy as np
+   import scipy.stats as stats
+   #from matplotlib import pyplot as plt
+
+
+   dist = stats.beta
+   n_trials = [0, 1, 2, 3, 4, 5, 8, 15, 50, 500]
+   data = stats.bernoulli.rvs(0.5, size=n_trials[-1])
+   x = np.linspace(0, 1, 100)
+
+   for k, N in enumerate(n_trials):
+       heads = data[:N].sum()
+       y = dist.pdf(x, 1 + heads, 1 + N - heads)
+       print(heads, y)
+ #+END_SRC
+
+ 
+ 
