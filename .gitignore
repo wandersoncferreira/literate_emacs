@@ -22,3 +22,4 @@ emacs/smex-items
 emacs/eshell/history
 emacs/eshell/lastdir
 emacs/.uptimes.el
+.DS_store

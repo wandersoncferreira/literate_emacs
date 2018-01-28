@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 09:32:54 wandersonferreira"
+;; Time-stamp: "2018-01-28 09:46:39 wandersonferreira"
 
 ;;; Code:
 
@@ -426,23 +426,55 @@
 
 ;;; Mac OSX specific settings:
 
+;; switch the cmd and meta keys
+(when init-isOSX
+  (setq mac-option-key-is-meta nil
+        mac-command-key-is-meta t
+        mac-command-modifier 'meta
+        mac-option-modifier nil))
+
+;; menu bar is not anoyying in OSX
+(when init-isOSX
+  (menu-bar-mode 1))
+
+
+(defun bk/osx-default-font ()
+  "Set the default font for OSX."
+  (interactive)
+  (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+  (set-face-attribute 'default nil :font bk/default-font))
+
+(defun bk/source-code-pro ()
+  "Define Source Code fonts."
+  (interactive)
+  (set-face-attribute 'default nil :family "Source Code Pro" :height 140))
+
+
 (when init-isOSX
   (require 'ls-lisp)
   (setq ns-pop-up-frames nil
+        delete-by-moving-to-trash t
         trash-directory "~/.Trash/emacs"
         ls-lisp-use-insert-directory-program t
         mac-redisplay-dont-reset-vscroll t
         mac-mouse-wheel-smoth-scroll nil
         mouse-wheel-scroll-amount '(5 ((shift) . 2))
-        mac-command-modifier 'meta
         insert-directory-program "/usr/local/bin/gls"
         epg-gpg-program "gpg"
         epa-pinetry-mode 'loopback)
-
+  (bk/source-code-pro)
   (setenv "GPG_AGENT_INFO" nil)
-  (add-to-list 'exec-path "/usr/local/bin")
-  (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-  (set-face-attribute 'default nil :font bk/default-font))
+  (add-to-list 'exec-path "/usr/local/bin"))
+
+
+(defun bk/finder ()
+  "Opens file directory in Finder."
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (if file
+        (shell-command
+         (format "%s %s" (executable-find "open") (file-name-directory file)))
+      (error "Buffer is not attached to any file!"))))
 
 ;;; Abbreviation mode:
 
