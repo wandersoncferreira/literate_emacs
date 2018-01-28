@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 09:29:43 wandersonferreira"
+;; Time-stamp: "2018-01-28 09:32:54 wandersonferreira"
 
 ;;; Code:
 
@@ -917,6 +917,12 @@ With PREFIX-argument, use ISO format."
   :ensure t
   :config
   (add-hook 'prog-mode-hook 'highlight-numbers-mode))
+
+;; idle highlight
+(use-package idle-highlight-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'idle-highlight-mode))
 
 ;; volatile highlights
 (use-package volatile-highlights
