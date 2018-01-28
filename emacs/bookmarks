@@ -4,7 +4,7 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/dotfiles/agenda/todo.org.gpg")
- (front-context-string . "** TODO Terminar")
- (rear-context-string . ":\n* To Do Items\n")
- (position . 113))
+ (front-context-string . "** TODO Fazer um")
+ (rear-context-string . "\n\n* To Do Items\n")
+ (position . 94))
 )

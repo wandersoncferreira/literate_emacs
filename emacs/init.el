@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 00:28:07 wandersonferreira"
+;; Time-stamp: "2018-01-28 09:29:43 wandersonferreira"
 
 ;;; Code:
 
@@ -96,7 +96,9 @@
 ;;** time display
 (require 'time)
 (setq display-time-24hr-format t)
-(setq display-time-default-load-average nil)
+(setq display-time-world-list '(("Etc/GMT+2" "São Paulo")
+                                ("America/New_York" "New York")
+                                ("Europe/Italy" "Milan")))
 (display-time-mode +1)
 
 (setq ring-bell-function 'ignore)
@@ -221,9 +223,9 @@
 (setq max-lisp-eval-depth (* 15 max-lisp-eval-depth))
 
 ;; encoding
-(setq locale-coding-system 'utf-8) 
-(set-terminal-coding-system 'utf-8) 
-(set-keyboard-coding-system 'utf-8) 
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
@@ -351,7 +353,7 @@
     :init
     (setq smex-completion-system 'ivy)
     :config (smex-initialize))
-  
+
   (add-hook 'after-init-hook 'counsel-mode)
   :bind
   (("M-x" . counsel-M-x)
@@ -448,12 +450,12 @@
   :diminish abbrev-mode
   :init
   (setq save-abbrevs 'silently)
-  
+
   (unless (file-exists-p abbrev-file-name)
     (with-temp-buffer (write-file abbrev-file-name)))
 
   (quietly-read-abbrev-file)
-  
+
   :config
   (add-hook 'prog-mode-hook #'abbrev-mode)
   (add-hook 'text-mode-hook #'abbrev-mode))
@@ -554,7 +556,7 @@
   :config
   (define-key prog-mode-map (kbd "M-.") 'dumb-jump-go)
   (define-key prog-mode-map (kbd "M-,") 'dumb-jump-back))
-  
+
 
 ;;; Ace-link:
 
@@ -623,7 +625,7 @@ In that case, insert the number."
     (interactive)
     (goto-char (point-max))
     (dired-next-line -1))
-  
+
   :init
 
   (setq dired-recursive-deletes 'top
@@ -660,10 +662,16 @@ In that case, insert the number."
 
 ;;; GO mode:
 
+;; packages that you need to install on your OS-box
+;; go get github.com/nsf/gocode
+;; go get github.com/rogpeppe/godef
+;; go get golang.org/x/tools/cmd/goimports
+;; go get golang.org/x/tools/cmd/godoc
+
 (use-package go-mode
   :ensure t
   :preface
-  
+
   (defun bk/set-go-compiler ()
     (if (not (string-match "go" compile-command))
         (set (make-local-variable 'compile-command)
@@ -675,10 +683,10 @@ In that case, insert the number."
   :config
   (use-package go-guru
     :ensure t)
-  
+
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'bk/set-go-compiler)
-  
+
   :bind (:map go-mode-map
               ("C-c C-r" . go-remove-unused-imports)
               ("C-c i" . go-goto-imports)
@@ -725,7 +733,7 @@ In that case, insert the number."
 ;; insert date
 (defun bk/insert-date (prefix)
   "Function to insert the current date.
-With PREFIX-argument, use ISO format." 
+With PREFIX-argument, use ISO format."
   (interactive "P")
   (let ((format (cond
                  ((not prefix) "%Y-%m-%d")
@@ -895,6 +903,14 @@ With PREFIX-argument, use ISO format."
             (font-lock-add-keywords nil
                                     '(("\\<\\(NOTE\\|FIXME\\|TODO\\|BUG\\|HACK\\|REFACTOR\\)"
                                        1 font-lock-warning-face t)))))
+
+;; underscore -> UPCASE -> CamelCase conversion of names
+(use-package string-inflection
+  :ensure t
+  :config
+  (global-unset-key (kbd "C-q"))
+  (global-set-key (kbd "C-q C-u") 'string-inflection-all-cycle))
+
 
 ;; highlight numbers
 (use-package highlight-numbers
@@ -1307,10 +1323,10 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 (defun my-sql-connect (product connection)
   "Connect to sql using the encrypted passwords receive PRODUCT AND CONNECTION."
-  
+
   (load-library "~/.emacs.d/secrets/databases.el.gpg")
   (load-library "~/.emacs.d/secrets/dbpass.el.gpg")
-  
+
   ;; update the password to the sql-connection-alist
   (let ((connection-info (assoc connection sql-connection-alist))
 	    (sql-password (car (last (assoc connection my-sql-password)))))
@@ -1496,7 +1512,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq org-capture-templates
       '(("n" "Note" entry (file+headline "~/dotfiles/agenda/notes.org" "Notes")
          "** Note: %?\n")
-        
+
         ("l" "Link" entry (file+headline "~/dotfiles/agenda/links.org.gpg" "Links")
          "** %? %^L %^g \n%T" :prepend t)
 
@@ -1637,6 +1653,24 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (use-package esup
   :ensure t
   :commands esup)
+
+;;; Move text:
+
+;; In order to use the move-text, M-Up and M-Down.
+(use-package move-text
+  :ensure t
+  :config
+  (move-text-default-bindings))
+
+;;; Additional packages:
+
+;; boxquote
+(use-package boxquote
+  :ensure t)
+
+;; google this error, forecast, line, yank....
+(use-package google-this
+  :ensure t)
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
