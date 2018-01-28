@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 15:44:21 wandersonferreira"
+;; Time-stamp: "2018-01-28 16:17:49 wandersonferreira"
 
 ;;; Code:
 
@@ -523,6 +523,16 @@
 
 ;;; Abbreviation mode:
 
+(defvar abbrev-data '(("wo" . "without")
+                      ("bc" . "because")
+                      ("dot" . "http://github.com/wandersoncferreira/dotfiles")))
+(dolist (var abbrev-data)
+  (let ((base (car var))
+        (expansion (cdr var)))
+    (pp expansion)
+    (define-global-abbrev base expansion)))
+(message "Done setting your abbreviations!!")
+
 (use-package abbrev
   :diminish abbrev-mode
   :init
@@ -1034,6 +1044,12 @@ there's a region, all lines that region covers will be duplicated."
 
 ;; aliases
 (defalias 'dtw 'delete-trailing-whitespace)
+
+;; indent tools
+(use-package indent-tools
+  :ensure t
+  :bind
+  ("C-c >" . indent-tools-hydra/body))
 
 (use-package whitespace
   :init
@@ -1781,12 +1797,49 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; Emacs minor mode for avoiding cliches and bad grammar when writing
 (use-package artbollocks-mode
   :ensure t
+  :init
+  (setq artbollocks-weasel-words-regex
+        (concat "\\b" (regexp-opt
+                       '("one of the"
+                         "should"
+                         "just"
+                         "sort of"
+                         "probably"
+                         "maybe"
+                         "perhaps"
+                         "I think"
+                         "really"
+                         "nice"
+                         "utilize"
+                         "pretty"))))
   :config
   (add-hook 'text-mode-hook 'artbollocks-mode))
 
+;; hippie expand
+(use-package hippie-expand
+  :init
+  (setq hippie-expand-try-functions-list
+        '(yas-hippie-try-expand
+          try-expand-line
+          try-expand-all-abbrevs
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-dabbrev
+          try-expand-dabbrev-from-kill
+          try-expand-dabbrev-all-buffers
+          try-expand-list
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol
+          ))
+  :bind
+  ("M-/" . hippie-expand))
+
+;; restart emacs
+(use-package restart-emacs :ensure t)
+
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
+(when (file-exists-p cqustom-file)
   (load custom-file))
 
 (provide 'init)
