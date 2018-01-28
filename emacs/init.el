@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 19:45:27 wandersonferreira"
+;; Time-stamp: "2018-01-28 19:59:12 wandersonferreira"
 
 ;;; Code:
 
@@ -11,6 +11,7 @@
 (setq ac-redefinition-accept 'accept)
 
 ;;; Packages:
+
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
@@ -21,6 +22,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (setq use-package-verbose t)
+
+(use-package paradox
+  :ensure t)
 
 (use-package diminish :ensure t :defer t)
 
@@ -111,6 +115,9 @@
 (display-time-mode +1)
 
 (setq ring-bell-function 'ignore)
+
+;; mouse
+(setq mouse-wheel-progressive-speed nil)
 
 ;; setup minibuffer
 (setq enable-recursive-minibuffers t)
@@ -367,6 +374,10 @@
     (magit-push "master" "origin/master" "-v")
     (message "Your repository is synced with the master branch.")))
 
+;; git time machine
+(use-package git-timemachine
+  :ensure t)
+
 
 ;;; Gist:
 
@@ -394,6 +405,18 @@
   :ensure t
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-correct-previous-word-generic)))
+
+;;; Multiple cursors:
+
+;; First mark the word, then add more cursors
+;; If you want to insert a new line in multiple cursors mode, use C-j
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  (("C->" . mc/mark-next-like-this)
+   ("C-<" . mc/mark-previous-like-this)
+   ("C-c C->" . mc/mark-all-like-this)
+   ("C-c C-l" . mc/edit-lines)))
 
 ;;; Completions:
 
@@ -1800,6 +1823,14 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :ensure t
   :config
   (move-text-default-bindings))
+
+;;; Anzu:
+
+(use-package anzu
+  :ensure t
+  :diminish anzu-mode
+  :config
+  (global-anzu-mode +1))
 
 ;;; Additional packages:
 
