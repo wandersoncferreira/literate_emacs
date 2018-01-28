@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 10:40:17 wandersonferreira"
+;; Time-stamp: "2018-01-28 15:44:21 wandersonferreira"
 
 ;;; Code:
 
@@ -1776,6 +1776,13 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :ensure t
   :config
   (global-smartscan-mode +1))
+
+;; artbollocks-mode
+;; Emacs minor mode for avoiding cliches and bad grammar when writing
+(use-package artbollocks-mode
+  :ensure t
+  :config
+  (add-hook 'text-mode-hook 'artbollocks-mode))
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
