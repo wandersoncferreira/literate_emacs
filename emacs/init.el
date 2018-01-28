@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 19:59:12 wandersonferreira"
+;; Time-stamp: "2018-01-28 20:02:24 wandersonferreira"
 
 ;;; Code:
 
@@ -1414,6 +1414,19 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
 (require 'go-flycheck)
 
+;;; Diff highlight:
+
+;; Show differences between local and origin repo
+(use-package diff-hl
+  :ensure t
+  :init
+  (setq diff-hl-side 'left)
+  :config
+  (add-hook 'dired-mode-hook 'diff-hl-dir-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (diff-hl-flydiff-mode)
+  (global-diff-hl-mode +1))
+
 ;;; Markdown mode:
 
 (use-package markdown-mode
@@ -1423,6 +1436,9 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
+
+(use-package markdown-preview-mode
+  :ensure t)
 
 ;;; Fix-words:
 
@@ -1902,7 +1918,6 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (setq golden-ratio-recenter t)
   :config
   (golden-ratio-mode +1))
-
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
