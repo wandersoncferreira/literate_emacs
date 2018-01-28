@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-27 21:44:28 wandersonferreira"
+;; Time-stamp: "2018-01-28 00:28:07 wandersonferreira"
 
 ;;; Code:
 
@@ -49,6 +49,11 @@
     (path (directory-files custom-theme-directory t "\\w+"))
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
+
+;; case insensitive
+(setq completion-ignore-case t
+      read-file-name-completion-ignore-case t
+      read-buffer-completion-ignore-case t)
 
 ;;; User Interface:
 
@@ -547,11 +552,9 @@
   :init
   (setq dumb-jump-selector 'ivy)
   :config
-  (bind-key* "M-g o" 'dumb-jump-go-other-window)
-  (bind-key* "M-g j" 'dumb-jump-go)
-  (bind-key* "M-g i" 'dumb-jump-go-prompt)
-  (bind-key* "M-g x" 'dumb-jump-go-prefer-external)
-  (bind-key* "M-g z" 'dumb-jump-go-prefer-external-other-window))
+  (define-key prog-mode-map (kbd "M-.") 'dumb-jump-go)
+  (define-key prog-mode-map (kbd "M-,") 'dumb-jump-back))
+  
 
 ;;; Ace-link:
 
@@ -718,6 +721,19 @@ In that case, insert the number."
 (use-package go-playground :ensure t)
 
 ;;; Custom functions:
+
+;; insert date
+(defun bk/insert-date (prefix)
+  "Function to insert the current date.
+With PREFIX-argument, use ISO format." 
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%Y-%m-%d")
+                 ((equal prefix '(4)) "%d.%m.%Y")
+                 (t "%A, %d. %B %Y")))
+        (system-time-locale "en_US"))
+    (insert (format-time-string format))))
+
 (defun bk/eval-buffer ()
   "Function to evaluate the current buffer."
   (interactive)
@@ -911,6 +927,10 @@ In that case, insert the number."
         whitespace-auto-cleanup t
         whitespace-style '(face trailing lines space-before-tab empty
                                 indentation space-after-tab)))
+
+;; show trailing whitespaces
+(add-hook 'prog-mode-hook (lambda ()
+                            (setq-local show-trailing-whitespace t)))
 
 ;; folding code
 (use-package yafolding
