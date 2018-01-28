@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 16:17:49 wandersonferreira"
+;; Time-stamp: "2018-01-28 19:29:27 wandersonferreira"
 
 ;;; Code:
 
@@ -740,11 +740,6 @@ In that case, insert the number."
 
 ;; direx
 (use-package go-direx :ensure t)
-
-
-;; dired sort
-(use-package dired-sort
-  :ensure t)
 
 
 ;;; GO mode:
@@ -1839,7 +1834,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p cqustom-file)
+(when (file-exists-p custom-file)
   (load custom-file))
 
 (provide 'init)

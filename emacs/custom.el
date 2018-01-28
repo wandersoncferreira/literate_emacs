@@ -3,15 +3,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#ffffff" "#cc342b" "#198844" "#fba922" "#3971ed" "#a36ac7" "#3971ed" "#373b41"])
- '(ansi-term-color-vector
-   [unspecified "#ffffff" "#cc342b" "#198844" "#fba922" "#3971ed" "#a36ac7" "#3971ed" "#373b41"] t)
- '(custom-safe-themes
-   (quote
-    ("b8929cff63ffc759e436b0f0575d15a8ad7658932f4b2c99415f3dde09b32e97" default)))
- '(delete-selection-mode nil)
- '(ns-alternate-modifier (quote none))
  '(org-publish-project-alist
    (\`
     (("default" :base-directory
@@ -55,13 +46,13 @@
  '(org2jekyll-jekyll-directory (expand-file-name "~/wandersoncferreira.github.io") nil (org2jekyll))
  '(org2jekyll-jekyll-drafts-dir "" nil (org2jekyll))
  '(org2jekyll-jekyll-posts-dir "_posts/" nil (org2jekyll))
- '(org2jekyll-source-directory (expand-file-name "~/Dropbox/blogging") nil (org2jekyll))
+ '(org2jekyll-source-directory (expand-file-name "~/blogging") nil (org2jekyll))
  '(package-selected-packages
    (quote
-    (indent-tools restart-emacs artbollocks-mode smartscan undo-tree miniedit auto-compile string-inflection google-this boxquote move-text github-issues esup ranger powerline try yasnippet-snippets imenu-anywhere config-parser go-playground latex-math-preview edit-indirect org2jekyll markdown-mode go-mode go-guru ox-reveal org-plus-contrib ob-go org-download helm-spotify-plus uptimes sqlup-mode fix-word flycheck go-direx go-gopath go-eldoc go-add-tags go-stacktracer company-go exec-path-from-shell gist volatile-highlights voletile-highlights highlight-numbers idle-highlight-mode json-mode yafolding whitespace-cleanup-mode electric-operator pythonic dired-sort diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile flyspell-correct magit expand-region elpy smex counsel ivy diminish use-package))))
+    (smex restart-emacs artbollocks-mode smartscan google-this boxquote move-text esup ranger imenu-anywhere edit-indirect org2jekyll ox-reveal org-download ob-go helm-spotify-plus uptimes sqlup-mode fix-word markdown-mode flycheck exec-path-from-shell json-mode try yasnippet-snippets indent-tools whitespace-cleanup-mode volatile-highlights highlight-numbers string-inflection go-playground go-gopath go-eldoc go-add-tags go-stacktracer go-guru company-go go-mode dired-sort go-direx diredfl company-flx restclient ace-link dumb-jump tldr insert-shebang typo shackle avy deft projectile electric-operator pythonic elpy counsel ivy flyspell-correct gist magit undo-tree miniedit expand-region base16-theme org-plus-contrib auto-compile diminish use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(idle-highlight ((t (:background "DarkSlateGray4")))))
+ )
