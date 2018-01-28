@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 10:32:03 wandersonferreira"
+;; Time-stamp: "2018-01-28 10:40:17 wandersonferreira"
 
 ;;; Code:
 
@@ -132,6 +132,15 @@
               echo-keystrokes 0.1
               recenter-positions '(top middle bottom))
 
+;; killing text
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+
 ;; backup
 (setq backup-directory-alist `(("." . ,(expand-file-name "backup" user-emacs-directory)))
       backup-by-copying-when-linked t
@@ -186,6 +195,8 @@
       ad-do-it)
     (dotimes (i 10)
       (when (= p (point)) ad-do-it))))
+
+(global-set-key (kbd "C-x p") 'pop-to-mark-command)
 
 ;; alias
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -278,6 +289,19 @@
 (use-package miniedit
   :ensure t
   :commands minibuffer-edit)
+
+
+;;; Undo tree mode:
+;; People often struggle with the Emacs undo model, where there's really no concept of "redo" - you simply undo the undo. This lets you use C-x u to visually walk through the changes you've made
+
+(use-package undo-tree
+  :ensure t
+  :diminish undo-tree-mode
+  :init
+  (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-diff t)
+  :config
+  (global-undo-tree-mode +1))
 
 ;;; Git:
 
@@ -988,12 +1012,6 @@ there's a region, all lines that region covers will be duplicated."
   :ensure t
   :config
   (add-hook 'prog-mode-hook 'highlight-numbers-mode))
-
-;; idle highlight
-(use-package idle-highlight-mode
-  :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'idle-highlight-mode))
 
 ;; volatile highlights
 (use-package volatile-highlights
@@ -1751,6 +1769,13 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; google this error, forecast, line, yank....
 (use-package google-this
   :ensure t)
+
+;; smartscan
+;; this makes M-n and M-p look for the symbol at point.
+(use-package smartscan
+  :ensure t
+  :config
+  (global-smartscan-mode +1))
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
