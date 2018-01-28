@@ -1,0 +1,13 @@
+Why probabilistic programming matters
+
+
+    - A probabilistic programming language is a language which includes random events as first-class primitives.
+    - The developer can easily encode sophisticated *structured stochastic processes*
+    - In addition to its usual duties, the compiler or runtime needs to figure it how to perform *inference* on the program.
+    - Inference answers the question: of all the ways in which a program containing random choices could execute, which of those execution paths provides the best explanation for the data?
+    - Probabilistic programming will unlock narrative explanations of data
+    - Probabilistic programming decouples modeling and inference
+    - Programming programming enables more general, abstract reasoning
+
+
+Probabilistic programming requires a different combination of skills from traditional development, on the one hand, and machine learning or statistical inference on the other. I think it would be a shame if these systems, once they are developed, remained at the fringes - used only by the kinds of programmers who are currently drawn to, say, languages like Lisp and Haskell.

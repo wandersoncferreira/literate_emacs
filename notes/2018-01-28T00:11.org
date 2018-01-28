@@ -1,0 +1,8 @@
+Modeling approaches
+
+
+A good starting thought to Bayesian modeling is to think about /how your data might have been generated/. Position yourself in an omniscient position, and try to image how you would recreate the dataset.
+
+    1. What is the best random variable to describe this count data? A Poisson random variable is a good candidate because it can represent count data.
+    2. Ok, assuming they are Poisson-distributed, what do I need for the Poisson distribution? Well, has a parameter λ.
+    3. Do we know λ? No. In fact, we have a suspicion that there are two λ values for the earlier behavior and one for the later behavior. 
