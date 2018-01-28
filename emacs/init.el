@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 09:58:58 wandersonferreira"
+;; Time-stamp: "2018-01-28 10:32:03 wandersonferreira"
 
 ;;; Code:
 
@@ -20,8 +20,15 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+(setq use-package-verbose t)
 
 (use-package diminish :ensure t :defer t)
+
+(use-package auto-compile
+  :ensure t
+  :config
+  (auto-compile-on-load-mode))
+(setq load-prefer-newer t)
 
 ;; emacs outline mode
 (add-hook 'emacs-lisp-mode-hook
@@ -259,11 +266,18 @@
 (setq savehist-file "~/.emacs.d/savehist.log")
 (savehist-mode 1)
 (setq history-length t)
+(setq history-delete-duplicates t)
 (setq savehist-save-minibuffer-history 1)
 (setq savehist-additional-variables
 	  '(kill-ring
 	    search-ring
 	    regexp-search-ring))
+
+;; Minibuffer editing - more space
+;; this binds C-M-e in the minibuffer so that you can edit the contents of the minibuffer before submitting it.
+(use-package miniedit
+  :ensure t
+  :commands minibuffer-edit)
 
 ;;; Git:
 
