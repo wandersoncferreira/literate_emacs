@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 22:22:48 wandersonferreira"
+;; Time-stamp: "2018-01-29 00:30:46 wandersonferreira"
 
 ;;; Code:
 
@@ -32,7 +32,10 @@
   (package-install 'use-package))
 (setq use-package-verbose t)
 
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 (use-package paradox
   :ensure t)
@@ -145,10 +148,18 @@
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode +1)
 
+;; always indent with spaces
+(setq-default indent-tabs-mode nil
+              default-tab-width 4
+              c-basic-offset 4)
+
+;; text wrapping at 80 columns by default (only text)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook '(lambda () (set-fill-column 80)))
+
 ;; there is a need to change some default behaviors
 (setq-default tab-always-indent 'complete
               tab-width 4
-              indent-tabs-mode nil
               require-final-newline t
               auto-save-default nil
               auto-save-list-file-prefix nil
@@ -811,6 +822,8 @@ In that case, insert the number."
 ;; execute asynchronous commands
 (use-package async
   :ensure t
+  :init
+  (setq async-bytecomp-package-mode t)
   :config
   (dired-async-mode +1))
 
@@ -1892,6 +1905,16 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (global-anzu-mode +1))
 
 ;;; Additional packages:
+
+;; beacon
+(use-package beacon
+  :ensure t
+  :diminish beacon-mode
+  :init
+  (setq beacon-push-mark 35
+        beacon-blink-when-focused t)
+  :config
+  (beacon-mode +1))
 
 ;; boxquote
 (use-package boxquote
