@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 18:02:53 wandersonferreira"
+;; Time-stamp: "2018-01-29 18:12:23 wandersonferreira"
 
 ;;; Code:
 
@@ -436,6 +436,12 @@
 (use-package git-timemachine
   :ensure t)
 
+;; github PR
+(use-package github-pullrequest
+  :ensure t
+  :commands (github-pullrequest-new
+             github-pullrequest-checkout))
+
 
 ;;; Gist:
 
@@ -487,6 +493,7 @@
         ivy-current-matching nil
         ivy-wrap t
         ivy-count-format ""
+        ivy-magic-tilde nil
         ivy-initial-inputs-alist nil
         ivy-fixed-height-minibuffer t
         ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
@@ -1422,6 +1429,12 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (erc-track-mode +1)
 (setq erc-keywords '("machine" "bayesian" "cassandra" "bayes" "models" "scala"))
 (setq erc-track-exclude-server-buffer t)
+
+(setq erc-timestamp-only-if-changed-flag nil
+      erc-timestamp-format "%H:%M "
+      erc-fill-prefix "          "
+      erc-fill-column 78
+      erc-insert-timestamp-function 'erc-insert-timestamp-left)
 
 (defun bk/login-irc ()
   "Connecting to my IRC account."
