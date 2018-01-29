@@ -1,0 +1,21 @@
+Boost performance by leveraging byte-compilation
+
+
+Emacs's Lisp interpreter is able to interpret two kinds of code: humanly readable code and machine optimized code.
+
+Byte-compiled code runs faster than humanly readable code.
+
+One can also byte-compile Emacs Lisp source files using Emacs in batch mode.
+
+#+BEGIN_SRC shell
+  emacs -batch -f batch-byte-compile ~/.emacs.d/**/*.el
+#+END_SRC
+
+Of course we can easily create an Emacs command that does the same thing:
+
+#+BEGIN_SRC emacs-lisp
+  (defun bk/byte-compile-init-dir ()
+    "Byte-compile all your dotfiles."
+    (interactive)
+    (byte-recompile-directory user-emacs-directory 0))
+#+END_SRC

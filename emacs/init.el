@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 22:12:23 wandersonferreira"
+;; Time-stamp: "2018-01-28 22:22:48 wandersonferreira"
 
 ;;; Code:
 
@@ -39,10 +39,19 @@
 
 (use-package diminish :ensure t :defer t)
 
+;; To display the buffer use M-x auto-compile-display-log
 (use-package auto-compile
   :ensure t
+  :init
+  (setq auto-compile-display-buffer nil
+        auto-compile-mode-line-counter t)
   :config
   (auto-compile-on-load-mode))
+
+(defun bk/byte-compile-init-dir ()
+  "Byte-compile all your dotfiles."
+  (interactive)
+  (byte-recompile-directory user-emacs-directory 0))
 
 ;; prefer newer version of byte compile file
 (setq load-prefer-newer t)
