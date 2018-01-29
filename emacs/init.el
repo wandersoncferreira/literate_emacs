@@ -1,8 +1,17 @@
-;;; package --- Emacs settings
+;;; package --- Emacs configuration of Bartuka -*- lexical-binding: t; -*-
+;;
+;; Copyright (c) 2016-2018 Wanderson Ferreira <iagwanderson@gmail.com>
+;;
+;; Author: Wanderson Ferreira <iagwanderson@gmail.com>
+;; URL: http://github.com/wandersoncferreira/dotfiles
+;; Keywords: convenience
+
+;; This file is not part of GNU Emacs.
+
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-28 20:02:24 wandersonferreira"
+;; Time-stamp: "2018-01-28 22:12:23 wandersonferreira"
 
 ;;; Code:
 
@@ -23,6 +32,8 @@
   (package-install 'use-package))
 (setq use-package-verbose t)
 
+(require 'use-package)
+
 (use-package paradox
   :ensure t)
 
@@ -32,6 +43,8 @@
   :ensure t
   :config
   (auto-compile-on-load-mode))
+
+;; prefer newer version of byte compile file
 (setq load-prefer-newer t)
 
 ;; emacs outline mode
@@ -652,6 +665,9 @@
   :init
   (setq shackle-rules '((help-mode :select t :align t :size 0.3)
                         (compilation-mode :noselect t :align t :size 0.3)
+                        ("*Completions*" :select nil :inhibit-window-quit nil)
+                        ("*Bookmark List*" :select t :inhibit-window-quit nil :size 0.3 :align below)
+                        ("*grep*" :select t)
                         (special-mode-hook :select t :align t :size 0.3)))
   :config
   (add-hook 'after-init-hook #'shackle-mode))
@@ -782,6 +798,12 @@ In that case, insert the number."
 
   (define-key dired-mode-map (vector 'remap 'beginning-of-buffer)
     'dired-back-to-top))
+
+;; execute asynchronous commands
+(use-package async
+  :ensure t
+  :config
+  (dired-async-mode +1))
 
 ;; dired font lock
 (use-package diredfl
@@ -1405,7 +1427,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (use-package flycheck
   :ensure t
   :init
-  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (setq flycheck-check-syntax-automatically '(save))
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (add-hook 'go-mode-hook 'flycheck-mode))
@@ -1635,9 +1657,18 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
               org-tags-column 100
               org-startup-indented t
               org-completion-use-ido t
+              org-deadline-warning-days 30 ; show deadlines 30 days before
               org-startup-folded t
-              org-cycle-separator-lines 0
+              org-cycle-separator-lines 0 ; no blank lines between headers
               org-image-actual-width nil)
+
+;; TODO entry automatically change to done when all children are done
+;; form orgmode.org
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 
 ;; interactions
 (setq org-file-apps
@@ -1647,6 +1678,9 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 (add-to-list 'auto-mode-alist '("\\.txt$\'" . org-mode))
 (add-hook 'org-mode-hook (lambda () (flyspell-mode)))
+
+;; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+(setq utf-translate-cjk-mode nil)
 
 ;; remove from the modeline
 (require 'org-indent)
