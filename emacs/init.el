@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 00:46:50 wandersonferreira"
+;; Time-stamp: "2018-01-29 00:53:32 wandersonferreira"
 
 ;;; Code:
 
@@ -2020,7 +2020,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :ensure t
   :commands elfeed
   :config
-  (setq elfeed-search-filter "@9-weeks-old +unread"
+  (setq elfeed-search-filter "@9-weeks-old"
         elfeed-search-title-max-width 100)
   (setq elfeed-feeds
         '(
