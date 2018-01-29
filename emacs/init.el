@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 00:30:46 wandersonferreira"
+;; Time-stamp: "2018-01-29 00:34:20 wandersonferreira"
 
 ;;; Code:
 
@@ -1918,7 +1918,12 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;; boxquote
 (use-package boxquote
-  :ensure t)
+  :ensure t
+  :init
+  (setq boxquote-bottom-corner "╰"
+        boxquote-side "│ "
+        boxquote-top-and-tail "────"
+        boxquote-top-corner "╭"))
 
 ;; google this error, forecast, line, yank....
 (use-package google-this
