@@ -11,16 +11,27 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 12:23:04 wanderson"
+;; Time-stamp: "2018-01-29 18:02:53 wandersonferreira"
 
 ;;; Code:
 
+(defconst emacs-start-time (current-time))
+(defvar file-name-handler-alist file-name-handler-alist)
+
+(setq package-enable-at-startup nil
+      file-name-handler-alist nil
+      ac-redefinition-accept 'accept
+      message-log-max 16384
+      gc-cons-threshold 402653184
+      gc-cons-percentage 0.6)
+
 ;;; Garbage collector:
-(setq gc-cons-threshold (* 10 1024 1024))
-(setq ac-redefinition-accept 'accept)
+(add-hook 'after-init-hook
+          `(lambda () (setq file-name-handler-alist file-name-handler-alist-old
+                       gc-cons-threshold 800000
+                       gc-cons-percentage 0.1)) t)
 
 ;;; Packages:
-
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
@@ -30,7 +41,11 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-(setq use-package-verbose t)
+
+(setq use-package-verbose t
+      use-package-expand-minimally nil
+      use-package-compute-statistics t
+      debug-on-error t)
 
 (use-package diminish :ensure t :defer t)
 
@@ -132,6 +147,10 @@
 ;; cursor like a thin bar. Idk why I got used to it.
 (when (display-graphic-p)
   (setq-default cursor-type 'bar))
+
+;; Don't use GTK+ tooltip
+(when (boundp 'x-gtk-use-system-tooltips)
+  (setq x-gtk-use-system-tooltip nil))
 
 ;; more info into the modeline
 (column-number-mode +1)
@@ -497,6 +516,16 @@
 (global-visual-line-mode +1)
 (diminish 'visual-line-mode)
 
+;;; C/C++ mode:
+(use-package cc-mode
+  :ensure t
+  :config
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (c-set-style "bsd")
+              (setq tab-width 4)
+              (setq c-basic-offset 4))))
+
 ;;; Python mode:
 
 (use-package python
@@ -575,7 +604,7 @@
 (defun bk/osx-default-font ()
   "Set the default font for OSX."
   (interactive)
-  (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+  (setq bk/default-font "-*-Hack-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font bk/default-font))
 
 (defun bk/source-code-pro (font-size)
@@ -594,7 +623,7 @@
         insert-directory-program "/usr/local/bin/gls"
         epg-gpg-program "gpg"
         epa-pinetry-mode 'loopback)
-  (bk/source-code-pro 140)
+  (bk/osx-default-font)
   (setenv "GPG_AGENT_INFO" nil)
   (add-to-list 'exec-path "/usr/local/bin"))
 
@@ -839,6 +868,17 @@ In that case, insert the number."
 
 ;; direx
 (use-package go-direx :ensure t)
+
+;; dired toggle
+(use-package dired-toggle
+  :ensure t
+  :preface
+  (defun my-dired-toggle-mode-hook ()
+    (interactive)
+    (visual-line-mode 1)
+    (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
+    (setq-local word-wrap nil))
+  :hook (dired-toggle-mode . my-dired-toggle-mode-hook))
 
 
 ;;; GO mode:
