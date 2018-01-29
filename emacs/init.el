@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 00:53:32 wandersonferreira"
+;; Time-stamp: "2018-01-29 01:51:46 wandersonferreira"
 
 ;;; Code:
 
@@ -38,7 +38,12 @@
 (require 'bind-key)
 
 (use-package paradox
-  :ensure t)
+  :ensure t
+  :commands paradox-list-packages
+  :config
+  (setq paradox-github-token t
+        paradox-automatically-star nil
+        paradox-execute-asynchronously t))
 
 (use-package diminish :ensure t :defer t)
 
@@ -367,6 +372,7 @@
   :init
   (setq undo-tree-visualizer-timestamps t)
   (setq undo-tree-visualizer-diff t)
+  (setq undo-tree-auto-save-history t)
   :config
   (global-undo-tree-mode +1))
 
@@ -1106,6 +1112,14 @@ there's a region, all lines that region covers will be duplicated."
   (global-unset-key (kbd "C-q"))
   (global-set-key (kbd "C-q C-u") 'string-inflection-all-cycle))
 
+;; fill column indicator
+(use-package fill-column-indicator
+  :ensure t
+  :commands fci-mode
+  :config
+  (setq fci-rule-column 79)
+  (fci-mode +1))
+
 
 ;; highlight numbers
 (use-package highlight-numbers
@@ -1175,6 +1189,13 @@ there's a region, all lines that region covers will be duplicated."
 (use-package yasnippet-snippets
   :ensure t
   :defer 4)
+
+;; disable it in ansi-term
+(add-hook 'after-change-major-mode-hook
+          (lambda ()
+            (when (find major-mode
+                        '(term-mode ansi-term))
+              (yas-minor-mode 0))))
 
 ;;; Try:
 (use-package try :ensure t)
@@ -1796,6 +1817,22 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (fringe-mode 1)
   (winner-undo))
 
+;; org-bullets
+(use-package org-bullets
+  :ensure t
+  :init
+  (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
+  :config
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+
+;; ox-pandoc
+;; ╭────
+;; │ translates org-mode files to various other formats via Pandoc
+;; ╰────
+(use-package ox-pandoc
+  :ensure t)
+
+
 ;; org reveal
 (use-package ox-reveal
   :ensure t
@@ -1881,7 +1918,11 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;;; Ranger:
 (use-package ranger
-  :ensure t)
+  :ensure t
+  :config
+  (setq ranger-cleanup-on-disable t
+        ranger-show-dotfiles nil
+        ranger-show-literal nil))
 
 ;;; emacs profiling:
 (use-package esup
@@ -1919,7 +1960,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; boxquote
 (use-package boxquote
   :ensure t
-  :init
+  :config
   (setq boxquote-bottom-corner "╰"
         boxquote-side "│ "
         boxquote-top-and-tail "────"
@@ -2028,6 +2069,53 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
           ("https://www.reddit.com/r/emacs/.rss" emacs)
           ("http://planet.emacsen.org/atom.xml" emacs)
           ("http://www.masteringemacs.org/feed/" emacs))))
+
+;; epresent
+;; is a simple presentation mode for Emacs org-mode
+(use-package epresent
+  :ensure t)
+
+;; FIXMEE
+;; is for quickly navigate to FIXME and TODO notices in Emacs
+;; C-c f --- fixmee-goto-nextmost-urgent
+;; C-c F --- fixme-goto-prevmost-urgent
+(use-package fixmee
+  :ensure t
+  :diminish fixmee-mode
+  :commands (fixmee-mode fixmee-view-listing)
+  :config
+  (add-hook 'prog-mode-hook 'fixmee-mode))
+
+;; google translate
+(use-package google-translate
+  :ensure t
+  :commands google-translate-smooth-translate
+  :init
+  (setq-default google-translate-translation-directions-alist
+                '(("en" . "pt") ("pt" . "en"))
+                google-translate-show-phonetic t))
+
+;; lorem-ipsum
+(use-package lorem-ipsum
+  :ensure t
+  :commands lorem-ipsum-insert-paragraphs)
+
+;; pretty-mode
+;; ╭────
+;; │ use mathematical Unicode symbols instead of expressions or keywords in
+;; | some programming languages
+;; ╰────
+
+(use-package pretty-mode
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'turn-on-pretty-mode))
+
+
+;; Speed type
+;; is for practice touch/speed typing in Emacs
+(use-package speed-type
+  :ensure t)
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
