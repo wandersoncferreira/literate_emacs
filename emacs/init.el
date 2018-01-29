@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 02:07:40 wandersonferreira"
+;; Time-stamp: "2018-01-29 12:23:04 wanderson"
 
 ;;; Code:
 
@@ -32,10 +32,18 @@
   (package-install 'use-package))
 (setq use-package-verbose t)
 
+(use-package diminish :ensure t :defer t)
+
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
+
+;; I need this to work!
+(use-package org
+  :ensure org-plus-contrib
+  :mode ("\\.org$\'" . org-mode)
+  :defer t)
 
 (use-package paradox
   :ensure t
@@ -44,8 +52,6 @@
   (setq paradox-github-token t
         paradox-automatically-star nil
         paradox-execute-asynchronously t))
-
-(use-package diminish :ensure t :defer t)
 
 ;; To display the buffer use M-x auto-compile-display-log
 (use-package auto-compile
@@ -72,12 +78,8 @@
             (make-local-variable 'outline-heading-end-regexp)
             (setq outline-heading-end-regexp ":\n")
             (outline-minor-mode +1)))
+(diminish 'outline-minor-mode)
 
-;; I need this to work!
-(use-package org
-  :ensure org-plus-contrib
-  :mode ("\\.org$\'" . org-mode)
-  :defer t)
 
 ;;; Constants:
 (defconst init-isOSX (eq system-type 'darwin))
@@ -371,7 +373,6 @@
   :init
   (setq undo-tree-visualizer-timestamps t)
   (setq undo-tree-visualizer-diff t)
-  (setq undo-tree-auto-save-history t)
   :config
   (global-undo-tree-mode +1))
 
@@ -577,11 +578,9 @@
   (setq bk/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font bk/default-font))
 
-(defun bk/source-code-pro ()
-  "Define Source Code fonts."
-  (interactive)
-  (set-face-attribute 'default nil :family "Source Code Pro" :height 140))
-
+(defun bk/source-code-pro (font-size)
+  "Define Source Code font with a specific FONT-SIZE."
+  (set-face-attribute 'default nil :family "Source Code Pro" :height font-size))
 
 (when init-isOSX
   (require 'ls-lisp)
@@ -595,7 +594,7 @@
         insert-directory-program "/usr/local/bin/gls"
         epg-gpg-program "gpg"
         epa-pinetry-mode 'loopback)
-  (bk/source-code-pro)
+  (bk/source-code-pro 140)
   (setenv "GPG_AGENT_INFO" nil)
   (add-to-list 'exec-path "/usr/local/bin"))
 
