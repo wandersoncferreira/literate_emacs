@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 00:34:20 wandersonferreira"
+;; Time-stamp: "2018-01-29 00:46:50 wandersonferreira"
 
 ;;; Code:
 
@@ -1925,6 +1925,25 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
         boxquote-top-and-tail "────"
         boxquote-top-corner "╭"))
 
+;; bug hunter
+;; ╭────
+;; │ The bug hunter is an Emacs library that finds the source
+;; | of an error or unexpected behavior inside an elisp configuration file.
+;; ╰────
+(use-package bug-hunter
+  :ensure t
+  :commands (bug-hunter-file bug-hunter-init-file))
+
+
+;;; cloc
+;; ╭────
+;; │ count the lines of code in a buffer
+;; ╰────
+(use-package cloc
+  :ensure t
+  :commands cloc)
+
+
 ;; google this error, forecast, line, yank....
 (use-package google-this
   :ensure t)
@@ -1989,6 +2008,26 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (setq golden-ratio-recenter t)
   :config
   (golden-ratio-mode +1))
+
+;; csv-mode
+(use-package csv-mode
+  :ensure t
+  :mode ("\\.csv$\\'"))
+
+;;; Elfeed - RSS news:
+
+(use-package elfeed
+  :ensure t
+  :commands elfeed
+  :config
+  (setq elfeed-search-filter "@9-weeks-old +unread"
+        elfeed-search-title-max-width 100)
+  (setq elfeed-feeds
+        '(
+          ("http://endlessparentheses.com/atom.xml" emacs)
+          ("https://www.reddit.com/r/emacs/.rss" emacs)
+          ("http://planet.emacsen.org/atom.xml" emacs)
+          ("http://www.masteringemacs.org/feed/" emacs))))
 
 ;;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
