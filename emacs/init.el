@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 01:51:46 wandersonferreira"
+;; Time-stamp: "2018-01-29 02:07:40 wandersonferreira"
 
 ;;; Code:
 
@@ -65,14 +65,13 @@
 (setq load-prefer-newer t)
 
 ;; emacs outline mode
-(use-package outline
-  :diminish outline-minor-mode
-  :init
-  (setq-default outline-regexp "^;;; ")
-  (setq-default outline-heading-end-regexp ":\n")
-  :config
-  (outline-minor-mode))
-
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (make-local-variable 'outline-regexp)
+            (setq outline-regexp "^;;; ")
+            (make-local-variable 'outline-heading-end-regexp)
+            (setq outline-heading-end-regexp ":\n")
+            (outline-minor-mode +1)))
 
 ;; I need this to work!
 (use-package org
@@ -1976,7 +1975,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :commands (bug-hunter-file bug-hunter-init-file))
 
 
-;;; cloc
+;; cloc
 ;; ╭────
 ;; │ count the lines of code in a buffer
 ;; ╰────
