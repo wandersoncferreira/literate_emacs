@@ -11,12 +11,12 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 18:12:23 wandersonferreira"
+;; Time-stamp: "2018-01-29 23:21:12 wandersonferreira"
 
 ;;; Code:
 
 (defconst emacs-start-time (current-time))
-(defvar file-name-handler-alist file-name-handler-alist)
+(defvar file-name-handler-alist-old file-name-handler-alist)
 
 (setq package-enable-at-startup nil
       file-name-handler-alist nil
@@ -42,11 +42,6 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(setq use-package-verbose t
-      use-package-expand-minimally nil
-      use-package-compute-statistics t
-      debug-on-error t)
-
 (use-package diminish :ensure t :defer t)
 
 (eval-when-compile
@@ -56,9 +51,7 @@
 
 ;; I need this to work!
 (use-package org
-  :ensure org-plus-contrib
-  :mode ("\\.org$\'" . org-mode)
-  :defer t)
+  :ensure org-plus-contrib)
 
 (use-package paradox
   :ensure t
@@ -1430,12 +1423,6 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq erc-keywords '("machine" "bayesian" "cassandra" "bayes" "models" "scala"))
 (setq erc-track-exclude-server-buffer t)
 
-(setq erc-timestamp-only-if-changed-flag nil
-      erc-timestamp-format "%H:%M "
-      erc-fill-prefix "          "
-      erc-fill-column 78
-      erc-insert-timestamp-function 'erc-insert-timestamp-left)
-
 (defun bk/login-irc ()
   "Connecting to my IRC account."
   (let* ((hostentry (get-authinfo "irc.freenode.net"))
@@ -1444,11 +1431,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 	(setq erc-nick login)
 	(setq erc-password password)))
 
-(defun bk/ERC ()
-  "Start the ERC correctly."
-  (interactive)
-  (bk/login-irc)
-  (erc))
+(bk/login-irc)
+
 
 (setq erc-current-nick-highlight-type 'nick)
 (setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
@@ -1886,10 +1870,12 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;; org reveal
 (use-package ox-reveal
-  :ensure t
-  :init
-  (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
-  (setq org-reveal-mathjax t))
+  :ensure ox-reveal)
+(require 'ox-reveal nil t)
+(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+(setq org-reveal-mathjax t)
+(setq org-reveal-hlevel 1)
+
 
 ;;; Jekyll - Blogging made easy!:
 
@@ -2091,16 +2077,6 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; restart emacs
 (use-package restart-emacs :ensure t)
 
-
-;; golden ratio
-(use-package golden-ratio
-  :diminish golden-ratio-mode
-  :ensure t
-  :init
-  (setq golden-ratio-recenter t)
-  :config
-  (golden-ratio-mode +1))
-
 ;; csv-mode
 (use-package csv-mode
   :ensure t
@@ -2151,11 +2127,11 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :ensure t
   :commands lorem-ipsum-insert-paragraphs)
 
-;; pretty-mode
-;; ╭────
-;; │ use mathematical Unicode symbols instead of expressions or keywords in
-;; | some programming languages
-;; ╰────
+;; ;; pretty-mode
+;; ;; ╭────
+;; ;; │ use mathematical Unicode symbols instead of expressions or keywords in
+;; ;; | some programming languages
+;; ;; ╰────
 
 (use-package pretty-mode
   :ensure t
@@ -2168,7 +2144,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (use-package speed-type
   :ensure t)
 
-;;; Custom file:
+;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
