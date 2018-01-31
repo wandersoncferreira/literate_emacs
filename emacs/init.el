@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-29 23:21:12 wandersonferreira"
+;; Time-stamp: "2018-01-31 13:59:17 wanderson"
 
 ;;; Code:
 
@@ -110,7 +110,8 @@
 
 (use-package base16-theme :ensure t)
 (setq custom-safe-themes t)
-(load-theme 'default-black t)
+;; (load-theme 'default-black t)
+(load-theme 'base16-google-light t)
 
 
 ;; I don't like of too much things happening when I open Emacs
@@ -600,12 +601,18 @@
 (when init-isOSX
   (menu-bar-mode 1))
 
-
 (defun bk/osx-default-font ()
   "Set the default font for OSX."
   (interactive)
   (setq bk/default-font "-*-Hack-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font bk/default-font))
+
+(defun bk/unix-default-font ()
+  "Set the default font for Unix-boxes."
+  (interactive)
+  (setq bk/default-font "-*-Hack-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1")
+  (set-face-attribute 'default nil :font bk/default-font))
+
 
 (defun bk/source-code-pro (font-size)
   "Define Source Code font with a specific FONT-SIZE."
@@ -719,6 +726,8 @@
   (setq shackle-rules '((help-mode :select t :align t :size 0.3)
                         (compilation-mode :noselect t :align t :size 0.3)
                         ("*Completions*" :select nil :inhibit-window-quit nil)
+                        ("*HTTP Response*" :noselect t :size 0.4 :align below)
+                        ("*Warnings*" :select t :size 0.3 :inhibit-window-quit t)
                         ("*Bookmark List*" :select t :inhibit-window-quit nil :size 0.3 :align below)
                         ("*grep*" :select t)
                         (special-mode-hook :select t :align t :size 0.3)))
@@ -891,28 +900,23 @@ In that case, insert the number."
 
 (use-package go-mode
   :ensure t
-  :preface
-
-  (defun bk/set-go-compiler ()
-    (if (not (string-match "go" compile-command))
-        (set (make-local-variable 'compile-command)
-             "go build -v && go test -v && go run"))
-    (local-set-key (kbd "M-p") 'compile))
-
   :init
   (setq gofmt-command "goimports")
   :config
-  (use-package go-guru
-    :ensure t)
-
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'bk/set-go-compiler)
-
   :bind (:map go-mode-map
               ("C-c C-r" . go-remove-unused-imports)
               ("C-c i" . go-goto-imports)
               ("M-." . godef-jump)
               ("M-*" . pop-tag-mark)))
+
+(defun bk/set-go-compiler ()
+  "Function to define the compile command in go buffers."
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v && go test -v && go run"))
+  (local-set-key (kbd "M-p") 'compile))
 
 ;; activate Go on Linux
 (when init-isUnix
