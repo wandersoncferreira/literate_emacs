@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-31 13:59:17 wanderson"
+;; Time-stamp: "2018-01-31 23:22:34 wandersonferreira"
 
 ;;; Code:
 
@@ -113,6 +113,9 @@
 ;; (load-theme 'default-black t)
 (load-theme 'base16-google-light t)
 
+;; highlight region whenever mark is active
+(transient-mark-mode +1)
+
 
 ;; I don't like of too much things happening when I open Emacs
 (setq inhibit-splash-screen t
@@ -186,12 +189,13 @@
               register-preview-delay nil
               indicate-empty-lines t
               truncate-partial-width-windows nil
-              kill-ring-max 100
               global-mark-ring-max 200
               message-log-max 1000
               truncate-lines t
               search-whitespace-regexp ".*?"
               x-select-enable-clipboard t
+              kill-do-not-save-duplicates t
+              kill-ring-max 100
               select-active-regions t
               save-interprogram-paste-before-kill t
               yank-pop-change-selection t
@@ -265,6 +269,15 @@
       (when (= p (point)) ad-do-it))))
 
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
+
+
+;; super save
+;; Automatically save when tabbing out of a buffer.
+(use-package super-save
+  :diminish super-save-mode
+  :ensure t
+  :config
+  (super-save-mode +1))
 
 ;; alias
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -485,9 +498,11 @@
   (setq ivy-height 8
         ivy-use-virtual-buffers t
         ivy-current-matching nil
+        ivy-extra-directories nil
         ivy-wrap t
         ivy-count-format ""
         ivy-magic-tilde nil
+        ivy-use-selectable-prompt t     ; allow using the input as entered.
         ivy-initial-inputs-alist nil
         ivy-fixed-height-minibuffer t
         ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
@@ -792,6 +807,7 @@
   :ensure t
   :diminish company-mode
   :preface
+
   (defun ora-company-number ()
     "Forward to `company-complete-number'.
 Unless the number is potentially part of the candidate.
@@ -803,11 +819,19 @@ In that case, insert the number."
                       company-candidates)
           (self-insert-command 1)
         (company-complete-number (string-to-number k)))))
+
   :init
+
   (setq company-transformers '(company-sort-by-occurrence))
   (setq company-require-match 'never)
   (setq company-show-numbers t)
+  (setq company-idle-delay 0.3)
+  (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-limit 20)
+  (setq company-auto-complete nil)
+
   :config
+
   (let ((map company-active-map))
     (mapc
      (lambda (x)
@@ -901,10 +925,7 @@ In that case, insert the number."
 (use-package go-mode
   :ensure t
   :init
-  (setq gofmt-command "goimports")
-  :config
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (add-hook 'go-mode-hook 'bk/set-go-compiler)
+  (setq gofmt-command "~/go/bin/goimports")
   :bind (:map go-mode-map
               ("C-c C-r" . go-remove-unused-imports)
               ("C-c i" . go-goto-imports)
@@ -917,6 +938,14 @@ In that case, insert the number."
       (set (make-local-variable 'compile-command)
            "go build -v && go test -v && go run"))
   (local-set-key (kbd "M-p") 'compile))
+
+(defun bk/gofmt-before-save ()
+  "Function to run the GOFMT before each save inside Go mode."
+  (set (make-local-variable 'before-save-hook)
+       (append before-save-hook (list #'gofmt-before-save))))
+
+(add-hook 'go-mode-hook #'bk/set-go-compiler)
+(add-hook 'go-mode-hook #'bk/gofmt-before-save)
 
 ;; activate Go on Linux
 (when init-isUnix
@@ -954,6 +983,23 @@ In that case, insert the number."
 (use-package go-playground :ensure t)
 
 ;;; Custom functions:
+
+(defun bk/sudo-edit (&optional arg)
+  "Edit currently visited file as root.
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+                         (ido-read-file-name "Fund file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(defun bk/show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (message (buffer-file-name))
+  (kill-new (file-truename buffer-file-name)))
 
 ;; insert date
 (defun bk/insert-date (prefix)
@@ -1113,12 +1159,15 @@ there's a region, all lines that region covers will be duplicated."
         tramp-use-ssh-controlmaster-options "ssh"))
 
 ;;; Load Secrets:
+(require 'epa-file)
+(epa-file-enable)
+
 (let ((secrets-dir (concat user-emacs-directory "secrets/")))
   (unless (file-exists-p secrets-dir)
     (make-directory secrets-dir)))
 
-(defvar authinfo (concat user-emacs-directory "secrets/authinfo.gpg"))
-(defvar auth-sources '((:source "~/.emacs.d/secrets/authinfo.gpg")))
+(setq authinfo (concat user-emacs-directory "secrets/authinfo.gpg"))
+(setq auth-sources '((:source "~/.emacs.d/secrets/authinfo.gpg")))
 
 (require 'netrc)
 (defun get-authinfo (host)
@@ -1441,6 +1490,12 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (setq erc-current-nick-highlight-type 'nick)
 (setq erc-track-exclude-types '("JOIN" "PART" "QUIT" "NICK" "MODE"))
 (setq erc-track-use-faces t)
+(setq erc-kill-queries-on-quit t)
+(setq erc-kill-buffer-on-part t)
+(setq erc-kill-queries-on-quit t)
+(setq erc-server-reconnect-timeout 60)
+(setq erc-server-send-ping-timeout 180)
+(setq erc-server-send-ping-interval 45)
 (setq erc-track-faces-priority-list
 	  '(erc-current-nick-face
 	    erc-keyword-face
