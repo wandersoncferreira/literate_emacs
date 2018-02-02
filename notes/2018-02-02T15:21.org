@@ -1,0 +1,41 @@
+Kotlin - A Java replacement
+
+* Compiling a library
+
+If you are developing a library to be used by other Kotlin applications, you can
+produce the .jar file without including the Kotlin runtime into it.
+
+#+BEGIN_SRC shell
+  kotlinc hello.kt -d hello.jar
+#+END_SRC
+
+Since binaries compiled this way depend on the Kotlin rutime you should make
+sure the latter is present in the class path whenever your compiled library is
+used.
+
+
+* Running the REPL
+
+We can run the compiler without parameters to have an interactive shell. We can
+type any valid Kotlin code and see the results.
+
+
+
+* Using the command line to run scripts
+
+ Kotlin can also be used as a scripting language. A script is a Kotlin source
+ file (.kts) with top level executable code.
+
+ #+BEGIN_SRC js
+   import java.io.File
+
+   val folders = File(args[0]).listFiles { file -> file.isDirectory() }
+   folders?.forEach {folder ->println(folder)}
+ #+END_SRC
+
+To run a script, we just pass the ~-script~ option to the compiler with the
+corresponding script file.
+
+ #+BEGIN_SRC shell
+   kotlinc -script list_folders.kts <path_to_folder_to_inspect>
+ #+END_SRC

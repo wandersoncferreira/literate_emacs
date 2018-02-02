@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-01 22:16:30 wandersonferreira"
+;; Time-stamp: "2018-02-02 15:17:11 wanderson"
 
 ;;; Code:
 
@@ -993,6 +993,8 @@ In that case, insert the number."
 (use-package go-eldoc
   :ensure t
   :diminish eldoc-mode
+  :init
+  (setq go-eldoc-gocode "~/go/bin/gocode")
   :config
   (add-hook 'go-mode-hook 'go-eldoc-setup))
 
@@ -1001,6 +1003,11 @@ In that case, insert the number."
 
 ;; go-playground
 (use-package go-playground :ensure t)
+
+
+;; Kotlin
+(use-package kotlin-mode
+  :ensure t)
 
 ;;; Custom functions:
 
