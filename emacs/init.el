@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-01-31 23:22:34 wandersonferreira"
+;; Time-stamp: "2018-02-01 22:16:30 wandersonferreira"
 
 ;;; Code:
 
@@ -129,6 +129,13 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+
+;; syntax highlighting
+(global-font-lock-mode t)
+
+;; emacs supports multiple levels of complexity for highlighting
+;; Setting this value to ~t~ forces it to pick the maximum available.
+(setq font-lock-maximum-decoration 1)
 
 ;; use dialog boxes
 (setq use-dialog-box nil)
@@ -409,6 +416,8 @@
   :commands (magit-status)
   :init
   (setq magit-item-highlight-face 'bold)
+  (setq magit-commit-arguments '("--verbose"))
+  (setq magit-push-arguments '("--set-upstream"))
   (set-default 'magit-push-always-verify nil)
   (set-default 'magit-revert-buffers 'silently)
   (set-default 'magit-no-confirm '(stage-all-changes
@@ -605,6 +614,10 @@
 
 ;;; Mac OSX specific settings:
 
+;; Typically OSX hosts are called things like ~hostname.localconfig~.
+(when init-isOSX
+  (setq system-name (car (split-string system-name "\\."))))
+
 ;; switch the cmd and meta keys
 (when init-isOSX
   (setq mac-option-key-is-meta nil
@@ -757,7 +770,6 @@
   :config
   (add-hook 'after-init-hook 'typo-global-mode))
 
-
 ;;; Shebang:
 
 (use-package insert-shebang
@@ -788,8 +800,13 @@
   (define-key prog-mode-map (kbd "M-,") 'dumb-jump-back))
 
 
-;;; Ace-link:
+;;; StackExchange:
+(use-package sx
+  :ensure t
+  :defer t)
 
+
+;;; Ace-link:
 (use-package ace-link
   :ensure t
   :config
@@ -798,7 +815,10 @@
               ("M-o" . ace-link-Org)))
 
 ;;; Restclient:
-(use-package restclient :ensure t)
+(use-package restclient
+  :ensure t
+  :mode ("\\.rest\\'" . restclient-mode)
+  :commands restclient-mode)
 
 
 ;;; Company mode:
@@ -2043,6 +2063,11 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;;; Additional packages:
 
+;; pomidor
+(use-package pomidor
+  :ensure t
+  :commands pomidor)
+
 ;; beacon
 (use-package beacon
   :ensure t
@@ -2202,6 +2227,12 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; is for practice touch/speed typing in Emacs
 (use-package speed-type
   :ensure t)
+
+(use-package golden-ratio
+  :ensure t
+  :defer t
+  :config
+  (add-to-list 'golden-ratio-extra-commands 'ace-window))
 
 ;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
