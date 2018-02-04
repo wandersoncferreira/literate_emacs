@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-04 00:29:06 wandersonferreira"
+;; Time-stamp: "2018-02-04 13:09:10 wandersonferreira"
 
 ;;; Code:
 
@@ -1268,8 +1268,9 @@ there's a region, all lines that region covers will be duplicated."
 ;; cleaning up the whitespaces
 (use-package whitespace-cleanup-mode
   :ensure t
+  :diminish whitespace-cleanup-mode
   :config
-  (add-hook 'python-mode-hook 'whitespace-cleanup-mode))
+  (add-hook 'prog-mode-hook 'whitespace-cleanup-mode))
 
 ;; indent tools
 (use-package indent-tools
@@ -2269,7 +2270,8 @@ Sent from Emacs")
   :config
   (global-pretty-mode +1)
   (pretty-deactivate-groups
-   '(:sets :logic))
+   '(:sets :logic :punctuation :ordering-triple :ordering-double
+           :arrows :arrows-twoheaded :ordering))
   (pretty-activate-groups
    '(:sub-and-superscripts :greek :arithmetic-nary)))
 

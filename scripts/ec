@@ -1,47 +1,47 @@
-#!/Bin/Bash
+#!/bin/bash
 
-# This Script Starts Emacs Daemon If It Is Not Running, Opens Whatever File
-# You Pass In And Changes The Focus To Emacs.  Without Any Arguments, It Just
-# Opens The Current Buffer Or *Scratch* If Nothing Else Is Open.  The Following
-# Example Will Open ~/.Bashrc
+# This script starts emacs daemon if it is not running, opens whatever file
+# you pass in and changes the focus to emacs.  Without any arguments, it just
+# opens the current buffer or *scratch* if nothing else is open.  The following
+# example will open ~/.bashrc
 
-# Ec ~/.Bashrc
+# ec ~/.bashrc
 
-# You Can Also Pass It Multiple Files, It Will Open Them All.  Unbury-Buffer
-# Will Cycle Through Those Files In Order
+# You can also pass it multiple files, it will open them all.  Unbury-buffer
+# will cycle through those files in order
 
-# The Compliment To The Script Is Et, Which Opens Emacs In The Terminal
-# Attached To A Daemon
+# The compliment to the script is et, which opens emacs in the terminal
+# attached to a daemon
 
-# If You Want To Execute Elisp, Pass In -E Whatever.
-# You May Also Want To Stop The Output From Returning To The Terminal, Like
-# Ec -E "(Message \"Hello\")" > /Dev/Null
+# If you want to execute elisp, pass in -e whatever.
+# You may also want to stop the output from returning to the terminal, like
+# ec -e "(message \"Hello\")" > /dev/null
 
-# Emacsclient Options For Reference
-# -A "" Starts Emacs Daemon And Reattaches
-# -C Creates A New Frame
-# -N Returns Control Back To The Terminal
-# -E Eval The Script
+# emacsclient options for reference
+# -a "" starts emacs daemon and reattaches
+# -c creates a new frame
+# -n returns control back to the terminal
+# -e eval the script
 
-# Number Of Current Visible Frames,
-# Emacs Daemon Always Has A Visible Frame Called F1
-Visible_Frames() {
-  Emacsclient -A "" -E '(Length (Visible-Frame-List))'
+# Number of current visible frames,
+# Emacs daemon always has a visible frame called F1
+visible_frames() {
+  emacsclient -a "" -e '(length (visible-frame-list))'
 }
 
-Change_Focus() {
-  Emacsclient -N -E "(Select-Frame-Set-Input-Focus (Selected-Frame))" > /Dev/Null
+change_focus() {
+  emacsclient -n -e "(select-frame-set-input-focus (selected-frame))" > /dev/null
 }
 
-# Try Switching To The Frame Incase It Is Just Minimized
-# Will Start A Server If Not Running
-Test "$(Visible_Frames)" -Eq "1" && Change_Focus
+# try switching to the frame incase it is just minimized
+# will start a server if not running
+test "$(visible_frames)" -eq "1" && change_focus
 
-If [ "$(Visible_Frames)" -Lt  "2" ]; Then # Need To Create A Frame
-  # -C $@ With No Args Just Opens The Scratch Buffer
-  Emacsclient -N -C "$@" && Change_Focus
-Else # There Is Already A Visible Frame Besides The Daemon, So
-  Change_Focus
-  # -N $@ Errors If There Are No Args
-  Test  "$#" -Ne "0" && Emacsclient -N "$@"
-Fi
+if [ "$(visible_frames)" -lt  "2" ]; then # need to create a frame
+  # -c $@ with no args just opens the scratch buffer
+  emacsclient -n -c "$@" && change_focus
+else # there is already a visible frame besides the daemon, so
+  change_focus
+  # -n $@ errors if there are no args
+  test  "$#" -ne "0" && emacsclient -n "$@"
+fi
