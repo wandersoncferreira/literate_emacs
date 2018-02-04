@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-02 15:17:11 wanderson"
+;; Time-stamp: "2018-02-03 22:35:52 wandersonferreira"
 
 ;;; Code:
 
@@ -33,9 +33,13 @@
 
 ;;; Packages:
 (package-initialize)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+
+;; Checks trust on TLS connections.
+(setq tls-checktrust t)
 
 ;; installing the `use-package' if not enabled!
 (unless (package-installed-p 'use-package)
@@ -286,7 +290,9 @@
   :config
   (super-save-mode +1))
 
-;; alias
+;; aliases
+(defalias 'dtw 'delete-trailing-whitespace)
+(defalias 're 'restart-emacs)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; activate some modes
@@ -486,6 +492,7 @@
   :bind (:map flyspell-mode-map
               ("C-;" . flyspell-correct-previous-word-generic)))
 
+
 ;;; Multiple cursors:
 
 ;; First mark the word, then add more cursors
@@ -621,8 +628,10 @@
 ;; switch the cmd and meta keys
 (when init-isOSX
   (setq mac-option-key-is-meta nil
-        mac-command-key-is-meta t
-        mac-command-modifier 'meta
+        ns-control-modifier 'control
+        ns-alternate-modifier 'super
+        ns-right-alternate-modifier nil
+        ns-command-modifier 'meta
         mac-option-modifier nil))
 
 ;; menu bar is not anoyying in OSX
@@ -845,10 +854,8 @@ In that case, insert the number."
   (setq company-transformers '(company-sort-by-occurrence))
   (setq company-require-match 'never)
   (setq company-show-numbers t)
-  (setq company-idle-delay 0.3)
-  (setq company-minimum-prefix-length 2)
-  (setq company-tooltip-limit 20)
-  (setq company-auto-complete nil)
+  (setq company-idle-delay 0.4)
+  (setq company-minimum-prefix-length 4)
 
   :config
 
@@ -867,6 +874,7 @@ In that case, insert the number."
 ;; company flx matching
 (use-package company-flx
   :ensure t
+  :disabled t
   :config
   (company-flx-mode +1))
 
@@ -1263,9 +1271,6 @@ there's a region, all lines that region covers will be duplicated."
   :ensure t
   :config
   (add-hook 'python-mode-hook 'whitespace-cleanup-mode))
-
-;; aliases
-(defalias 'dtw 'delete-trailing-whitespace)
 
 ;; indent tools
 (use-package indent-tools
@@ -1732,16 +1737,29 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;;; Mail settings:
 
-(setq send-mail-function 'smtpmail-send-it)
-(setq smtpmail-auth-credentials (expand-file-name "~/.emacs.d/secrets/authinfo.gpg"))
+(require 'smtpmail)
+(setq starttls-use-gnutls t)
+(setq send-mail-function 'smtpmail-send-it
+      message-send-mail-function 'smtpmail-send-it)
+(setq smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
+(setq smtpmail-auth-credentials "~/.emacs.d/secrets/authinfo.gpg")
+(setq smtpmail-default-smtp-server "smtp.gmail.com")
 (setq smtpmail-smtp-server "smtp.gmail.com")
 (setq smtpmail-smtp-service 587)
+(setq smtpmail-debug-info t)
 (setq starttls-extra-arguments nil
 	  starttls-gnutls-program "/usr/bin/gnutls-cli"
 	  starttls-use-gnutls t)
+(setq smtpmail-smtp-user "iagwanderson")
 (setq message-signature "Wanderson Ferreira
-    http://bartuka.com
-    Sent from Emacs")
+http://bartuka.com
+Sent from Emacs")
+
+;; make it easier to send "flowed" email messages from Emacs
+(use-package messages-are-flowing
+  :ensure t
+  :config
+  (add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines))
 
 ;;; grep-folder:
 
@@ -1885,14 +1903,26 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
                             "#+END_SRC"
                             ))))
 
+(use-package org-alert
+  :init
+  (setq alert-default-style 'libnotify)
+  :ensure t)
+
+(defvar org-notes-file "~/dotfiles/agenda/notes.org")
+(defvar org-links-file "~/dotfiles/agenda/links.org.gpg")
+(defvar org-todo-file "~/dotfiles/agenda/todo.org.gpg")
+(defvar org-meeting-file "~/dotfiles/agenda/meeting.org.gpg")
+
 (setq org-capture-templates
-      '(("n" "Note" entry (file+headline "~/dotfiles/agenda/notes.org" "Notes")
+      '(("n" "Note" entry (file+headline org-notes-file "Notes")
          "** Note: %?\n")
-
-        ("l" "Link" entry (file+headline "~/dotfiles/agenda/links.org.gpg" "Links")
+        ("l" "Link" entry (file+headline org-links-file "Links")
          "** %? %^L %^g \n%T" :prepend t)
-
-        ("t" "To Do Item" entry (file+headline "~/dotfiles/agenda/todo.org.gpg" "To Do Items")
+        ("m" "Meeting" entry (file org-meeting-file)
+         "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+        ("i" "Idea" entry (file org-default-notes-file)
+         "* %? :IDEA: \n%u" :clock-in t :clock-resume t)
+        ("t" "To Do Item" entry (file+headline org-todo-file "To Do Items")
          "** TODO %?\n" :prepend t)))
 
 (defun bk/org-notes ()
@@ -1911,7 +1941,18 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (interactive)
   (find-file "~/dotfiles/agenda/todo.org.gpg"))
 
+(setq org-agenda-block-separator " ")
+
+;; in order to get the todo.org.gpg working in Org agenda
+;; I had to run `org-agenda-file-to-front' while visiting the .gpg file
 (setq org-agenda-files '("~/dotfiles/agenda"))
+
+;; change the width from org agenda
+(defadvice org-agenda (around split-vertically activate)
+  (let ((split-width-threshold 80))
+    ad-do-it))
+
+(add-hook 'after-init-hook (lambda () (org-agenda nil "d")))
 
 ;; org download package
 (use-package org-download
@@ -2186,7 +2227,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
           ("http://endlessparentheses.com/atom.xml" emacs)
           ("https://www.reddit.com/r/emacs/.rss" emacs)
           ("http://planet.emacsen.org/atom.xml" emacs)
-          ("http://www.masteringemacs.org/feed/" emacs))))
+          ("http://www.masteringemacs.org/feed/" emacs)))
+  (add-hook 'elfeed-mode-hook (lambda () (visual-line-mode -1))))
 
 ;; epresent
 ;; is a simple presentation mode for Emacs org-mode
@@ -2237,9 +2279,10 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 (use-package golden-ratio
   :ensure t
-  :defer t
+  :diminish golden-ratio-mode
   :config
-  (add-to-list 'golden-ratio-extra-commands 'ace-window))
+  (add-to-list 'golden-ratio-extra-commands 'ace-window)
+  (golden-ratio-mode +1))
 
 ;; Custom file:
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

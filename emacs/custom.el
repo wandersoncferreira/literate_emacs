@@ -3,7 +3,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil)
  '(delete-selection-mode nil)
+ '(fci-rule-color "#3f1a1a")
+ '(org-agenda-files (quote ("~/dotfiles/agenda/todo.org.gpg")))
+ '(org-fontify-whole-heading-line t)
  '(org-publish-project-alist
    (\`
     (("default" :base-directory
@@ -50,7 +54,9 @@
  '(org2jekyll-source-directory (expand-file-name "~/blogging") nil (org2jekyll))
  '(package-selected-packages
    (quote
-    (kotlin-mode sx pomidor super-save csv-mode dired-toggle github-pullrequest yasnippet-snippets whitespace-cleanup-mode volatile-highlights use-package uptimes undo-tree typo try tldr string-inflection sqlup-mode speed-type smex smartscan shackle restclient restart-emacs ranger pythonic projectile pretty-mode paradox ox-reveal ox-pandoc org2jekyll org-plus-contrib org-download org-bullets ob-go multiple-cursors move-text miniedit markdown-preview-mode magit lorem-ipsum json-mode insert-shebang indent-tools imenu-anywhere highlight-numbers helm-spotify-plus google-translate google-this golden-ratio go-stacktracer go-playground go-guru go-gopath go-eldoc go-direx go-add-tags git-timemachine gist flyspell-correct flycheck fixmee fix-word fill-column-indicator expand-region exec-path-from-shell esup epresent elpy elfeed electric-operator edit-indirect dumb-jump diredfl diminish diff-hl deft counsel company-go company-flx cloc bug-hunter boxquote beacon base16-theme auto-compile artbollocks-mode anzu ace-link))))
+    (messages-are-flowing ess org-alert langtool kotlin-mode sx pomidor super-save csv-mode dired-toggle github-pullrequest yasnippet-snippets whitespace-cleanup-mode volatile-highlights use-package uptimes undo-tree typo try tldr string-inflection sqlup-mode speed-type smex smartscan shackle restclient restart-emacs ranger pythonic projectile pretty-mode paradox ox-reveal ox-pandoc org2jekyll org-plus-contrib org-download org-bullets ob-go multiple-cursors move-text miniedit markdown-preview-mode magit lorem-ipsum json-mode insert-shebang indent-tools imenu-anywhere highlight-numbers helm-spotify-plus google-translate google-this golden-ratio go-stacktracer go-playground go-guru go-gopath go-eldoc go-direx go-add-tags git-timemachine gist flyspell-correct flycheck fixmee fix-word fill-column-indicator expand-region exec-path-from-shell esup epresent elpy elfeed electric-operator edit-indirect dumb-jump diredfl diminish diff-hl deft counsel company-go company-flx cloc bug-hunter boxquote beacon base16-theme auto-compile artbollocks-mode anzu ace-link)))
+ '(window-divider-default-right-width 1)
+ '(window-divider-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

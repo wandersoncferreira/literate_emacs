@@ -1,0 +1,23 @@
+Emacs: Difference between shell, term, eshell
+
+- *shell*: is the standard emacs interface to Operating System's command line
+  interface.
+- *term*: is a terminal emulator. It behaves like a dedicated terminal app, such
+  as {xterm, gnome-terminal}. It is compatible to more shell apps than emacs
+  ~shell~ interface, but standard emacs keys such as moving cursor doesn't work here.
+- *ansi-term*: is pretty much same to ~term~ today. They were different
+  packages, but now both defined in ~term.el~.
+- *eshell*: is a shell written entirely in Emacs lisp. Note: it is not a bash
+  emulator. Eshell is a shell by itself, but similar to bash or other shells.
+
+
+* Which should you use?
+
+*shell* is the most popular. It is good for general use of classic/standard unix
+ shell commands such as grep, du, ls, sort...
+
+*term* or *ansi-term* are good if you want to run stuff like ssh, or other
+ command line interactive interface such as python, ruby, lisp, or text based
+ GUI app such as vim.
+
+*eshell* is good especially on Windows where bash is not installed.
