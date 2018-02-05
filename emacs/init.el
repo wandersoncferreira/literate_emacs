@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-04 23:19:09 wandersonferreira"
+;; Time-stamp: "2018-02-04 23:21:29 wandersonferreira"
 
 ;;; Code:
 
@@ -1233,6 +1233,19 @@ there's a region, all lines that region covers will be duplicated."
   (add-hook 'after-init-hook 'recentf-mode))
 
 ;;; Programming mode:
+
+;; eldoc
+(use-package eldoc
+  :ensure t
+  :diminish eldoc-mode
+  :commands eldoc-mode
+  :init
+  (setq eldoc-idle-delay 0.1
+        eldoc-echo-area-use-multiline-p nil)
+  :config
+  (eldoc-mode +1)
+  (add-hook 'prog-mode-hook 'turn-on-eldoc-mode))
+
 ;; watch out words
 (add-hook 'prog-mode-hook
           (lambda ()
