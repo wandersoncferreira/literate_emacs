@@ -11,13 +11,27 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-04 13:09:10 wandersonferreira"
+;; Time-stamp: "2018-02-04 23:06:15 wandersonferreira"
 
 ;;; Code:
 
+;; define constants
 (defconst emacs-start-time (current-time))
+(defconst init-isOSX (eq system-type 'darwin))
+(defconst init-isUnix (eq system-type 'gnu/linux))
+(defconst init-isEmacs25 (>= emacs-major-version 25))
 (defvar file-name-handler-alist-old file-name-handler-alist)
+(defvar org-notes-file "~/dotfiles/agenda/notes.org")
+(defvar org-links-file "~/dotfiles/agenda/links.org.gpg")
+(defvar org-todo-file "~/dotfiles/agenda/todo.org.gpg")
+(defvar org-meeting-file "~/dotfiles/agenda/meeting.org.gpg")
+(defvar site-packages (expand-file-name "site-packages" user-emacs-directory))
+(defvar abbrev-data '(("wo" . "without")
+                      ("bc" . "because")
+                      ("dot" . "http://github.com/wandersoncferreira/dotfiles")))
 
+
+;; set initial variables
 (setq package-enable-at-startup nil
       file-name-handler-alist nil
       ac-redefinition-accept 'accept
@@ -93,11 +107,6 @@
 (diminish 'outline-minor-mode)
 
 
-;;; Constants:
-(defconst init-isOSX (eq system-type 'darwin))
-(defconst init-isUnix (eq system-type 'gnu/linux))
-(defconst init-isEmacs25 (>= emacs-major-version 25))
-
 ;; load custom themes
 (setq custom-theme-directory (concat user-emacs-directory "themes"))
 (dolist
@@ -114,20 +123,15 @@
 
 (use-package base16-theme :ensure t)
 (setq custom-safe-themes t)
-;; (load-theme 'default-black t)
 (load-theme 'base16-google-light t)
 
 ;; highlight region whenever mark is active
 (transient-mark-mode +1)
 
-
 ;; I don't like of too much things happening when I open Emacs
 (setq inhibit-splash-screen t
       inhibit-startup-echo-area-message t
       inhibit-startup-message t)
-
-(setq user-full-name "Wanderson Ferreira"
-      user-mail-address "iagwanderson@gmail.com")
 
 ;; removing distractive ui
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -682,9 +686,6 @@
 
 ;;; Abbreviation mode:
 
-(defvar abbrev-data '(("wo" . "without")
-                      ("bc" . "because")
-                      ("dot" . "http://github.com/wandersoncferreira/dotfiles")))
 (dolist (var abbrev-data)
   (let ((base (car var))
         (expansion (cdr var)))
@@ -1482,8 +1483,6 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
         ("emacs" "find-file $1")))
 
 ;;; ERC mode:
-(defvar site-packages
-  (expand-file-name "site-packages" user-emacs-directory))
 (add-to-list 'load-path (concat site-packages "/erc-extras") t)
 
 (erc-spelling-mode +1)
@@ -1619,8 +1618,13 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (diff-hl-flydiff-mode)
   (global-diff-hl-mode +1))
 
-;;; Markdown mode:
+;; define the faces for git diff
+(custom-set-faces
+ '(diff-hl-change ((t (:background "#3a81c3"))))
+ '(diff-hl-delete ((t (:background "#ee6363"))))
+ '(diff-hl-insert ((t (:background "#7ccd7c")))))
 
+;;; Markdown mode:
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -1683,12 +1687,9 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (defun bk/switch-to-eshell ()
   (interactive)
   (switch-to-buffer "*eshell*"))
-
 (global-set-key (kbd "C-c e") 'bk/switch-to-eshell)
 
-
 ;;; SQL mode:
-
 (defun my-sql-connect (product connection)
   "Connect to sql using the encrypted passwords receive PRODUCT AND CONNECTION."
 
@@ -1719,9 +1720,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (add-hook 'sql-mode-hook 'sqlup-mode)
   (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
 
-
 ;;; Server mode in Emacs:
-
 (require 'server)
 (add-hook 'after-init-hook (lambda ()
                              (unless (or (daemonp) (server-running-p))
@@ -1737,22 +1736,23 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   :ensure t)
 
 ;;; Mail settings:
-
 (require 'smtpmail)
-(setq starttls-use-gnutls t)
-(setq send-mail-function 'smtpmail-send-it
-      message-send-mail-function 'smtpmail-send-it)
-(setq smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
-(setq smtpmail-auth-credentials "~/.emacs.d/secrets/authinfo.gpg")
-(setq smtpmail-default-smtp-server "smtp.gmail.com")
-(setq smtpmail-smtp-server "smtp.gmail.com")
-(setq smtpmail-smtp-service 587)
-(setq smtpmail-debug-info t)
-(setq starttls-extra-arguments nil
+(setq user-full-name "Wanderson Ferreira"
+      user-mail-address "iagwanderson@gmail.com"
+      starttls-use-gnutls t
+      send-mail-function 'smtpmail-send-it
+      message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials "~/.emacs.d/secrets/authinfo.gpg"
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      smtpmail-debug-info t
+      starttls-extra-arguments nil
 	  starttls-gnutls-program "/usr/bin/gnutls-cli"
-	  starttls-use-gnutls t)
-(setq smtpmail-smtp-user "iagwanderson")
-(setq message-signature "Wanderson Ferreira
+	  starttls-use-gnutls t
+      smtpmail-smtp-user "iagwanderson"
+      message-signature "Wanderson Ferreira
 http://bartuka.com
 Sent from Emacs")
 
@@ -1763,7 +1763,6 @@ Sent from Emacs")
   (add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines))
 
 ;;; grep-folder:
-
 (add-to-list 'load-path "~/.emacs.d/site-packages/grep-folder")
 (require 'grep-folder)
 (setq grep-folder-setup-dirs '(("~/.emacs.d" . ("var/" "etc/" ".cask/" ".git/" "site-packages" "elpa/" "themes/"))
@@ -1773,7 +1772,6 @@ Sent from Emacs")
 (global-set-key (kbd "C-c g") 'grep-folder)
 
 ;;; Latex settings:
-
 (defun bk/template-latex-simple ()
   "Personal LaTeX template."
   (interactive)
@@ -1828,9 +1826,7 @@ Sent from Emacs")
                     (output-pdf "Skim")
                     (output-html "xdg-open"))))))
 
-
 ;;; Org mode settings:
-
 (require 'org)
 (setq-default org-confirm-babel-evaluate nil
               org-return-follows-link t
@@ -1867,7 +1863,6 @@ Sent from Emacs")
 
 ;; remove from the modeline
 (require 'org-indent)
-
 (require 'ob-scheme)
 (require 'ob-python)
 (require 'ob-emacs-lisp)
@@ -1908,11 +1903,6 @@ Sent from Emacs")
   :init
   (setq alert-default-style 'libnotify)
   :ensure t)
-
-(defvar org-notes-file "~/dotfiles/agenda/notes.org")
-(defvar org-links-file "~/dotfiles/agenda/links.org.gpg")
-(defvar org-todo-file "~/dotfiles/agenda/todo.org.gpg")
-(defvar org-meeting-file "~/dotfiles/agenda/meeting.org.gpg")
 
 (setq org-capture-templates
       '(("n" "Note" entry (file+headline org-notes-file "Notes")
