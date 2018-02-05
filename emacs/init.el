@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-04 23:06:15 wandersonferreira"
+;; Time-stamp: "2018-02-04 23:19:09 wandersonferreira"
 
 ;;; Code:
 
@@ -30,6 +30,13 @@
                       ("bc" . "because")
                       ("dot" . "http://github.com/wandersoncferreira/dotfiles")))
 
+
+;; define aliases
+(defalias 'dtw 'delete-trailing-whitespace)
+(defalias 're 'restart-emacs)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'sh 'eshell)
+(defalias 'refresh 'package-refresh-contents)
 
 ;; set initial variables
 (setq package-enable-at-startup nil
@@ -146,8 +153,8 @@
 (setq font-lock-maximum-decoration 1)
 
 ;; use dialog boxes
-(setq use-dialog-box nil)
-(setq use-file-dialog nil)
+(setq use-dialog-box nil
+      use-file-dialog nil)
 
 ;; improve the frame title in Emacs to show the path to file visited
 (when (display-graphic-p)
@@ -165,18 +172,24 @@
   (setq x-gtk-use-system-tooltip nil))
 
 ;; more info into the modeline
+
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'respectful)
+  (sml/setup))
+
 (column-number-mode +1)
 
 
 ;;** time display
 (require 'time)
-(setq display-time-24hr-format t)
-(setq display-time-world-list '(("Etc/GMT+2" "São Paulo")
+(setq display-time-24hr-format t
+      display-time-world-list '(("Etc/GMT+2" "São Paulo")
                                 ("America/New_York" "New York")
                                 ("Europe/Italy" "Milan")))
 (display-time-mode +1)
-
-(setq ring-bell-function 'ignore)
 
 ;; mouse
 (setq mouse-wheel-progressive-speed nil)
@@ -197,6 +210,7 @@
 ;; there is a need to change some default behaviors
 (setq-default tab-always-indent 'complete
               tab-width 4
+              ring-bell-function 'ignore
               require-final-newline t
               auto-save-default nil
               auto-save-list-file-prefix nil
@@ -293,11 +307,6 @@
   :ensure t
   :config
   (super-save-mode +1))
-
-;; aliases
-(defalias 'dtw 'delete-trailing-whitespace)
-(defalias 're 'restart-emacs)
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; activate some modes
 (electric-pair-mode t)
@@ -2056,7 +2065,6 @@ Sent from Emacs")
 
 
 ;;; Edit indirect:
-
 (use-package edit-indirect
   :ensure t
   :commands edit-indirect)
@@ -2091,7 +2099,6 @@ Sent from Emacs")
   (move-text-default-bindings))
 
 ;;; Anzu:
-
 (use-package anzu
   :ensure t
   :diminish anzu-mode
@@ -2099,7 +2106,6 @@ Sent from Emacs")
   (global-anzu-mode +1))
 
 ;;; Additional packages:
-
 ;; pomidor
 (use-package pomidor
   :ensure t
@@ -2196,7 +2202,8 @@ Sent from Emacs")
   ("M-/" . hippie-expand))
 
 ;; restart emacs
-(use-package restart-emacs :ensure t)
+(use-package restart-emacs
+  :ensure t)
 
 ;; csv-mode
 (use-package csv-mode
@@ -2204,7 +2211,6 @@ Sent from Emacs")
   :mode ("\\.csv$\\'"))
 
 ;;; Elfeed - RSS news:
-
 (use-package elfeed
   :ensure t
   :commands elfeed
@@ -2240,9 +2246,9 @@ Sent from Emacs")
   :ensure t
   :commands google-translate-smooth-translate
   :init
-  (setq-default google-translate-translation-directions-alist
-                '(("en" . "pt") ("pt" . "en"))
-                google-translate-show-phonetic t))
+  (setq google-translate-translation-directions-alist
+        '(("en" . "pt") ("pt" . "en"))
+        google-translate-show-phonetic t))
 
 ;; lorem-ipsum
 (use-package lorem-ipsum
@@ -2263,7 +2269,7 @@ Sent from Emacs")
    '(:sets :logic :punctuation :ordering-triple :ordering-double
            :arrows :arrows-twoheaded :ordering))
   (pretty-activate-groups
-   '(:sub-and-superscripts :greek :arithmetic-nary)))
+   '(:sub-and-superscripts :greek)))
 
 ;; prettify symbols
 (global-prettify-symbols-mode +1)
