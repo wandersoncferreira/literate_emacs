@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-04 23:21:29 wandersonferreira"
+;; Time-stamp: "2018-02-04 23:53:27 wandersonferreira"
 
 ;;; Code:
 
@@ -37,6 +37,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'sh 'eshell)
 (defalias 'refresh 'package-refresh-contents)
+(defalias 'rct 'recenter-positions)
 
 ;; set initial variables
 (setq package-enable-at-startup nil
@@ -325,6 +326,22 @@
   :config
   (show-paren-mode +1))
 
+
+;;; Smartparens:
+(use-package smartparens
+  :ensure t
+  :config
+  (require 'smartparens-config)
+  (smartparens-global-strict-mode +1)
+  (sp-local-pair 'erc-mode "(" nil :actions nil)
+  :bind (:map smartparens-mode-map
+              ("C-M-f" . sp-forward-sexp)
+              ("C-M-b" . sp-backward-sexp)
+              ("C-l" . sp-forward-slurp-sexp)
+              ("C-h" . sp-forward-barf-sexp)
+              ("C-c <right>" . sp-backward-slurp-sexp)
+              ("C-c <left>" . sp-backward-barf-sexp)
+              ))
 
 ;; emacs export path correctly
 (add-to-list 'exec-path "/usr/local/bin")
@@ -640,12 +657,10 @@
 
 ;; switch the cmd and meta keys
 (when init-isOSX
-  (setq mac-option-key-is-meta nil
-        ns-control-modifier 'control
-        ns-alternate-modifier 'super
-        ns-right-alternate-modifier nil
-        ns-command-modifier 'meta
-        mac-option-modifier nil))
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'super
+        mac-control-modifier 'control
+        ns-function-modifier 'hyper))
 
 ;; menu bar is not anoyying in OSX
 (when init-isOSX
