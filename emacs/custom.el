@@ -4,7 +4,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
+ '(default-input-method (quote latin-postfix))
  '(delete-selection-mode nil)
+ '(erc-modules
+   (quote
+    (autojoin button completion fill irccontrols list match menu move-to-prompt netsplit networks noncommands readonly ring services stamp spelling track truncate)))
  '(fci-rule-color "#3f1a1a")
  '(org-agenda-files (quote ("~/dotfiles/agenda/todo.org.gpg")))
  '(org-fontify-whole-heading-line t)

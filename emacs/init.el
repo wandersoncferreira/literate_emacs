@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-04 23:53:27 wandersonferreira"
+;; Time-stamp: "2018-02-06 15:01:10 wanderson"
 
 ;;; Code:
 
@@ -327,21 +327,23 @@
   (show-paren-mode +1))
 
 
-;;; Smartparens:
-(use-package smartparens
-  :ensure t
-  :config
-  (require 'smartparens-config)
-  (smartparens-global-strict-mode +1)
-  (sp-local-pair 'erc-mode "(" nil :actions nil)
-  :bind (:map smartparens-mode-map
-              ("C-M-f" . sp-forward-sexp)
-              ("C-M-b" . sp-backward-sexp)
-              ("C-l" . sp-forward-slurp-sexp)
-              ("C-h" . sp-forward-barf-sexp)
-              ("C-c <right>" . sp-backward-slurp-sexp)
-              ("C-c <left>" . sp-backward-barf-sexp)
-              ))
+;; most of the time I find this very useful, however I prefer to take sometime in the future
+;; to learn a little bit better about it.
+;; ;;; Smartparens:
+;; (use-package smartparens
+;;   :ensure t
+;;   :config
+;;   (require 'smartparens-config)
+;;   (smartparens-global-strict-mode +1)
+;;   (sp-local-pair 'erc-mode "(" nil :actions nil)
+;;   :bind (:map smartparens-mode-map
+;;               ("C-M-f" . sp-forward-sexp)
+;;               ("C-M-b" . sp-backward-sexp)
+;;               ("C-l" . sp-forward-slurp-sexp)
+;;               ("C-h" . sp-forward-barf-sexp)
+;;               ("C-c <right>" . sp-backward-slurp-sexp)
+;;               ("C-c <left>" . sp-backward-barf-sexp)
+;;               ))
 
 ;; emacs export path correctly
 (add-to-list 'exec-path "/usr/local/bin")
@@ -544,11 +546,9 @@
   (setq ivy-height 8
         ivy-use-virtual-buffers t
         ivy-current-matching nil
-        ivy-extra-directories nil
         ivy-wrap t
         ivy-count-format ""
         ivy-magic-tilde nil
-        ivy-use-selectable-prompt t     ; allow using the input as entered.
         ivy-initial-inputs-alist nil
         ivy-fixed-height-minibuffer t
         ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
@@ -1521,6 +1521,19 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;;; ERC mode:
 (add-to-list 'load-path (concat site-packages "/erc-extras") t)
+
+;; erc truncate
+(setq erc-max-buffer-size 30000)
+(setq erc-truncate-buffer-on-save t)
+
+;; if you just want to flush the buffer
+(defun bk/erc-FLUSH (&rest ignore)
+  "Erase the current buffer."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (message "Flushed contents of channel..")
+    t))
 
 (erc-spelling-mode +1)
 (add-hook 'erc-mode-hook (lambda () (auto-fill-mode 0)))

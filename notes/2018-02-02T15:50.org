@@ -1,0 +1,83 @@
+Lern X in Y minutes, where X=Kotlin
+
+
+#+BEGIN_SRC kotlin
+  package com.learnxinyminutes.kotlin
+
+  // The entry point to a Kotlin program is a function named "main"
+  // The function is passed an array containing any command line arguments.
+
+  fun main(args: Array<String>){
+      val fooVal = 10              // we cannot later reassign fooVal to something else
+      var fooVar = 10
+      fooVar = 30                 // fooVar can be reassigned
+
+      fun helloWorld(val name: String) {
+          println("Hello, World")
+      }
+
+      // A function parameter may be marked with the "vararg" keyword
+      // to allow a variable number of arguments to be passed to the function...
+      fun varargExample(vararg names: Int) {
+          println("Argument has ${names.size} elements")
+      }
+
+      // The "class" keyword is used to declare classes.
+      class ExampleClass(val x: Int) {
+          fun memberFunction(y: Int): Int {
+              return x+ y
+          }
+
+          infix fun infixMemberFunction(y: Int): Int {
+              return x * y
+          }
+      }
+
+
+      // To create a new instance we call the constructor.
+      // Note that Kotlin does not have a "new" keyword.
+      val fooExampleClass = ExampleClass(7)
+
+      // Data classes are a concise way to create classes that just hold data.
+      // The "hashCode"/"equals" and "toString" methods are automatically generated
+      data class DataClassExample(val x: Int, val y: Int, val z: Int)
+      val fooData = DataClassExample(1, 2, 3)
+
+
+      // We can create a list using the "listOf" function
+      // The list will be immutable - elements cannot be added or removed.
+      val fooList = listOf("a", "b", "c")
+
+
+      // Sequences represent lazily-evaluated collections
+      // We can create a sequence using the "generateSequence" function
+      val fooSequence = generateSequence(1, {it + 1})
+      val x = fooSequence.take(10).toList()
+      println(x) // => [1,2,3,4,5,6,7,8,9,10]
+
+
+      // an example of using a sequence to generate Fibonacci numbers:
+      fun fibonacciSequence(): Sequence<Long> {
+          var a = 0L
+          var b = 1L
+
+          fun next(): Long {
+              val result = a + b
+              a = b
+              b = result
+              return a
+          }
+          return generateSequence(::next)
+      }
+
+      val y = fibonacciSequence().take(10).toList()
+      println(y) // => [1,1,2,3,5,8,13,21,34,55]
+
+      // Kotlin provides higher-order functions for working with collections
+      val z = (1..9).map {it * 3}
+              .filter {it < 20}
+              .groupBy {it % 2 == 0}
+              .mapKeys { if (it.key) "even" else "odd"}
+      println(z) // => {odd=[3,9,15], even=[6,12,18]}
+  }
+#+END_SRC
