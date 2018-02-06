@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-06 15:01:10 wanderson"
+;; Time-stamp: "2018-02-06 17:13:30 wanderson"
 
 ;;; Code:
 
@@ -789,6 +789,7 @@
                         ("*Completions*" :select nil :inhibit-window-quit nil)
                         ("*HTTP Response*" :noselect t :size 0.4 :align below)
                         ("*Warnings*" :select t :size 0.3 :inhibit-window-quit t)
+                        ("*Ediff Control Panel*" :select t :size 0.2 :align below)
                         ("*Bookmark List*" :select t :inhibit-window-quit nil :size 0.3 :align below)
                         ("*grep*" :select t)
                         (special-mode-hook :select t :align t :size 0.3)))
