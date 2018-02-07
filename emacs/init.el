@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-07 06:34:30 wandersonferreira"
+;; Time-stamp: "2018-02-07 08:32:49 wanderson"
 
 ;;; Code:
 
@@ -29,7 +29,6 @@
 (defvar abbrev-data '(("wo" . "without")
                       ("bc" . "because")
                       ("dot" . "http://github.com/wandersoncferreira/dotfiles")))
-
 
 ;; define aliases
 (defalias 'dtw 'delete-trailing-whitespace)
@@ -71,8 +70,10 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; remove undesired packages from the mode-line
 (use-package diminish :ensure t :defer t)
 
+;; necessary to require these packages when byte-compiling the whole project
 (eval-when-compile
   (require 'use-package))
 (require 'diminish)
@@ -137,6 +138,7 @@
 (use-package base16-theme :ensure t)
 (use-package color-theme-sanityinc-tomorrow :ensure t)
 
+;; load the default theme
 (setq custom-safe-themes t)
 (load-theme 'base16-twilight t)
 
@@ -181,22 +183,21 @@
 
 ;; more info into the modeline
 
-;; (use-package smart-mode-line
-;;   :ensure t
-;;   :config
-;;   (setq sml/no-confirm-load-theme t)
-;;   (setq sml/theme 'respectful)
-;;   (sml/setup))
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
 
 (column-number-mode +1)
 
 
-;;** time display
+;; time display in the mode-line
 (require 'time)
 (setq display-time-24hr-format t
       display-time-world-list '(("Etc/GMT+2" "São Paulo")
                                 ("America/New_York" "New York")
                                 ("Europe/Italy" "Milan")))
+;; activate the display time mode
 (display-time-mode +1)
 
 ;; mouse
@@ -215,12 +216,12 @@
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'text-mode-hook '(lambda () (set-fill-column 80)))
 
-;; there is a need to change some default behaviors
+;; I need to change some default behaviors on Emacs
 (setq-default tab-always-indent 'complete
               tab-width 4
               ring-bell-function 'ignore
               require-final-newline t
-              auto-save-default nil
+              auto-save-default nil       ; I have super-save on...
               auto-save-list-file-prefix nil
               set-mark-command-repeat-pop t
               register-preview-delay nil
@@ -249,8 +250,7 @@
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
-
-;; backup
+;; backup settings
 (setq backup-directory-alist `(("." . ,(expand-file-name "backup" user-emacs-directory)))
       backup-by-copying-when-linked t
       delete-old-versions t
@@ -260,18 +260,19 @@
       version-control t)
 
 ;; functions to find functions =)
-(defun lgm/describe-func ()
+;; sorry lgmoneda, I need to rename these guys or I will never use it... :(
+(defun bk/describe-func ()
   "Jump to Elisp functions."
   (interactive)
   (describe-function (function-called-at-point)))
 
-(defun lgm/jump-to-elisp-func-def ()
+(defun bk/jump-to-elisp-func-def ()
   "Jump to Elisp definitions."
   (interactive)
   (find-function (function-called-at-point)))
 
-(global-set-key (kbd "C-h C-j") 'lgm/jump-to-elisp-func-def)
-(global-set-key (kbd "C-h C-f") 'lgm/describe-func)
+(global-set-key (kbd "C-h C-j") 'bk/jump-to-elisp-func-def)
+(global-set-key (kbd "C-h C-f") 'bk/describe-func)
 
 ;; smart `beginning-of-line'
 (defadvice move-beginning-of-line (around smarter-bol activate)
@@ -284,7 +285,6 @@
     (back-to-indentation)
     (when (= pos (point))
       ad-do-it)))
-
 
 ;; expand region
 (use-package expand-region
@@ -307,23 +307,27 @@
 
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 
-
 ;; super save
 ;; Automatically save when tabbing out of a buffer.
 (use-package super-save
   :diminish super-save-mode
   :ensure t
+  :init
+  (setq super-save-auto-save-when-idle t)
   :config
   (super-save-mode +1))
 
-;; activate some modes
-(electric-pair-mode t)
+;; activate some really important modes
+(setq auto-revert-verbose nil)
+
+(add-hook 'after-init-hook #'electric-pair-mode)
 (add-hook 'after-init-hook #'delete-selection-mode)
 (add-hook 'after-init-hook #'pending-delete-mode)
-(global-auto-revert-mode t)
-(setq auto-revert-verbose nil)
+(add-hook 'after-init-hook #'global-auto-revert-mode)
+(add-hook 'after-init-hook #'subword-mode)
+
+;; remove undesired packages' name from the mode-line
 (diminish 'auto-revert-mode)
-(subword-mode t)
 (diminish 'subword-mode)
 
 ;; show parenthesis mode
@@ -332,7 +336,6 @@
   (setq show-paren-ring-bell-on-mismatch t)
   :config
   (show-paren-mode +1))
-
 
 ;; most of the time I find this very useful, however I prefer to take sometime in the future
 ;; to learn a little bit better about it.
@@ -797,6 +800,8 @@
                         ("*HTTP Response*" :noselect t :size 0.4 :align below)
                         ("*Warnings*" :select t :size 0.3 :inhibit-window-quit t)
                         ("*Ediff Control Panel*" :select t :size 0.2 :align below)
+                        ("*Process List*" :size 0.2 :align below)
+                        ("*wclock*" :select t :size 0.6 :align below)
                         ("*Bookmark List*" :select t :inhibit-window-quit nil :size 0.3 :align below)
                         ("*grep*" :select t)
                         (special-mode-hook :select t :align t :size 0.3)))
@@ -1517,7 +1522,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 ;; finally load eshell on startup
 (add-hook 'emacs-startup-hook (lambda ()
                                 (let ((default-directory (getenv "HOME")))
-                                  (command-execute 'eshell))))
+                                  (command-execute 'eshell)
+                                  (delete-other-windows))))
 
 ;; some aliases
 (setq eshell-command-aliases-list
@@ -2309,7 +2315,6 @@ Sent from Emacs")
 ;; ;; │ use mathematical Unicode symbols instead of expressions or keywords in
 ;; ;; | some programming languages
 ;; ;; ╰────
-
 (use-package pretty-mode
   :ensure t
   :config
@@ -2330,7 +2335,6 @@ Sent from Emacs")
            ("def" .      #x2131)
            ("not" .      #x2757)
            ("in" .       #x2208)
-           ("not in" .   #x2209)
            ("return" .   #x27fc)
            ("yield" .    #x27fb)
            ("for" .      #x2200)
@@ -2345,8 +2349,7 @@ Sent from Emacs")
            ("list" .     #x2112)
            ("tuple" .    #x2a02)
            ("set" .      #x2126)
-           ("iterable" . #x1d50a)
-           ("union" .    #x22c3)))))
+           ("iterable" . #x1d50a)))))
 
 ;; Speed type
 ;; is for practice touch/speed typing in Emacs
@@ -2356,6 +2359,8 @@ Sent from Emacs")
 (use-package golden-ratio
   :ensure t
   :diminish golden-ratio-mode
+  :init
+  (setq golden-ratio-exclude-buffer-names '("*wclock*" "*Warnings*"))
   :config
   (add-to-list 'golden-ratio-extra-commands 'ace-window)
   (golden-ratio-mode +1))
