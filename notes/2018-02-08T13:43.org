@@ -2,6 +2,7 @@ From big data to fast data
 
 Notes about a Oreilly publication on Fast data.
 
+* Introduction
     - When batch operations predominated, Hadoop could handle most of an
       organization's needs.
     - Real-time decision needs complicate this scenario and new tools and
@@ -35,3 +36,55 @@ Notes about a Oreilly publication on Fast data.
 
 Two perspective: logical (i.e the model) and physical data storage
 - Every problem has its solution but don't reinvent the wheel
+
+
+* Data processing: combining tools and approaches
+
+ - Systems must have batch and stream processing at the same time
+ - Segment your processing and consider micro batching
+ - Considering in-memory or in-disk and data locality
+ - Technologies
+   - Apache Spark: engine for large-scale data processing
+   - Apache Flink: stream processing framework
+   - Apache Storm: distributed realtime computation system
+   - Apache Beam: unified model for batch and streaming data
+
+* Data visualization
+
+- Don't process and minimize calculations
+  - This step should avoid processing. Some reports will need runtime
+    calculations, but always work in the highest level of data possible. Data
+    should always be in summarized output tables, with groupings that could be
+    temporal or categorical
+- Parallelism and performance
+- Technologies
+  - Apache Zeppelin and Jupyter notebooks
+  - Charts, maps, and graphs: Tableu
+  - Customized charts, maps, and graphics: D3.js and Gephi
+
+
+* Data center management: the fast data infrastructure
+
+- From scale-up to scale-out and the open-source reign
+  - A common practice is to create a dedicated cluster for each technology: a
+    Kafka cluster, a Spark cluster, a Cassandra cluster, etc. The tendency is to
+    adopt open source and avoid two dependencies: vendor lock-in and external
+    entity support. Transparency is ensured through community-defined groups,
+    such as the Apache Software Foundation, and tooling for sustainable and fair
+    technology development.
+- Data store diversification, data gravity, and data locality
+  - Deal with data store synchronization among data centers
+  - Data locality is the idea of moving computation to the data rather than data
+    to the computation
+- DevOps rules
+  - Devops means best practices for collaboration between software development
+    and operations. To avoid reworking, the developer's team should have the
+    same for local testing as the used in production environments.
+- Technologies
+  - Apache Mesos: project to manage computer clusters
+  - Mesosphere DC/OS: platform for automating rollout and production for
+    containers and data services
+  - Docker: platform to build, ship, and run distributed applications
+  - Kubernetes: system for automating, deploying, scaling and managing
+    containerized applications
+  - Spinnaker: multi-cloud continuous delivery platform for releasing software changes.
