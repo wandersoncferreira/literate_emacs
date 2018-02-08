@@ -1,0 +1,60 @@
+How to solve 90% of NLP problems: a step-by-step guide
+
+
+Notes about the [[https://blog.insightdatascience.com/how-to-solve-90-of-nlp-problems-a-step-by-step-guide-fda605278e4e?imm_mid=0fb117][Using Machine Learning to understand and leverage text]]
+
+* Intro
+
+The science of extracting meaning and learning from text data is an active topic
+of research called Natural Language Processing (NLP)
+
+
+ The Insight team has seen a few key practical applications come up much more
+ frequently than any other:
+     - Identifying different cohorts of users/customers (prediction churn,
+       lifetime value, product preferences)
+     - Accurately detecting and extracting different categories of feedback
+       (positive and negative reviews/opinios)
+     - Classifying text according to intent (request for basic help, urgent problem)
+
+ 
+* How this article can help
+
+ We will begin with *the simplest method* that could work, and then move on to
+ more nuanced solutions, such as featuring engineering, word vectors, and deep
+ learning.
+
+
+
+* Step 1: Gather your data
+
+ Common sources of textual information include:
+     - Product reviews
+     - User-generated content (Tweets, Facebook, questions...)
+     - Troubleshooting
+
+
+ Example that will be used for this tutorial... *Disaster on Social Media*
+ dataset. Our task will be to detect which tweets are about disastrous event as
+ opposed to an irrelevant topic.
+
+<LOL>
+"Rather than spending a month figuring out an unsupervised machine learning
+problem, just label some data for a week and train a classifier"
+</LOL>
+
+
+* Step 2: Clean your data
+
+"A clean dataset will allow a model to learn meaningful features and not overfit
+on irrelevant noise."
+
+1. Remove all irrelevant characters such as any non alphanumeric characters
+2. Tokenize your test by separating it into individual words
+3. Remove words that are not relevant, such as "@" twitter mentions or urls
+4. Convert all characters to lowercase, in order to treat words with different
+   capitalization the same way
+5. Consider combining misspelled or alternately spelled words to a single
+   representation (e.g. "cool"/"kool"/"cooool")
+6. Consider lemmatization (reduce words such as "am", "are", and "is")
+
