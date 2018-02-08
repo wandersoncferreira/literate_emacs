@@ -1,0 +1,77 @@
+import pandas as pd
+import numpy as np
+import os
+import sys
+import datetime as dt
+import abc
+
+
+
+# integer dataframe
+df_int = pd.DataFrame({"col1": [el for el in range(10, 40)],
+                    "col2": [el for el in range(55, 85)],
+                    "col3": [el for el in range(30)]})
+
+# date dataframe
+df_dates = pd.DataFrame({"col_index": [(dt.datetime.today() + dt.timedelta(weeks=el)).date() for el in range(20)],
+                         "col1": [el for el in range(100, 120)],
+                         "col2": [el for el in range(1, 21)]})
+df_dates.set_index("col_index", inplace=True)
+
+
+
+# pandas datetime dataframe
+df_pandas_dates = df_dates.copy()
+df_pandas_dates.index = pd.to_datetime(df_pandas_dates.index)
+
+# var AlexGame
+alexGame = 2
+
+
+# matrix with zeros
+mzeros = np.zeros((20, 20))
+
+
+# column matrix with random values
+mc_random = np.random.random((1, 20))
+
+
+# line matrix with random values
+ml_random = np.random.random((20, 1))
+
+
+# full matrix with random values
+m_random = np.random.random((20, 20))
+
+
+# list with integers
+ilist = [el for el in range(20)]
+
+
+# datetime
+dt_base = dt.datetime.today()
+dt_list = [(dt_base - dt.timedelta(days=el)).date() for el in range(20)]
+
+
+
+# dictionary with integers
+dict_int = {key: value for key, value in zip(range(0, 20), range(10, 30))}
+
+
+
+# dictionary with dates in keys
+dict_dates = {key: value for key, value in zip(dt_list, ilist)}
+
+
+
+# regular class
+class NormalClass:
+
+    def foo(self):
+        NotImplemented
+
+
+    def bar(self):
+        raise NotImplementedError
+
+

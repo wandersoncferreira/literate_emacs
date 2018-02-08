@@ -1,3 +1,6 @@
 [submodule "emacs/site-packages/grep-folder"]
 	path = emacs/site-packages/grep-folder
 	url = http://github.com/wandersoncferreira/grep-folder
+[submodule "emacs/site-packages/python-experiment"]
+	path = emacs/site-packages/python-experiment
+	url = https://github.com/wandersoncferreira/python-experiment

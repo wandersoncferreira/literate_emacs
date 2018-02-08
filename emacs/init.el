@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-07 08:32:49 wanderson"
+;; Time-stamp: "2018-02-08 17:52:50 wanderson"
 
 ;;; Code:
 
@@ -816,14 +816,6 @@
   :config
   (add-hook 'after-init-hook 'typo-global-mode))
 
-;;; Shebang:
-
-(use-package insert-shebang
-  :ensure t
-  :init
-  (setq insert-shebang-ignore-extensions '("txt" "org" "el")))
-
-
 ;;; Bash Completions:
 (add-hook 'shell-dynamic-complete-functions 'bash-completion-dynamic-complete)
 
@@ -1457,6 +1449,13 @@ there's a region, all lines that region covers will be duplicated."
   (exec-path-from-shell-initialize)
   (when window-system (set-exec-path-from-shell-PATH)))
 
+
+;;; Python experiment mode:
+(add-to-list 'load-path "~/.emacs.d/site-packages/python-experiment")
+(require 'python-experiment)
+(setq python-experiment-builtins '((functools . nil) (os . nil) (collections . cl) (hubble . nil)))
+
+
 ;;; Eshell:
 (use-package eshell
   :init
@@ -1537,7 +1536,7 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 (add-to-list 'load-path (concat site-packages "/erc-extras") t)
 
 ;; erc truncate
-(setq erc-max-buffer-size 30000)
+(setq erc-max-buffer-size 3000)
 (setq erc-truncate-buffer-on-save t)
 
 ;; if you just want to flush the buffer
@@ -1652,8 +1651,15 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
 
 ;; logging is activated
 (require 'erc-log)
-(setq erc-save-buffer-on-part t)
-(setq erc-hide-timestamps t)
+(setq erc-log-channels-directory "~/.emacs.d/logs")
+(setq erc-save-buffer-on-part nil
+      erc-save-queries-on-quit nil
+      erc-log-write-after-insert t
+      erc-log-write-after-send t
+      erc-hide-timestamps t)
+
+(setq erc-log-insert-log-on-open t)
+(add-hook 'erc-mode-hook #'erc-log-mode)
 
 ;;; Flycheck settings:
 

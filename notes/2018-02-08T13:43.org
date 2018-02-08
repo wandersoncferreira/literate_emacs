@@ -1,0 +1,37 @@
+From big data to fast data
+
+Notes about a Oreilly publication on Fast data.
+
+    - When batch operations predominated, Hadoop could handle most of an
+      organization's needs.
+    - Real-time decision needs complicate this scenario and new tools and
+      architectures are needed to handle these challenges
+
+* Beyond Hadoop: designing architectures for fast data
+
+ Any successful a fast data architecture must satisfy these high-level
+ requirements:
+     - Performant and reliable data acquisition or ingestion
+     - Flexible storage and querying
+     - Sophisticates analysis tools
+
+ 
+* Data acquisition: pipeline for performance
+ 
+ - The key focus of this stage is performance (?sera?)
+ - Data transfer should be asynchronous and avoid back pressure
+ - Parsing can be expensive so parallelize when possible:
+   - The most expensive step of data acquisition is data transformation
+   - Processing must work with valid data sets, so clean and remove duplicates
+     before transforming data.
+ - Technologies: For this stage you should consider streaming APIs and messaging
+   solutions.... (uhmmmm)
+   - Apache Kafka - open-source stream processing platform
+   - Apache Streams - open-source stream processing based on Akka
+   - Amazon Kinesis - Amazon data stream processing solution
+   - ActiveMQ - open-source message broker with a JMS client in Java
+
+* Data storage: flexible experimentation leads to solutions
+
+Two perspective: logical (i.e the model) and physical data storage
+- Every problem has its solution but don't reinvent the wheel
