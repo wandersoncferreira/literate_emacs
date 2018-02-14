@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-08 17:52:50 wanderson"
+;; Time-stamp: "2018-02-14 09:48:27 bartuka"
 
 ;;; Code:
 
@@ -1672,8 +1672,8 @@ The eshell is renamed to match that directory to make multiple eshell windows ea
   (add-hook 'go-mode-hook 'flycheck-mode))
 
 ;; goflycheck
-(add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
-(require 'go-flycheck)
+;; (add-to-list 'load-path "~/go/src/github.com/dougm/goflymake")
+;; (require 'go-flycheck)
 
 ;;; Diff highlight:
 
@@ -2321,41 +2321,41 @@ Sent from Emacs")
 ;; ;; │ use mathematical Unicode symbols instead of expressions or keywords in
 ;; ;; | some programming languages
 ;; ;; ╰────
-(use-package pretty-mode
-  :ensure t
-  :config
-  (global-pretty-mode +1)
-  (pretty-deactivate-groups
-   '(:sets :logic :punctuation :ordering-triple :ordering-double
-           :arrows :arrows-twoheaded :ordering))
-  (pretty-activate-groups
-   '(:sub-and-superscripts :greek)))
+;; (use-package pretty-mode
+;;   :ensure t
+;;   :config
+;;   (global-pretty-mode +1)
+;;   (pretty-deactivate-groups
+;;    '(:sets :logic :punctuation :ordering-triple :ordering-double
+;;            :arrows :arrows-twoheaded :ordering))
+;;   (pretty-activate-groups
+;;    '(:sub-and-superscripts :greek)))
 
-;; prettify symbols
-(global-prettify-symbols-mode +1)
-(add-hook
- 'python-mode-hook
- (lambda ()
-   (mapc (lambda (pair) (push pair prettify-symbols-alist))
-         '(;; Syntax
-           ("def" .      #x2131)
-           ("not" .      #x2757)
-           ("in" .       #x2208)
-           ("return" .   #x27fc)
-           ("yield" .    #x27fb)
-           ("for" .      #x2200)
-           ;; Base Types
-           ("int" .      #x2124)
-           ("float" .    #x211d)
-           ("str" .      #x1d54a)
-           ("True" .     #x1d54b)
-           ("False" .    #x1d53d)
-           ;; Mypy
-           ("dict" .     #x1d507)
-           ("list" .     #x2112)
-           ("tuple" .    #x2a02)
-           ("set" .      #x2126)
-           ("iterable" . #x1d50a)))))
+;; ;; prettify symbols
+;; (global-prettify-symbols-mode +1)
+;; (add-hook
+;;  'python-mode-hook
+;;  (lambda ()
+;;    (mapc (lambda (pair) (push pair prettify-symbols-alist))
+;;          '(;; Syntax
+;;            ("def" .      #x2131)
+;;            ("not" .      #x2757)
+;;            ("in" .       #x2208)
+;;            ("return" .   #x27fc)
+;;            ("yield" .    #x27fb)
+;;            ("for" .      #x2200)
+;;            ;; Base Types
+;;            ("int" .      #x2124)
+;;            ("float" .    #x211d)
+;;            ("str" .      #x1d54a)
+;;            ("True" .     #x1d54b)
+;;            ("False" .    #x1d53d)
+;;            ;; Mypy
+;;            ("dict" .     #x1d507)
+;;            ("list" .     #x2112)
+;;            ("tuple" .    #x2a02)
+;;            ("set" .      #x2126)
+;;            ("iterable" . #x1d50a)))))
 
 ;; Speed type
 ;; is for practice touch/speed typing in Emacs
