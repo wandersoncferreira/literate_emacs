@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-14 13:57:07 wanderson"
+;; Time-stamp: "2018-02-14 20:06:03 wanderson"
 
 ;;; Code:
 
@@ -771,7 +771,14 @@
         deft-default-extension "org"
         deft-directory "~/dotfiles/notes"
         deft-recursive t
+        deft-use-filename-as-title nil
+        deft-use-filter-string-for-filename t
         deft-auto-save-interval 0)
+  
+  (setq deft-file-naming-rules
+        '((noslash . "-")
+          (nospace . "-")
+          (case-fn . downcase)))
   :bind
   ("<f6>" . deft)
   :config

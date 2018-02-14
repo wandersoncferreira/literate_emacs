@@ -1,0 +1,5 @@
+#+TITLE: An outsiders tour of reinforcement learning part 1
+
+
+[[http://www.argmin.net/2018/01/29/taxonomy/?imm_mid=0fb29a&cmp=em-data-na-na-newsltr_20180214][Link]]
+
