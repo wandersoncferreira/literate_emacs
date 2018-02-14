@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-14 09:48:27 bartuka"
+;; Time-stamp: "2018-02-14 13:57:07 wanderson"
 
 ;;; Code:
 
@@ -172,10 +172,6 @@
 	    '((:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name))
                    "%b")))))
-
-;; cursor like a thin bar. Idk why I got used to it.
-(when (display-graphic-p)
-  (setq-default cursor-type 'bar))
 
 ;; Don't use GTK+ tooltip
 (when (boundp 'x-gtk-use-system-tooltips)
@@ -2067,7 +2063,7 @@ Sent from Emacs")
 
 (use-package org2jekyll
   :ensure t
-  :init
+  :config
   (custom-set-variables '(org2jekyll-blog-author "Wanderson Ferreira")
                         '(org2jekyll-source-directory (expand-file-name "~/blogging"))
                         '(org2jekyll-jekyll-directory (expand-file-name "~/wandersoncferreira.github.io"))
@@ -2121,7 +2117,6 @@ Sent from Emacs")
                              :publishing-function org-publish-attachment
                              :recursive t)
                             ("web" :components ("images" "js" "css")))))
-  :config
   (add-hook 'org-mode-hook 'org2jekyll-mode))
 
 
