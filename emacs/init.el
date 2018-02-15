@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-15 07:09:07 bartuka"
+;; Time-stamp: "2018-02-15 07:26:18 bartuka"
 
 ;;; Code:
 
@@ -627,9 +627,13 @@
           ((string= (system-name) "Wandersons-Air")
            (pythonic-activate "~/miniconda3")
            (message "Python environment Miniconda Default was activated!"))
+          (t
+           (pythonic-activate "~/miniconda3")
+           (message "Python Miniconda default is active!"))
           ))
   :config
   (set-right-python-environment))
+
 
 (use-package electric-operator
   :ensure t
@@ -746,6 +750,19 @@
   (add-hook 'prog-mode-hook #'abbrev-mode)
   (add-hook 'text-mode-hook #'abbrev-mode))
 
+;;; Clojure:
+(use-package cider
+  :ensure t
+  :mode (("\\.edn$'" . clojure-mode)
+         ("\\.boot$\\'" . clojure-mode)
+         ("\\.cljs.*$\\'" . clojure-mode)
+         ("\\lein-env\\'" . enh-ruby-mode))
+  :init
+  (setq cider-repl-pop-to-buffer-on-connect t
+        cider-show-error-buffer t
+        cider-auto-select-error-buffer t
+        cider-repl-history-file "~/.emacs.d/cider-history"
+        cider-repl-wrap-history t))
 
 ;;; Projectile:
 
