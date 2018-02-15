@@ -11,7 +11,7 @@
 ;;; Commentary:
 
 ;; Here be dragons!!
-;; Time-stamp: "2018-02-14 20:06:03 wanderson"
+;; Time-stamp: "2018-02-15 07:09:07 bartuka"
 
 ;;; Code:
 
@@ -140,7 +140,7 @@
 
 ;; load the default theme
 (setq custom-safe-themes t)
-(load-theme 'base16-twilight t)
+(load-theme 'base16-google-light t)
 
 ;; highlight region whenever mark is active
 (transient-mark-mode +1)
@@ -564,21 +564,25 @@
               ("C-j" . ivy-immediate-done)
               ("RET" . ivy-alt-done)))
 
+(use-package smex
+  :ensure t
+  :init
+  (setq smex-completion-system 'ivy)
+  :config
+  (smex-initialize))
 
 (use-package counsel
   :ensure t
   :config
-
-  (use-package smex
-    :ensure t
-    :init
-    (setq smex-completion-system 'ivy)
-    :config (smex-initialize))
-
   (add-hook 'after-init-hook 'counsel-mode)
   :bind
   (("M-x" . counsel-M-x)
    ("C-x C-m" . counsel-M-x)))
+
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (counsel-projectile-mode))
 
 ;; global visual line
 (global-visual-line-mode +1)
@@ -687,6 +691,11 @@
 (defun bk/source-code-pro (font-size)
   "Define Source Code font with a specific FONT-SIZE."
   (set-face-attribute 'default nil :family "Source Code Pro" :height font-size))
+
+;; do not centralize cursor
+(setq scroll-step 1
+      scroll-conservatively 10000
+      auto-window-vscroll nil)
 
 (when init-isOSX
   (require 'ls-lisp)
@@ -862,6 +871,33 @@
   :commands restclient-mode)
 
 
+;;; Smartparens:
+;; for the nth time, let's try this smartparens
+(use-package smartparens
+  :ensure t
+  :config
+  (smartparens-global-strict-mode)
+  (require 'smartparens-config)
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "`" "'")
+  (sp-local-pair 'erc-mode "(" nil :actions nil)
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
+
+;; key-bindings
+;; jumps the outer ()
+(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+
+;; enter the next at beginning ()
+(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+
+
+;; slurp and barf
+(define-key smartparens-mode-map (kbd "C-<right>") 'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-<left>") 'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-M-<right>") 'sp-backward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-M-<left>") 'sp-backward-barf-sexp)
+
 ;;; Company mode:
 
 (use-package company
@@ -886,8 +922,8 @@ In that case, insert the number."
   (setq company-transformers '(company-sort-by-occurrence))
   (setq company-require-match 'never)
   (setq company-show-numbers t)
-  (setq company-idle-delay 0.4)
-  (setq company-minimum-prefix-length 4)
+  (setq company-idle-delay 0.3)
+  (setq company-minimum-prefix-length 2)
 
   :config
 
@@ -2368,7 +2404,7 @@ Sent from Emacs")
   :ensure t
   :diminish golden-ratio-mode
   :init
-  (setq golden-ratio-exclude-buffer-names '("*wclock*" "*Warnings*"))
+  (setq golden-ratio-exclude-buffer-names '("*wclock*" "*Warnings*" "*Choices*"))
   :config
   (add-to-list 'golden-ratio-extra-commands 'ace-window)
   (golden-ratio-mode +1))
