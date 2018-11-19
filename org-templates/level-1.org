@@ -1,0 +1,12 @@
+#+TITLE: @bartuka
+#+DATE: <2018-11-6 Tue>
+#+EMAIL: wanderson.ferreira@protonmail.com
+#+AUTHOR: Wanderson Ferreira
+#+OPTIONS: toc:nil title:nil creator:coment date:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/stylesheet.css"/>
+#+HTML_HEAD: <script type="text/javascript" src="../../js/main.js"></script>
+#+CREATOR: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="https://orgmode.org">Org</a> mode 9.1.9)
+#+ATTR_HTML: :width 300px
+#+ATTR_ORG: :width 300
+#+LANGUAGE: en

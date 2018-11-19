@@ -1,0 +1,37 @@
+;; clojure mode
+(bk/install-maybe-require 'clojure-mode)
+(bk/install-maybe-require 'clojure-mode-extra-font-locking)
+
+(add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
+(add-to-list 'exec-path "/usr/local/bin")
+(add-hook 'clojure-mode-hook 'cider-mode)
+
+(define-key clojure-mode-map [remap paredit-forward] 'clojure-forward-logical-sexp)
+(define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp)
+
+;; cider
+(bk/install-maybe-require 'cider)
+
+(setq cider-repl-result-prefix ";; => ")
+(setq cider-repl-display-help-banner nil
+      cider-repl-wrap-history t
+      cider-auto-select-error-buffer t
+      cider-show-error-buffer t
+      cider-repl-use-clojure-font-lock t
+      cider-repl-pop-to-buffer-on-connect nil
+      cider-repl-use-pretty-printing t
+      cider-repl-popup-stacktraces t)
+
+;; refactor
+(bk/install-maybe-require 'clj-refactor)
+
+(setq cljr-favor-prefix-notation nil
+      cljr-favor-private-functions nil)
+
+(defun my-clojure-mode-hook ()
+  (clj-refactor-mode +1)
+  (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+
+(provide 'setup-clojure)

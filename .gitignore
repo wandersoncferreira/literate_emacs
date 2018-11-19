@@ -1,0 +1,9 @@
+elpa/
+auto-save-list/
+backup/
+history
+ido.last
+projectile-bookmarks.eld
+recentf
+smex-items
+.mc-lists.el

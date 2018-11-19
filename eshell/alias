@@ -1,0 +1,6 @@
+alias ll ls -l
+alias d dired $1
+alias gsm git submodule add $1
+alias ee find-file-other-window $1
+alias emacs find-file $1
+alias e find-file $1
