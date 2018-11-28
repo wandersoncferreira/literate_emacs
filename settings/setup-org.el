@@ -1,18 +1,18 @@
-;; defaults
 (require 'org)
+(require 'ox-publish)
+
 (setq org-use-speed-commands t
       org-return-follows-link t
       org-confirm-elisp-link-function t
       org-confirm-babel-evaluate nil)
 
+(eval-after-load 'org
+  '(setq-default fill-column 60))
 
 ;; fix the behavior of ace-jump in org-mode buffers
 (add-hook 'org-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "C-'") 'ace-jump-mode)))
-
-;;; blogging
-(require 'ox-publish)
 
 (defun bk/my-blog-footer (arg)
   (with-temp-buffer
@@ -48,6 +48,23 @@
 
         ("blog"
          :components ("blog-notes" "blog-static"))))
+
+
+(bk/install-maybe-require 'org-present)
+(eval-after-load "org-present"
+  '(progn
+     (add-hook 'org-present-mode-hook
+               (lambda ()
+                 (org-present-big)
+                 (org-display-inline-images)
+                 (org-present-hide-cursor)
+                 (org-present-read-only)))
+     (add-hook 'org-present-mode-quit-hook
+               (lambda ()
+                 (org-present-small)
+                 (org-remove-inline-images)
+                 (org-present-show-cursor)
+                 (org-present-read-write)))))
 
 
 (provide 'setup-org)

@@ -1,3 +1,4 @@
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -5,10 +6,10 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (highlight-escape-sequences prodigy magit htmlize restclient elpy ace-jump-mode ace-jump browse-kill-ring jump-char whitespace-cleanup-mode whitespace-cleanup ido-completing-read+ ido-at-point ido-vertical-mode flx-ido elisp-slime-nav exec-path-from-shell diminish yasnippet-snippets smex projectile expand-region dash company clojure-snippets clojure-mode-extra-font-locking clj-refactor))))
+    (php-mode org-present move-dup graphviz-dot-mode paredit yasnippet multiple-cursors dpaste emms request typit typing-game perspective hardcore-mode yasnippet-snippets whitespace-cleanup-mode smex restclient projectile prodigy magit jump-char ido-vertical-mode ido-completing-read+ ido-at-point htmlize highlight-escape-sequences flx-ido expand-region exec-path-from-shell elpy elisp-slime-nav diminish clojure-snippets clojure-mode-extra-font-locking clj-refactor browse-kill-ring ace-jump-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(show-paren-match ((t (:background "#2159a8")))))

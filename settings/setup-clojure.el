@@ -13,14 +13,6 @@
 (bk/install-maybe-require 'cider)
 
 (setq cider-repl-result-prefix ";; => ")
-(setq cider-repl-display-help-banner nil
-      cider-repl-wrap-history t
-      cider-auto-select-error-buffer t
-      cider-show-error-buffer t
-      cider-repl-use-clojure-font-lock t
-      cider-repl-pop-to-buffer-on-connect nil
-      cider-repl-use-pretty-printing t
-      cider-repl-popup-stacktraces t)
 
 ;; refactor
 (bk/install-maybe-require 'clj-refactor)
@@ -33,5 +25,4 @@
   (cljr-add-keybindings-with-prefix "C-c C-m"))
 
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
-
 (provide 'setup-clojure)

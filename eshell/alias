@@ -4,3 +4,7 @@ alias gsm git submodule add $1
 alias ee find-file-other-window $1
 alias emacs find-file $1
 alias e find-file $1
+alias t touch $1 $*
+alias f find $*
+alias g git $*
+alias c curl $*

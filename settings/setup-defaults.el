@@ -1,17 +1,14 @@
-;; allow pasting selection outside of Emacs
-(setq x-select-enable-clipboard t)
-
 ;; show keystrokes in progress
 (setq echo-keystrokes 0.1)
-
 
 ;; always display line and col numbers
 (setq line-number-mode t
       column-number-mode t)
 
 ;; save a list of recent files visited
-(recentf-mode +1)
-(setq recentf-max-saved-items 100)
+(setq-default recentf-max-saved-items 1000)
+(setq-default recentf-exclude '("/tmp/" "/ssh:"))
+(add-hook 'after-init-hook 'recentf-mode)
 
 ;; ibuffer
 (setq ibuffer-default-sorting-mode 'major-mode)
@@ -22,10 +19,12 @@
 (savehist-mode +1)
 (setq history-length 1000)
 
+;; eldoc is always enabled by default now..
+;; just remove it from the modeline
+(diminish 'eldoc-mode)
+
 ;; undo/redo window configurations with C-c <left>/<right>
 (winner-mode +1)
-
-(setq-default indicate-empty-lines t)
 
 ;; don't break lines for me
 (setq-default truncate-lines t)
@@ -43,25 +42,31 @@
       uniquify-separator " • "
       uniquify-ignore-buffers-re "^\\*")
 
+;;; settings from better-defaults
+(setq-default indent-tabs-mode nil)
+(setq save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      require-final-newline t
+      load-prefer-newer t
+      ediff-window-setup-function 'ediff-setup-windows-plain
+      backup-directory-alist `(("." . ,(concat user-emacs-directory
+					       "backups"))))
+
 (setq tab-always-indent 'complete
       help-window-select t
       delete-old-versions t
       backup-by-copying t
-      backup-directory-alist '(("." . "~/.emacs.d/backup"))
-      create-lockfiles nil
-      shift-select-mode nil)
+      create-lockfiles nil)
+
+;;; real emacs knights!!
+(setq shift-select-mode nil)
 
 (electric-pair-mode +1)
-(global-visual-line-mode +1)
-(diminish 'visual-line-mode)
 
 ;; spelling
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (add-hook 'text-mode-hook 'flyspell-mode)
-(diminish 'flyspell-mode)
-
-;; make backups of files, even when they are under version control
-(setq vc-make-backup-files t)
 
 ;; save point position between sessions
 (require 'saveplace)
@@ -77,13 +82,6 @@
 	(goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
-
-;; utf-8
-(set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8-unix)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
 
 ;;; auto revert mode looks for changes to files, and updates them
 (global-auto-revert-mode +1)

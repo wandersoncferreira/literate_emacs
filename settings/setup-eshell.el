@@ -1,4 +1,3 @@
-
 (defun eshell-clear-buffer ()
   "clear terminal"
   (interactive)
@@ -9,15 +8,11 @@
 (add-hook 'eshell-mode-hook '(lambda ()
 			       (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
-
-;;; defaults
 (setq eshell-save-history-on-exit t
       eshell-glob-case-insensitive t
       eshell-error-if-no-glob t
       eshell-cmpl-cycle-completions nil)
 
-
-;; aliases
 (add-hook 'eshell-mode-hook
 	  (lambda ()
 	    (eshell/alias "e" "find-file $1")

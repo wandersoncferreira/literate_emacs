@@ -1,0 +1,2 @@
+;;; .emms-cache -*- mode: emacs-lisp; coding: utf-8; -*-
+(puthash "/tmp/delete-one-day.ogg" '(*track* (type . file) (name . "/tmp/delete-one-day.ogg") (metadata) (last-played 23543 160 780714 0) (play-count . 22) (info-mtime 23543 160 762644 780000)) emms-cache-db)

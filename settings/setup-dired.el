@@ -1,11 +1,12 @@
 (require 'dired-x)
 (require 'dired)
 
+(let ((gls (executable-find "gls")))
+  (when gls (setq insert-directory-program gls)))
+
 (setq dired-recursive-copies 'always
       dired-recursive-deletes 'always
       dired-dwim-target t)
-
-(global-set-key (kbd "C-x C-j") 'dired-jump)
 
 ;; enale `a'-keybinding in dired - which opens the file
 ;; and closes the dired buffer

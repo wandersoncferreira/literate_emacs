@@ -4,25 +4,22 @@
 	    (highlight-regexp "FIXME" 'hi-red-b)
 	    (highlight-regexp "TODO" 'hi-red-b)))
 
-;; whitespace
 (require 'whitespace)
 (setq whitespace-style '(trailing lines space-before-tab
 				  indentation space-after-tab))
 (setq whitespace-line-column 100)
 
+;; general programming mode
+(add-hook 'prog-mode-hook 'whitespace-mode)
+(diminish 'whitespace-mode)
+
+(add-hook 'prog-mode-hook 'prettify-symbols-mode)
+
 (bk/install-maybe-require 'whitespace-cleanup-mode)
 (global-whitespace-cleanup-mode +1)
 (diminish 'whitespace-cleanup-mode)
 
-;; htmlize
+;;; install only packages
 (bk/install-maybe-require 'htmlize)
-
-;;; restclient
 (bk/install-maybe-require 'restclient)
-
-;; highlight escape sequences
-(bk/install-maybe-require 'highlight-escape-sequences)
-(hes-mode)
-(put 'font-lock-regexp-grouping-backslash 'face-alias 'font-lock-builtin-face)
-
 (provide 'setup-misc)

@@ -7,15 +7,6 @@
 (setq ls-lisp-use-insert-directory-program nil
       dired-use-ls-dired nil)
 
-(global-set-key (kbd "s-u") 'universal-argument)
-(global-set-key (kbd "s--") 'negative-argument)
-
-(dotimes (v 5)
-  (global-set-key (read-kbd-macro (format "s-%d" v)) 'digit-argument))
-
-;; keybinding to toggle full screen mode
-(global-set-key (quote [M-f10]) 'toggle-frame-fullscreen)
-
 ;; use aspell for spell checking
 (setq ispell-program-name "/usr/local/bin/aspell")
 
