@@ -1,14 +1,16 @@
-;;; init.el setup
+;;; init.el --- Emacs
+
+;;; Commentary:
+
+;; Author: Wanderson Ferreira
+;; Emacs user since 2017
+
+;;; Code:
+
 (package-initialize)
 
-;; remove security vulnerability
-(eval-after-load "enriched"
-  '(defun enriched-decode-display-prop (start end &optional param)
-     (list start end)))
-
-(defconst osx? (eq system-type 'darwin))
-
-(setq setting-dir (expand-file-name "settings" user-emacs-directory))
+(defconst init-osx? (eq system-type 'darwin))
+(defconst setting-dir (expand-file-name "settings" user-emacs-directory))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (add-to-list 'load-path setting-dir)
@@ -18,18 +20,18 @@
 (require 'setup-defaults)
 (require 'setup-package)
 (require 'setup-ido)
-(require 'setup-dired)
 (require 'setup-eshell)
-(require 'setup-git)
-(require 'setup-org)
 
-;; load all my functions
+(eval-after-load 'dired '(require 'setup-dired))
+(eval-after-load 'magit '(require 'setup-git))
+(eval-after-load 'org '(require 'setup-org))
+
 (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
 
-(when osx?
+(when init-osx?
   (require 'setup-mac)
   (bk/install-maybe-require 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
@@ -42,19 +44,25 @@
 (require 'setup-prodigy)
 (require 'setup-mode-mapping)
 (require 'setup-keybindings)
-
-;; programming languages
+(require 'setup-erc)
 (require 'setup-snippets)
 (require 'setup-lisp)
 (require 'setup-paredit)
+(require 'setup-flycheck)
+(require 'setup-elfeed)
+(require 'setup-help)
+(require 'setup-grep)
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure))
 (eval-after-load 'python '(require 'setup-python))
 (eval-after-load 'php-mode '(require 'setup-php))
+(eval-after-load 'web-mode '(require 'setup-web))
 
-;; emacs on server mode
 (require 'server)
 (unless (server-running-p)
   (server-start))
 
 (eshell)
+
+(provide 'init.el)
+;;; init.el ends here

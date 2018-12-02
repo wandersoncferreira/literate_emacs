@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: eheader
+# key: eheader
+# --
+;;; $1 --- $2
+;;; Commentary:
+
+;; $3
+
+;;; Code:
+
+$4
+
+(provide '$1)
+;;; $1.el ends here

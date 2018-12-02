@@ -1,3 +1,7 @@
+;;; keybindings --- my customized keybindings
+;;; Commentary:
+;;; Code:
+
 ;;; highlight symbols
 (global-set-key (kbd "M-n") 'highlight-symbol-at-point)
 (global-set-key (kbd "M-p") 'unhighlight-regexp)
@@ -52,6 +56,7 @@
 ;;; isearch
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
 
 ;;; open new lines
 (global-set-key (kbd "<C-return>") 'open-line-below)
@@ -68,7 +73,12 @@
 
 ;;; ido
 (global-set-key (kbd "C-x f") 'ido-recentf-open)
-(global-set-key (kbd "C-x C-i") 'ido-imenu)
+(global-set-key (kbd "C-x C-i") 'bk/ido-menu)
+
+;;; fix words
+(global-set-key (kbd "M-u") #'fix-word-upcase)
+(global-set-key (kbd "M-l") #'fix-word-downcase)
+(global-set-key (kbd "M-c") #'fix-word-capitalize)
 
 ;;; quickly jump in document with ace-jump-mode
 (define-key global-map (kbd "C-'") 'ace-jump-mode)
@@ -101,18 +111,37 @@
 ;;; prodigy
 (global-set-key (kbd "C-x M-m") 'prodigy)
 
-;;; window switching
+;;; org mode
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+
+;;; windows
 (windmove-default-keybindings)
+(global-set-key (kbd "C-x 2") (lambda ()
+                                (interactive)
+                                (split-window-vertically)
+                                (other-window 1)))
+(global-set-key (kbd "C-x 3") (lambda ()
+                                (interactive)
+                                (split-window-horizontally)
+                                (other-window 1)))
 
 ;;; browse kill ring
 (global-set-key (kbd "C-x C-y") 'browse-kill-ring)
 
-;;; magit status
+;;; git
 (global-set-key (kbd "C-c m s") 'magit-status)
+(global-set-key (kbd "C-c m t") 'git-timemachine)
 
 ;; misc
 (global-set-key (kbd "M-s l") 'sort-lines)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
+(global-set-key (kbd "C-a") 'bk/back-to-indentation-or-beginning)
+
+
+;;; elisp
+(define-key emacs-lisp-mode-map (kbd "C-c C-c") 'eval-defun)
+(define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
 
 ;;; move lines
 (bk/install-maybe-require 'move-dup)
@@ -122,3 +151,4 @@
 (global-set-key [C-M-up] 'md/duplicate-up)
 
 (provide 'setup-keybindings)
+;;; setup-keybindings.el ends here

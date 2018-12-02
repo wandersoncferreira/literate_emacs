@@ -1,3 +1,7 @@
+;;; setup-prodigy.el --- Services
+;;; Commentary:
+;;; Code:
+
 (bk/install-maybe-require 'prodigy)
 
 ;; define some useful tags and proper ready messages
@@ -39,3 +43,4 @@
   :tags '(captalys))
 
 (provide 'setup-prodigy)
+;;; setup-prodigy.el ends here

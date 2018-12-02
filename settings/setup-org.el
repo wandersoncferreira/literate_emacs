@@ -1,3 +1,7 @@
+;;; setup-org.el --- Org
+;;; Commentary:
+;;; Code:
+
 (require 'org)
 (require 'ox-publish)
 
@@ -6,20 +10,27 @@
       org-confirm-elisp-link-function t
       org-confirm-babel-evaluate nil)
 
+;;; capture & gtd
+(setq org-capture-templates '(("t" "Todo [inbox]" entry
+                               (file+headline "~/gtd/inbox.org" "Tasks")
+                               "* TODO %i%?")))
+
 (eval-after-load 'org
   '(setq-default fill-column 60))
 
 ;; fix the behavior of ace-jump in org-mode buffers
 (add-hook 'org-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "C-'") 'ace-jump-mode)))
+          (lambda ()
+            (local-set-key (kbd "C-'") 'ace-jump-mode)))
 
 (defun bk/my-blog-footer (arg)
+  "Function to insert the footer of my blog passing an ARG."
   (with-temp-buffer
     (insert-file-contents "~/Documents/bkblog/org/footer.html")
     (buffer-string)))
 
 (defun bk/my-blog-header (arg)
+  "Function to insert the header of my blog passing an ARG."
   (with-temp-buffer
     (insert-file-contents "~/Documents/bkblog/org/header.html")
     (buffer-string)))
@@ -68,3 +79,4 @@
 
 
 (provide 'setup-org)
+;;; setup-org.el ends here

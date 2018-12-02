@@ -1,3 +1,7 @@
+;;; setup-dired.el --- Dired
+;;; Commentary:
+;;; Code:
+
 (require 'dired-x)
 (require 'dired)
 
@@ -16,3 +20,4 @@
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 (provide 'setup-dired)
+;;; setup-dired.el ends here

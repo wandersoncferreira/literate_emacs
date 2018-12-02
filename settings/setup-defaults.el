@@ -1,9 +1,32 @@
+;;; setup-defaults.el --- Defaults
+;;; Commentary:
+;;; Code:
+
+;; remove security vulnerability
+(eval-after-load "enriched"
+  '(defun enriched-decode-display-prop (start end &optional param)
+     (list start end)))
+
 ;; show keystrokes in progress
 (setq echo-keystrokes 0.1)
 
 ;; always display line and col numbers
 (setq line-number-mode t
       column-number-mode t)
+
+;; tramp
+(require 'tramp)
+(setq tramp-debug-on-error t)
+(setq tramp-verbose 10)
+(defun tramp-set-auto-save ()
+  "Overwriting the `tramp-set-auto-save'.
+The idea is to completely turn off backups for Tramp."
+  (auto-save-mode -1))
+
+;; abbrev mode
+(setq save-abbrevs 'silent)
+(add-hook 'text-mode-hook #'abbrev-mode)
+(add-hook 'prog-mode-hook #'abbrev-mode)
 
 ;; save a list of recent files visited
 (setq-default recentf-max-saved-items 1000)
@@ -88,9 +111,21 @@
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
+;;; delete selection mode
+(delete-selection-mode +1)
+
+;;; expand
+(setq hippie-expand-try-functions-list
+      '(try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill))
+
 ;; aliases
 (defalias 'cquit 'cider-quit)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'qrr 'query-replace-regexp "Query replace regexp")
 
 (provide 'setup-defaults)
+;;; setup-defaults.el ends here

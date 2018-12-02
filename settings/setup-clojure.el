@@ -1,3 +1,8 @@
+;;; clojure-mode --- Clojure
+;;; Commentary:
+;;; Code:
+
+
 ;; clojure mode
 (bk/install-maybe-require 'clojure-mode)
 (bk/install-maybe-require 'clojure-mode-extra-font-locking)
@@ -25,4 +30,6 @@
   (cljr-add-keybindings-with-prefix "C-c C-m"))
 
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+
 (provide 'setup-clojure)
+;;; setup-clojure.el ends here
