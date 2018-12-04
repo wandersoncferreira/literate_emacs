@@ -14,6 +14,9 @@
 (setq line-number-mode t
       column-number-mode t)
 
+;; safety of file variables
+(setq enable-local-variables :safe)
+
 ;; tramp
 (require 'tramp)
 (setq tramp-debug-on-error t)
@@ -27,6 +30,7 @@ The idea is to completely turn off backups for Tramp."
 (setq save-abbrevs 'silent)
 (add-hook 'text-mode-hook #'abbrev-mode)
 (add-hook 'prog-mode-hook #'abbrev-mode)
+(diminish 'abbrev-mode)
 
 ;; save a list of recent files visited
 (setq-default recentf-max-saved-items 1000)
@@ -36,7 +40,7 @@ The idea is to completely turn off backups for Tramp."
 ;; ibuffer
 (setq ibuffer-default-sorting-mode 'major-mode)
 (add-hook 'ibuffer-mode-hook (lambda nil
-			       (visual-line-mode -1)))
+                               (visual-line-mode -1)))
 
 ;; save minibuffer history
 (savehist-mode +1)
@@ -74,7 +78,7 @@ The idea is to completely turn off backups for Tramp."
       load-prefer-newer t
       ediff-window-setup-function 'ediff-setup-windows-plain
       backup-directory-alist `(("." . ,(concat user-emacs-directory
-					       "backups"))))
+                                               "backups"))))
 
 (setq tab-always-indent 'complete
       help-window-select t
@@ -88,8 +92,11 @@ The idea is to completely turn off backups for Tramp."
 (electric-pair-mode +1)
 
 ;; spelling
+(require 'flyspell)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (add-hook 'text-mode-hook 'flyspell-mode)
+(define-key flyspell-mode-map (kbd "C-,") nil)
+(diminish 'flyspell-mode)
 
 ;; save point position between sessions
 (require 'saveplace)
@@ -101,8 +108,8 @@ The idea is to completely turn off backups for Tramp."
   (interactive)
   (unwind-protect
       (progn
-	(linum-mode +1)
-	(goto-line (read-number "Goto line: ")))
+        (linum-mode +1)
+        (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
@@ -114,13 +121,6 @@ The idea is to completely turn off backups for Tramp."
 ;;; delete selection mode
 (delete-selection-mode +1)
 
-;;; expand
-(setq hippie-expand-try-functions-list
-      '(try-complete-file-name-partially
-        try-complete-file-name
-        try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-expand-dabbrev-from-kill))
 
 ;; aliases
 (defalias 'cquit 'cider-quit)

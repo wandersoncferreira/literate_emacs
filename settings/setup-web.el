@@ -7,7 +7,7 @@
 
 (bk/install-maybe-require 'web-mode)
 (bk/install-maybe-require 'emmet-mode)
-
+(bk/install-maybe-require 'rjsx-mode)
 
 (add-hook 'css-mode-hook 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode)

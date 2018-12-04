@@ -25,8 +25,6 @@
 (global-whitespace-cleanup-mode +1)
 (diminish 'whitespace-cleanup-mode)
 
-(bk/install-maybe-require 'persistent-scratch)
-(persistent-scratch-autosave-mode +1)
 
 (bk/install-maybe-require 'keyfreq)
 (keyfreq-mode +1)

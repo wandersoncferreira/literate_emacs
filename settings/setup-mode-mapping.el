@@ -19,13 +19,16 @@
 
 ;; clojure
 (add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
-(add-to-list 'auto-mode-alist '("\\.cljs$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljs$" . clojurescript-mode))
 
 ;; web mode
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\.twig\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+;; rsjx
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 ;; dockerfile
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))

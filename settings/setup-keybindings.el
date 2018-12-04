@@ -46,12 +46,12 @@
 ;;; backspace key
 (global-set-key [(control ?h)] 'delete-backward-char)
 
-;;; hippie-expand
+;;; expand
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "s-/") 'hippie-expand)
-
-;;; expand region
+(global-set-key (kbd "C-:") 'hippie-expand-lines)
 (global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-,") 'complete-symbol)
 
 ;;; isearch
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -137,6 +137,12 @@
 (global-set-key (kbd "M-s l") 'sort-lines)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-a") 'bk/back-to-indentation-or-beginning)
+(global-set-key (kbd "C-x C-/") 'save-buffer)
+
+
+;; registers
+(set-register ?e '(file . "~/.emacs.d/conf.org"))
+(set-register ?h '(file . "~/emacs-notes/7habits-effective-editing.org"))
 
 
 ;;; elisp

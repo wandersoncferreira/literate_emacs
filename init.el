@@ -52,11 +52,12 @@
 (require 'setup-elfeed)
 (require 'setup-help)
 (require 'setup-grep)
+(require 'setup-expand)
+(require 'setup-web)
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure))
 (eval-after-load 'python '(require 'setup-python))
 (eval-after-load 'php-mode '(require 'setup-php))
-(eval-after-load 'web-mode '(require 'setup-web))
 
 (require 'server)
 (unless (server-running-p)

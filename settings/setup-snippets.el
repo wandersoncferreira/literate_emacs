@@ -1,6 +1,15 @@
+;;; setup-snippets --- Snippets
+;;; Commentary:
+
+;; ease your life with snippets
+
+;;; Code:
+
+
 (bk/install-maybe-require 'yasnippet)
 (bk/install-maybe-require 'yasnippet-snippets)
 (bk/install-maybe-require 'clojure-snippets)
+(bk/install-maybe-require 'react-snippets)
 
 (yas-global-mode +1)
 (diminish 'yas-minor-mode)
@@ -15,4 +24,6 @@
 (setq yas-verbosity 1)
 (setq yas-wrap-around-region t)
 
+
 (provide 'setup-snippets)
+;;; setup-snippets.el ends here
