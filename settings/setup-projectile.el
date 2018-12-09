@@ -1,3 +1,10 @@
+;;; setup-projectile --- Projects
+;;; Commentary:
+
+;; Manage your projects
+
+;;; Code:
+
 (bk/install-maybe-require 'projectile)
 
 (setq projectile-completion-system 'ido
@@ -12,3 +19,4 @@
 (add-hook 'after-init-hook #'projectile-mode)
 
 (provide 'setup-projectile)
+;;; setup-projectile.el ends here
