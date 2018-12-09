@@ -16,7 +16,6 @@
       ido-use-filename-at-point 'guess
       ido-enable-flex-matching t)
 
-
 (setq ido-file-extensions-order
       '(".clj" ".py" ".org" ".php" ".rest"))
 
@@ -38,6 +37,9 @@
 
 (require 'icomplete)
 (icomplete-mode +1)
+
+(bk/install-maybe-require 'company)
+(global-company-mode +1)
 
 (provide 'setup-ido)
 ;;; setup-ido.el ends here

@@ -11,7 +11,7 @@
 
 (defconst init-osx? (eq system-type 'darwin))
 (defconst setting-dir (expand-file-name "settings" user-emacs-directory))
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(defconst custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (add-to-list 'load-path setting-dir)
 (load custom-file :noerror)
@@ -21,10 +21,9 @@
 (require 'setup-package)
 (require 'setup-ido)
 (require 'setup-eshell)
-
-(eval-after-load 'dired '(require 'setup-dired))
-(eval-after-load 'magit '(require 'setup-git))
-(eval-after-load 'org '(require 'setup-org))
+(require 'setup-git)
+(require 'setup-dired)
+(require 'setup-org)
 
 (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
@@ -54,10 +53,10 @@
 (require 'setup-grep)
 (require 'setup-expand)
 (require 'setup-web)
+(require 'setup-clojure)
+(require 'setup-python)
 
-(eval-after-load 'clojure-mode '(require 'setup-clojure))
-(eval-after-load 'python '(require 'setup-python))
-(eval-after-load 'php-mode '(require 'setup-php))
+(require 'setup-php)
 
 (require 'server)
 (unless (server-running-p)
