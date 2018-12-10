@@ -38,8 +38,48 @@
 (require 'icomplete)
 (icomplete-mode +1)
 
+
 (bk/install-maybe-require 'company)
+
+(require 'company)
+(setq company-global-modes '(not eshell-mode shell-mode
+                                 org-mode term-mode)
+      company-idle-delay 0.1
+      company-transformers '(company-sort-by-occurrence)
+      company-require-match 'never
+      company-show-numbers t)
 (global-company-mode +1)
 
+(defun ora-company-number ()
+  "Helper function to choose company candidate by number."
+  (interactive)
+  (let* ((k (this-command-keys))
+         (re (concat "^" company-prefix k)))
+    (if (cl-find-if (lambda (s) (string-match re s))
+                    company-candidates)
+        (self-insert-command 1)
+      (company-complete-number (string-to-number k)))))
+
+(defun ora-activate-number ()
+  "Choose company candidates by number."
+  (interactive)
+  (let ((map company-active-map))
+    (mapc
+     (lambda (x)
+       (define-key map (format "%d" x) 'ora-company-number))
+     (number-sequence 0 9))
+    (define-key map " " (lambda ()
+                          (interactive)
+                          (company-abort)
+                          (self-insert-command 1)))
+    (define-key map (kbd "<return>") nil)))
+
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-previous)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))
+
+(ora-activate-number)
 (provide 'setup-ido)
 ;;; setup-ido.el ends here
