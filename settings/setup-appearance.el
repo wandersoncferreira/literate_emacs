@@ -36,7 +36,10 @@
   (set-face-attribute 'default nil :font bk/default-font))
 
 (bk/theme-tsdh-light)
+
+(blink-cursor-mode -1)
 (show-paren-mode +1)
+(global-hl-line-mode +1)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here
