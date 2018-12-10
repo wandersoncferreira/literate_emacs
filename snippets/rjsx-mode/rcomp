@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: rcomp
+# key: rcomp
+# --
+import React from 'react';
+
+
+const $1 = (props) => {
+   $2
+};
+
+export default $1;
