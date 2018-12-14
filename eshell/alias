@@ -8,3 +8,4 @@ alias c curl $*
 alias g git $*
 alias f find $*
 alias t touch $1 $*
+alias 23 $*
