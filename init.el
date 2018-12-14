@@ -16,6 +16,20 @@
 (add-to-list 'load-path setting-dir)
 (load custom-file :noerror)
 
+(defun load-packages-from-folder (folder-name)
+  "Function to load a package from a specific FOLDER-NAME."
+  (dolist (l (directory-files (concat user-emacs-directory folder-name) nil "^[^\.]"))
+    (add-to-list 'load-path (concat user-emacs-directory folder-name "/" l))
+    (autoload (intern l) (concat l ".el"))))
+
+(load-packages-from-folder "maintainer")
+
+
+(bk/install-maybe-require 'helm)
+(bk/install-maybe-require 'multi)
+(require 'helm-spotify-plus)
+
+
 (require 'setup-appearance)
 (require 'setup-defaults)
 (require 'setup-package)
@@ -55,7 +69,6 @@
 (require 'setup-web)
 (require 'setup-clojure)
 (require 'setup-python)
-
 (require 'setup-php)
 
 (require 'server)

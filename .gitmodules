@@ -1,0 +1,3 @@
+[submodule "maintainer/helm-spotify-plus"]
+	path = maintainer/helm-spotify-plus
+	url = https://github.com/wandersoncferreira/helm-spotify-plus
