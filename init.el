@@ -24,12 +24,6 @@
 
 (load-packages-from-folder "maintainer")
 
-
-(bk/install-maybe-require 'helm)
-(bk/install-maybe-require 'multi)
-(require 'helm-spotify-plus)
-
-
 (require 'setup-appearance)
 (require 'setup-defaults)
 (require 'setup-package)
@@ -38,6 +32,15 @@
 (require 'setup-git)
 (require 'setup-dired)
 (require 'setup-org)
+
+(bk/install-maybe-require 'helm)
+(bk/install-maybe-require 'multi)
+(require 'helm-spotify-plus)
+(global-set-key (kbd "C-c s s") 'helm-spotify-plus)
+(global-set-key (kbd "C-c s f") 'helm-spotify-plus-next)
+(global-set-key (kbd "C-c s b") 'helm-spotify-plus-previous)
+(global-set-key (kbd "C-c s p") 'helm-spotify-plus-play)
+(global-set-key (kbd "C-c s g") 'helm-spotify-plus-pause)
 
 (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
