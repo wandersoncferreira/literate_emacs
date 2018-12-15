@@ -38,26 +38,17 @@ The idea is to completely turn off backups for Tramp."
 (savehist-mode +1)
 (setq history-length 1000)
 
-(winner-mode +1)
-
-(setq-default truncate-lines t)
-(setq gc-cons-threshold 20000000)
-
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-after-kill-buffer-p t
       uniquify-separator " • "
       uniquify-ignore-buffers-re "^\\*")
 
-(setq-default indent-tabs-mode nil)
 (setq save-interprogram-paste-before-kill t
-      apropos-do-all t
       require-final-newline t
       load-prefer-newer t
-      ediff-window-setup-function 'ediff-setup-windows-plain
       backup-directory-alist `(("." . ,(concat user-emacs-directory
                                                "backups")))
-
       tab-always-indent 'complete
       help-window-select t
       delete-old-versions t
