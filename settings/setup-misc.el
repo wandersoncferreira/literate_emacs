@@ -34,7 +34,6 @@
 (bk/install-maybe-require 'htmlize)
 (bk/install-maybe-require 'restclient)
 (bk/install-maybe-require 'yaml-mode)
-(bk/install-maybe-require 'restart-emacs)
 (bk/install-maybe-require 'dockerfile-mode)
 (bk/install-maybe-require 'fix-word)
 
