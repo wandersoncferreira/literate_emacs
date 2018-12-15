@@ -22,24 +22,14 @@
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
 
-(defun bk/theme-tsdh-light ()
-  "Let's face it... defaults are always better..."
-  (interactive)
-  (load-theme 'tsdh-light)
-  (when init-osx?
-    (set-face-attribute 'default nil :font bk/default-font)))
-
 (defun bk/theme-default-black ()
   "Default black theme."
   (interactive)
   (load-theme 'default-black)
   (set-face-attribute 'default nil :font bk/default-font))
 
-(bk/theme-tsdh-light)
-
-(blink-cursor-mode -1)
+(bk/theme-default-black)
 (show-paren-mode +1)
-(global-hl-line-mode +1)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here
