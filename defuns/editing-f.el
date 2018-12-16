@@ -27,9 +27,9 @@
   "Function to dwm for line movements."
   (interactive)
   (if (= (point)
-         (progn
-           (back-to-indentation)
-           (point)))
+	 (progn
+	   (back-to-indentation)
+	   (point)))
       (beginning-of-line)))
 
 (defun bk/sudo-edit (&optional arg)
@@ -38,6 +38,16 @@
   (if (or arg (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(defun bk/remove-python-print-statements ()
+  "Function to remove all print statements from my python code."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "^print(" nil t)
+      (kill-whole-line)
+      (bk/remove-all-statements)))
+  (message "All occurrences of the print statement were removed!"))
 
 
 (provide 'editing-f)

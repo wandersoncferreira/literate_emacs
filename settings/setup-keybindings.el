@@ -93,7 +93,7 @@
 ;;; zap to char
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "s-z") (lambda (char)
-                              (interactive "cZap up to char backwards: " (zap-up-to-char -1 char))))
+			      (interactive "cZap up to char backwards: " (zap-up-to-char -1 char))))
 
 ;;; iy-go-to-char - like f in Vim
 (global-set-key (kbd "M-m") 'jump-char-forward)
@@ -118,13 +118,13 @@
 ;;; windows
 (windmove-default-keybindings)
 (global-set-key (kbd "C-x 2") (lambda ()
-                                (interactive)
-                                (split-window-vertically)
-                                (other-window 1)))
+				(interactive)
+				(split-window-vertically)
+				(other-window 1)))
 (global-set-key (kbd "C-x 3") (lambda ()
-                                (interactive)
-                                (split-window-horizontally)
-                                (other-window 1)))
+				(interactive)
+				(split-window-horizontally)
+				(other-window 1)))
 
 ;;; browse kill ring
 (global-set-key (kbd "C-x C-y") 'browse-kill-ring)

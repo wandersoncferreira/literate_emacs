@@ -33,7 +33,7 @@ The idea is to completely turn off backups for Tramp."
 
 (setq ibuffer-default-sorting-mode 'major-mode)
 (add-hook 'ibuffer-mode-hook (lambda nil
-                               (visual-line-mode -1)))
+			       (visual-line-mode -1)))
 
 (savehist-mode +1)
 (setq history-length 1000)
@@ -48,7 +48,7 @@ The idea is to completely turn off backups for Tramp."
       require-final-newline t
       load-prefer-newer t
       backup-directory-alist `(("." . ,(concat user-emacs-directory
-                                               "backups")))
+					       "backups")))
       tab-always-indent 'complete
       help-window-select t
       delete-old-versions t
@@ -73,8 +73,8 @@ The idea is to completely turn off backups for Tramp."
   (interactive)
   (unwind-protect
       (progn
-        (linum-mode +1)
-        (goto-line (read-number "Goto line: ")))
+	(linum-mode +1)
+	(goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
@@ -85,6 +85,8 @@ The idea is to completely turn off backups for Tramp."
 (delete-selection-mode +1)
 
 (defalias 'cquit 'cider-quit)
+(defalias 'ctest 'cider-test-run-test)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'qrr 'query-replace-regexp "Query replace regexp")
 

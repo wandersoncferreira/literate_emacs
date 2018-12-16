@@ -1,0 +1,100 @@
+#+title: File to manage the configuration of a GTD environment
+
+
+* What is GTD?
+
+* Capture information and refile
+
+  Define the main files to collect and organize information
+  #+BEGIN_SRC emacs-lisp
+  (setq org-agenda-files'("~/gtd/inbox.org"
+			"~/gtd/gtd.org"
+			"~/gtd/tickler.org"))
+  #+END_SRC
+
+  capture data into the inbox and tickler files
+  #+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates '(("t" "Todo [inbox]" entry
+			       (file+headline "~/gtd/inbox.org" "Tasks")
+			       "* TODO %i%?")
+			      ("T" "Tickler" entry
+			       (file+headline "~/gtd/tickler.org" "Tickler")
+			       "* %i%? \n %U")))
+  #+END_SRC
+
+  The inbox should be processed and emptied daily. When
+  processing the inbox, I'd refile each entry that is
+  actionable and belongs to a project using ~C-c C-w~,
+  moving the entry to the appropriate place.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq org-refile-targets '(("~/gtd/gtd.org" :maxlevel . 3)
+			       ("~/gtd/someday.org" :maxlevel . 1)
+			       ("~/gtd/tickler.org" :maxlevel . 2)))
+  #+END_SRC
+
+* How the process works?
+
+  The main file is the ~gtd.org~. That's where all the
+  active projects are kept. Each project contains actions to
+  be performed. The first action of each project is called
+  its "next action", and that's always the one I will do
+  when working on a project.
+
+** Tagging a specific entry
+
+   Tagging is done using ~C-c C-c~ on a headline, whether
+   it's a project or action. Purposes of the tags:
+
+   - regular categories, like: emacs
+   - tags that link to people, like: veridiana
+   - GTD contexts
+
+
+** GTD contexts
+
+   GTD contexts are just regular tags, starting with @. Some
+   useful ones, @home, @office, @traveling, @email...
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "NEXT(n)" "STARTED(s)" "|" "DONE(d)" "CANCELLED(c)")))
+   #+END_SRC
+
+
+** Agenda views
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-agenda-custom-commands
+	   '(("g" . "GTD contexts")
+	     ("ga" "All TODO" alltodo nil
+	      ((org-agenda-sorting-strategy '(tag-up priority-up))))
+
+	     ("gc" "Clojure" tags-todo "clojure"
+	      ((org-agenda-sorting-strategy '(priority-up))
+	       (org-agenda-prefix-format "[ ] %T: ")
+	       (org-agenda-compact-blocks t)
+	       (org-agenda-remove-tags t)))
+
+	     ("gs" "Study Time" tags-todo "@study"
+	      ((org-agenda-sorting-strategy '(priority-up))))
+
+	     ("ge" "Emacs Time" tags-todo "@emacs")
+
+	     ("gp" "Personal stuff" tags-todo "@personal")))
+   #+END_SRC
+* Move fast to the GTD files
+
+  I like to practice some features from Emacs, therefore
+  I'll make the usage of ~registers~ to jump quickly to GTD
+  files whenever I see fit.
+  #+BEGIN_SRC emacs-lisp
+    (set-register ?i '(file . "~/gtd/inbox.org"))
+    (set-register ?p '(file . "~/gtd/gtd.org"))
+  #+END_SRC
+
+  How to move using registers?
+  | commands  | description                                              |
+  |-----------+----------------------------------------------------------|
+  | C-x r j r | jump to the register saved in the r keyword              |
+  | C-x r w r | save the state of the selected frame's windows in r      |
+  | C-x r f r | save the state of all frames, including all their window |

@@ -9,10 +9,16 @@
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
-(unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
+(when (not package-archive-contents)
   (package-refresh-contents))
+
+(setq package-archive-priorities
+      '(("melpa-stable" . 15)
+	("org" . 10)
+	("melpa" . 5)))
 
 (defun bk/install-maybe-require (package)
   "Function to install a PACKAGE if not already present."
