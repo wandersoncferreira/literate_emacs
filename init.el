@@ -24,17 +24,17 @@
 
 (load-packages-from-folder "maintainer")
 
+(require 'setup-package)
 (require 'setup-appearance)
 (require 'setup-defaults)
-(require 'setup-package)
 (require 'setup-ido)
 (require 'setup-eshell)
 (require 'setup-git)
 (require 'setup-dired)
 (require 'setup-org)
 
-(bk/install-maybe-require 'helm)
-(bk/install-maybe-require 'multi)
+(bk/install-maybe 'helm)
+(bk/install-maybe 'multi)
 (require 'helm-spotify-plus)
 (global-set-key (kbd "C-c s s") 'helm-spotify-plus)
 (global-set-key (kbd "C-c s f") 'helm-spotify-plus-next)
@@ -49,7 +49,7 @@
 
 (when init-osx?
   (require 'setup-mac)
-  (bk/install-maybe-require 'exec-path-from-shell)
+  (bk/install-maybe 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
 (require 'setup-smex)
