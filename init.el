@@ -16,14 +16,6 @@
 (add-to-list 'load-path setting-dir)
 (load custom-file :noerror)
 
-(defun load-packages-from-folder (folder-name)
-  "Function to load a package from a specific FOLDER-NAME."
-  (dolist (l (directory-files (concat user-emacs-directory folder-name) nil "^[^\.]"))
-    (add-to-list 'load-path (concat user-emacs-directory folder-name "/" l))
-    (autoload (intern l) (concat l ".el"))))
-
-(load-packages-from-folder "maintainer")
-
 (require 'setup-package)
 (require 'setup-appearance)
 (require 'setup-defaults)
@@ -32,15 +24,7 @@
 (require 'setup-git)
 (require 'setup-dired)
 (require 'setup-org)
-
-(bk/install-maybe 'helm)
-(bk/install-maybe 'multi)
-(require 'helm-spotify-plus)
-(global-set-key (kbd "C-c s s") 'helm-spotify-plus)
-(global-set-key (kbd "C-c s f") 'helm-spotify-plus-next)
-(global-set-key (kbd "C-c s b") 'helm-spotify-plus-previous)
-(global-set-key (kbd "C-c s p") 'helm-spotify-plus-play)
-(global-set-key (kbd "C-c s g") 'helm-spotify-plus-pause)
+(require 'setup-maintainer)
 
 (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
