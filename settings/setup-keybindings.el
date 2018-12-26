@@ -10,7 +10,7 @@
 (global-set-key (kbd "C-,") 'complete-symbol)
 
 ;;; multiple cursors
-(bk/install-maybe-require 'multiple-cursors)
+(bk/install-maybe 'multiple-cursors)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
@@ -70,6 +70,7 @@
 ;; eshell
 (global-set-key (kbd "C-c e") 'eshell)
 (global-set-key (kbd "C-x \"") 'eshell)
+(global-set-key (kbd "C-c r") 'bk/eshell-full-or-restore)
 
 ;;; ido
 (global-set-key (kbd "C-x f") 'ido-recentf-open)
@@ -150,7 +151,7 @@
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
 
 ;;; move lines
-(bk/install-maybe-require 'move-dup)
+(bk/install-maybe 'move-dup)
 (global-set-key [M-up] 'md/move-lines-up)
 (global-set-key [M-down] 'md/move-lines-down)
 (global-set-key [C-M-down] 'md/duplicate-down)

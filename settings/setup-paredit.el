@@ -1,9 +1,17 @@
-(bk/install-maybe-require 'paredit)
-(diminish 'paredit-mode)
+;;; setup-paredit --- Paredit
+;;; Commentary:
+
+;; Take care of your parenthesis
+
+;;; Code:
+
+(bk/install-maybe 'paredit)
+(require 'paredit)
 
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'clojure-mode-hook #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+(diminish 'paredit-mode)
 
 ;;; makes paredit-mode work with delete-selection-mode
 (put 'paredit-forward-delete 'delete-selection 'supersede)
@@ -30,9 +38,9 @@
     (define-key paredit-mode-map (read-kbd-macro original) nil)
     (define-key paredit-mode-map (read-kbd-macro replacement) command)))
 
-
 (define-key paredit-mode-map (kbd "s-r") 'paredit-raise-sexp)
 (define-key paredit-mode-map (kbd "\\") nil)
 
 
 (provide 'setup-paredit)
+;;; setup-paredit.el ends here

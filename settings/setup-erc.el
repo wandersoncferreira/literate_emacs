@@ -29,6 +29,5 @@
 (set-face-foreground 'erc-input-face "dim gray")
 (set-face-foreground 'erc-my-nick-face "blue")
 
-
 (provide 'setup-erc)
 ;;; setup-erc.el ends here

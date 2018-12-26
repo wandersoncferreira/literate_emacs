@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(bk/install-maybe-require 'multiple-cursors)
+(bk/install-maybe 'multiple-cursors)
 
 (provide 'setup-multiple-cursors)
 ;;; setup-multiple-cursors.el ends here

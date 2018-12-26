@@ -2,7 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe-require 'prodigy)
+(bk/install-maybe 'prodigy)
+(require 'prodigy)
 
 ;; define some useful tags and proper ready messages
 (prodigy-define-tag

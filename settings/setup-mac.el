@@ -1,9 +1,19 @@
+;;; setup-mac --- Mac settings
+;;; Commentary:
+
+;; Macbook specifics
+
+;;; Code:
+
+(require 'ls-lisp)
+(require 'ispell)
+(require 'dired)
+
 (setq mac-command-modifier 'meta
       mac-right-option-modifier 'none
       ns-function-modifier 'hyper
       mac-option-modifier 'super)
 
-(require 'ls-lisp)
 (setq ls-lisp-use-insert-directory-program nil
       dired-use-ls-dired nil)
 
@@ -19,3 +29,4 @@
 ;; defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
 
 (provide 'setup-mac)
+;;; setup-mac.el ends here

@@ -20,11 +20,13 @@
 	("org" . 10)
 	("melpa" . 5)))
 
-(defun bk/install-maybe-require (package)
+(defun bk/install-maybe (package)
   "Function to install a PACKAGE if not already present."
   (when (not (package-installed-p package))
-    (package-install package))
-  (require package))
+    (package-install package)))
+
+(bk/install-maybe 'diminish)
+(require 'diminish)
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

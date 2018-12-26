@@ -4,8 +4,13 @@
 
 
 ;; clojure mode
-(bk/install-maybe-require 'clojure-mode)
-(bk/install-maybe-require 'clojure-mode-extra-font-locking)
+(bk/install-maybe 'clojure-mode)
+(bk/install-maybe 'clojure-mode-extra-font-locking)
+(bk/install-maybe 'clj-refactor)
+(bk/install-maybe 'cider)
+
+(require 'cider)
+(require 'clj-refactor)
 
 (add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
 (add-to-list 'exec-path "/usr/local/bin")
@@ -15,17 +20,14 @@
 (define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp)
 
 ;; cider
-(bk/install-maybe-require 'cider)
-
 (setq cider-repl-result-prefix ";; => ")
 
 ;; refactor
-(bk/install-maybe-require 'clj-refactor)
-
 (setq cljr-favor-prefix-notation nil
       cljr-favor-private-functions nil)
 
 (defun my-clojure-mode-hook ()
+  "Activate the refactor library."
   (clj-refactor-mode +1)
   (cljr-add-keybindings-with-prefix "C-c C-m"))
 

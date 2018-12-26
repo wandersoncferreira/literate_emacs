@@ -2,13 +2,13 @@
 ;;; Commentary:
 
 ;; I'm reading the Emacs Info continuously, but I really like the change
-;; in font-lock when I visit some nodes at *Info*. But they are gone
-;; when you restart an Emacs session. Let's make them persistent.
+;; in font-lock when I visit some nodes at *Info*.  But they are gone
+;; when you restart an Emacs session.  Let's make them persistent.
 
 ;;; Code:
 
 (defvar bk--name-of-file (expand-file-name "bk-info.history"
-                                           user-emacs-directory))
+					   user-emacs-directory))
 (defun bk/save-info-history-visited-nodes ()
   "Save visited nodes."
   (interactive)

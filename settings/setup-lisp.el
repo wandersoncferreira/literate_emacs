@@ -3,7 +3,9 @@
 ;;; Code:
 
 ;;; elisp go-to-definition with M-. and back again with M-,
-(bk/install-maybe-require 'elisp-slime-nav)
+(bk/install-maybe 'elisp-slime-nav)
+(require 'elisp-slime-nav)
+
 (add-hook 'emacs-lisp-mode-hook (lambda ()
 				  (elisp-slime-nav-mode t)
 				  (eldoc-mode +1)))

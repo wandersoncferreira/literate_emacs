@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(require 'org)
+
 (setq org-agenda-files'("~/gtd/inbox.org"
 			"~/gtd/gtd.org"
 			"~/gtd/tickler.org"))
@@ -17,5 +19,5 @@
 			       (file+headline "~/gtd/tickler.org" "Tickler")
 			       "* %i%? \n %U")))
 
-(provide 'setup-gtp)
-;;; setup-gtp.el ends here
+(provide 'setup-gtd)
+;;; setup-gtd.el ends here

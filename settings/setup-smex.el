@@ -5,7 +5,9 @@
 
 ;;; Code:
 
-(bk/install-maybe-require 'smex)
+(bk/install-maybe 'smex)
+
+(require 'smex)
 
 (setq smex-prompt-string "Here be dragons => ")
 (smex-initialize)

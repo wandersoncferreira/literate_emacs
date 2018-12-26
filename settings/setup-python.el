@@ -2,8 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe-require 'elpy)
-(bk/install-maybe-require 'pip-requirements)
+(bk/install-maybe 'elpy)
+(bk/install-maybe 'pip-requirements)
+
+(require 'elpy)
+(require 'pip-requirements)
 
 (elpy-enable)
 (pyvenv-activate "~/miniconda3")

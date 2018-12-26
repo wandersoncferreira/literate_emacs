@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(bk/install-maybe-require 'php-mode)
+(bk/install-maybe 'php-mode)
 
 (provide 'setup-php)
 ;;; setup-php.el ends here

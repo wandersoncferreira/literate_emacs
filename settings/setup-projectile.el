@@ -5,7 +5,8 @@
 
 ;;; Code:
 
-(bk/install-maybe-require 'projectile)
+(bk/install-maybe 'projectile)
+(require 'projectile)
 
 (setq projectile-completion-system 'ido
       projectile-switch-project-action 'projectile-find-file

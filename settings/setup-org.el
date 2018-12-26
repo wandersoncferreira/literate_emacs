@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(bk/install-maybe 'org-present)
+
 (require 'org)
 (require 'ox-publish)
 
@@ -61,7 +63,6 @@
 	 :components ("blog-notes" "blog-static"))))
 
 
-(bk/install-maybe-require 'org-present)
 (eval-after-load "org-present"
   '(progn
      (add-hook 'org-present-mode-hook
