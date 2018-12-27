@@ -20,6 +20,14 @@
   :tags '(clj-ring))
 
 (prodigy-define-service
+  :name "Platform State"
+  :command "python"
+  :args '("app.py")
+  :cwd "/Users/wandersonferreira/captalys/platform-state/platformState"
+  :stop-signal 'sigkill
+  :tags '(captalys))
+
+(prodigy-define-service
   :name "Pricing"
   :command "python"
   :args '("app.py")

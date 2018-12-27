@@ -4,12 +4,12 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-refile-last-stored"
  (filename . "~/gtd/gtd.org")
- (front-context-string . "** TODO Read the")
- (rear-context-string . "m.asp][link]]\n\n\n")
- (position . 5218))
+ (front-context-string . "** STARTED Intro")
+ (rear-context-string . "ng languages.\n\n\n")
+ (position . 6727))
 ("org-capture-last-stored"
  (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO Read the")
- (rear-context-string . "      :reframe:\n")
- (position . 5020))
+ (front-context-string . "** TODO find the")
+ (rear-context-string . "dbook)   :book:\n")
+ (position . 6590))
 )

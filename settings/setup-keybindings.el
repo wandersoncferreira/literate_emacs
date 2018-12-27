@@ -44,7 +44,7 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;;; backspace key
-(global-set-key [(control ?h)] 'delete-backward-char)
+;; (global-set-key [(control ?h)] 'delete-backward-char)
 
 ;;; expand
 (global-set-key (kbd "M-/") 'hippie-expand)
@@ -63,9 +63,9 @@
 (global-set-key (kbd "<C-S-return>") 'open-line-above)
 
 ;;; help command
-(define-key key-translation-map [?\C-h] [?\C-?])
-(global-set-key (kbd "<f1>") 'help-command)
-(global-set-key (kbd "<f1> a") 'apropos)
+;; (define-key key-translation-map [?\C-h] [?\C-?])
+;; (global-set-key (kbd "<f1>") 'help-command)
+;; (global-set-key (kbd "<f1> a") 'apropos)
 
 ;; eshell
 (global-set-key (kbd "C-c e") 'eshell)

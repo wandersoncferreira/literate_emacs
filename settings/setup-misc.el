@@ -9,7 +9,6 @@
 (bk/install-maybe 'dockerfile-mode)
 (bk/install-maybe 'fix-word)
 (bk/install-maybe 'whitespace-cleanup-mode)
-(bk/install-maybe 'keyfreq)
 
 (require 'whitespace)
 
@@ -33,9 +32,6 @@
 
 (global-whitespace-cleanup-mode +1)
 (diminish 'whitespace-cleanup-mode)
-
-(keyfreq-mode +1)
-(keyfreq-autosave-mode +1)
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

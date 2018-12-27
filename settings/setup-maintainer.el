@@ -5,6 +5,10 @@
 
 ;;; Code:
 
+(bk/install-maybe 'helm)
+(bk/install-maybe 'multi)
+
+
 (defun load-packages-from-folder (folder-name)
   "Function to load a package from a specific FOLDER-NAME."
   (dolist (l (directory-files (concat user-emacs-directory folder-name) nil "^[^\.]"))
@@ -13,8 +17,6 @@
 
 (load-packages-from-folder "maintainer")
 
-(bk/install-maybe 'helm)
-(bk/install-maybe 'multi)
 
 (require 'helm-spotify-plus)
 (global-set-key (kbd "C-c s s") 'helm-spotify-plus)

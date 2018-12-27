@@ -25,6 +25,7 @@
 	try-expand-line
 	try-complete-lisp-symbol-partially
 	try-complete-lisp-symbol))
+
 (setq hippie-expand-verbose t)
 
 (defun hippie-expand-lines ()
