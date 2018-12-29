@@ -115,6 +115,7 @@
 ;;; org mode
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c \"") 'poporg-dwim)
 
 ;;; windows
 (windmove-default-keybindings)

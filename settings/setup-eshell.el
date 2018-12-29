@@ -6,6 +6,10 @@
 ;;; Code:
 
 (require 'eshell)
+(require 'em-hist)
+(require 'em-glob)
+(require 'em-prompt)
+(require 'em-cmpl)
 
 (defun eshell-clear-buffer ()
   "Clear terminal."
@@ -14,13 +18,21 @@
     (erase-buffer)
     (eshell-send-input)))
 
+(defun bk/eshell-prompt-function ()
+  "My eshell prompt function."
+  (concat " λ "))
+
 (add-hook 'eshell-mode-hook
 	  '(lambda ()
 	     (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
 (setq eshell-save-history-on-exit t
+      eshell-hist-ignoredups t
       eshell-glob-case-insensitive t
       eshell-error-if-no-glob t
+      eshell-highlight-prompt nil
+      eshell-prefer-lisp-functions t
+      eshell-prompt-function #'bk/eshell-prompt-function
       eshell-cmpl-cycle-completions nil)
 
 (add-hook 'eshell-mode-hook

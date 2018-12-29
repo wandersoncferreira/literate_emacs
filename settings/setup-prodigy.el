@@ -28,6 +28,14 @@
   :tags '(captalys))
 
 (prodigy-define-service
+  :name "Onboard"
+  :command "python"
+  :args '("app.py")
+  :cwd "/Users/wandersonferreira/captalys/credito-digital-onboard/onboard"
+  :stop-signal 'sigkill
+  :tags '(captalys))
+
+(prodigy-define-service
   :name "Pricing"
   :command "python"
   :args '("app.py")

@@ -33,7 +33,7 @@
       (beginning-of-line)))
 
 (defun bk/sudo-edit (&optional arg)
-  "Function to edit file with super-user."
+  "Function to edit file with super-user with optional ARG."
   (interactive "P")
   (if (or arg (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))

@@ -10,6 +10,7 @@
 (package-initialize)
 
 (defconst init-osx? (eq system-type 'darwin))
+
 (defconst setting-dir (expand-file-name "settings" user-emacs-directory))
 (defconst custom-file (expand-file-name "custom.el" user-emacs-directory))
 
@@ -36,6 +37,7 @@
   (bk/install-maybe 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
+(require 'setup-company)
 (require 'setup-smex)
 (require 'setup-projectile)
 (require 'setup-multiple-cursors)
@@ -53,16 +55,20 @@
 (require 'setup-help)
 (require 'setup-grep)
 (require 'setup-expand)
-(require 'setup-web)
+(require 'setup-docker)
+
+;;; programming languages
 (require 'setup-clojure)
 (require 'setup-python)
 (require 'setup-php)
+(require 'setup-javascript)
+(require 'setup-c)
+(require 'setup-web)
 
-(require 'server)
-(unless (server-running-p)
+(use-package server
+  :unless (server-running-p)
+  :config
   (server-start))
-
-(eshell)
 
 (provide 'init.el)
 ;;; init.el ends here

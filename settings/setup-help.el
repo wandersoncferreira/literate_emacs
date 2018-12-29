@@ -7,6 +7,14 @@
 
 ;;; Code:
 
+(bk/install-maybe 'guide-key)
+
+(require 'guide-key)
+(setq guide-key/guide-key-sequence '("C-x r" "C-x v" "C-c" "C-x x"))
+(guide-key-mode +1)
+(setq guide-key/recursive-key-sequence-flag t)
+(setq guide-key/popup-window-position 'bottom)
+
 (defvar bk--name-of-file (expand-file-name "bk-info.history"
 					   user-emacs-directory))
 (defun bk/save-info-history-visited-nodes ()

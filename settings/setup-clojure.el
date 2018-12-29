@@ -8,6 +8,7 @@
 (bk/install-maybe 'clojure-mode-extra-font-locking)
 (bk/install-maybe 'clj-refactor)
 (bk/install-maybe 'cider)
+(bk/install-maybe 'elein)
 
 (require 'cider)
 (require 'clj-refactor)

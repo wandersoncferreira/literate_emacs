@@ -14,5 +14,9 @@
 ;; don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)
 
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'prog-mode-hook 'turn-on-auto-fill)
+(setq-default fill-column 72)
+
 (provide 'setup-editing)
 ;;; setup-editing.el ends here

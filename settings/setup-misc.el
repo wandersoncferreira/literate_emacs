@@ -6,11 +6,14 @@
 (bk/install-maybe 'htmlize)
 (bk/install-maybe 'restclient)
 (bk/install-maybe 'yaml-mode)
-(bk/install-maybe 'dockerfile-mode)
 (bk/install-maybe 'fix-word)
 (bk/install-maybe 'whitespace-cleanup-mode)
+(bk/install-maybe 'quickrun)
+(bk/install-maybe 'poporg)
 
 (require 'whitespace)
+(require 'quickrun)
+(require 'poporg)
 
 (add-hook 'prog-mode-hook
 	  (defun bk--add-watchwords ()

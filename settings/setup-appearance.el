@@ -10,9 +10,12 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-(load-theme 'tsdh-light t)
-(set-default-font "Monaco 15")
-(show-paren-mode +1)
+(defun bk/default-theme ()
+  "Default appearance for my Emacs sessions."
+  (load-theme 'tsdh-light t)
+  (set-frame-font "Monaco 15"))
+
+(bk/default-theme)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

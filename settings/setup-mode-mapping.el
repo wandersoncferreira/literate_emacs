@@ -8,7 +8,7 @@
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
 ;; restclient
-(add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode))
+(add-to-list 'auto-mode-alist '("\\.rest$" . restclient-mode))
 
 ;; snippets
 (add-to-list 'auto-mode-alist '("yasnippet/snippets" . snippet-mode))
@@ -26,9 +26,6 @@
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html\\.twig\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-
-;; rsjx
-(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 ;; dockerfile
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))

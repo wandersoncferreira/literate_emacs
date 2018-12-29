@@ -41,6 +41,5 @@
 (define-key paredit-mode-map (kbd "s-r") 'paredit-raise-sexp)
 (define-key paredit-mode-map (kbd "\\") nil)
 
-
 (provide 'setup-paredit)
 ;;; setup-paredit.el ends here

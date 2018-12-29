@@ -38,6 +38,34 @@ Removed from xah."
       (eshell)
       (delete-other-windows))))
 
+(defun bk/rename-current-buffer-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let* ((name (buffer-name))
+	 (filename (buffer-file-name))
+	 (new-name (read-file-name "New name: " filename)))
+    (if (get-buffer new-name)
+	(error "A buffer named '%s' already exists!" new-name)
+      (rename-file filename new-name 1)
+      (rename-buffer new-name)
+      (set-visited-file-name new-name)
+      (set-buffer-modified-p nil)
+      (message "File '%s' sucessfully renamed to '%s'"
+	       name (file-name-nondirectory new-name)))))
+
+(defun bk/delete-current-buffer-file ()
+  "Remove file connected to current buffer and kill buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+	(buffer (current-buffer))
+	(name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+	(ido-kill-buffer)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+	(delete-file filename)
+	(kill-buffer buffer)
+	(message "File '%s' sucessfully removed" filename)))))
+
 
 (provide 'buffers-f)
 ;;; buffers-f.el ends here
