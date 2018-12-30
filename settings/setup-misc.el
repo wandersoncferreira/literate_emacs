@@ -31,7 +31,6 @@
 
 (add-hook 'prog-mode-hook 'prettify-symbols-mode)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
-(diminish 'hs-minor-mode)
 
 (global-whitespace-cleanup-mode +1)
 (diminish 'whitespace-cleanup-mode)

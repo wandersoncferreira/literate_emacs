@@ -19,6 +19,7 @@
 
 (setq ido-use-virtual-buffers t
       ido-enable-prefix nil
+      ido-max-prospects 10
       ido-auto-merge-work-directories-length -1
       ido-create-new-buffer 'always
       ido-use-filename-at-point 'guess

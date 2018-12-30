@@ -38,11 +38,13 @@
       company-transformers '(company-sort-by-occurrence)
       company-require-match 'never
       company-show-numbers t
-      company-tooltip-limit 20
+      company-tooltip-limit 10
       company-tooltip-align-annotations t
       company-dabbrev-time-limit 0.001
       company-dabbrev-code-time-limit 0.001
       company-dabbrev-downcase nil)
+
+(diminish 'company-mode)
 
 (defun ora-company-number ()
   "Choose the candidate based on his number at candidate list."

@@ -14,6 +14,7 @@
 (guide-key-mode +1)
 (setq guide-key/recursive-key-sequence-flag t)
 (setq guide-key/popup-window-position 'bottom)
+(diminish 'guide-key-mode)
 
 (defvar bk--name-of-file (expand-file-name "bk-info.history"
 					   user-emacs-directory))

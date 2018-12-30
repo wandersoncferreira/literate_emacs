@@ -65,9 +65,7 @@
 (require 'setup-c)
 (require 'setup-web)
 
-(use-package server
-  :unless (server-running-p)
-  :config
+(unless (server-running-p)
   (server-start))
 
 (provide 'init.el)

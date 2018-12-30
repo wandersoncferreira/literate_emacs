@@ -9,7 +9,7 @@
  (position . 8151))
 ("org-capture-last-stored"
  (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO Watch We")
- (rear-context-string . "       :@emacs:\n")
- (position . 6858))
+ (front-context-string . "** TODO Read the")
+ (rear-context-string . "ical guide\n   -\n")
+ (position . 6924))
 )

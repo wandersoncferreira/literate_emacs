@@ -5,6 +5,12 @@
 
 ;;; Code:
 
+(defmacro bk/after-load (mode &rest code)
+  "Custom `eval-after-load' to a MODE and CODE functionality."
+  (declare (indent defun))
+  `(eval-after-load ,mode
+     '(progn ,@code)))
+
 (defun bk/eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)
