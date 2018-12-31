@@ -17,20 +17,21 @@
 (add-to-list 'load-path setting-dir)
 (load custom-file :noerror)
 
+(defconst defuns-dir (expand-file-name "defuns" user-emacs-directory))
+(dolist (file (directory-files defuns-dir t "\\w+"))
+  (when (file-regular-p file)
+    (load file)))
+
 (require 'setup-package)
 (require 'setup-appearance)
 (require 'setup-defaults)
 (require 'setup-ido)
-(require 'setup-eshell)
 (require 'setup-git)
-(require 'setup-dired)
-(require 'setup-org)
 (require 'setup-maintainer)
 
-(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
+(bk/after-load 'dired (require 'setup-dired))
+(bk/after-load 'org (require 'setup-org))
+(bk/after-load 'eshell (require 'setup-eshell))
 
 (when init-osx?
   (require 'setup-mac)
@@ -59,12 +60,14 @@
 
 ;;; programming languages
 (require 'setup-clojure)
-(require 'setup-python)
-(require 'setup-php)
 (require 'setup-javascript)
-(require 'setup-c)
 (require 'setup-web)
+(bk/after-load 'python-mode (require 'setup-python))
+(bk/after-load 'php-mode (require 'setup-php))
+(bk/after-load 'c-mode (require 'setup-c))
 
+
+(require 'server)
 (unless (server-running-p)
   (server-start))
 

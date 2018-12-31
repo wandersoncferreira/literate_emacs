@@ -10,12 +10,24 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-(defun bk/default-theme ()
+(setq custom-theme-directory (concat user-emacs-directory
+				     "themes"))
+(dolist
+    (path (directory-files custom-theme-directory t "\\w+"))
+  (when (file-directory-p path)
+    (add-to-list 'custom-theme-load-path path)))
+
+(defun bk/default-light-theme ()
   "Default appearance for my Emacs sessions."
   (load-theme 'tsdh-light t)
   (set-frame-font "Monaco 15"))
 
-(bk/default-theme)
+(defun bk/default-dark-theme ()
+  "Default appearance for my Emacs sessions."
+  (load-theme 'default-black t)
+  (set-frame-font "Monaco 15"))
+
+(bk/default-dark-theme)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

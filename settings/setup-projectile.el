@@ -12,8 +12,6 @@
       projectile-switch-project-action 'projectile-find-file
       projectile-project-search-path '("~/captalys" "~/personal"))
 
-(setq-default projectile-mode-line-prefix " Proj")
-
 (eval-after-load 'projectile
   '(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 

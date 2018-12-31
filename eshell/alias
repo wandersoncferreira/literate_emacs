@@ -1,12 +1,12 @@
-alias ll ls -l
 alias d dired $1
-alias gsm git submodule add $1
 alias ee find-file-other-window $1
 alias emacs find-file $1
 alias e find-file $1
-alias t touch $1 $*
-alias f find $*
-alias g git $*
-alias c curl $*
-alias prodpython DBNENV=production python $1
+alias ll ls -l
+alias gsm git submodule add $1
 alias devpython DBNENV=development python $1
+alias prodpython DBNENV=production python $1
+alias c curl $*
+alias g git $*
+alias f find $*
+alias t touch $1 $*

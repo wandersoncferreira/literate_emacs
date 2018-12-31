@@ -13,9 +13,7 @@
   '(defun enriched-decode-display-prop (start end &optional param)
      (list start end)))
 
-(setq save-interprogram-paste-before-kill t
-      require-final-newline t
-      echo-keystrokes 0.1
+(setq echo-keystrokes 0.1
       line-number-mode t
       column-number-mode t
       enable-local-variables :safe
@@ -25,7 +23,6 @@
       delete-old-versions t
       backup-by-copying t
       create-lockfiles nil
-      history-length 1000
       shift-select-mode nil
       backup-directory-alist `(("." . ,(concat user-emacs-directory
 					       "backups"))))
@@ -89,7 +86,7 @@ The idea is to completely turn off backups for Tramp."
     (linum-mode -1)))
 
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
-
+(setq linum-format " %3d ")
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
