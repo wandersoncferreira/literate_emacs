@@ -29,9 +29,9 @@
 (require 'setup-git)
 (require 'setup-maintainer)
 
-(bk/after-load 'dired (require 'setup-dired))
-(bk/after-load 'org (require 'setup-org))
-(bk/after-load 'eshell (require 'setup-eshell))
+(require 'setup-dired)
+(require 'setup-org)
+(require 'setup-eshell)
 
 (when init-osx?
   (require 'setup-mac)
@@ -62,10 +62,10 @@
 (require 'setup-clojure)
 (require 'setup-javascript)
 (require 'setup-web)
-(bk/after-load 'python-mode (require 'setup-python))
-(bk/after-load 'php-mode (require 'setup-php))
-(bk/after-load 'c-mode (require 'setup-c))
-
+(require 'setup-python)
+(require 'setup-php)
+(require 'setup-c)
+(require 'setup-latex)
 
 (require 'server)
 (unless (server-running-p)
