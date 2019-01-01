@@ -63,6 +63,8 @@
 
 (define-abbrev-table 'clojurescript-mode-abbrev-table '())
 
+(define-abbrev-table 'coffee-mode-abbrev-table '())
+
 (define-abbrev-table 'comint-mode-abbrev-table '())
 
 (define-abbrev-table 'completion-list-mode-abbrev-table '())
@@ -85,11 +87,23 @@
 
 (define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
 
+(define-abbrev-table 'css-mode-abbrev-table '())
+
 (define-abbrev-table 'debugger-mode-abbrev-table '())
 
 (define-abbrev-table 'diff-mode-abbrev-table '())
 
 (define-abbrev-table 'display-time-world-mode-abbrev-table '())
+
+(define-abbrev-table 'docker-container-mode-abbrev-table '())
+
+(define-abbrev-table 'docker-image-mode-abbrev-table '())
+
+(define-abbrev-table 'docker-machine-mode-abbrev-table '())
+
+(define-abbrev-table 'docker-network-mode-abbrev-table '())
+
+(define-abbrev-table 'docker-volume-mode-abbrev-table '())
 
 (define-abbrev-table 'dockerfile-mode-abbrev-table '())
 
@@ -111,6 +125,14 @@
 
 (define-abbrev-table 'eshell-mode-abbrev-table '())
 
+(define-abbrev-table 'eww-bookmark-mode-abbrev-table '())
+
+(define-abbrev-table 'eww-buffers-mode-abbrev-table '())
+
+(define-abbrev-table 'eww-history-mode-abbrev-table '())
+
+(define-abbrev-table 'eww-mode-abbrev-table '())
+
 (define-abbrev-table 'ffip-diff-mode-abbrev-table '())
 
 (define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
@@ -123,6 +145,8 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
+    ("bci" "brew cask install" nil 17)
+    ("bi" "brew install" nil 26)
     ("devpython" "DBENV=development python" nil 0)
     ("ppl" "print(\"\\n\\n\\n\\n\\n\")" nil 2)
     ("prodpython" "DBENV=production python" nil 1)
@@ -131,6 +155,8 @@
 (define-abbrev-table 'gnus-group-mode-abbrev-table '())
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
+
+(define-abbrev-table 'haml-mode-abbrev-table '())
 
 (define-abbrev-table 'helm-major-mode-abbrev-table '())
 
@@ -152,6 +178,8 @@
   '(
    ))
 
+(define-abbrev-table 'js-comint-mode-abbrev-table '())
+
 (define-abbrev-table 'js-jsx-mode-abbrev-table '())
 
 (define-abbrev-table 'js-mode-abbrev-table '())
@@ -159,6 +187,8 @@
 (define-abbrev-table 'js2-jsx-mode-abbrev-table '())
 
 (define-abbrev-table 'js2-mode-abbrev-table '())
+
+(define-abbrev-table 'json-mode-abbrev-table '())
 
 (define-abbrev-table 'lisp-mode-abbrev-table '())
 
@@ -238,13 +268,19 @@
 
 (define-abbrev-table 'python-mode-abbrev-table '())
 
-(define-abbrev-table 'python-mode-skeleton-abbrev-table
-  '(
-   ))
+(define-abbrev-table 'python-mode-skeleton-abbrev-table '())
+
+(define-abbrev-table 'quickrun/mode-abbrev-table '())
 
 (define-abbrev-table 'restclient-mode-abbrev-table '())
 
 (define-abbrev-table 'rjsx-mode-abbrev-table '())
+
+(define-abbrev-table 'ruby-mode-abbrev-table '())
+
+(define-abbrev-table 'sass-mode-abbrev-table '())
+
+(define-abbrev-table 'scss-mode-abbrev-table '())
 
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
@@ -256,11 +292,27 @@
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
 
+(define-abbrev-table 'skewer-clients-mode-abbrev-table '())
+
+(define-abbrev-table 'skewer-error-mode-abbrev-table '())
+
+(define-abbrev-table 'sldb-mode-abbrev-table '())
+
+(define-abbrev-table 'slime-connection-list-mode-abbrev-table '())
+
+(define-abbrev-table 'slime-inspector-mode-abbrev-table '())
+
+(define-abbrev-table 'slime-thread-control-mode-abbrev-table '())
+
+(define-abbrev-table 'slime-xref-mode-abbrev-table '())
+
 (define-abbrev-table 'snippet-mode-abbrev-table '())
 
 (define-abbrev-table 'special-mode-abbrev-table '())
 
 (define-abbrev-table 'speedbar-mode-abbrev-table '())
+
+(define-abbrev-table 'tablist-mode-abbrev-table '())
 
 (define-abbrev-table 'tabulated-list-mode-abbrev-table '())
 
@@ -269,6 +321,8 @@
 (define-abbrev-table 'term-mode-abbrev-table '())
 
 (define-abbrev-table 'text-mode-abbrev-table '())
+
+(define-abbrev-table 'typescript-mode-abbrev-table '())
 
 (define-abbrev-table 'url-cookie-mode-abbrev-table '())
 
