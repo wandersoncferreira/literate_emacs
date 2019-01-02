@@ -13,6 +13,9 @@
   '(defun enriched-decode-display-prop (start end &optional param)
      (list start end)))
 
+(add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
+(add-to-list 'exec-path "/usr/local/bin")
+
 (setq echo-keystrokes 0.1
       line-number-mode t
       column-number-mode t

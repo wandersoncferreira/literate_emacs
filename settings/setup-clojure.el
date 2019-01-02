@@ -9,29 +9,6 @@
 (bk/install-maybe 'clj-refactor)
 (bk/install-maybe 'cider)
 
-(require 'cider)
-(require 'cider-connection)
-(require 'clj-refactor)
-
-
-(add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
-(add-to-list 'exec-path "/usr/local/bin")
-(add-hook 'clojure-mode-hook 'cider-mode)
-
-(define-key clojure-mode-map [remap paredit-forward] 'clojure-forward-logical-sexp)
-(define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp)
-
-;; cider
-(setq cider-repl-result-prefix ";; => "
-      cider-prompt-for-symbol nil
-      nrepl-hide-special-buffers nil
-      cljr-inject-dependencies-at-jack-in nil)
-
-
-;; refactor
-(setq cljr-favor-prefix-notation nil
-      cljr-favor-private-functions nil)
-
 (defun my-clojure-mode-hook ()
   "Activate the refactor library."
   (clj-refactor-mode +1)
@@ -56,7 +33,19 @@
     (cider-repl-return)))
 
 
-(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+(with-eval-after-load 'clojure-mode
+  (define-key clojure-mode-map [remap paredit-forward] 'clojure-forward-logical-sexp)
+  (define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp)
+  (setq cljr-favor-prefix-notation nil
+	cljr-favor-private-functions nil)
+  (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
+  (add-hook 'clojure-mode-hook 'cider-mode))
+
+(with-eval-after-load 'cider
+  (setq cider-repl-result-prefix ";; => "
+	cider-prompt-for-symbol nil
+	nrepl-hide-special-buffers nil
+	cljr-inject-dependencies-at-jack-in nil))
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here
