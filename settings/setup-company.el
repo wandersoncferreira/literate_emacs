@@ -13,27 +13,15 @@
 (add-hook 'after-init-hook 'global-company-mode)
 (diminish 'company-mode)
 
-(eval-after-load 'company
-  '(progn
-     (dolist (backend '(company-eclim company-semantic))
-       (delq backend company-backends))
-     (define-key company-active-map (kbd "M-n") nil)
-     (define-key company-active-map (kbd "M-p") nil)
-     (define-key company-active-map (kbd "C-n") 'company-select-next)
-     (define-key company-active-map (kbd "C-p") 'company-select-previous)
-     (setq-default company-dabbrev-other-buffers 'all
-		   company-tooltip-align-annotations t)))
-
-(add-to-list 'completion-styles 'initials t)
-
-(setq company-global-modes '(not eshell-mode
-				 shell-mode
-				 org-mode
-				 term-mode))
-
+(setq company-global-modes '(not eshell-mode shell-mode
+				 org-mode term-mode))
 (setq company-transformers '(company-sort-by-occurrence)
       company-require-match 'never
-      company-show-numbers t)
+      company-show-numbers t
+      company-idle-delay 0.5
+      company-minimum-prefix-length 2
+      company-tooltip-align-annotations t
+      company-tooltip-flip-when-above t)
 
 (defun ora-company-number ()
   "Choose the candidate based on his number at candidate list."
