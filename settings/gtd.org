@@ -3,7 +3,7 @@
 
 * What is GTD?
 
-* Capture information and refile
+* COMMENT Capture information and refile
 
   Define the main files to collect and organize information
   #+BEGIN_SRC emacs-lisp
@@ -14,12 +14,12 @@
 
   capture data into the inbox and tickler files
   #+BEGIN_SRC emacs-lisp
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-			       (file+headline "~/gtd/inbox.org" "Tasks")
-			       "* TODO %i%?")
-			      ("T" "Tickler" entry
-			       (file+headline "~/gtd/tickler.org" "Tickler")
-			       "* %i%? \n %U")))
+    (setq org-capture-templates '(("t" "Todo [inbox]" entry
+				   (file+headline "~/gtd/inbox.org" "Tasks")
+				   "* TODO %i%? %^G \n %U" :empty-lines 1)
+				  ("T" "Tickler" entry
+				   (file+headline "~/gtd/tickler.org" "Tickler")
+				   "* %i%? \n %U" :empty-lines 1)))
   #+END_SRC
 
   The inbox should be processed and emptied daily. When
@@ -56,8 +56,11 @@
    GTD contexts are just regular tags, starting with @. Some
    useful ones, @home, @office, @traveling, @email...
 
+   I also want to add some timestamps to each state
    #+BEGIN_SRC emacs-lisp
-     (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "NEXT(n)" "STARTED(s)" "|" "DONE(d)" "CANCELLED(c)")))
+     (setq org-log-into-drawer t)
+     (setq org-todo-keywords
+	   '((sequence "TODO(t)" "WAITING(w@/!)" "NEXT(n!)" "STARTED(s!)" "|" "DONE(d!)" "CANCELLED(c@)")))
    #+END_SRC
 
 
