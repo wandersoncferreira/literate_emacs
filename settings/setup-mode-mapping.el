@@ -2,33 +2,49 @@
 ;;; Commentary:
 ;;; Code:
 
-;; yaml
-(add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
-(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
-;; restclient
-(add-to-list 'auto-mode-alist '("\\.rest$" . restclient-mode))
+(defvar bk/auto-install-alist
+  '(("\\Jenkinsfile\\'" yaml-mode yaml-mode)
+    ("\\.yaml\\'" yaml-mode yaml-mode)
+    ("\\.yml\\'" yaml-mode yaml-mode)
+    ("\\.rest$\\'" restclient-mode restclient-mode)
+    ("yasnippet/snippets" snippet-mode snippet-mode)
+    ("\\.php\\'" php-mode php-mode)
+    ("\\.clj\\'" clojure-mode clojure-mode)
+    ("\\.cljs\\'" clojurescript-mode clojurescript-mode)
+    ("\\Dockerfile\\'" dockerfile-mode dockerfile-mode)
+    ("\\.phtml\\'" web-mode web-mode)
+    ("\\.tpl\\.php\\'" web-mode web-mode)
+    ("\\.html\\.twig\\'" web-mode web-mode)
+    ("\\.html?\\'" web-mode web-mode)
+    ("\\.go\\'" go-mode go-mode)
+    ("\\.json\\'" json-mode json-mode)
+    ("\\.md\\'" markdown-mode markdown-mode)
+    ("\\.sass\\'" sass-mode sass-mode)
+    ("\\.graphql\\'" graphql-mode graphql-mode)
+    ("\\.elixir\\'" elixir-mode elixir-mode)
+    ("\\.scss\\'" scss-mode scss-mode)
+    ("\\.scala\\'" scala-mode scala-mode)))
 
-;; snippets
-(add-to-list 'auto-mode-alist '("yasnippet/snippets" . snippet-mode))
-(add-to-list 'auto-mode-alist '("\\.yasnippet$" . snippet-mode))
+;; macro from prelude!
+(defmacro bk/auto-install (extension package mode)
+  "When file with EXTENSION is opened triggers auto-install of PACKAGE.
+The file is opened in MODE."
+  `(add-to-list 'auto-mode-alist
+		`(,extension . (lambda ()
+				 (unless (package-installed-p ',package)
+				   (package-install ',package))
+				 (,mode)))))
 
-;; php
-(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+(mapc
+ (lambda (entry)
+   (let ((extension (car entry))
+	 (package (cadr entry))
+	 (mode (cadr (cdr entry))))
+     (unless (package-installed-p package)
+       (bk/auto-install extension package mode))))
+ bk/auto-install-alist)
 
-;; clojure
-(add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
-(add-to-list 'auto-mode-alist '("\\.cljs$" . clojurescript-mode))
-
-;; web mode
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html\\.twig\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-
-;; dockerfile
-(add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-mode))
 
 (provide 'setup-mode-mapping)
 ;;; setup-mode-mapping.el ends here
