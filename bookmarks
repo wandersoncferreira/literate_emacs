@@ -4,12 +4,12 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-refile-last-stored"
  (filename . "~/gtd/gtd.org")
- (front-context-string . "** TODO advanced")
- (rear-context-string . "8a729][link]]\n\n\n")
- (position . 15086))
+ (front-context-string . "** TODO Take a l")
+ (rear-context-string . "d refactor it\n\n\n")
+ (position . 1545))
 ("org-capture-last-stored"
  (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO Look for")
- (rear-context-string . "radox of Choice\n")
- (position . 7211))
+ (front-context-string . "** TODO Take a l")
+ (rear-context-string . "can't code good\n")
+ (position . 969))
 )
