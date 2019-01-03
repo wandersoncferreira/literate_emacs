@@ -3,17 +3,19 @@
 		      "~/gtd/tickler.org"))
 
 (setq org-capture-templates '(("t" "Todo [inbox]" entry
-			     (file+headline "~/gtd/inbox.org" "Tasks")
-			     "* TODO %i%?")
-			    ("T" "Tickler" entry
-			     (file+headline "~/gtd/tickler.org" "Tickler")
-			     "* %i%? \n %U")))
+			       (file+headline "~/gtd/inbox.org" "Tasks")
+			       "* TODO %i%? %^G \n %U" :empty-lines 1)
+			      ("T" "Tickler" entry
+			       (file+headline "~/gtd/tickler.org" "Tickler")
+			       "* %i%? \n %U" :empty-lines 1)))
 
 (setq org-refile-targets '(("~/gtd/gtd.org" :maxlevel . 3)
 			   ("~/gtd/someday.org" :maxlevel . 1)
 			   ("~/gtd/tickler.org" :maxlevel . 2)))
 
-(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "NEXT(n)" "STARTED(s)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-log-into-drawer t)
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "OPEN(o!)" "|" "DONE(d!)" "CANCELLED(c!)")))
 
 (setq org-agenda-custom-commands
       '(("g" . "GTD contexts")

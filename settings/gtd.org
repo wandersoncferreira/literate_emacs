@@ -3,7 +3,7 @@
 
 * What is GTD?
 
-* COMMENT Capture information and refile
+* Capture information and refile
 
   Define the main files to collect and organize information
   #+BEGIN_SRC emacs-lisp
@@ -60,7 +60,7 @@
    #+BEGIN_SRC emacs-lisp
      (setq org-log-into-drawer t)
      (setq org-todo-keywords
-	   '((sequence "TODO(t)" "WAITING(w@/!)" "NEXT(n!)" "STARTED(s!)" "|" "DONE(d!)" "CANCELLED(c@)")))
+	   '((sequence "TODO(t)" "OPEN(o!)" "|" "DONE(d!)" "CANCELLED(c!)")))
    #+END_SRC
 
 
