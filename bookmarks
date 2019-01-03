@@ -9,7 +9,7 @@
  (position . 1545))
 ("org-capture-last-stored"
  (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO Take a l")
- (rear-context-string . "can't code good\n")
- (position . 969))
+ (front-context-string . "** TODO Git from")
+ (rear-context-string . "ality/][link]]\n\n")
+ (position . 2189))
 )
