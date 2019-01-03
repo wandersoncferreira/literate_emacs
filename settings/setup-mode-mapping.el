@@ -11,7 +11,6 @@
     ("yasnippet/snippets" snippet-mode snippet-mode)
     ("\\.php\\'" php-mode php-mode)
     ("\\.clj\\'" clojure-mode clojure-mode)
-    ("\\.cljs\\'" clojurescript-mode clojurescript-mode)
     ("\\Dockerfile\\'" dockerfile-mode dockerfile-mode)
     ("\\.phtml\\'" web-mode web-mode)
     ("\\.tpl\\.php\\'" web-mode web-mode)
