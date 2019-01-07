@@ -18,7 +18,7 @@
 (setq company-transformers '(company-sort-by-occurrence)
       company-require-match 'never
       company-show-numbers t
-      company-idle-delay 0.5
+      company-idle-delay 0.1
       company-minimum-prefix-length 2
       company-tooltip-align-annotations t
       company-tooltip-flip-when-above t)

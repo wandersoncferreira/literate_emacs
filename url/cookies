@@ -2,12 +2,15 @@
 ;; Automatically generated file!!! DO NOT EDIT!!!
 
 (setq url-cookie-storage
- 'nil)
+ '(("github.com"
+  [url-cookie "has_recent_activity" "1" "Mon, 07 Jan 2019 04:23:21 -0000" "/" "github.com" nil]))
+)
 (setq url-cookie-secure-storage
- '(("reddit.com"
-  [url-cookie "loid" "00000000002nddqhrw.2.1542914660062.Z0FBQUFBQmI5d0prQ1d6VUtWandaY1JmS1pZTklVMDFEYTNwODhhN2oxNnYzNkJYeF9zaEdWZnBDTjRyU25ZNm9YRFA5ZldSeTJzQnN3anUtRW5BZlRuUTJ1d085MTluOGpsRnhmSWNSLTlfMHZuVnBMRzdzLWtmX3FLbDJFVVdCOXRnVUhzSmN4U0Q" "Sat Nov 21 19:24:19 2020 GMT" "/" "reddit.com" t]
-  [url-cookie "session_tracker" "bUOhO9nJjUpYZnHQS8.0.1542916179989.Z0FBQUFBQmI5d2hVTVVhaTh6RDF3Rmx0V3N4UFk3TWtodDVDUGVpN3FqNF9jT3JaS1pMbkJ4RjZpZ1prck5HbDdqckZUYlJhckNwd2FuYUpZcHRQOUNPT3oxQmlycy1JRE1CR2NiMEJ3UUd1ZFlMRWZRMEZ1QWtwVzhTS041aGxSa0NtQllUQy1CM3o" "Thu Nov 22 21:49:39 2018 GMT" "/" "reddit.com" t]
-  [url-cookie "edgebucket" "YYM7CdIgU3GGYRT7oI" "Sat Nov 21 19:24:19 2020 GMT" "/" "reddit.com" t]))
+ '((".github.com"
+  [url-cookie "logged_in" "no" "Fri, 07 Jan 2039 03:23:05 -0000" "/" ".github.com" t])
+ ("reddit.com"
+  [url-cookie "edgebucket" "YYM7CdIgU3GGYRT7oI" "Sat Nov 21 19:24:19 2020 GMT" "/" "reddit.com" t]
+  [url-cookie "loid" "00000000002nddqhrw.2.1542914660062.Z0FBQUFBQmI5d0prQ1d6VUtWandaY1JmS1pZTklVMDFEYTNwODhhN2oxNnYzNkJYeF9zaEdWZnBDTjRyU25ZNm9YRFA5ZldSeTJzQnN3anUtRW5BZlRuUTJ1d085MTluOGpsRnhmSWNSLTlfMHZuVnBMRzdzLWtmX3FLbDJFVVdCOXRnVUhzSmN4U0Q" "Sat Nov 21 19:24:19 2020 GMT" "/" "reddit.com" t]))
 )
 
 ;; Local Variables:

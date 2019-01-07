@@ -65,6 +65,7 @@
 (require 'setup-python)
 (require 'setup-php)
 (require 'setup-c)
+(require 'setup-go)
 (require 'setup-latex)
 
 (require 'server)

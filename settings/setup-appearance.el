@@ -27,7 +27,7 @@
   (load-theme 'default-black t)
   (set-frame-font "Monaco 15"))
 
-(bk/default-dark-theme)
+(bk/default-light-theme)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here
