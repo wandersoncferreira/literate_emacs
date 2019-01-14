@@ -140,7 +140,7 @@
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-a") 'bk/back-to-indentation-or-beginning)
 (global-set-key (kbd "C-x C-/") 'save-buffer)
-
+(global-set-key (kbd "C-c w") 'google-this-search)
 
 ;; registers
 (set-register ?e '(file . "~/.emacs.d/conf.org"))
