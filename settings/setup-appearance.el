@@ -20,12 +20,12 @@
 (defun bk/default-light-theme ()
   "Default appearance for my Emacs sessions."
   (load-theme 'tsdh-light t)
-  (set-frame-font "Monaco 15"))
+  (set-frame-font "Monaco 17"))
 
 (defun bk/default-dark-theme ()
   "Default appearance for my Emacs sessions."
   (load-theme 'default-black t)
-  (set-frame-font "Monaco 15"))
+  (set-frame-font "Monaco 17"))
 
 (bk/default-light-theme)
 
