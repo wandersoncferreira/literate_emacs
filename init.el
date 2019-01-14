@@ -39,7 +39,7 @@
   (exec-path-from-shell-initialize))
 
 (require 'setup-company)
-(require 'setup-google-this)
+(require 'setup-google)
 (require 'setup-smex)
 (require 'setup-projectile)
 (require 'setup-multiple-cursors)
