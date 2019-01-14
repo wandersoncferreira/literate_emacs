@@ -8,6 +8,7 @@
 (bk/install-maybe 'yaml-mode)
 (bk/install-maybe 'fix-word)
 (bk/install-maybe 'whitespace-cleanup-mode)
+(bk/install-maybe 'graphviz-dot-mode)
 (bk/install-maybe 'quickrun)
 (bk/install-maybe 'poporg)
 
