@@ -24,9 +24,11 @@
       tab-always-indent 'complete
       help-window-select t
       delete-old-versions t
+      vc-make-backup-files t
       backup-by-copying t
       create-lockfiles nil
       shift-select-mode nil
+      auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `(("." . ,(concat user-emacs-directory
 					       "backups"))))
 (electric-pair-mode +1)

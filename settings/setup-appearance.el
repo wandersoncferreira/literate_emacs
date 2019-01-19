@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -28,6 +29,7 @@
   (set-frame-font "Monaco 17"))
 
 (bk/default-light-theme)
+
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

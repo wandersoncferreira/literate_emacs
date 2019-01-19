@@ -11,6 +11,13 @@
       (switch-to-buffer (get-buffer-create "*scratch*"))
       (lisp-interaction-mode))))
 
+(defun touch-buffer-file ()
+  "Create file from current buffer."
+  (interactive)
+  (insert " ")
+  (backward-delete-char 1)
+  (save-buffer))
+
 (defun bk/normalize-buffer ()
   "Function to organize the buffer."
   (interactive)

@@ -4,14 +4,19 @@
 
 (bk/install-maybe 'ido-completing-read+)
 (bk/install-maybe 'ido-at-point)
+(bk/install-maybe 'ido-vertical-mode)
 
 (require 'ido)
 (require 'ido-at-point)
+(require 'ido-vertical-mode)
 
 (ido-ubiquitous-mode +1)
 (ido-mode +1)
 (ido-everywhere +1)
 (ido-at-point-mode +1)
+(ido-vertical-mode +1)
+
+(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 
 (setq ido-use-virtual-buffers t
       ido-enable-prefix nil
@@ -19,22 +24,6 @@
       ido-create-new-buffer 'always
       ido-use-filename-at-point 'guess
       ido-enable-flex-matching t)
-
-(setq ido-decorations
-      '("\n-> "                             ; left bracket around prospect list
-	""                                  ; right bracket around prospect list
-	"\n   "                             ; separator between prospects, depends on `ido-separator`
-	"\n   ..."                          ; inserted at the end of a truncated list of prospects
-	"["                                 ; left bracket around common match string
-	"]"                                 ; right bracket around common match string
-	" [No match]"
-	" [Matched]"
-	" [Not readable]"
-	" [Too big]"
-	" [Confirm]"
-	"\n-> "                             ; left bracket around the sole remaining completion
-	""                                  ; right bracket around the sole remaining completion
-	))
 
 (setq ido-file-extensions-order '(".clj" ".py" ".org" ".php" ".rest"))
 

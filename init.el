@@ -56,6 +56,7 @@
 (require 'setup-elfeed)
 (require 'setup-help)
 (require 'setup-grep)
+(require 'setup-advices)
 (require 'setup-expand)
 (require 'setup-docker)
 
@@ -64,6 +65,7 @@
 (require 'setup-javascript)
 (require 'setup-web)
 (require 'setup-python)
+(require 'setup-ruby)
 (require 'setup-php)
 (require 'setup-c)
 (require 'setup-go)

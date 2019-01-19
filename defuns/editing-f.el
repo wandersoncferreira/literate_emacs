@@ -9,6 +9,15 @@
   (newline)
   (indent-for-tab-command))
 
+(defun comment-kill-all ()
+  "Function to kill all comments in a buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (comment-kill (save-excursion
+		    (goto-char (point-max))
+		    (line-number-at-pos)))))
+
 (defun open-line-above ()
   "Create a new line above the cursor."
   (interactive)

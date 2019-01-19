@@ -103,6 +103,7 @@
 ;;; buffers
 (fset 'quick-switch-buffer [?\C-x ?b return])
 (global-set-key (kbd "s-b") 'quick-switch-buffer)
+(global-set-key (kbd "C-\"") 'quick-switch-buffer)
 (global-set-key (kbd "s-y") 'bury-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-c C-k") 'eval-buffer)
@@ -138,6 +139,7 @@
 ;; misc
 (global-set-key (kbd "M-s l") 'sort-lines)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
+(global-set-key (kbd "C-x C-p") 'pop-global-mark)
 (global-set-key (kbd "C-a") 'bk/back-to-indentation-or-beginning)
 (global-set-key (kbd "C-x C-/") 'save-buffer)
 (global-set-key (kbd "C-c w") 'google-this-search)

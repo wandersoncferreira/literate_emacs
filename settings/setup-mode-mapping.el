@@ -8,6 +8,7 @@
     ("\\.yaml\\'" yaml-mode yaml-mode)
     ("\\.yml\\'" yaml-mode yaml-mode)
     ("\\.rest$\\'" restclient-mode restclient-mode)
+    ("\\.restclient\\'" restclient-mode restclient-mode)
     ("yasnippet/snippets" snippet-mode snippet-mode)
     ("\\.php\\'" php-mode php-mode)
     ("\\.clj\\'" clojure-mode clojure-mode)

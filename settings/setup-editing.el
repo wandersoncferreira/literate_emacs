@@ -16,7 +16,7 @@
 
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'prog-mode-hook 'turn-on-auto-fill)
-(setq-default fill-column 72)
+(setq-default fill-column 100)
 
 (provide 'setup-editing)
 ;;; setup-editing.el ends here
