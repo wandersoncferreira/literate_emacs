@@ -59,5 +59,37 @@
   (message "All occurrences of the print statement were removed!"))
 
 
+(defun rgrep-fullscreen (regexp &optional files dir confirm)
+  "Open grep in full screen, saving windows."
+  (interactive
+   (progn
+     (grep-compute-defaults)
+     (let* ((regexp (grep-read-regexp))
+	    (files (grep-read-files regexp))
+	    (dir (ido-read-directory-name "Base directory: "
+					  nil default-directory t))
+	    (confirm (equal current-prefix-arg '(4))))
+       (list regexp files dir confirm))))
+  (window-configuration-to-register ?$)
+  (rgrep regexp files dir confirm)
+  (switch-to-buffer "*grep*")
+  (delete-other-windows)
+  (goto-char (point-min)))
+
+(defun rgrep-quit-window ()
+  "Simply jump to the register where all your windows are."
+  (interactive)
+  (kill-buffer)
+  (jump-to-register ?$))
+
+(defun rgrep-goto-file-and-close-rgrep ()
+  "Go to file and close rgrep window."
+  (interactive)
+  (compile-goto-error)
+  (kill-buffer "*grep*")
+  (delete-other-windows)
+  (message "Type C-x r j $ to return to pre-rgrep windows."))
+
+
 (provide 'editing-f)
 ;;; editing-f.el ends here
