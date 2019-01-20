@@ -1,3 +1,6 @@
 [submodule "maintainer/helm-spotify-plus"]
 	path = maintainer/helm-spotify-plus
 	url = https://github.com/wandersoncferreira/helm-spotify-plus
+[submodule "third-party/emacs-bash-completion"]
+	path = third-party/emacs-bash-completion
+	url = https://github.com/szermatt/emacs-bash-completion

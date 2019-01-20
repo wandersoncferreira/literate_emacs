@@ -16,7 +16,7 @@
     (autoload (intern l) (concat l ".el"))))
 
 (load-packages-from-folder "maintainer")
-
+(load-packages-from-folder "third-party")
 
 (require 'helm-spotify-plus)
 (global-set-key (kbd "C-c s s") 'helm-spotify-plus)

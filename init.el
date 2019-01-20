@@ -24,10 +24,10 @@
 
 (require 'setup-package)
 (require 'setup-appearance)
+(require 'setup-maintainer)
 (require 'setup-defaults)
 (require 'setup-ido)
 (require 'setup-git)
-(require 'setup-maintainer)
 
 (require 'setup-dired)
 (require 'setup-org)
