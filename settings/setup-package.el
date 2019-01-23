@@ -27,6 +27,7 @@
     (package-install package)))
 
 (bk/install-maybe 'diminish)
+(bk/install-maybe 'use-package)
 (require 'diminish)
 
 (provide 'setup-package)
