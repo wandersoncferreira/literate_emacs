@@ -46,6 +46,7 @@
 (require 'setup-projectile)
 (require 'setup-multiple-cursors)
 (require 'setup-editing)
+(require 'setup-pdf)
 (require 'setup-misc)
 (require 'setup-prodigy)
 (require 'setup-mode-mapping)

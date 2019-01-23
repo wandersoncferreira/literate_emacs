@@ -15,5 +15,14 @@
 (put 'dired-find-alternate-file 'disabled nil)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
+(defun ensure-buffer-name-ends-in-slash ()
+  "Change buffer name to end with slash."
+  (let ((name (buffer-name)))
+    (if (not (string-match "/$" name))
+	(rename-buffer (concat name "/") t))))
+(add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
+(add-hook 'dired-mode-hook
+	  (lambda () (setq truncate-lines 1)))
+
 (provide 'setup-dired)
 ;;; setup-dired.el ends here
