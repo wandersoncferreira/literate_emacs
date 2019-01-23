@@ -11,7 +11,7 @@
 
 (require 'smarty-mode)
 
-(bk/after-load 'company
+(with-eval-after-load 'company
   (push 'company-ac-php-backend company-backends))
 
 (provide 'setup-php)

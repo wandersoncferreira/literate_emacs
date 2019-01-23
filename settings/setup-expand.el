@@ -7,13 +7,6 @@
 
 (require 'hippie-exp)
 
-(defadvice he-substitute-string (after he-paredit-fix)
-  "Remove extra paren when expanding line in paredit."
-  (if (and paredit-mode (equal (substring str -1) ")"))
-      (progn
-	(backward-delete-char 1)
-	(forward-char))))
-
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
 	try-expand-dabbrev-all-buffers

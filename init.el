@@ -22,13 +22,15 @@
   (when (file-regular-p file)
     (load file)))
 
+(load-packages-from-folder "maintainer")
+(load-packages-from-folder "third-party")
+
 (require 'setup-package)
 (require 'setup-appearance)
 (require 'setup-maintainer)
 (require 'setup-defaults)
 (require 'setup-ido)
 (require 'setup-git)
-
 (require 'setup-dired)
 (require 'setup-org)
 (require 'setup-eshell)
@@ -50,7 +52,6 @@
 (require 'setup-keybindings)
 (require 'setup-erc)
 (require 'setup-snippets)
-(require 'setup-lisp)
 (require 'setup-paredit)
 (require 'setup-flycheck)
 (require 'setup-elfeed)
@@ -70,6 +71,11 @@
 (require 'setup-c)
 (require 'setup-go)
 (require 'setup-latex)
+
+(defalias 'cquit 'cider-quit)
+(defalias 'ctest 'cider-test-run-test)
+(defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'qrr 'query-replace-regexp "Query replace regexp")
 
 (require 'server)
 (unless (server-running-p)

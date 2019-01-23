@@ -7,7 +7,6 @@
 
 (bk/install-maybe 'shell-command)
 
-
 (require 'eshell)
 (require 'shell-command)
 (require 'bash-completion)

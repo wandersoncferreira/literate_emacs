@@ -9,7 +9,7 @@
  (position . 1545))
 ("org-capture-last-stored"
  (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO Web Scra")
- (rear-context-string . "-05 Sat 20:13]\n\n")
- (position . 3077))
+ (front-context-string . "** TODO [[https:")
+ (rear-context-string . "1 2)\n#+END_SRC\n\n")
+ (position . 7773))
 )

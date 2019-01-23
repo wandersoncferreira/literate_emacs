@@ -1,4 +1,4 @@
-alias d dired $1
+alias d dried $1
 alias ee find-file-other-window $1
 alias emacs find-file $1
 alias e find-file $1

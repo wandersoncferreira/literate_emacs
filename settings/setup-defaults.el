@@ -7,6 +7,8 @@
 (require 'flyspell)
 (require 'saveplace)
 (require 'ibuffer)
+(require 'linum)
+(require 'autorevert)
 
 ;; fix old security emacs problems
 (eval-after-load "enriched"
@@ -25,28 +27,24 @@
       help-window-select t
       delete-old-versions t
       vc-make-backup-files t
+      save-place-mode t
+      save-place-file (expand-file-name ".places" user-emacs-directory)
+      linum-format " %3d "
+      global-auto-revert-non-file-buffers t
+      auto-revert-verbose nil
       backup-by-copying t
       create-lockfiles nil
       shift-select-mode nil
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `(("." . ,(concat user-emacs-directory
 					       "backups"))))
+
 (electric-pair-mode +1)
 (show-paren-mode +1)
 (delete-selection-mode +1)
 (global-auto-revert-mode +1)
 (savehist-mode +1)
 
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-
-(defalias 'cquit 'cider-quit)
-(defalias 'ctest 'cider-test-run-test)
-(defalias 'yes-or-no-p 'y-or-n-p)
-(defalias 'qrr 'query-replace-regexp "Query replace regexp")
-
-;; tramp
 (defun tramp-set-auto-save ()
   "Overwriting the `tramp-set-auto-save'.
 The idea is to completely turn off backups for Tramp."
@@ -76,23 +74,6 @@ The idea is to completely turn off backups for Tramp."
 (add-hook 'text-mode-hook 'flyspell-mode)
 (define-key flyspell-mode-map (kbd "C-,") nil)
 (diminish 'flyspell-mode)
-
-(setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
-
-(defun goto-line-with-feedback ()
-  "Show line numbers when `goto-line' is pressed."
-  (interactive)
-  (unwind-protect
-      (progn
-	(linum-mode +1)
-	(goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
-
-(global-set-key [remap goto-line] 'goto-line-with-feedback)
-(setq linum-format " %3d ")
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

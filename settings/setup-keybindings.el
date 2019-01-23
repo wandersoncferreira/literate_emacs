@@ -70,7 +70,7 @@
 ;; eshell
 (global-set-key (kbd "C-c e") 'eshell)
 (global-set-key (kbd "C-x \"") 'eshell)
-(global-set-key (kbd "C-c r") 'bk/eshell-full-or-restore)
+(global-set-key (kbd "C-c r e") 'bk/eshell-full-or-restore)
 
 ;;; ido
 (global-set-key (kbd "C-x f") 'ido-recentf-open)
@@ -143,6 +143,8 @@
 (global-set-key (kbd "C-a") 'bk/back-to-indentation-or-beginning)
 (global-set-key (kbd "C-x C-/") 'save-buffer)
 (global-set-key (kbd "C-c w") 'google-this-search)
+(global-set-key (kbd "C-c r r") 'quickrun)
+(global-set-key [remap goto-line] 'goto-line-with-feedback)
 
 ;; registers
 (set-register ?e '(file . "~/.emacs.d/conf.org"))

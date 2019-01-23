@@ -9,6 +9,15 @@
   (newline)
   (indent-for-tab-command))
 
+(defun goto-line-with-feedback ()
+  "Show line numbers when `goto-line' is pressed."
+  (interactive)
+  (unwind-protect
+      (progn
+	(linum-mode +1)
+	(goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
+
 (defun comment-kill-all ()
   "Function to kill all comments in a buffer."
   (interactive)
