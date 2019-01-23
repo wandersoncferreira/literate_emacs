@@ -2,17 +2,23 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe 'elpy)
-(bk/install-maybe 'pip-requirements)
+(use-package python
+  :ensure t
+  :defer t
+  :mode ("\\.py\\'" . python-mode))
 
-(require 'elpy)
-(require 'pip-requirements)
+(use-package elpy
+  :ensure t
+  :after python
+  :config
+  (elpy-enable)
+  (delete `elpy-module-django elpy-modules)
+  (delete `elpy-module-highlight-indentation elpy-modules)
+  (pyvenv-activate "~/miniconda3"))
 
-(elpy-enable)
-(pyvenv-activate "~/miniconda3")
-
-(delete `elpy-module-django elpy-modules)
-(delete `elpy-module-highlight-indentation elpy-modules)
+(use-package pip-requirements
+  :ensure t
+  :after python)
 
 (provide 'setup-python)
 ;;; setup-python.el ends here
