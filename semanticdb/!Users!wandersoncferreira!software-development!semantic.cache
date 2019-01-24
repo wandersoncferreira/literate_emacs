@@ -1,0 +1,29 @@
+;; Object semanticdb-project-database-file
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file"
+  :tables
+  (list
+
+    (semanticdb-table "semanticdb-table"
+      :major-mode java-mode
+      :tags 
+        '( ("LocationTester" type
+               (:typemodifiers ("public")
+                :members 
+                  ( ("main" function
+                       (:typemodifiers ("public" "static")
+                        :arguments 
+                          ( ("args" variable
+                               (:dereference 1
+                                :type "String")
+                                (reparse-symbol formal_parameters) [59 72]))                          
+                        :type "void")
+                        (reparse-symbol class_member_declaration) [35 237]))                  
+                :type "class")
+                nil [1 239]))          
+      :file "LocationTester.java"
+      :pointmax 240
+      :unmatched-syntax nil))
+  :file "!Users!wandersoncferreira!software-development!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")

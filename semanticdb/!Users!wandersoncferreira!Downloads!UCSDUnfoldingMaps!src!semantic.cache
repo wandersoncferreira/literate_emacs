@@ -1,0 +1,36 @@
+;; Object semanticdb-project-database-file
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table"
+      :major-mode java-mode
+      :tags 
+        '( ("processing.core.PApplet" include nil nil [1 32])
+            ("de.fhpotsdam.unfolding.UnfoldingMap" include nil nil [33 76])
+            ("de.fhpotsdam.unfolding.geo.Location" include nil nil [77 120])
+            ("de.fhpotsdam.unfolding.providers.Google" include nil nil [121 168])
+            ("de.fhpotsdam.unfolding.utils.MapUtils" include nil nil [169 214])
+            ("HelloUCSDWorld" type
+               (:typemodifiers ("public")
+                :superclasses "PApplet"
+                :members 
+                  ( ("map" variable (:type "UnfoldingMap") (reparse-symbol class_member_declaration) [354 371])
+                    ("setup" function
+                       (:typemodifiers ("public")
+                        :type "void")
+                        (reparse-symbol class_member_declaration) [374 610])
+                    ("draw" function
+                       (:typemodifiers ("public")
+                        :type "void")
+                        (reparse-symbol class_member_declaration) [613 667]))                  
+                :type "class")
+                nil [306 670]))          
+      :file "HelloUCSDWorld.java"
+      :pointmax 671
+      :fsize 700
+      :lastmodtime '(22920 33934 0 0)
+      :unmatched-syntax nil))
+  :file "!Users!wandersoncferreira!Downloads!UCSDUnfoldingMaps!src!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")

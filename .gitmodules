@@ -4,3 +4,6 @@
 [submodule "third-party/emacs-bash-completion"]
 	path = third-party/emacs-bash-completion
 	url = https://github.com/szermatt/emacs-bash-completion
+[submodule "third-party/ipinfo.el"]
+	path = third-party/ipinfo.el
+	url = https://github.com/dakra/ipinfo.el
