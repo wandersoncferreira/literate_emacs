@@ -72,7 +72,9 @@
 (require 'setup-c)
 (require 'setup-go)
 (require 'setup-latex)
+(require 'setup-sml)
 
+(defalias 're 'restart-emacs)
 (defalias 'cquit 'cider-quit)
 (defalias 'ctest 'cider-test-run-test)
 (defalias 'yes-or-no-p 'y-or-n-p)
