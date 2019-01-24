@@ -13,9 +13,12 @@
 (bk/install-maybe 'poporg)
 (bk/install-maybe 'windresize)
 (bk/install-maybe 'minions)
+(bk/install-maybe 'request)
+(bk/install-maybe 'restart-emacs)
 (bk/install-maybe 'rotate)
 ;; rotate-window: change the windows inside the frame
 ;; rotate-layout: change the layout inside the frame. -- to |
+
 
 (require 'whitespace)
 (require 'quickrun)

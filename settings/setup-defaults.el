@@ -34,15 +34,16 @@
       auto-revert-verbose nil
       backup-by-copying t
       create-lockfiles nil
+      default-tab-width 4
       shift-select-mode nil
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `(("." . ,(concat user-emacs-directory
 					       "backups"))))
-
 (electric-pair-mode +1)
 (show-paren-mode +1)
 (delete-selection-mode +1)
 (global-auto-revert-mode +1)
+(semantic-mode +1)
 (global-subword-mode +1)
 (savehist-mode +1)
 

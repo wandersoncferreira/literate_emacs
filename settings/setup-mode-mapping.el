@@ -16,6 +16,7 @@
     ("\\.phtml\\'" web-mode web-mode)
     ("\\.tpl\\.php\\'" web-mode web-mode)
     ("\\.html\\.twig\\'" web-mode web-mode)
+    ("\\.dot\\'" graphviz-dot-mode)
     ("\\.html?\\'" web-mode web-mode)
     ("\\.go\\'" go-mode go-mode)
     ("\\.json\\'" json-mode json-mode)
@@ -35,7 +36,6 @@ The file is opened in MODE."
 				 (unless (package-installed-p ',package)
 				   (package-install ',package))
 				 (,mode)))))
-
 (mapc
  (lambda (entry)
    (let ((extension (car entry))
