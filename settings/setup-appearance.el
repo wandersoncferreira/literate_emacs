@@ -21,14 +21,23 @@
 (defun bk/default-light-theme ()
   "Default appearance for my Emacs sessions."
   (load-theme 'tsdh-light t)
-  (set-frame-font "Monaco 17"))
+  (set-frame-font "Monaco 12"))
 
 (defun bk/default-dark-theme ()
   "Default appearance for my Emacs sessions."
   (load-theme 'default-black t)
-  (set-frame-font "Monaco 17"))
+  (set-frame-font "Monaco 12"))
 
 (bk/default-light-theme)
+
+(setq initial-frame-alist
+      '((background-color . "honeydew")
+	(left . 50)
+	(top . 50)
+	(width . 106)
+	(height . 60)))
+
+(setq default-frame-alist initial-frame-alist)
 
 
 (provide 'setup-appearance)
