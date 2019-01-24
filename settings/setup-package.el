@@ -26,9 +26,7 @@
   (when (not (package-installed-p package))
     (package-install package)))
 
-(bk/install-maybe 'diminish)
 (bk/install-maybe 'use-package)
-(require 'diminish)
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

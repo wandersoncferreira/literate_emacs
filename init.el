@@ -78,8 +78,6 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'qrr 'query-replace-regexp "Query replace regexp")
 
-(use-package eldoc :diminish 'eldoc-mode)
-
 (require 'server)
 (unless (server-running-p)
   (server-start))

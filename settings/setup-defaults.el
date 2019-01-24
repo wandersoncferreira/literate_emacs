@@ -43,6 +43,7 @@
 (show-paren-mode +1)
 (delete-selection-mode +1)
 (global-auto-revert-mode +1)
+(global-subword-mode +1)
 (savehist-mode +1)
 
 (defun tramp-set-auto-save ()
@@ -53,7 +54,6 @@ The idea is to completely turn off backups for Tramp."
 (setq save-abbrevs 'silent)
 (add-hook 'text-mode-hook #'abbrev-mode)
 (add-hook 'prog-mode-hook #'abbrev-mode)
-(diminish 'abbrev-mode)
 
 (setq-default recentf-max-saved-items 1000
 	      recentf-exclude '("/tmp/" "/ssh:"))
@@ -73,7 +73,6 @@ The idea is to completely turn off backups for Tramp."
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (add-hook 'text-mode-hook 'flyspell-mode)
 (define-key flyspell-mode-map (kbd "C-,") nil)
-(diminish 'flyspell-mode)
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

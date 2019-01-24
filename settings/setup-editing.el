@@ -15,7 +15,6 @@
 (setq expand-region-fast-keys-enabled nil)
 
 (use-package simple
-  :diminish 'auto-fill-mode
   :config
   (auto-fill-mode +1))
 

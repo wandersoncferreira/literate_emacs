@@ -17,7 +17,6 @@
 (require 'react-snippets)
 
 (yas-global-mode +1)
-(diminish 'yas-minor-mode)
 
 (defun yas/goto-end-of-active-field ()
   "Go to the end of the active field."

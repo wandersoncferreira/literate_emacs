@@ -37,17 +37,14 @@
 
 (add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'whitespace-cleanup)
-(diminish 'whitespace-mode)
 
 (add-hook 'prog-mode-hook 'prettify-symbols-mode)
 
 (use-package hideshow
-  :diminish 'hs-minor-mode
   :config
   (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 (global-whitespace-cleanup-mode +1)
-(diminish 'whitespace-cleanup-mode)
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

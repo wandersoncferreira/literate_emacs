@@ -11,7 +11,6 @@
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'clojure-mode-hook #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-(diminish 'paredit-mode)
 
 ;;; makes paredit-mode work with delete-selection-mode
 (put 'paredit-forward-delete 'delete-selection 'supersede)

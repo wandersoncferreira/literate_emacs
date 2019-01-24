@@ -11,7 +11,6 @@
 (require 'company)
 
 (add-hook 'after-init-hook 'global-company-mode)
-(diminish 'company-mode)
 
 (setq company-global-modes '(not eshell-mode shell-mode
 				 org-mode term-mode))
