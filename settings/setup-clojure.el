@@ -53,7 +53,7 @@
 (setq cider-repl-result-prefix ";; => "
       cider-prompt-for-symbol nil
       nrepl-hide-special-buffers nil)
-
+(setq teste-clj "ativo")
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here

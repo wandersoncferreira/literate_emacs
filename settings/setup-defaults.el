@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'tramp)
 (require 'uniquify)
 (require 'flyspell)
 (require 'saveplace)
@@ -39,13 +38,13 @@
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `(("." . ,(concat user-emacs-directory
 					       "backups"))))
-(electric-pair-mode +1)
-(show-paren-mode +1)
-(delete-selection-mode +1)
-(global-auto-revert-mode +1)
-(semantic-mode +1)
-(global-subword-mode +1)
-(savehist-mode +1)
+
+(add-hook 'after-init-hook 'electric-pair-mode)
+(add-hook 'after-init-hook 'show-paren-mode)
+(add-hook 'after-init-hook 'delete-selection-mode)
+(add-hook 'after-init-hook 'global-auto-revert-mode)
+(add-hook 'after-init-hook 'global-subword-mode)
+(add-hook 'after-init-hook 'savehist-mode)
 
 (defun tramp-set-auto-save ()
   "Overwriting the `tramp-set-auto-save'.

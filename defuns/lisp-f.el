@@ -11,6 +11,12 @@
   `(eval-after-load ,mode
      '(progn ,@code)))
 
+(cl-defmacro or-protected (&body body)
+  "Return first successfully computed result."
+  `(or ,@(mapcar
+	  (lambda (x) `(ignore-errors ,x))
+	  body)))
+
 (defun bk/eval-and-replace ()
   "Replace the preceding sexp with its value."
   (interactive)

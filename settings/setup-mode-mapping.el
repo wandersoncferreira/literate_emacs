@@ -7,8 +7,6 @@
   '(("\\Jenkinsfile\\'" yaml-mode yaml-mode)
     ("\\.yaml\\'" yaml-mode yaml-mode)
     ("\\.yml\\'" yaml-mode yaml-mode)
-    ("\\.rest$\\'" restclient-mode restclient-mode)
-    ("\\.restclient\\'" restclient-mode restclient-mode)
     ("yasnippet/snippets" snippet-mode snippet-mode)
     ("\\.php\\'" php-mode php-mode)
     ("\\.clj\\'" clojure-mode clojure-mode)
@@ -16,6 +14,7 @@
     ("\\.phtml\\'" web-mode web-mode)
     ("\\.tpl\\.php\\'" web-mode web-mode)
     ("\\.html\\.twig\\'" web-mode web-mode)
+    ("\\.fish\\'" fish-mode fish-mode)
     ("\\.dot\\'" graphviz-dot-mode)
     ("\\.html?\\'" web-mode web-mode)
     ("\\.go\\'" go-mode go-mode)
@@ -26,6 +25,8 @@
     ("\\.elixir\\'" elixir-mode elixir-mode)
     ("\\.scss\\'" scss-mode scss-mode)
     ("\\.scala\\'" scala-mode scala-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode))
 
 ;; macro from prelude!
 (defmacro bk/auto-install (extension package mode)

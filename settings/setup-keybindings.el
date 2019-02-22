@@ -109,6 +109,7 @@
 (global-set-key (kbd "C-c C-k") 'eval-buffer)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-c b") 'bk/scratch-buffer)
+(global-set-key (kbd "C-z") 'bury-buffer)
 
 ;;; prodigy
 (global-set-key (kbd "C-x M-m") 'prodigy)
@@ -147,7 +148,7 @@
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
 ;; registers
-(set-register ?e '(file . "~/.emacs.d/conf.org"))
+(set-register ?b '(file . "~/books.org"))
 (set-register ?h '(file . "~/emacs-notes/7habits-effective-editing.org"))
 
 

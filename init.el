@@ -29,11 +29,12 @@
 (require 'setup-appearance)
 (require 'setup-maintainer)
 (require 'setup-defaults)
-(require 'setup-ido)
-(require 'setup-git)
-(require 'setup-dired)
-(require 'setup-org)
-(require 'setup-eshell)
+
+(eval-after-load 'ido '(require 'setup-ido))
+(eval-after-load 'org '(require 'setup-org))
+(eval-after-load 'dired '(require 'setup-dired))
+(eval-after-load 'magit '(require 'setup-git))
+(eval-after-load 'eshell '(require 'setup-eshell))
 
 (when init-osx?
   (require 'setup-mac)
@@ -61,18 +62,20 @@
 (require 'setup-advices)
 (require 'setup-expand)
 (require 'setup-docker)
+(require 'setup-web)
 
 ;;; programming languages
-(require 'setup-clojure)
-(require 'setup-javascript)
-(require 'setup-web)
-(require 'setup-python)
-(require 'setup-ruby)
-(require 'setup-php)
-(require 'setup-c)
-(require 'setup-go)
-(require 'setup-latex)
-(require 'setup-sml)
+(eval-after-load "python" '(require 'setup-python))
+(eval-after-load "js" '(require 'setup-javascript))
+(eval-after-load "clojure-mode" '(require 'setup-clojure))
+(eval-after-load 'ruby-mode '(require 'setup-ruby))
+(eval-after-load "php-mode" '(require 'setup-php))
+(eval-after-load 'typescript-mode '(require 'setup-typescript))
+(eval-after-load 'go-mode '(require 'setup-go))
+(eval-after-load 'sml-mode '(require 'setup-sml))
+(eval-after-load "tex" '(require 'setup-latex))
+(eval-after-load "cc-mode" '(require 'setup-c))
+
 
 (defalias 're 'restart-emacs)
 (defalias 'cquit 'cider-quit)

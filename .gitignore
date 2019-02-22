@@ -8,3 +8,4 @@ recentf
 smex-items
 .mc-lists.el
 .cask/
+semanticdb/*

@@ -9,6 +9,7 @@
 (bk/install-maybe 'company)
 
 (require 'company)
+(require 'company-dabbrev)
 
 (add-hook 'after-init-hook 'global-company-mode)
 
@@ -21,6 +22,9 @@
       company-minimum-prefix-length 2
       company-tooltip-align-annotations t
       company-tooltip-flip-when-above t)
+
+;; stop lower-casing all the completions
+(setq company-dabbrev-downcase nil)
 
 (defun ora-company-number ()
   "Choose the candidate based on his number at candidate list."

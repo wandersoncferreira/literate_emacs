@@ -16,6 +16,7 @@
 (bk/install-maybe 'request)
 (bk/install-maybe 'restart-emacs)
 (bk/install-maybe 'rotate)
+
 ;; rotate-window: change the windows inside the frame
 ;; rotate-layout: change the layout inside the frame. -- to |
 

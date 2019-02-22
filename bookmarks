@@ -9,7 +9,7 @@
  (position . 1545))
 ("org-capture-last-stored"
  (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO List of ")
- (rear-context-string . "-23 Wed 13:44]\n\n")
- (position . 7947))
+ (front-context-string . "** TODO eftest l")
+ (rear-context-string . "0b6c20][link]]\n\n")
+ (position . 11851))
 )

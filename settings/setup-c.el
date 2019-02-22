@@ -19,6 +19,6 @@
 (setq rtags-autostart-diagnostics t)
 (rtags-enable-standard-keybindings)
 
-
+(setq teste-c "ativo")
 (provide 'setup-c)
 ;;; setup-c.el ends here

@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;###autoload
 (defun bk/scratch-buffer ()
   "Function to change buffer to scratch buffer."
   (interactive)
@@ -11,6 +12,7 @@
       (switch-to-buffer (get-buffer-create "*scratch*"))
       (lisp-interaction-mode))))
 
+;;;###autoload
 (defun touch-buffer-file ()
   "Create file from current buffer."
   (interactive)
@@ -18,6 +20,7 @@
   (backward-delete-char 1)
   (save-buffer))
 
+;;;###autoload
 (defun bk/normalize-buffer ()
   "Function to organize the buffer."
   (interactive)
@@ -25,6 +28,7 @@
   (untabify (point-min) (point-max))
   (indent-region (point-min) (point-max)))
 
+;;;###autoload
 (defun bk/new-scratch-buffer ()
   "Create a new empty buffer.
 Removed from xah."
@@ -35,6 +39,7 @@ Removed from xah."
     (lisp-interaction-mode)
     buff))
 
+;;;###autoload
 (defun bk/eshell-full-or-restore ()
   "Bring up a full-screen eshell or restore previous config."
   (interactive)
@@ -45,6 +50,7 @@ Removed from xah."
       (eshell)
       (delete-other-windows))))
 
+;;;###autoload
 (defun bk/rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -60,6 +66,7 @@ Removed from xah."
       (message "File '%s' sucessfully renamed to '%s'"
 	       name (file-name-nondirectory new-name)))))
 
+;;;###autoload
 (defun bk/delete-current-buffer-file ()
   "Remove file connected to current buffer and kill buffer."
   (interactive)

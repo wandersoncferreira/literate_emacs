@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;###autoload
 (defun open-line-below ()
   "Create a new line below the cursor."
   (interactive)
@@ -9,6 +10,7 @@
   (newline)
   (indent-for-tab-command))
 
+;;;###autoload
 (defun goto-line-with-feedback ()
   "Show line numbers when `goto-line' is pressed."
   (interactive)
@@ -18,6 +20,7 @@
 	(goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 
+;;;###autoload
 (defun comment-kill-all ()
   "Function to kill all comments in a buffer."
   (interactive)
@@ -27,6 +30,7 @@
 		    (goto-char (point-max))
 		    (line-number-at-pos)))))
 
+;;;###autoload
 (defun open-line-above ()
   "Create a new line above the cursor."
   (interactive)
@@ -35,12 +39,14 @@
   (forward-line -1)
   (indent-for-tab-command))
 
+;;;###autoload
 (defun bk/insert-date ()
   "Function to insert date into buffer."
   (interactive)
   (insert (format-time-string
-	   "%Y-%m-%d" (current-time))))
+	   "%Y-%m-%d:%H-%M-%S" (current-time))))
 
+;;;###autoload
 (defun bk/back-to-indentation-or-beginning ()
   "Function to dwm for line movements."
   (interactive)
@@ -50,6 +56,7 @@
 	   (point)))
       (beginning-of-line)))
 
+;;;###autoload
 (defun bk/sudo-edit (&optional arg)
   "Function to edit file with super-user with optional ARG."
   (interactive "P")
@@ -57,6 +64,7 @@
       (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
+;;;###autoload
 (defun bk/remove-python-print-statements ()
   "Function to remove all print statements from my python code."
   (interactive)
@@ -68,6 +76,7 @@
   (message "All occurrences of the print statement were removed!"))
 
 
+;;;###autoload
 (defun rgrep-fullscreen (regexp &optional files dir confirm)
   "Open grep in full screen, saving windows."
   (interactive
@@ -85,12 +94,14 @@
   (delete-other-windows)
   (goto-char (point-min)))
 
+;;;###autoload
 (defun rgrep-quit-window ()
   "Simply jump to the register where all your windows are."
   (interactive)
   (kill-buffer)
   (jump-to-register ?$))
 
+;;;###autoload
 (defun rgrep-goto-file-and-close-rgrep ()
   "Go to file and close rgrep window."
   (interactive)

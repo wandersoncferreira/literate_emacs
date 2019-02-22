@@ -12,12 +12,14 @@
 (bk/install-maybe 'react-snippets)
 
 (require 'yasnippet)
+
+(yas-global-mode 1)
+
 (require 'yasnippet-snippets)
 (require 'clojure-snippets)
 (require 'react-snippets)
 
-(yas-global-mode +1)
-
+;; inter-field navigation
 (defun yas/goto-end-of-active-field ()
   "Go to the end of the active field."
   (interactive)
@@ -38,7 +40,10 @@
 
 (define-key yas-keymap (kbd "C-e") 'yas/goto-end-of-active-field)
 (define-key yas-keymap (kbd "C-a") 'yas/goto-start-of-active-field)
+
+;; jump to end of snippet definition
 (define-key yas-keymap (kbd "<return>") 'yas-exit-all-snippets)
+
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (define-key yas-minor-mode-map (kbd "<tab>") nil)
 (define-key yas-minor-mode-map (kbd "M-i") 'yas-expand)
