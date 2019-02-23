@@ -10,24 +10,15 @@
 (bk/install-maybe 'whitespace-cleanup-mode)
 (bk/install-maybe 'graphviz-dot-mode)
 (bk/install-maybe 'quickrun)
-(bk/install-maybe 'poporg)
 (bk/install-maybe 'windresize)
-(bk/install-maybe 'minions)
 (bk/install-maybe 'request)
-(bk/install-maybe 'restart-emacs)
 (bk/install-maybe 'rotate)
 
 ;; rotate-window: change the windows inside the frame
 ;; rotate-layout: change the layout inside the frame. -- to |
 
-
 (require 'whitespace)
 (require 'quickrun)
-(require 'poporg)
-
-(require 'minions)
-(setq minions-mode-line-lighter "☰")
-(minions-mode +1)
 
 (add-hook 'prog-mode-hook
 	  (defun bk--add-watchwords ()

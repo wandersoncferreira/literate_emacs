@@ -5,6 +5,7 @@
 (bk/install-maybe 'magit)
 (bk/install-maybe 'git-timemachine)
 (bk/install-maybe 'yagist)
+(bk/install-maybe 'browse-at-remote)
 
 (require 'magit)
 

@@ -8,8 +8,8 @@
  (rear-context-string . "d refactor it\n\n\n")
  (position . 1545))
 ("org-capture-last-stored"
- (filename . "~/gtd/inbox.org")
- (front-context-string . "** TODO eftest l")
- (rear-context-string . "0b6c20][link]]\n\n")
- (position . 11851))
+ (filename . "~/gtd/tickler.org")
+ (front-context-string . "** Site muito bo")
+ (rear-context-string . "atching-regexp\n\n")
+ (position . 1131))
 )

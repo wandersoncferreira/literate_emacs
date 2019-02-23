@@ -17,22 +17,12 @@
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
 
-(defun bk/default-light-theme ()
-  "Default appearance for my Emacs sessions."
-  (load-theme 'tsdh-light t))
-
-(defun bk/default-dark-theme ()
-  "Default appearance for my Emacs sessions."
-  (load-theme 'default-black t))
-
-(bk/default-dark-theme)
+(load-theme 'tsdh-light t)
 
 (or-protected
  (not (set-frame-font "Monaco 15"))
  (not (set-frame-font "Liberation Mono 15"))
  (not (set-frame-font "Ubuntu Mono 16")))
-
-(setq default-frame-alist initial-frame-alist)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

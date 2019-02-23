@@ -1,7 +1,3 @@
-/Users/wandersoncferreira/platform/platform-mgm/test
-/Users/wandersoncferreira/platform/platform-mgm/config
-/Users/wandersoncferreira/platform/platform-gandalph
-/Users/wandersoncferreira/platform/platform-galway
 /Users/wandersoncferreira/platform/conector-db
 /Users/wandersoncferreira/platform/data-manager
 /Users/wandersoncferreira/platform-soap-clj
@@ -31,3 +27,7 @@
 /Users/wandersoncferreira/platform/py-s3-bucket
 /Users/wandersoncferreira/platform
 /Users/wandersoncferreira
+/Users/wandersoncferreira/platform/platform-s3/ps3
+/Users/wandersoncferreira/platform/platform-cessao/cessao
+/Users/wandersoncferreira/platform/platform-cessao/cessao/api
+/Users/wandersoncferreira/platform/platform-cessao/cessao
