@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(bk/install-maybe 'dired-collapse)
+
 (require 'dired-x)
 (require 'dired)
 
@@ -23,6 +25,8 @@
 (add-hook 'dired-mode-hook 'ensure-buffer-name-ends-in-slash)
 (add-hook 'dired-mode-hook
 	  (lambda () (setq truncate-lines 1)))
+
+(add-hook 'dired-mode-hook 'dired-collapse-mode)
 
 (provide 'setup-dired)
 ;;; setup-dired.el ends here

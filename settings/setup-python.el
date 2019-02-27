@@ -7,6 +7,7 @@
 (bk/install-maybe 'pip-requirements)
 (bk/install-maybe 'electric-operator)
 (bk/install-maybe 'python-pytest)
+(bk/install-maybe 'pydoc-info)
 
 (elpy-enable)
 
@@ -15,7 +16,20 @@
 
 (pyvenv-activate "~/miniconda3")
 
-(electric-operator-mode +1)
+(add-hook 'python-mode-hook 'electric-operator-mode)
+
+(require 'python)
+(setq tab-width 4
+	  python-indent-offset 4
+	  python-shell-interpreter "ipython"
+	  python-shell-interpreter-args "-i")
+
+(require 'info-look)
+(info-lookup-add-help
+ :mode 'python-mode
+ :regexp "[[:alnum:]_]+"
+ :doc-spec
+ '(("(pythonIndex" nil "")))
 
 (provide 'setup-python)
 ;;; setup-python.el ends here
