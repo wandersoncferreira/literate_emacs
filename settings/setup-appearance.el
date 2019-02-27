@@ -17,12 +17,14 @@
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
 
-(load-theme 'tsdh-light t)
+(bk/install-maybe 'base16-theme)
+(load-theme 'base16-railscasts t)
 
 (or-protected
  (not (set-frame-font "Monaco 15"))
  (not (set-frame-font "Liberation Mono 15"))
  (not (set-frame-font "Ubuntu Mono 16")))
+
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here
