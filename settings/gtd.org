@@ -7,15 +7,20 @@
 
   Define the main files to collect and organize information
   #+BEGIN_SRC emacs-lisp
-  (setq org-agenda-files'("~/gtd/inbox.org"
-			"~/gtd/gtd.org"
-			"~/gtd/tickler.org"))
+    (setq org-agenda-files'("~/gtd/inbox.org"
+			    "~/gtd/gtd.org"
+			    "~/gtd/tickler.org"
+			    "~/platform/inbox.org"
+			    ))
   #+END_SRC
 
   capture data into the inbox and tickler files
   #+BEGIN_SRC emacs-lisp
     (setq org-capture-templates '(("t" "Todo [inbox]" entry
 				   (file+headline "~/gtd/inbox.org" "Tasks")
+				   "* TODO %i%? %^G \n %U" :empty-lines 1)
+				  ("p" "Platform TODO [inbox]" entry
+				   (file+headline "~/platform/inbox.org" "Platform Tasks")
 				   "* TODO %i%? %^G \n %U" :empty-lines 1)
 				  ("T" "Tickler" entry
 				   (file+headline "~/gtd/tickler.org" "Tickler")
@@ -78,12 +83,15 @@
 	       (org-agenda-compact-blocks t)
 	       (org-agenda-remove-tags t)))
 
+	     ("gp" "Captalys Platform" tags-todo "@platform"
+	      ((org-agenda-sorting-strategy '(priority-up))
+	       (org-agenda-prefix-format "[ ] %T: ")
+	       (org-agenda-compact-blocks t)))
+
 	     ("gs" "Study Time" tags-todo "@study"
 	      ((org-agenda-sorting-strategy '(priority-up))))
 
-	     ("ge" "Emacs Time" tags-todo "@emacs")
-
-	     ("gp" "Personal stuff" tags-todo "@personal")))
+	     ("ge" "Emacs Time" tags-todo "@emacs")))
    #+END_SRC
 * Move fast to the GTD files
 
@@ -101,3 +109,4 @@
   | C-x r j r | jump to the register saved in the r keyword              |
   | C-x r w r | save the state of the selected frame's windows in r      |
   | C-x r f r | save the state of all frames, including all their window |
+

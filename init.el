@@ -50,28 +50,26 @@
 (require 'setup-misc)
 (require 'setup-mode-mapping)
 (require 'setup-keybindings)
-(require 'setup-erc)
 (require 'setup-snippets)
 (require 'setup-paredit)
 (require 'setup-flycheck)
-(require 'setup-help)
 (require 'setup-grep)
 (require 'setup-advices)
 (require 'setup-expand)
 (require 'setup-docker)
-(require 'setup-web)
+
+;;; packages under review
+;; (require 'setup-erc)
+;; (require 'setup-help)
+;; (require 'setup-web)
 
 ;;; programming languages
 (eval-after-load "python" '(require 'setup-python))
 (eval-after-load "js" '(require 'setup-javascript))
 (eval-after-load "clojure-mode" '(require 'setup-clojure))
-(eval-after-load 'ruby-mode '(require 'setup-ruby))
 (eval-after-load "php-mode" '(require 'setup-php))
 (eval-after-load 'typescript-mode '(require 'setup-typescript))
-(eval-after-load 'go-mode '(require 'setup-go))
-(eval-after-load 'sml-mode '(require 'setup-sml))
 (eval-after-load "tex" '(require 'setup-latex))
-(eval-after-load "cc-mode" '(require 'setup-c))
 
 
 (defalias 're 'restart-emacs)

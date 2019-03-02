@@ -11,12 +11,13 @@
 (bk/install-maybe 'graphviz-dot-mode)
 (bk/install-maybe 'quickrun)
 (bk/install-maybe 'windresize)
-(bk/install-maybe 'request)
+(bk/install-maybe 'vlf)
 (bk/install-maybe 'rotate)
 
 ;; rotate-window: change the windows inside the frame
 ;; rotate-layout: change the layout inside the frame. -- to |
 
+(require 'vlf-setup)
 (require 'whitespace)
 (require 'quickrun)
 

@@ -5,6 +5,9 @@
 
 ;;; Code:
 
+;;; https://github.com/benmaughan/spotlight.el
+(bk/install-maybe 'spotlight)
+
 (require 'ls-lisp)
 (require 'ispell)
 (require 'dired)

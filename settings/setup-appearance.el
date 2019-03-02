@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(bk/install-maybe 'pos-tip)
+
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -18,7 +20,7 @@
     (add-to-list 'custom-theme-load-path path)))
 
 (bk/install-maybe 'base16-theme)
-(load-theme 'base16-railscasts t)
+(load-theme 'base16-onedark t)
 
 (or-protected
  (not (set-frame-font "Monaco 15"))
