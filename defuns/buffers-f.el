@@ -29,15 +29,26 @@
   (indent-region (point-min) (point-max)))
 
 ;;;###autoload
-(defun bk/new-scratch-buffer ()
-  "Create a new empty buffer.
-Removed from xah."
+(defun make-scratch-buffer ()
+  "Create a new scratch buffer."
   (interactive)
-  (let ((buff (generate-new-buffer "*scratch*")))
-    (switch-to-buffer buff)
-    (setq buffer-offer-save t)
-    (lisp-interaction-mode)
-    buff))
+  (with-current-buffer (get-buffer-create "*scratch*")
+    (with-temp-message ""
+      (lisp-interaction-mode))))
+
+(defun scratch-respawns-when-killed ()
+  "Scratch buffer needs to be re-spawned when killed."
+  (interactive)
+  (if (not (string= (buffer-name (current-buffer)) "*scratch*"))
+      t
+    (let ((kill-buffer-query-functions kill-buffer-query-functions))
+      (remove-hook 'kill-buffer-query-functions 'scratch-respawns-when-killed)
+      (set-buffer (get-buffer-create "*scratch*"))
+      (kill-buffer (current-buffer)))
+    (make-scratch-buffer)
+    nil))
+
+(add-hook 'kill-buffer-query-functions 'scratch-respawns-when-killed)
 
 ;;;###autoload
 (defun bk/eshell-full-or-restore ()
