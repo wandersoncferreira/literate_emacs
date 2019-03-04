@@ -20,7 +20,7 @@
     (add-to-list 'custom-theme-load-path path)))
 
 (bk/install-maybe 'base16-theme)
-(load-theme 'base16-onedark t)
+(load-theme 'base16-tomorrow-night)
 
 (or-protected
  (not (set-frame-font "Monaco 15"))
