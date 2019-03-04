@@ -6,6 +6,7 @@
 (bk/install-maybe 'expand-region)
 (bk/install-maybe 'jump-char)
 (bk/install-maybe 'ace-jump-mode)
+(bk/install-maybe 'webpaste)
 
 (require 'expand-region)
 (require 'jump-char)
