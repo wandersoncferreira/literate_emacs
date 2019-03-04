@@ -19,10 +19,15 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defun bk/install-maybe (package)
+(defun bk/install-maybe (package &optional min-version no-refresh)
   "Function to install a PACKAGE if not already present."
-  (when (not (package-installed-p package))
-    (package-install package)))
+  (if (package-installed-p package min-version)
+      t
+    (if (or (assoc package package-archive-contents) no-refresh)
+	(package-install package)
+      (progn
+	(package-refresh-contents)
+	(bk/install-maybe package min-version t)))))
 
 (bk/install-maybe 'use-package)
 
