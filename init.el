@@ -30,11 +30,11 @@
 (require 'setup-maintainer)
 (require 'setup-defaults)
 
-(eval-after-load 'ido '(require 'setup-ido))
-(eval-after-load 'org '(require 'setup-org))
-(eval-after-load 'dired '(require 'setup-dired))
-(eval-after-load 'magit '(require 'setup-git))
-(eval-after-load 'eshell '(require 'setup-eshell))
+(require 'setup-ido)
+(require 'setup-org)
+(require 'setup-dired)
+(require 'setup-git)
+(require 'setup-eshell)
 
 (when init-osx?
   (require 'setup-mac)
