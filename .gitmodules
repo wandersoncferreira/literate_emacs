@@ -7,3 +7,6 @@
 [submodule "third-party/ipinfo.el"]
 	path = third-party/ipinfo.el
 	url = https://github.com/dakra/ipinfo.el
+[submodule "third-party/resurrect"]
+	path = third-party/resurrect
+	url = https://github.com/fbkante/resurrect
