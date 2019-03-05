@@ -8,8 +8,8 @@
  (rear-context-string . "d refactor it\n\n\n")
  (position . 1545))
 ("org-capture-last-stored"
- (filename . "~/platform/inbox.org")
- (front-context-string . "** TODO Responde")
- (rear-context-string . "-28 Thu 11:04]\n\n")
- (position . 1051))
+ (filename . "~/gtd/tickler.org")
+ (front-context-string . "** Fetch info fr")
+ (rear-context-string . "r.typicode.com\n\n")
+ (position . 1238))
 )
