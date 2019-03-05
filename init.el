@@ -32,6 +32,8 @@
 (require 'setup-ido)
 (require 'setup-org)
 (require 'setup-dired)
+(require 'setup-buffers)
+(require 'setup-bk-mode)
 (require 'setup-git)
 (require 'setup-eshell)
 
@@ -56,11 +58,7 @@
 (require 'setup-advices)
 (require 'setup-expand)
 (require 'setup-docker)
-
-;;; packages under review
-;; (require 'setup-erc)
-;; (require 'setup-help)
-;; (require 'setup-web)
+(require 'setup-erc)
 
 ;;; programming languages
 (eval-after-load "python" '(require 'setup-python))
@@ -80,6 +78,8 @@
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
+(load-file "~/.emacs.d/bk-after-init.el")
 
 (provide 'init.el)
 ;;; init.el ends here
