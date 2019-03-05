@@ -78,7 +78,8 @@
 
 ;;;###autoload
 (defun rgrep-fullscreen (regexp &optional files dir confirm)
-  "Open grep in full screen, saving windows."
+  "Open grep in full screen, saving windows and searching for REGEXP.
+in FILES and DIR without CONFIRM."
   (interactive
    (progn
      (grep-compute-defaults)

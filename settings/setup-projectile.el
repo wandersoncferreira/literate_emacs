@@ -13,7 +13,7 @@
 
 (setq projectile-completion-system 'ido
       projectile-switch-project-action 'projectile-find-file
-      projectile-project-search-path '("~/captalys" "~/personal"))
+      projectile-project-search-path '("~/captalys" "~/personal" "~/platform"))
 
 
 (eval-after-load 'projectile

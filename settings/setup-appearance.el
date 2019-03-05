@@ -9,6 +9,12 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 (setq custom-safe-themes t
+      inhibit-splash-screen t
+      inhibit-startup-echo-area-message t
+      inhibit-startup-message t
+      ns-pop-up-frames nil
+      use-file-dialog nil
+      use-dialog-box nil
       visible-bell nil
       ring-bell-function 'ignore)
 
@@ -23,7 +29,7 @@
 (load-theme 'base16-tomorrow-night)
 
 (or-protected
- (not (set-frame-font "Monaco 15"))
+ (not (set-frame-font "Monaco 14"))
  (not (set-frame-font "Liberation Mono 15"))
  (not (set-frame-font "Ubuntu Mono 16")))
 

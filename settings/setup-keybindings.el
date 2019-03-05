@@ -138,9 +138,11 @@
 (global-set-key (kbd "C-c m t") 'git-timemachine)
 
 ;; misc
+(global-unset-key (kbd "C-\\"))
 (global-set-key (kbd "M-s l") 'sort-lines)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-x C-p") 'pop-global-mark)
+(global-set-key (kbd "C-\\") 'push-mark-no-activate)
 (global-set-key (kbd "C-a") 'bk/back-to-indentation-or-beginning)
 (global-set-key (kbd "C-x C-/") 'save-buffer)
 (global-set-key (kbd "C-c w") 'google-this-search)

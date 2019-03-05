@@ -17,6 +17,14 @@
 (add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
 (add-to-list 'exec-path "/usr/local/bin")
 
+;;; mark
+;; sometimes you just want to explicitly set a mark into one place
+;; so you can get back to it latter with C-u SPC
+(defun push-mark-no-activate ()
+  (interactive)
+  (push-mark (point) t nil)
+  (message "Pushed mark to ring."))
+
 (setq echo-keystrokes 0.1
       line-number-mode t
       column-number-mode t
@@ -45,6 +53,13 @@
 (add-hook 'after-init-hook 'global-auto-revert-mode)
 (add-hook 'after-init-hook 'global-subword-mode)
 (add-hook 'after-init-hook 'savehist-mode)
+
+;;; let's make electric help me out with some completions
+(setq electric-pair-pairs '(
+			    (?\* . ?\*)
+			    (?\~ . ?\~)
+			    ))
+
 
 (defun tramp-set-auto-save ()
   "Overwriting the `tramp-set-auto-save'.
@@ -82,6 +97,19 @@ The idea is to completely turn off backups for Tramp."
 (setq ediff-split-window-function (quote split-window-horizontally))
 (winner-mode)
 (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+
+;;; utf-8 everywhere
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8-unix)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+;;; change some colors for the diff-mode
+(eval-after-load 'diff-mode
+  '(progn
+     (set-face-foreground 'diff-added "green4")
+     (set-face-foreground 'diff-removed "red3")))
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

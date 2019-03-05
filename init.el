@@ -29,7 +29,6 @@
 (require 'setup-appearance)
 (require 'setup-maintainer)
 (require 'setup-defaults)
-
 (require 'setup-ido)
 (require 'setup-org)
 (require 'setup-dired)

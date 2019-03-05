@@ -92,5 +92,19 @@
 	(message "File '%s' sucessfully removed" filename)))))
 
 
+;;; helper to check spelling errors in buffers
+(defun bk/spell-buffer-pt-BR ()
+  "Function to spell check inside the buffer."
+  (interactive)
+  (ispell-change-dictionary "brasileiro")
+  (flyspell-buffer))
+
+(defun bk/spell-buffer-en ()
+  "Function to spell check inside the buffer."
+  (interactive)
+  (ispell-change-dictionary "en_US")
+  (flyspell-buffer))
+
+
 (provide 'buffers-f)
 ;;; buffers-f.el ends here

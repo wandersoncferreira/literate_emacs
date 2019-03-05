@@ -6,6 +6,23 @@
 ;;; Code:
 
 (require 'eshell)
+(require 'em-hist)
+(require 'em-glob)
+(require 'em-cmpl)
+
+(setq shell-file-name "/bin/zsh"
+      eshell-save-history-on-exit t
+      eshell-glob-case-insensitive t
+      eshell-error-if-no-glob t
+      eshell-cmpl-cycle-completions nil)
+
+;; some commands require a proper terminal to run and eshell can't handle
+(require 'em-term)
+(nconc eshell-visual-commands
+       '("bower" "htop" "docker" "top" "ssh" "ranger" "npm" "tail"))
+(nconc eshell-visual-subcommands '(("docker" "build")
+				   ("git" "log" "diff" "show")
+				   ("npm" "init" "install")))
 
 (defun eshell-clear-buffer ()
   "Clear terminal."

@@ -11,6 +11,7 @@
 (require 'ls-lisp)
 (require 'ispell)
 (require 'dired)
+(require 'flyspell)
 
 (setq mac-command-modifier 'meta
       mac-right-option-modifier 'none
@@ -21,7 +22,9 @@
       dired-use-ls-dired nil)
 
 ;; use aspell for spell checking
-(setq ispell-program-name "/usr/local/bin/aspell")
+(setq ispell-program-name "/usr/local/bin/aspell"
+      ispell-extra-args '("--sug-mode=ultra")
+      flyspell-issue-message-flag nil)
 
 (setq delete-by-moving-to-trash t
       trash-directory "~/.Trash/emacs")
