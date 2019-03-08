@@ -30,6 +30,10 @@
 	(bk/install-maybe package min-version t)))))
 
 (bk/install-maybe 'use-package)
+(bk/install-maybe 'dash)
+
+(require 'dash)
+(require 'use-package)
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

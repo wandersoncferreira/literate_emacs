@@ -24,5 +24,18 @@
 	(backward-delete-char 1)
 	(forward-char))))
 
+;; also, is the last command was a copy - skip past all the expand-region cruft
+(defadvice pop-to-mark-command (around ensure-new-position activate)
+  "When popping the mark, continue popping until the cursor actually move."
+  (let ((p (point)))
+    (when (eq last-command 'save-region-or-current-line)
+      ad-do-it
+      ad-do-it
+      ad-do-it)
+    (dotimes (i 10)
+      (when (= p (point)) ad-do-it))))
+
+(setq set-mark-command-repeat-pop t)
+
 (provide 'setup-advices)
 ;;; setup-advices.el ends here

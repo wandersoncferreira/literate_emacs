@@ -54,13 +54,6 @@
 (add-hook 'after-init-hook 'global-subword-mode)
 (add-hook 'after-init-hook 'savehist-mode)
 
-;;; let's make electric help me out with some completions
-(setq electric-pair-pairs '(
-			    (?\* . ?\*)
-			    (?\~ . ?\~)
-			    ))
-
-
 (defun tramp-set-auto-save ()
   "Overwriting the `tramp-set-auto-save'.
 The idea is to completely turn off backups for Tramp."

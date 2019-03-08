@@ -18,6 +18,8 @@
 (diminish 'yas-minor-mode)
 (diminish 'company-mode)
 (diminish 'eldoc-mode)
+(diminish 'flymake)
+(diminish 'ws-butler-mode)
 
 
 (provide 'bk-after-init)

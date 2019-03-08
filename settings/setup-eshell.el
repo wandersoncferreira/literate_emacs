@@ -10,8 +10,7 @@
 (require 'em-glob)
 (require 'em-cmpl)
 
-(setq shell-file-name "/bin/zsh"
-      eshell-save-history-on-exit t
+(setq eshell-save-history-on-exit t
       eshell-glob-case-insensitive t
       eshell-error-if-no-glob t
       eshell-cmpl-cycle-completions nil)

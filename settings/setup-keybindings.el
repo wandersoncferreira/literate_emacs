@@ -111,8 +111,10 @@
 (global-set-key (kbd "C-c b") 'bk/scratch-buffer)
 (global-set-key (kbd "C-z") 'bury-buffer)
 
-;;; prodigy
-(global-set-key (kbd "C-x M-m") 'prodigy)
+;;; frames
+(global-set-key (kbd "C-x +") 'zoom-frame-in)
+(global-set-key (kbd "C-x -") 'zoom-frame-out)
+(global-set-key (kbd "C-x C-0") 'zoom-frm-unzoom)
 
 ;;; org mode
 (global-set-key (kbd "C-c a") 'org-agenda)
