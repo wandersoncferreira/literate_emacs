@@ -123,14 +123,8 @@
 
 ;;; windows
 (windmove-default-keybindings)
-(global-set-key (kbd "C-x 2") (lambda ()
-				(interactive)
-				(split-window-vertically)
-				(other-window 1)))
-(global-set-key (kbd "C-x 3") (lambda ()
-				(interactive)
-				(split-window-horizontally)
-				(other-window 1)))
+(global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
+(global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
 
 ;;; browse kill ring
 (global-set-key (kbd "C-x C-y") 'browse-kill-ring)
