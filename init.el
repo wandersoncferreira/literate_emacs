@@ -42,7 +42,7 @@
   (bk/install-maybe 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
-(require 'setup-company)
+;; (require 'setup-company)
 (require 'setup-smex)
 (require 'setup-projectile)
 (require 'setup-multiple-cursors)
@@ -52,7 +52,7 @@
 (require 'setup-keybindings)
 (require 'setup-snippets)
 (require 'setup-paredit)
-(require 'setup-flycheck)
+;; (require 'setup-flycheck)
 (require 'setup-grep)
 (require 'setup-advices)
 (require 'setup-expand)

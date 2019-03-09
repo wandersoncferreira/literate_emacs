@@ -9,3 +9,5 @@ smex-items
 .mc-lists.el
 .cask/
 semanticdb/*
+custom.el
+eshell/lastdir
