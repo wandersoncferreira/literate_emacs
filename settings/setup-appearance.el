@@ -24,8 +24,7 @@
 			   (invert-face 'mode-line)
 			   (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
-(setq custom-theme-directory
-      (concat user-emacs-directory "themes"))
+(setq custom-theme-directory (concat user-emacs-directory "themes"))
 (dolist
     (path (directory-files custom-theme-directory t "\\w+"))
   (when (file-directory-p path)
