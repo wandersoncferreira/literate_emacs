@@ -23,7 +23,8 @@
 ;; rotate-layout: change the layout inside the frame. -- to |
 
 (require 'vlf-setup)
-
+(require 'webpaste)
+(setq webpaste-provider-priority '("dpaste.de"))
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here
