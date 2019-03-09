@@ -6,7 +6,6 @@
 (require 'flyspell)
 (require 'saveplace)
 (require 'ibuffer)
-(require 'linum)
 (require 'autorevert)
 
 ;; fix old security emacs problems
@@ -47,12 +46,14 @@
       backup-directory-alist `(("." . ,(concat user-emacs-directory
 					       "backups"))))
 
-(add-hook 'after-init-hook 'electric-pair-mode)
-(add-hook 'after-init-hook 'show-paren-mode)
 (add-hook 'after-init-hook 'delete-selection-mode)
 (add-hook 'after-init-hook 'global-auto-revert-mode)
-(add-hook 'after-init-hook 'global-subword-mode)
 (add-hook 'after-init-hook 'savehist-mode)
+
+(add-hook 'prog-mode-hook 'electric-pair-mode)
+(add-hook 'prog-mode-hook 'show-paren-mode)
+(add-hook 'prog-mode-hook 'subword-mode)
+(add-hook 'prog-mode-hook 'prettify-symbols-mode)
 
 (defun tramp-set-auto-save ()
   "Overwriting the `tramp-set-auto-save'.
@@ -68,8 +69,7 @@ The idea is to completely turn off backups for Tramp."
 (add-hook 'after-init-hook 'recentf-mode)
 
 (setq ibuffer-default-sorting-mode 'major-mode)
-(add-hook 'ibuffer-mode-hook (lambda nil
-			       (visual-line-mode -1)))
+(add-hook 'ibuffer-mode-hook (lambda nil (visual-line-mode -1)))
 
 (setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-after-kill-buffer-p t
