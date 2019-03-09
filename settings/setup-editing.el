@@ -27,14 +27,19 @@
 	     nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
 		    1 font-lock-warning-face t)))))
 
+(defun bk/show-trailing-ws ()
+  "Enable display of trailing whitespace in this buffer."
+  (setq-default show-trailing-whitespace t))
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook 'bk/show-trailing-ws))
+
 (setq whitespace-style '(trailing lines space-before-tab
 				  indentation space-after-tab)
       whitespace-line-column 100)
 
 (whitespace-mode +1)
-(prettify-symbols-mode +1)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
-(whitespace-cleanup-mode +1)
+(add-hook 'after-init-hook 'global-whitespace-cleanup-mode)
 
 
 (provide 'setup-editing)
