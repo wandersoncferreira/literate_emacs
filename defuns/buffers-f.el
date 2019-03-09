@@ -96,7 +96,7 @@
 (defun bk/spell-buffer-pt-BR ()
   "Function to spell check inside the buffer."
   (interactive)
-  (ispell-change-dictionary "brasileiro")
+  (ispell-change-dictionary "pt_BR")
   (flyspell-buffer))
 
 (defun bk/spell-buffer-en ()
@@ -104,6 +104,24 @@
   (interactive)
   (ispell-change-dictionary "en_US")
   (flyspell-buffer))
+
+(defun bk/add-region-global-abbrev (start end)
+  "Adicionar a região selecionada como uma abreviação global."
+  (interactive "r")
+  (if (use-region-p)
+      (let ((num-words (count-words-region start end)))
+	(add-abbrev global-abbrev-table "Global" num-words)
+	(deactivate-mark))
+    (message "No selected region!")))
+
+(defun bk/add-region-local-abbrev (start end)
+  "Adicionar a região selecionada como abreviação especifica do mode."
+  (interactive "r")
+  (if (use-region-p)
+      (let ((num-words (count-words-region start end)))
+	(add-mode-abbrev num-words)
+	(deactivate-mark))
+    (message "No selected region!")))
 
 
 (provide 'buffers-f)

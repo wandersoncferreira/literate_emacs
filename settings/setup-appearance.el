@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe 'pos-tip)
+(bk/install-maybe 'zenburn-theme)
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -24,9 +24,6 @@
 			   (invert-face 'mode-line)
 			   (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
-;; highlight current line
-(global-hl-line-mode +1)
-
 (setq custom-theme-directory
       (concat user-emacs-directory "themes"))
 (dolist
@@ -34,8 +31,7 @@
   (when (file-directory-p path)
     (add-to-list 'custom-theme-load-path path)))
 
-(bk/install-maybe 'base16-theme)
-(load-theme 'base16-tomorrow-night)
+(load-theme 'zenburn t)
 
 (or-protected
  (not (set-frame-font "Monaco 14"))
@@ -46,7 +42,6 @@
   (setq frame-title-format '(buffer-file-format "%f" ("%b")))
   (tooltip-mode -1)
   (blink-cursor-mode -1))
-
 
 ;;; make zooming affect frame instead of buffers
 (require 'zoom-frm)

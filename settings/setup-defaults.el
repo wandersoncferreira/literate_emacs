@@ -16,6 +16,7 @@
 
 (add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
 (add-to-list 'exec-path "/usr/local/bin")
+(add-to-list 'exec-path "/opt/local/bin/")
 
 ;;; mark
 ;; sometimes you just want to explicitly set a mark into one place
@@ -36,7 +37,6 @@
       vc-make-backup-files t
       save-place-mode t
       save-place-file (expand-file-name ".places" user-emacs-directory)
-      linum-format " %3d "
       global-auto-revert-non-file-buffers t
       auto-revert-verbose nil
       backup-by-copying t

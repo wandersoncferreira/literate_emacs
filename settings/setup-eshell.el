@@ -19,6 +19,7 @@
 (require 'em-term)
 (nconc eshell-visual-commands
        '("bower" "htop" "docker" "top" "ssh" "ranger" "npm" "tail"))
+
 (nconc eshell-visual-subcommands '(("docker" "build")
 				   ("git" "log" "diff" "show" "blame")
 				   ("npm" "init" "install")))

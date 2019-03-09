@@ -22,7 +22,7 @@
       dired-use-ls-dired nil)
 
 ;; use aspell for spell checking
-(setq ispell-program-name "/usr/local/bin/aspell"
+(setq ispell-program-name "/opt/local/bin/aspell"
       ispell-extra-args '("--sug-mode=ultra")
       flyspell-issue-message-flag nil)
 

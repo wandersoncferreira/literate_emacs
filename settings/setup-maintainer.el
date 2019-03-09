@@ -6,15 +6,12 @@
 ;;; Code:
 
 
-(use-package helm-spotify-plus
-  :ensure t
-  :demand t
-  :bind
-  (("C-c s s" . helm-spotify-plus)
-   ("C-c s f" . helm-spotify-plus-next)
-   ("C-c s b" . helm-spotify-plus-previous)
-   ("C-c s p" . helm-spotify-plus-play)
-   ("C-c s g" . helm-spotify-plus-pause)))
+(require 'helm-spotify-plus)
+(global-set-key (kbd "C-c s s") 'helm-spotify-plus)
+(global-set-key (kbd "C-c s f") 'helm-spotify-plus-next)
+(global-set-key (kbd "C-c s b") 'helm-spotify-plus-previous)
+(global-set-key (kbd "C-c s p") 'helm-spotify-plus-play)
+(global-set-key (kbd "C-c s g") 'helm-spotify-plus-pause)
 
 (provide 'setup-maintainer)
 ;;; setup-maintainer.el ends here

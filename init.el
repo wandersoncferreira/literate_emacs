@@ -42,7 +42,6 @@
   (bk/install-maybe 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
-;; (require 'setup-company)
 (require 'setup-smex)
 (require 'setup-projectile)
 (require 'setup-multiple-cursors)
@@ -52,21 +51,20 @@
 (require 'setup-keybindings)
 (require 'setup-snippets)
 (require 'setup-paredit)
-;; (require 'setup-flycheck)
 (require 'setup-grep)
 (require 'setup-advices)
 (require 'setup-expand)
 (require 'setup-docker)
-(require 'setup-erc)
+(require 'setup-flycheck)
+(require 'setup-company)
 
 ;;; programming languages
 (eval-after-load "python" '(require 'setup-python))
 (eval-after-load "js" '(require 'setup-javascript))
 (eval-after-load "clojure-mode" '(require 'setup-clojure))
-(eval-after-load "php-mode" '(require 'setup-php))
+(eval-after-load 'php-mode '(require 'setup-php))
 (eval-after-load 'typescript-mode '(require 'setup-typescript))
 (eval-after-load "tex" '(require 'setup-latex))
-
 
 (defalias 're 'restart-emacs)
 (defalias 'cquit 'cider-quit)

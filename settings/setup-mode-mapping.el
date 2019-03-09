@@ -8,7 +8,6 @@
     ("\\.yaml\\'" yaml-mode yaml-mode)
     ("\\.yml\\'" yaml-mode yaml-mode)
     ("yasnippet/snippets" snippet-mode snippet-mode)
-    ("\\.php\\'" php-mode php-mode)
     ("\\.clj\\'" clojure-mode clojure-mode)
     ("\\Dockerfile\\'" dockerfile-mode dockerfile-mode)
     ("\\.phtml\\'" web-mode web-mode)
@@ -27,6 +26,7 @@
     ("\\.scala\\'" scala-mode scala-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.restclient$" . restclient-mode))
+(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 
 ;; macro from prelude!
 (defmacro bk/auto-install (extension package mode)

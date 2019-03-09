@@ -5,22 +5,34 @@
 
 ;;; Code:
 
-(bk/install-maybe 'diminish)
-(require 'diminish)
-(diminish 'paredit-mode)
-(diminish 'google-this-mode)
-(diminish 'flyspell-mode)
-(diminish 'abbrev-mode)
-(diminish 'whitespace-mode)
-(diminish 'hs-minor-mode)
-(diminish 'whitespace-cleanup-mode)
-(diminish 'subword-mode)
-(diminish 'yas-minor-mode)
-(diminish 'company-mode)
-(diminish 'eldoc-mode)
-(diminish 'flymake)
-(diminish 'ws-butler-mode)
+(defvar mode-line-cleaner-alist
+  `((yas/minor-mode . "")
+    (paredit-mode . "")
+    (eldoc-mode . "")
+    (hs-minor-mode . "")
+    (subword-mode . "")
+    (abbrev-mode . "")
+    (company-mode . "")
+    (flyspell-mode . "")
+    (whitespace-cleanup-mode . "")
+    (yas-minor-mode . "")
+    (google-this-mode . "")
+    (whitespace-mode . ""))
+  "Small doc.")
 
+(defun clean-mode-line ()
+  "Function for cleaning up the modeline."
+  (interactive)
+  (loop for cleaner in mode-line-cleaner-alist
+	do (let* ((mode (car cleaner))
+		  (mode-str (cdr cleaner))
+		  (old-mode-str (cdr (assq mode minor-mode-alist))))
+	     (when old-mode-str
+	       (setcar old-mode-str mode-str))
+	     (when (eq mode major-mode)
+	       (setq mode-name mode-str)))))
+
+(add-hook 'after-init-hook 'clean-mode-line)
 
 (provide 'bk-after-init)
 ;;; bk-after-init.el ends here
