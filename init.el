@@ -7,6 +7,9 @@
 
 ;;; Code:
 
+;; Produce backtraces when errors occur
+(setq debug-on-error t)
+
 (package-initialize)
 
 (defconst init-osx? (eq system-type 'darwin))
