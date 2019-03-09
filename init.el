@@ -21,10 +21,9 @@
 (defconst init-osx? (eq system-type 'darwin))
 
 (defconst setting-dir (expand-file-name "settings" user-emacs-directory))
-(defconst custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (add-to-list 'load-path setting-dir)
-(load custom-file :noerror)
 
 (defconst defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
@@ -86,6 +85,10 @@
   (server-start))
 
 (load-file "~/.emacs.d/bk-after-init.el")
+
+;; variables configured via the interactive `customize' interface
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 (provide 'init.el)
 ;;; init.el ends here
