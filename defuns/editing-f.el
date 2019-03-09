@@ -77,7 +77,7 @@
 
 
 ;;;###autoload
-(defun rgrep-fullscreen (regexp &optional files dir confirm)
+(defun bk/rgrep-fullscreen (regexp &optional files dir confirm)
   "Open grep in full screen, saving windows and searching for REGEXP.
 in FILES and DIR without CONFIRM."
   (interactive
