@@ -10,6 +10,7 @@
 (bk/install-maybe 'yasnippet-snippets)
 (bk/install-maybe 'clojure-snippets)
 (bk/install-maybe 'react-snippets)
+(bk/install-maybe 'go-snippets)
 
 (require 'yasnippet)
 
