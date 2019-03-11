@@ -27,17 +27,18 @@
 	     nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
 		    1 font-lock-warning-face t)))))
 
-(defun bk/show-trailing-ws ()
-  "Enable display of trailing whitespace in this buffer."
-  (setq-default show-trailing-whitespace t))
-(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-  (add-hook hook 'bk/show-trailing-ws))
+(setq whitespace-style
+      '(trailing spaces lines-tail empty indentation::tab
+		 indentation::space tabs newline tab-mark newline-mark))
+(global-whitespace-mode 1)
+(setq whitespace-display-mappings
+      '(
+	(space-mark 32 [183] [46]) ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+	(newline-mark 10 [8617 10]) ; 10 LINE FEED
+	(lines-tail 10 [8617 10]) ; 10 LINE FEED
+	(tab-mark 9 [8594 9] [183 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+	))
 
-(setq whitespace-style '(trailing lines space-before-tab
-				  indentation space-after-tab)
-      whitespace-line-column 100)
-
-(whitespace-mode +1)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'after-init-hook 'global-whitespace-cleanup-mode)
 

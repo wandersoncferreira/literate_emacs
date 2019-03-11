@@ -49,11 +49,9 @@
 (add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 (add-hook 'clojure-mode-hook 'cider-mode)
 
-
 (setq cider-repl-result-prefix ";; => "
       cider-prompt-for-symbol nil
       nrepl-hide-special-buffers nil)
-(setq teste-clj "ativo")
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here

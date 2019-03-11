@@ -14,6 +14,11 @@
 (bk/install-maybe 'webpaste)
 (bk/install-maybe 'google-this)
 (bk/install-maybe 'keycast)
+(bk/install-maybe 'alert)
+
+(require 'alert)
+(when (eq system-type 'darwin)
+  (setq-default alert-default-style 'osx-notifier))
 
 (require 'google-this)
 (google-this-mode 1)

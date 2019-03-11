@@ -11,3 +11,4 @@ smex-items
 semanticdb/*
 custom.el
 eshell/lastdir
+secrets/

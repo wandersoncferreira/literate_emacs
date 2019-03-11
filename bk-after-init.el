@@ -15,8 +15,11 @@
     (company-mode . "")
     (flyspell-mode . "")
     (whitespace-cleanup-mode . "")
+    (global-whitespace-mode . "")
     (yas-minor-mode . "")
     (google-this-mode . "")
+    (paredit-everywhere-mode . "")
+    (flymake-mode . "")
     (whitespace-mode . ""))
   "Small doc.")
 

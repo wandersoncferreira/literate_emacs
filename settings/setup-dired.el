@@ -22,10 +22,22 @@
 
 (setq dired-recursive-copies 'always
       dired-recursive-deletes 'always
+      dired-listing-switches "-alh"
+      dired-ls-F-marks-symlinks nil
+      dired-auto-revert-buffer t
       dired-dwim-target t)
 
 (put 'dired-find-alternate-file 'disabled nil)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+
+(defun bk/dired-directories-first ()
+  "Sort dired listings with directories first."
+  (save-excursion
+    (let (buffer-read-only)
+      (forward-line 2)
+      (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+    (set-buffer-modified-p nil)))
+(advice-add 'dired-readin :after #'bk/dired-directories-first)
 
 (defun ensure-buffer-name-ends-in-slash ()
   "Change buffer name to end with slash."

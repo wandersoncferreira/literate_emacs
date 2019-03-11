@@ -15,13 +15,13 @@
 
 (setq company-global-modes '(not eshell-mode shell-mode
 				 org-mode term-mode))
-(setq company-transformers '(company-sort-by-occurrence)
-      company-require-match 'never
-      company-show-numbers t
-      company-idle-delay 0.1
-      company-minimum-prefix-length 2
-      company-tooltip-align-annotations t
-      company-tooltip-flip-when-above t)
+(setq-default company-transformers '(company-sort-by-occurrence)
+	      company-require-match nil
+	      company-show-numbers t
+	      company-idle-delay 0.2
+	      company-minimum-prefix-length 1
+	      company-tooltip-align-annotations t
+	      company-tooltip-flip-when-above t)
 
 ;; stop lower-casing all the completions
 (setq company-dabbrev-downcase nil)

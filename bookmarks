@@ -8,8 +8,8 @@
  (rear-context-string . "d refactor it\n\n\n")
  (position . 1545))
 ("org-capture-last-stored"
- (filename . "~/platform/inbox.org")
- (front-context-string . "** TODO Arquivo ")
- (rear-context-string . "-28 Thu 11:53]\n\n")
- (position . 1397))
+ (filename . "~/gtd/tickler.org")
+ (front-context-string . "** Config to cre")
+ (rear-context-string . "mmit.* Meeting\n\n")
+ (position . 2339))
 )

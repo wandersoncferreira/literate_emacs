@@ -1,4 +1,4 @@
-;;; window-f --- Functions to deal with Windows in Emacs
+;;; window-f --- Functions to deal with Windows in Emacs -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; 

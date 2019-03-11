@@ -46,11 +46,15 @@
 ;;; backspace key
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
 
+;;; fold
+(global-set-key (kbd "<C-return>") 'hs-toggle-hiding)
+
 ;;; expand
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "s-/") 'hippie-expand)
 (global-set-key (kbd "C-:") 'hippie-expand-lines)
 (global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-+") 'er/contract-region)
 (global-set-key (kbd "C-,") 'complete-symbol)
 
 ;;; isearch

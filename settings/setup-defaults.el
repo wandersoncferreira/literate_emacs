@@ -13,17 +13,31 @@
   '(defun enriched-decode-display-prop (start end &optional param)
      (list start end)))
 
+;; garbage-collect on focus-out, emacs should feel snappier
+(add-hook 'focus-out-hook #'garbage-collect)
+
 (add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
 (add-to-list 'exec-path "/usr/local/bin")
 (add-to-list 'exec-path "/opt/local/bin/")
 
-;;; mark
-;; sometimes you just want to explicitly set a mark into one place
-;; so you can get back to it latter with C-u SPC
 (defun push-mark-no-activate ()
+  "Sometimes you just want to explicitly set a mark into one place.
+so you can get back to it later with `pop-to-mark-command'"
   (interactive)
   (push-mark (point) t nil)
   (message "Pushed mark to ring."))
+
+(setq-default
+ ad-redefinition-action 'accept           ; silence warnings for redefinition
+ auto-window-vscroll nil		  ; lighten vertical scroll
+ cursor-in-non-selected-windows t	  ; hide the cursor in inactive windows
+ delete-by-moving-to-trash t		  ; delete files to trash
+ help-window-select t			  ; focus new help window when opened
+ left-margin-width 1 right-margin-width 1 ; add left and right margin
+ ns-use-srgb-colorspace nil		  ; don't use sRGB colors
+ select-enable-clipboard t		  ; merge system's and emacs' clipboard
+ window-combination-resize t		  ; resize windows proportionally
+ )
 
 (setq echo-keystrokes 0.1
       line-number-mode t
@@ -31,7 +45,6 @@
       enable-local-variables :safe
       load-prefer-newer t
       tab-always-indent 'complete
-      help-window-select t
       delete-old-versions t
       vc-make-backup-files t
       save-place-mode t
@@ -40,7 +53,6 @@
       auto-revert-verbose nil
       backup-by-copying t
       create-lockfiles nil
-      default-tab-width 4
       shift-select-mode nil
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `(("." . ,(concat user-emacs-directory
@@ -98,11 +110,6 @@ The idea is to completely turn off backups for Tramp."
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;;; change some colors for the diff-mode
-(eval-after-load 'diff-mode
-  '(progn
-     (set-face-foreground 'diff-added "green4")
-     (set-face-foreground 'diff-removed "red3")))
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

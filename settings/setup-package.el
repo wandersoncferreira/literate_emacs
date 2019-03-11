@@ -32,5 +32,16 @@
 (bk/install-maybe 'dash)
 (require 'dash)
 
+(bk/install-maybe 'paradox)
+(require 'paradox)
+(setq-default
+ paradox-column-width-package 27
+ paradox-column-width-version 13
+ paradox-execute-asynchronously t
+ paradox-github-token nil
+ paradox-hide-wiki-packages t)
+
+(load-file "~/.emacs.d/secrets/paradox.el")
+
 (provide 'setup-package)
 ;;; setup-package.el ends here

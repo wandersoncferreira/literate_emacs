@@ -1,4 +1,4 @@
-;;; init.el --- Emacs
+;;; init.el --- Emacs -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -6,9 +6,6 @@
 ;; Emacs user since 2017
 
 ;;; Code:
-
-;; Produce backtraces when errors occur
-(setq debug-on-error t)
 
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
       (init-gc-cons-threshold (* 128 1024 1024)))
@@ -44,10 +41,12 @@
 (require 'setup-bk-mode)
 (require 'setup-git)
 (require 'setup-eshell)
+(require 'setup-hydras)
 
 (when init-osx?
   (require 'setup-mac)
   (bk/install-maybe 'exec-path-from-shell)
+  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
   (exec-path-from-shell-initialize))
 
 (require 'setup-smex)
@@ -67,10 +66,12 @@
 (require 'setup-company)
 
 ;;; programming languages
+(require 'setup-clojure)
+(require 'setup-php)
+(require 'setup-go)
+
 (eval-after-load "python" '(require 'setup-python))
 (eval-after-load "js" '(require 'setup-javascript))
-(eval-after-load "clojure-mode" '(require 'setup-clojure))
-(eval-after-load 'php-mode '(require 'setup-php))
 (eval-after-load 'typescript-mode '(require 'setup-typescript))
 (eval-after-load "tex" '(require 'setup-latex))
 
