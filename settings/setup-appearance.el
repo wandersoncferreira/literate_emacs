@@ -41,11 +41,11 @@
   (set-face-attribute 'highlight nil :background zenburn-yellow :foreground zenburn-fg-1)
   (set-face-attribute 'mode-line nil
 		      :box `(:line-width 1 :color ,zenburn-bg-1)
-		      :height 110)
+		      :height 120)
   (set-face-attribute 'mode-line-inactive nil
 		      :box `(:line-width 1 :color ,zenburn-bg-05)
 		      :foreground zenburn-bg+3
-		      :height 110
+		      :height 120
 		      )
   (set-face-attribute 'region nil
 		      :background zenburn-fg-1

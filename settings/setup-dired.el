@@ -59,10 +59,7 @@
 
 (eval-after-load "wdired"
   '(progn
-     (define-key wdired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)
-     (define-key wdired-mode-map (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
-     (define-key wdired-mode-map (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
-     ))
+     (define-key wdired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)))
 
 (provide 'setup-dired)
 ;;; setup-dired.el ends here

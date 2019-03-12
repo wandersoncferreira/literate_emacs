@@ -44,6 +44,7 @@ so you can get back to it later with `pop-to-mark-command'"
       column-number-mode t
       enable-local-variables :safe
       load-prefer-newer t
+      indent-tabs-mode nil
       tab-always-indent 'complete
       delete-old-versions t
       vc-make-backup-files t

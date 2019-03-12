@@ -15,6 +15,7 @@
 (bk/install-maybe 'google-this)
 (bk/install-maybe 'keycast)
 (bk/install-maybe 'alert)
+(bk/install-maybe 'beginend)
 
 (require 'alert)
 (when (eq system-type 'darwin)
@@ -29,6 +30,11 @@
 (require 'vlf-setup)
 (require 'webpaste)
 (setq webpaste-provider-priority '("dpaste.de"))
+
+
+;; redefine M-< and M-> for some modes
+(require 'beginend)
+(beginend-global-mode)
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

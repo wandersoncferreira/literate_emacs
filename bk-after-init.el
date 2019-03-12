@@ -20,6 +20,7 @@
     (google-this-mode . "")
     (paredit-everywhere-mode . "")
     (flymake-mode . "")
+    (beginend-global-mode . "")
     (whitespace-mode . ""))
   "Small doc.")
 

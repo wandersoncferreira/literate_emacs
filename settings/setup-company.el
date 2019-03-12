@@ -18,8 +18,8 @@
 (setq-default company-transformers '(company-sort-by-occurrence)
 	      company-require-match nil
 	      company-show-numbers t
-	      company-idle-delay 0.2
-	      company-minimum-prefix-length 1
+	      company-idle-delay 0.1
+	      company-minimum-prefix-length 2
 	      company-tooltip-align-annotations t
 	      company-tooltip-flip-when-above t)
 
