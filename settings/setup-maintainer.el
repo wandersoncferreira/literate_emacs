@@ -5,7 +5,8 @@
 
 ;;; Code:
 
-
+(bk/install-maybe 'helm)
+(bk/install-maybe 'multi)
 (require 'helm-spotify-plus)
 (global-set-key (kbd "C-c s s") 'helm-spotify-plus)
 (global-set-key (kbd "C-c s f") 'helm-spotify-plus-next)

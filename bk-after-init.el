@@ -21,6 +21,7 @@
     (paredit-everywhere-mode . "")
     (flymake-mode . "")
     (beginend-global-mode . "")
+    (beginend-prog-mode . "")
     (whitespace-mode . ""))
   "Small doc.")
 

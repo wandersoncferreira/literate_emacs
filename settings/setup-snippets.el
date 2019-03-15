@@ -25,18 +25,18 @@
   "Go to the end of the active field."
   (interactive)
   (let* ((snippet (car (yas-active-snippets)))
-	 (position (yas--field-end (yas--snippet-active-field snippet))))
+         (position (yas--field-end (yas--snippet-active-field snippet))))
     (if (= (point) position)
-	(move-end-of-line 1)
+        (move-end-of-line 1)
       (goto-char position))))
 
 (defun yas/goto-start-of-active-field ()
   "Go to the beginning of the active field."
   (interactive)
   (let* ((snippet (car (yas-active-snippets)))
-	 (position (yas--field-start (yas--snippet-active-field snippet))))
+         (position (yas--field-start (yas--snippet-active-field snippet))))
     (if (= (point) position)
-	(move-beginning-of-line 1)
+        (move-beginning-of-line 1)
       (goto-char position))))
 
 (define-key yas-keymap (kbd "C-e") 'yas/goto-end-of-active-field)
@@ -44,10 +44,10 @@
 
 ;; jump to end of snippet definition
 (define-key yas-keymap (kbd "<return>") 'yas-exit-all-snippets)
-
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 (define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "M-i") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "C-M-<return>") 'yas-expand)
+
 
 (setq yas-prompt-functions '(yas-ido-prompt yas-completing-prompt))
 (setq yas-verbosity 1)

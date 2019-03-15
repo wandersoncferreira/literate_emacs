@@ -7,7 +7,6 @@
 (bk/install-maybe 'ace-jump-mode)
 (bk/install-maybe 'fix-word)
 (bk/install-maybe 'browse-kill-ring)
-(bk/install-maybe 'whitespace-cleanup-mode)
 
 (require 'expand-region)
 (require 'ace-jump-mode)
@@ -40,7 +39,6 @@
 	))
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
-(add-hook 'prog-mode-hook 'whitespace-cleanup-mode)
 
 (provide 'setup-editing)
 ;;; setup-editing.el ends here

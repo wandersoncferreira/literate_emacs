@@ -16,6 +16,7 @@
 (bk/install-maybe 'keycast)
 (bk/install-maybe 'alert)
 (bk/install-maybe 'beginend)
+(bk/install-maybe 'change-inner)
 
 (require 'alert)
 (when (eq system-type 'darwin)
@@ -30,6 +31,9 @@
 (require 'vlf-setup)
 (require 'webpaste)
 (setq webpaste-provider-priority '("dpaste.de"))
+
+;; change inner as in vi
+(require 'change-inner)
 
 
 ;; redefine M-< and M-> for some modes

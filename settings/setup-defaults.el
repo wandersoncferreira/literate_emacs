@@ -37,6 +37,7 @@ so you can get back to it later with `pop-to-mark-command'"
  ns-use-srgb-colorspace nil		  ; don't use sRGB colors
  select-enable-clipboard t		  ; merge system's and emacs' clipboard
  window-combination-resize t		  ; resize windows proportionally
+ indent-tabs-mode nil
  )
 
 (setq echo-keystrokes 0.1
@@ -44,7 +45,6 @@ so you can get back to it later with `pop-to-mark-command'"
       column-number-mode t
       enable-local-variables :safe
       load-prefer-newer t
-      indent-tabs-mode nil
       tab-always-indent 'complete
       delete-old-versions t
       vc-make-backup-files t
