@@ -10,6 +10,3 @@
 [submodule "third-party/resurrect"]
 	path = third-party/resurrect
 	url = https://github.com/fbkante/resurrect
-[submodule "third-party/esup"]
-	path = third-party/esup
-	url = https://github.com/jschaf/esup
