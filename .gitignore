@@ -12,3 +12,4 @@ semanticdb/*
 custom.el
 eshell/lastdir
 secrets/
+*.elc

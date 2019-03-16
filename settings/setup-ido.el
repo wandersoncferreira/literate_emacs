@@ -10,9 +10,7 @@
 (require 'ido-at-point)
 (require 'ido-vertical-mode)
 (require 'ido-completing-read+)
-(require 'icomplete)
 
-(icomplete-mode)
 (ido-ubiquitous-mode)
 (ido-mode)
 (ido-everywhere)

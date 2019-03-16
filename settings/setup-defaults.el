@@ -98,7 +98,6 @@ The idea is to completely turn off backups for Tramp."
 ;; to compare the contents of two test files, use M-x ediff-files.
 ;; open the two files you want to compare.
 ;; Press | to put the two files side by side
-(require 'ediff)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq ediff-split-window-function (quote split-window-horizontally))
 (winner-mode)

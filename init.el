@@ -11,7 +11,7 @@
       (init-gc-cons-threshold (* 128 1024 1024)))
   (setq gc-cons-threshold init-gc-cons-threshold)
   (add-hook 'emacs-startup-hook
-	    (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
 (package-initialize)
 
@@ -90,6 +90,13 @@
 ;; variables configured via the interactive `customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
+
+
+;; byte compile everything that needs
+(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
+
+;;; start eshell
+(eshell)
 
 (provide 'init.el)
 ;;; init.el ends here

@@ -29,8 +29,7 @@
 (global-set-key (kbd "s-u") 'universal-argument)
 (global-set-key (kbd "s--") 'negative-argument)
 (global-set-key (quote [M-f10]) 'toggle-frame-fullscreen)
-(dotimes (v 5)
-  (global-set-key (read-kbd-macro (format "s-%d" v)) 'digit-argument))
+
 
 ;;; occur mode
 (define-key occur-mode-map (kbd "v") 'occur-mode-display-occurrence)
