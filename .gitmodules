@@ -10,9 +10,6 @@
 [submodule "third-party/resurrect"]
 	path = third-party/resurrect
 	url = https://github.com/fbkante/resurrect
-[submodule "third-party/persp-projectile"]
-	path = third-party/persp-projectile
-	url = https://github.com/bbatsov/persp-projectile
 [submodule "third-party/esup"]
 	path = third-party/esup
 	url = https://github.com/jschaf/esup
