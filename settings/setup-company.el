@@ -7,21 +7,18 @@
 
 
 (bk/install-maybe 'company)
-
 (require 'company)
 (require 'company-dabbrev)
 
 (add-hook 'after-init-hook 'global-company-mode)
 
 (setq company-global-modes '(not eshell-mode shell-mode
-				 org-mode term-mode))
+                                 org-mode term-mode))
 (setq-default company-transformers '(company-sort-by-occurrence)
-	      company-require-match nil
-	      company-show-numbers t
-	      company-idle-delay 0.1
-	      company-minimum-prefix-length 2
-	      company-tooltip-align-annotations t
-	      company-tooltip-flip-when-above t)
+              company-require-match nil
+              company-show-numbers t
+              company-idle-delay 0.1
+              company-minimum-prefix-length 2)
 
 ;; stop lower-casing all the completions
 (setq company-dabbrev-downcase nil)
@@ -30,10 +27,10 @@
   "Choose the candidate based on his number at candidate list."
   (interactive)
   (let* ((k (this-command-keys))
-	 (re (concat "^" company-prefix k)))
+         (re (concat "^" company-prefix k)))
     (if (cl-find-if (lambda (s) (string-match re s))
-		    company-candidates)
-	(self-insert-command 1)
+                    company-candidates)
+        (self-insert-command 1)
       (company-complete-number (string-to-number k)))))
 
 (defun ora-activate-number ()
@@ -45,9 +42,9 @@
        (define-key map (format "%d" x) 'ora-company-number))
      (number-sequence 0 9))
     (define-key map " " (lambda ()
-			  (interactive)
-			  (company-abort)
-			  (self-insert-command 1)))
+                          (interactive)
+                          (company-abort)
+                          (self-insert-command 1)))
     (define-key map (kbd "<return>") nil)))
 
 (ora-activate-number)

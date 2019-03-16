@@ -61,8 +61,8 @@
 (require 'setup-grep)
 (require 'setup-advices)
 (require 'setup-expand)
+(require 'setup-modeline)
 (require 'setup-docker)
-(require 'setup-flycheck)
 (require 'setup-company)
 
 ;;; programming languages

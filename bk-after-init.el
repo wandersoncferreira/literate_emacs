@@ -14,6 +14,7 @@
     (abbrev-mode . "")
     (company-mode . "")
     (flyspell-mode . "")
+    (flycheck-mode . "")
     (whitespace-cleanup-mode . "")
     (global-whitespace-mode . "")
     (yas-minor-mode . "")
@@ -21,21 +22,23 @@
     (paredit-everywhere-mode . "")
     (flymake-mode . "")
     (beginend-global-mode . "")
+    (bartuka-mode . "")
     (beginend-prog-mode . "")
-    (whitespace-mode . ""))
+    (whitespace-mode . "")
+    (hs-minor-mode . ""))
   "Small doc.")
 
 (defun clean-mode-line ()
   "Function for cleaning up the modeline."
   (interactive)
   (loop for cleaner in mode-line-cleaner-alist
-	do (let* ((mode (car cleaner))
-		  (mode-str (cdr cleaner))
-		  (old-mode-str (cdr (assq mode minor-mode-alist))))
-	     (when old-mode-str
-	       (setcar old-mode-str mode-str))
-	     (when (eq mode major-mode)
-	       (setq mode-name mode-str)))))
+        do (let* ((mode (car cleaner))
+                  (mode-str (cdr cleaner))
+                  (old-mode-str (cdr (assq mode minor-mode-alist))))
+             (when old-mode-str
+               (setcar old-mode-str mode-str))
+             (when (eq mode major-mode)
+               (setq mode-name mode-str)))))
 
 (add-hook 'after-init-hook 'clean-mode-line)
 
