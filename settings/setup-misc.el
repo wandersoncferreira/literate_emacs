@@ -35,10 +35,6 @@
 ;; change inner as in vi
 (require 'change-inner)
 
-
-;; profiler on third-party folder
-(require 'esup)
-
 ;; redefine M-< and M-> for some modes
 (require 'beginend)
 (beginend-global-mode)
