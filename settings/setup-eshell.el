@@ -12,8 +12,13 @@
 
 (setq eshell-save-history-on-exit t
       eshell-glob-case-insensitive t
+      eshell-ls-use-colors t
+      ffap-shell-prompt-regexp nil
+      eshell-destroy-buffer-when-process-dies t
       eshell-error-if-no-glob t
       eshell-cmpl-cycle-completions nil)
+
+(setq eshell-prompt-regexp "^> ")
 
 ;; some commands require a proper terminal to run and eshell can't handle
 (require 'em-term)
@@ -21,8 +26,8 @@
        '("bower" "htop" "docker" "top" "ssh" "ranger" "npm" "tail"))
 
 (nconc eshell-visual-subcommands '(("docker" "build")
-				   ("git" "log" "diff" "show" "blame")
-				   ("npm" "init" "install")))
+                                   ("git" "log" "diff" "show" "blame")
+                                   ("npm" "init" "install")))
 
 (defun eshell-clear-buffer ()
   "Clear terminal."
@@ -32,15 +37,15 @@
     (eshell-send-input)))
 
 (add-hook 'eshell-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+          '(lambda ()
+             (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
 (add-hook 'eshell-mode-hook
-	  (lambda ()
-	    (eshell/alias "e" "find-file $1")
-	    (eshell/alias "emacs" "find-file $1")
-	    (eshell/alias "ee" "find-file-other-window $1")
-	    (eshell/alias "d" "dried $1")))
+          (lambda ()
+            (eshell/alias "e" "find-file $1")
+            (eshell/alias "emacs" "find-file $1")
+            (eshell/alias "ee" "find-file-other-window $1")
+            (eshell/alias "d" "dried $1")))
 
 (add-hook 'eshell-mode-hook #'abbrev-mode)
 

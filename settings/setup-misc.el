@@ -17,6 +17,11 @@
 (bk/install-maybe 'alert)
 (bk/install-maybe 'beginend)
 (bk/install-maybe 'change-inner)
+(bk/install-maybe 'symon)
+
+;;; tiny graphical system monitor
+(require 'symon)
+(symon-mode)
 
 (require 'alert)
 (when (eq system-type 'darwin)

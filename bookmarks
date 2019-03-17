@@ -9,7 +9,7 @@
  (position . 1545))
 ("org-capture-last-stored"
  (filename . "~/gtd/tickler.org")
- (front-context-string . "** Config to cre")
- (rear-context-string . "mmit.* Meeting\n\n")
- (position . 2339))
+ (front-context-string . "** Yes, eshell i")
+ (rear-context-string . "nv-name> .venv\n\n")
+ (position . 2542))
 )

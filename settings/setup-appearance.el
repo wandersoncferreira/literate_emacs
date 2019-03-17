@@ -54,7 +54,7 @@
   (set-face-attribute 'smerge-refined-removed nil :background zenburn-red-4))
 
 (or-protected
- (not (set-frame-font "Monaco 14"))
+ (not (set-frame-font "Monaco 15"))
  (not (set-frame-font "Liberation Mono 15"))
  (not (set-frame-font "Ubuntu Mono 16")))
 
