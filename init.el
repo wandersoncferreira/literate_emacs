@@ -91,10 +91,6 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-
-;; byte compile everything that needs
-(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
-
 ;;; start eshell
 (eshell)
 

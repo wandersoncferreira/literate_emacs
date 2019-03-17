@@ -23,7 +23,7 @@
                            (run-with-timer 0.05 nil 'invert-face 'mode-line)))
 
 ;;; theme
-(load-theme 'leuven t)
+(load-theme 'tsdh-light t)
 (set-face-attribute 'font-lock-comment-face nil :italic t)
 (set-face-attribute 'font-lock-doc-face nil :italic t)
 

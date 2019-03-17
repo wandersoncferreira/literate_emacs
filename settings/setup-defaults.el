@@ -85,9 +85,10 @@ The idea is to completely turn off backups for Tramp."
 
 (put 'erase-buffer 'disabled nil)
 
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'text-mode-hook 'flyspell-mode)
-(define-key flyspell-mode-map (kbd "C-,") nil)
+;; (require 'flyspell)
+;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'text-mode-hook 'flyspell-mode)
+;; (define-key flyspell-mode-map (kbd "C-,") nil)
 
 ;; to compare the contents of two test files, use M-x ediff-files.
 ;; open the two files you want to compare.
