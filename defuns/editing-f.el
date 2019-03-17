@@ -16,8 +16,8 @@
   (interactive)
   (unwind-protect
       (progn
-	(linum-mode +1)
-	(goto-line (read-number "Goto line: ")))
+        (linum-mode +1)
+        (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 
 ;;;###autoload
@@ -27,8 +27,8 @@
   (save-excursion
     (goto-char (point-min))
     (comment-kill (save-excursion
-		    (goto-char (point-max))
-		    (line-number-at-pos)))))
+                    (goto-char (point-max))
+                    (line-number-at-pos)))))
 
 ;;;###autoload
 (defun open-line-above ()
@@ -76,9 +76,9 @@
   "Function to dwm for line movements."
   (interactive)
   (if (= (point)
-	 (progn
-	   (back-to-indentation)
-	   (point)))
+         (progn
+           (back-to-indentation)
+           (point)))
       (beginning-of-line)))
 
 ;;;###autoload
@@ -109,10 +109,10 @@ in FILES and DIR without CONFIRM."
    (progn
      (grep-compute-defaults)
      (let* ((regexp (grep-read-regexp))
-	    (files (grep-read-files regexp))
-	    (dir (ido-read-directory-name "Base directory: "
-					  nil default-directory t))
-	    (confirm (equal current-prefix-arg '(4))))
+            (files (grep-read-files regexp))
+            (dir (ido-read-directory-name "Base directory: "
+                                          nil default-directory t))
+            (confirm (equal current-prefix-arg '(4))))
        (list regexp files dir confirm))))
   (window-configuration-to-register ?$)
   (rgrep regexp files dir confirm)
@@ -135,6 +135,26 @@ in FILES and DIR without CONFIRM."
   (kill-buffer "*grep*")
   (delete-other-windows)
   (message "Type C-x r j $ to return to pre-rgrep windows."))
+
+
+(defun bk/diff-last-2-yanks ()
+  "Run ediff on latest two entries in `kill-ring'."
+  (interactive)
+  ;; implementation depends on `lexical-binding' being t, otherwise
+  ;; #'clean-up will not be saved as closure to `ediff-cleanup-hook'
+  (let ((a (generate-new-buffer "*diff-yank*"))
+        (b (generate-new-buffer "*diff-yank*")))
+    (cl-labels ((clean-up ()
+                          (kill-buffer a)
+                          (kill-buffer b)
+                          (remove-hook 'ediff-cleanup-hook #'clean-up)
+                          (winner-undo)))
+      (add-hook 'ediff-cleanup-hook #'clean-up)
+      (with-current-buffer a
+        (insert (elt kill-ring 0)))
+      (with-current-buffer b
+        (insert (elt kill-ring 1)))
+      (ediff-buffers a b))))
 
 
 (provide 'editing-f)

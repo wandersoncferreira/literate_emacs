@@ -33,15 +33,15 @@
   "When file with EXTENSION is opened triggers auto-install of PACKAGE.
 The file is opened in MODE."
   `(add-to-list 'auto-mode-alist
-		`(,extension . (lambda ()
-				 (unless (package-installed-p ',package)
-				   (package-install ',package))
-				 (,mode)))))
+                `(,extension . (lambda ()
+                                 (unless (package-installed-p ',package)
+                                   (package-install ',package))
+                                 (,mode)))))
 (mapc
  (lambda (entry)
    (let ((extension (car entry))
-	 (package (cadr entry))
-	 (mode (cadr (cdr entry))))
+         (package (cadr entry))
+         (mode (cadr (cdr entry))))
      (unless (package-installed-p package)
        (bk/auto-install extension package mode))))
  bk/auto-install-alist)

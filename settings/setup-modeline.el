@@ -53,7 +53,7 @@ Return `default-directory' if no project was found."
       'face 'font-lock-comment-face)
      ;; file name
      (propertize (file-name-nondirectory buffer-file-truename)
-                 'face 'mode-line-buffer-id))))
+                 'face 'font-lock-warning-face))))
 
 (defvar-local modeline-buffer-info nil)
 (defvar mode-line-buffer-info

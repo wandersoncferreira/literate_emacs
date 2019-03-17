@@ -5,14 +5,6 @@
 
 ;;; Code:
 
-;;; https://github.com/benmaughan/spotlight.el
-(bk/install-maybe 'spotlight)
-
-(require 'ls-lisp)
-(require 'ispell)
-(require 'dired)
-(require 'flyspell)
-
 (setq mac-command-modifier 'meta
       mac-right-option-modifier 'none
       ns-function-modifier 'hyper

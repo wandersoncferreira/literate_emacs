@@ -21,22 +21,22 @@
 
 ;;; programming mode settings
 (add-hook 'prog-mode-hook
-	  (defun bk--add-watchwords ()
-	    (font-lock-add-keywords
-	     nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
-		    1 font-lock-warning-face t)))))
+          (defun bk--add-watchwords ()
+            (font-lock-add-keywords
+             nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
+                    1 font-lock-warning-face t)))))
 
 (setq whitespace-style
       '(trailing spaces lines-tail empty indentation::tab
-		 indentation::space tabs newline tab-mark newline-mark))
+                 indentation::space tabs newline tab-mark newline-mark))
 (global-whitespace-mode 1)
 (setq whitespace-display-mappings
       '(
-	(space-mark 32 [183] [46]) ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-	(newline-mark 10 [8617 10]) ; 10 LINE FEED
-	(lines-tail 10 [8617 10]) ; 10 LINE FEED
-	(tab-mark 9 [8594 9] [183 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
-	))
+        (space-mark 32 [183] [46]) ; 32 SPACE 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+        (newline-mark 10 [8617 10]) ; 10 LINE FEED
+        (lines-tail 10 [8617 10]) ; 10 LINE FEED
+        (tab-mark 9 [8594 9] [183 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+        ))
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 

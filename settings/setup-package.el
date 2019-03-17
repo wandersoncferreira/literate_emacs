@@ -13,8 +13,8 @@
 
 (setq package-archive-priorities
       '(("melpa-stable" . 15)
-	("org" . 10)
-	("melpa" . 5)))
+        ("org" . 10)
+        ("melpa" . 5)))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -24,24 +24,13 @@
   (if (package-installed-p package min-version)
       t
     (if (or (assoc package package-archive-contents) no-refresh)
-	(package-install package)
+        (package-install package)
       (progn
-	(package-refresh-contents)
-	(bk/install-maybe package min-version t)))))
+        (package-refresh-contents)
+        (bk/install-maybe package min-version t)))))
 
 (bk/install-maybe 'dash)
 (require 'dash)
-
-(bk/install-maybe 'paradox)
-(require 'paradox)
-(setq-default
- paradox-column-width-package 27
- paradox-column-width-version 13
- paradox-execute-asynchronously t
- paradox-github-token nil
- paradox-hide-wiki-packages t)
-
-(load-file "~/.emacs.d/secrets/paradox.el")
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

@@ -17,15 +17,15 @@
   :init-value t)
 
 (add-to-list 'emulation-mode-map-alists
-	     `((bartuka-mode . ,bartuka-mode-map)))
+             `((bartuka-mode . ,bartuka-mode-map)))
 
 (define-key bartuka-mode-map
   (kbd "C-x o")
   '(menu-item "" nil :filter
-	      (lambda
-		(&optional _)
-		(when (one-window-p)
-		  'other-frame))))
+              (lambda
+                (&optional _)
+                (when (one-window-p)
+                  'other-frame))))
 
 (bartuka-mode +1)
 

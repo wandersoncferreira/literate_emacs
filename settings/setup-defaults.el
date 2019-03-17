@@ -2,12 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'uniquify)
-(require 'flyspell)
-(require 'saveplace)
-(require 'ibuffer)
-(require 'autorevert)
-
 ;; fix old security emacs problems
 (eval-after-load "enriched"
   '(defun enriched-decode-display-prop (start end &optional param)
@@ -29,14 +23,14 @@ so you can get back to it later with `pop-to-mark-command'"
 
 (setq-default
  ad-redefinition-action 'accept           ; silence warnings for redefinition
- auto-window-vscroll nil		  ; lighten vertical scroll
- cursor-in-non-selected-windows t	  ; hide the cursor in inactive windows
- delete-by-moving-to-trash t		  ; delete files to trash
- help-window-select t			  ; focus new help window when opened
+ auto-window-vscroll nil                  ; lighten vertical scroll
+ cursor-in-non-selected-windows t         ; hide the cursor in inactive windows
+ delete-by-moving-to-trash t              ; delete files to trash
+ help-window-select t                     ; focus new help window when opened
  left-margin-width 1 right-margin-width 1 ; add left and right margin
- ns-use-srgb-colorspace nil		  ; don't use sRGB colors
- select-enable-clipboard t		  ; merge system's and emacs' clipboard
- window-combination-resize t		  ; resize windows proportionally
+ ns-use-srgb-colorspace nil               ; don't use sRGB colors
+ select-enable-clipboard t                ; merge system's and emacs' clipboard
+ window-combination-resize t              ; resize windows proportionally
  indent-tabs-mode nil
  )
 
@@ -57,7 +51,7 @@ so you can get back to it later with `pop-to-mark-command'"
       shift-select-mode nil
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `(("." . ,(concat user-emacs-directory
-					       "backups"))))
+                                               "backups"))))
 
 (add-hook 'after-init-hook 'delete-selection-mode)
 (add-hook 'after-init-hook 'global-auto-revert-mode)
@@ -78,7 +72,7 @@ The idea is to completely turn off backups for Tramp."
 (add-hook 'prog-mode-hook #'abbrev-mode)
 
 (setq-default recentf-max-saved-items 1000
-	      recentf-exclude '("/tmp/" "/ssh:"))
+              recentf-exclude '("/tmp/" "/ssh:"))
 (add-hook 'after-init-hook 'recentf-mode)
 
 (setq ibuffer-default-sorting-mode 'major-mode)

@@ -4,17 +4,17 @@
 
 (bk/install-maybe 'magit)
 (bk/install-maybe 'git-timemachine)
-(bk/install-maybe 'yagist)
 (bk/install-maybe 'browse-at-remote)
 (bk/install-maybe 'magit-todos)
 (bk/install-maybe 'gitconfig-mode)
+(bk/install-maybe 'yagist)
 (bk/install-maybe 'diff-hl)
 
 (require 'magit)
 (require 'magit-todos)
 
 (setq magit-no-confirm '(stage-all-changes
-			 unstage-all-changes))
+                         unstage-all-changes))
 
 (defun magit-quit-session ()
   "Restore the previous window configuration."

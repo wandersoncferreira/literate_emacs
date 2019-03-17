@@ -10,12 +10,12 @@
 
 ;;; reload dired after making changes
 (--each '(dired-do-rename
-	  dired-do-copy
-	  dired-do-delete
-	  dired-create-directory
-	  wdired-abort-changes)
+          dired-do-copy
+          dired-do-delete
+          dired-create-directory
+          wdired-abort-changes)
   (eval `(defadvice ,it (after revert-buffer activate)
-	   (revert-buffer))))
+           (revert-buffer))))
 
 (let ((gls (executable-find "gls")))
   (when gls (setq insert-directory-program gls)))
@@ -43,7 +43,7 @@
   "Change buffer name to end with slash."
   (let ((name (buffer-name)))
     (if (not (string-match "/$" name))
-	(rename-buffer (concat name "/") t))))
+        (rename-buffer (concat name "/") t))))
 
 (defun dired-back-to-start-of-files ()
   "Make dired move back to start of file with [`beginning-of-line']."

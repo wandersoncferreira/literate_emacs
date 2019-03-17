@@ -21,8 +21,8 @@
   "Remove extra paren when expanding line in paredit."
   (if (and paredit-mode (equal (substring str -1) ")"))
       (progn
-	(backward-delete-char 1)
-	(forward-char))))
+        (backward-delete-char 1)
+        (forward-char))))
 
 ;; also, is the last command was a copy - skip past all the expand-region cruft
 (defadvice pop-to-mark-command (around ensure-new-position activate)

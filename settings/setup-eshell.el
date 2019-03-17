@@ -5,20 +5,11 @@
 
 ;;; Code:
 
-(require 'eshell)
-(require 'em-hist)
-(require 'em-glob)
-(require 'em-cmpl)
-
 (setq eshell-save-history-on-exit t
       eshell-glob-case-insensitive t
       eshell-ls-use-colors t
-      ffap-shell-prompt-regexp nil
-      eshell-destroy-buffer-when-process-dies t
       eshell-error-if-no-glob t
       eshell-cmpl-cycle-completions nil)
-
-(setq eshell-prompt-regexp "^> ")
 
 ;; some commands require a proper terminal to run and eshell can't handle
 (require 'em-term)

@@ -6,14 +6,10 @@
 ;;; Code:
 
 (bk/install-maybe 'paredit)
-(bk/install-maybe 'paredit-everywhere)
 (require 'paredit)
-
 (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
 (add-hook 'clojure-mode-hook #'enable-paredit-mode)
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-
-(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 
 ;;; makes paredit-mode work with delete-selection-mode
 (put 'paredit-forward-delete 'delete-selection 'supersede)
