@@ -18,6 +18,12 @@
 (bk/install-maybe 'beginend)
 (bk/install-maybe 'change-inner)
 (bk/install-maybe 'symon)
+(bk/install-maybe 'keyfreq)
+
+;;; track emacs commands frequency
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
 
 ;;; tiny graphical system monitor
 (require 'symon)
