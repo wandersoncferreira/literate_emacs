@@ -19,6 +19,7 @@
 (bk/install-maybe 'change-inner)
 (bk/install-maybe 'symon)
 (bk/install-maybe 'keyfreq)
+(bk/install-maybe 'wgrep)
 
 ;;; track emacs commands frequency
 (require 'keyfreq)
@@ -49,6 +50,10 @@
 ;; redefine M-< and M-> for some modes
 (require 'beginend)
 (beginend-global-mode)
+
+;;; edit several files in egrep buffer
+(require 'wgrep)
+(wgrep-setup)
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here
