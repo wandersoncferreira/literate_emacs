@@ -1,4 +1,5 @@
-;;; init.el --- Emacs -*- lexical-binding: t -*-
+;; -*- lexical-binding: t -*-
+;;; init.el --- Emacs
 
 ;;; Commentary:
 
@@ -8,10 +9,19 @@
 ;;; Code:
 
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
+      (init-gc-cons-threshold (* 128 1024 1024))
+      (bk--file-name-handler-alist file-name-handler-alist))
+  (setq gc-cons-threshold init-gc-cons-threshold
+        gc-cons-percentage 0.6
+        file-name-handler-alist nil)
   (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+            (lambda ()
+              (setq gc-cons-threshold normal-gc-cons-threshold
+                    gc-cons-percentage 0.1
+                    file-name-handler-alist bk--file-name-handler-alist))))
+
+(setq package-enable-at-startup nil
+      package--init-file-ensured t)
 
 (package-initialize)
 
@@ -51,7 +61,6 @@
 
 (require 'setup-smex)
 (require 'setup-projectile)
-(require 'setup-multiple-cursors)
 (require 'setup-editing)
 (require 'setup-misc)
 (require 'setup-mode-mapping)

@@ -6,10 +6,12 @@
 (bk/install-maybe 'expand-region)
 (bk/install-maybe 'ace-jump-mode)
 (bk/install-maybe 'fix-word)
-(bk/install-maybe 'browse-kill-ring)
+(bk/install-maybe 'multiple-cursors)
 
 (require 'expand-region)
 (require 'ace-jump-mode)
+(require 'multiple-cursors)
+
 
 ;; don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)

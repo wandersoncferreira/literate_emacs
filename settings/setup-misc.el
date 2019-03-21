@@ -53,7 +53,6 @@
 
 ;;; edit several files in egrep buffer
 (require 'wgrep)
-(wgrep-setup)
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

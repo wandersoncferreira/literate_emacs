@@ -8,12 +8,10 @@
 (bk/install-maybe 'clojure-mode-extra-font-locking)
 (bk/install-maybe 'clj-refactor)
 (bk/install-maybe 'cider)
-(bk/install-maybe 'kibit-helper)
 
 (require 'clojure-mode)
 (require 'clj-refactor)
 (require 'cider)
-(require 'kibit-helper)
 
 (defun my-clojure-mode-hook ()
   "Activate the refactor library."

@@ -25,6 +25,11 @@
     (if face (message "Face: %s" face)
       (message "No face at %d" pos))))
 
+(defun explain-shell (cmd)
+  (interactive (list (read-shell-command "Command: ")))
+  (browse-url (format "http://explainshell.com/explain?cmd=%s"
+                      (url-encode-url cmd))))
+
 
 (provide 'general-f)
 ;;; general-f.el ends here
