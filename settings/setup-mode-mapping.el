@@ -19,6 +19,7 @@
     ("\\.go\\'" go-mode go-mode)
     ("\\.json\\'" json-mode json-mode)
     ("\\.md\\'" markdown-mode markdown-mode)
+    ("\\.env\\'" dotenv-mode dotenv-mode)
     ("\\.sass\\'" sass-mode sass-mode)
     ("\\.graphql\\'" graphql-mode graphql-mode)
     ("\\.elixir\\'" elixir-mode elixir-mode)

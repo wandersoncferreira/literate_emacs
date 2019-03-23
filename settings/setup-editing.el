@@ -7,6 +7,7 @@
 (bk/install-maybe 'ace-jump-mode)
 (bk/install-maybe 'fix-word)
 (bk/install-maybe 'multiple-cursors)
+(bk/install-maybe 'jump-char)
 
 (require 'expand-region)
 (require 'ace-jump-mode)

@@ -9,4 +9,4 @@
 (resurrect-mode +1)
 
 (provide 'setup-buffers)
-;;; setup-buffers.el ends here
+;;; setup-buffers.el ends Here

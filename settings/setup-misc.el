@@ -20,6 +20,10 @@
 (bk/install-maybe 'symon)
 (bk/install-maybe 'keyfreq)
 (bk/install-maybe 'wgrep)
+(bk/install-maybe 'dotenv-mode)
+
+;;; windows
+(windmove-default-keybindings)
 
 ;;; track emacs commands frequency
 (require 'keyfreq)

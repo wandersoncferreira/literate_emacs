@@ -18,10 +18,5 @@
 (define-key dired-mode-map "." 'hydra-dired/body)
 (define-key ibuffer-mode-map "." 'hydra-ibuffer-main/body)
 
-(global-set-key (kbd "C-c f") 'hydra-flycheck/body)
-(global-set-key (kbd "C-c g") 'hydra-magit/body)
-(global-set-key (kbd "C-c s") 'hydra-system/body)
-(global-set-key (kbd "C-c p") 'hydra-projectile/body)
-
 (provide 'setup-hydras)
 ;;; setup-hydras.el ends here

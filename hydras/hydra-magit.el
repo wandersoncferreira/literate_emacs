@@ -11,6 +11,7 @@
   ("c" magit-clone "clone" :column "Do")
   ("i" magit-init "init" :column "Do")
   ("s" magit-status "status" :column "Do")
+  ("t" git-timemachine "time-travel" :column "TimeMachine")
   )
 
 (provide 'hydra-magit)
