@@ -10,9 +10,12 @@
 (bk/install-maybe 'jump-char)
 
 (require 'expand-region)
+(require 'expand-region-subword)
 (require 'ace-jump-mode)
 (require 'multiple-cursors)
 
+(require 'expand-region-subword)
+(setq testandoAgoraEssa t)
 
 ;; don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)

@@ -10,3 +10,6 @@
 [submodule "third-party/resurrect"]
 	path = third-party/resurrect
 	url = https://github.com/fbkante/resurrect
+[submodule "third-party/expand-region-subword"]
+	path = third-party/expand-region-subword
+	url = https://github.com/flatwhatson/expand-region-subword

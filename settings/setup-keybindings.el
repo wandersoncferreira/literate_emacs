@@ -30,6 +30,7 @@
 (global-set-key (kbd "C-:") 'hippie-expand-lines)
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-+") 'er/contract-region)
+(global-set-key (kbd "C-;") 'flyspell-auto-correct-previous-word)
 (global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "C-'") 'ace-jump-mode)
 (global-set-key (kbd "C-\\") 'push-mark-no-activate)
@@ -64,9 +65,6 @@
 (global-set-key (kbd "C-c C-\"") 'quick-switch-buffer)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-(define-key emacs-lisp-mode-map (kbd "C-c C-c") 'eval-defun)
-(define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
-
 
 ;;;;    -------- Meta based keys  -----------
 
@@ -83,6 +81,7 @@
 (global-set-key (kbd "M-u") #'fix-word-upcase)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
+(global-unset-key (kbd "M-t"))
 (global-set-key (kbd "M-g g") 'goto-line-with-feedback)
 (global-set-key (kbd "M-s f") 'find-name-dired)
 (global-set-key (kbd "M-s l") 'sort-lines)
