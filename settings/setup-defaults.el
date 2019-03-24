@@ -75,9 +75,6 @@ The idea is to completely turn off backups for Tramp."
               recentf-exclude '("/tmp/" "/ssh:"))
 (add-hook 'after-init-hook 'recentf-mode)
 
-(setq ibuffer-default-sorting-mode 'major-mode)
-(add-hook 'ibuffer-mode-hook (lambda nil (visual-line-mode -1)))
-
 (setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-after-kill-buffer-p t
       uniquify-separator " • "
@@ -85,18 +82,16 @@ The idea is to completely turn off backups for Tramp."
 
 (put 'erase-buffer 'disabled nil)
 
-;; (require 'flyspell)
-;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-;; (add-hook 'text-mode-hook 'flyspell-mode)
-;; (define-key flyspell-mode-map (kbd "C-,") nil)
+(require 'flyspell)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(define-key flyspell-mode-map (kbd "C-,") nil)
 
 ;; to compare the contents of two test files, use M-x ediff-files.
 ;; open the two files you want to compare.
 ;; Press | to put the two files side by side
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq ediff-split-window-function (quote split-window-horizontally))
-(winner-mode)
-(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
 
 ;;; utf-8 everywhere
 (set-language-environment "UTF-8")

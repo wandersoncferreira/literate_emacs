@@ -1,3 +1,5 @@
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
 ;;; setup-snippets --- Snippets
 ;;; Commentary:
 
@@ -52,6 +54,11 @@
 (setq yas-prompt-functions '(yas-ido-prompt yas-completing-prompt))
 (setq yas-verbosity 1)
 (setq yas-wrap-around-region t)
+
+
+;;; auto-yasnippet
+(bk/install-maybe 'auto-yasnippet)
+
 
 (provide 'setup-snippets)
 ;;; setup-snippets.el ends here

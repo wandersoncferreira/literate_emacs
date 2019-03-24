@@ -73,6 +73,7 @@
 (require 'setup-modeline)
 (require 'setup-docker)
 (require 'setup-company)
+(require 'setup-markdown)
 
 ;;; programming languages
 (require 'setup-clojure)

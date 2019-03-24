@@ -15,6 +15,9 @@
 (global-set-key (kbd "C-x f") 'ido-recentf-open)
 (global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
 (global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
+(global-set-key (kbd "C-x 4 u") 'winner-undo)
+(global-set-key (kbd "C-x 4 U") 'winner-redo)
+
 
 ;;; C-x {letter} are reserved for Emacs native essentials: buffers, window, frame, file, directory, etc.
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
@@ -64,6 +67,11 @@
 (global-set-key (kbd "C-c C-r") 'set-rectangular-region-anchor)
 (global-set-key (kbd "C-c C-\"") 'quick-switch-buffer)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+
+;;;; ----------- hyper based keys -----------
+(global-set-key (kbd "H-w") #'aya-create)
+(global-set-key (kbd "H-y") #'aya-expand)
 
 
 ;;;;    -------- Meta based keys  -----------

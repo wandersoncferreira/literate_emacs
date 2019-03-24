@@ -7,6 +7,9 @@
 
 (require 'grep)
 
+(setq grep-highlight-matches t
+      grep-scroll-output t)
+
 (eval-after-load "grep"
   '(progn
      (add-to-list 'grep-find-ignored-directories "target")

@@ -15,7 +15,6 @@
 (require 'multiple-cursors)
 
 (require 'expand-region-subword)
-(setq testandoAgoraEssa t)
 
 ;; don't use expand-region fast keys
 (setq expand-region-fast-keys-enabled nil)

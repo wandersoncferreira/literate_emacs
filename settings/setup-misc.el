@@ -17,10 +17,26 @@
 (bk/install-maybe 'alert)
 (bk/install-maybe 'beginend)
 (bk/install-maybe 'change-inner)
-(bk/install-maybe 'symon)
 (bk/install-maybe 'keyfreq)
 (bk/install-maybe 'wgrep)
 (bk/install-maybe 'dotenv-mode)
+(bk/install-maybe 'pomodoro)
+
+;;; pomodoro
+(require 'pomodoro)
+(setq pomodoro-break-time 2
+      pomodoro-long-break-time 5
+      pomodoro-work-time 15
+      pomodoro-desktop-notification t
+      pomodoro-show-number t)
+
+(setq-default mode-line-format
+              (cons '(pomodoro-mode-line-string pomodoro-mode-line-string)
+                    mode-line-format))
+
+(unless (featurep 'pomodoro)
+  (require 'pomodoro)
+  (pomodoro-add-to-mode-line))
 
 ;;; windows
 (windmove-default-keybindings)
@@ -29,10 +45,9 @@
 (require 'keyfreq)
 (keyfreq-mode 1)
 (keyfreq-autosave-mode 1)
-
-;;; tiny graphical system monitor
-(require 'symon)
-(symon-mode)
+(setq keyfreq-excluded-commands
+      '(self-insert-command
+        org-self-insert-command))
 
 (require 'alert)
 (when (eq system-type 'darwin)
