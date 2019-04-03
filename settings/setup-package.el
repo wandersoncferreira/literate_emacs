@@ -16,6 +16,11 @@
         ("org" . 10)
         ("melpa" . 5)))
 
+(setq package-enable-at-startup nil
+      package--init-file-ensured t)
+
+(package-initialize)
+
 (when (not package-archive-contents)
   (package-refresh-contents))
 
@@ -31,6 +36,15 @@
 
 (bk/install-maybe 'dash)
 (require 'dash)
+
+;;; automatically updates installed packages if at least `auto-package-update-interval' days have passed
+(bk/install-maybe 'auto-package-update)
+(require 'auto-package-update)
+(setq auto-package-update-interval 7
+      auto-package-update-prompt-before-update t
+      auto-package-update-delete-old-versions t
+      auto-package-update-hide-results t)
+(auto-package-update-maybe)
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

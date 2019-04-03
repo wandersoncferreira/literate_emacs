@@ -1,3 +1,4 @@
+;;; Disable dynamic scopes ---  -*- lexical-binding: t -*- 
 ;;; misc --- my miscellaneous
 ;;; Commentary:
 ;;; Code:
@@ -14,13 +15,11 @@
 (bk/install-maybe 'webpaste)
 (bk/install-maybe 'google-this)
 (bk/install-maybe 'keycast)
-(bk/install-maybe 'alert)
-(bk/install-maybe 'beginend)
 (bk/install-maybe 'change-inner)
-(bk/install-maybe 'keyfreq)
 (bk/install-maybe 'wgrep)
 (bk/install-maybe 'dotenv-mode)
 (bk/install-maybe 'pomodoro)
+(bk/install-maybe 'discover-my-major)
 
 ;;; pomodoro
 (require 'pomodoro)
@@ -41,18 +40,6 @@
 ;;; windows
 (windmove-default-keybindings)
 
-;;; track emacs commands frequency
-(require 'keyfreq)
-(keyfreq-mode 1)
-(keyfreq-autosave-mode 1)
-(setq keyfreq-excluded-commands
-      '(self-insert-command
-        org-self-insert-command))
-
-(require 'alert)
-(when (eq system-type 'darwin)
-  (setq-default alert-default-style 'osx-notifier))
-
 (require 'google-this)
 (google-this-mode 1)
 
@@ -66,12 +53,18 @@
 ;; change inner as in vi
 (require 'change-inner)
 
-;; redefine M-< and M-> for some modes
-(require 'beginend)
-(beginend-global-mode)
-
 ;;; edit several files in egrep buffer
 (require 'wgrep)
+
+;;; neotree .... because.. why not!
+(bk/install-maybe 'neotree)
+
+;; mcfly
+(setq mcfly-commands
+      '(query-replace-regexp
+        query-replace
+        flush-lines
+        keep-lines))
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

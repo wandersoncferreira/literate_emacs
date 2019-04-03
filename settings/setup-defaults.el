@@ -2,6 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+
+;; owner information
+(setq user-full-name "Wanderson Ferreira"
+      user-mail-address "iagwanderson@gmail.com")
+
 ;; fix old security emacs problems
 (eval-after-load "enriched"
   '(defun enriched-decode-display-prop (start end &optional param)
@@ -23,16 +28,13 @@ so you can get back to it later with `pop-to-mark-command'"
 
 (setq-default
  ad-redefinition-action 'accept           ; silence warnings for redefinition
- auto-window-vscroll nil                  ; lighten vertical scroll
- cursor-in-non-selected-windows t         ; hide the cursor in inactive windows
- delete-by-moving-to-trash t              ; delete files to trash
  help-window-select t                     ; focus new help window when opened
- left-margin-width 1 right-margin-width 1 ; add left and right margin
- ns-use-srgb-colorspace nil               ; don't use sRGB colors
  select-enable-clipboard t                ; merge system's and emacs' clipboard
- window-combination-resize t              ; resize windows proportionally
  indent-tabs-mode nil
  )
+
+;;; auto save when losing focus
+(add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
 
 (setq echo-keystrokes 0.1
       line-number-mode t
@@ -60,12 +62,6 @@ so you can get back to it later with `pop-to-mark-command'"
 (add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)
 (add-hook 'prog-mode-hook 'subword-mode)
-(add-hook 'prog-mode-hook 'prettify-symbols-mode)
-
-(defun tramp-set-auto-save ()
-  "Overwriting the `tramp-set-auto-save'.
-The idea is to completely turn off backups for Tramp."
-  (auto-save-mode -1))
 
 (setq save-abbrevs 'silent)
 (add-hook 'text-mode-hook #'abbrev-mode)
@@ -75,9 +71,9 @@ The idea is to completely turn off backups for Tramp."
               recentf-exclude '("/tmp/" "/ssh:"))
 (add-hook 'after-init-hook 'recentf-mode)
 
-(setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-after-kill-buffer-p t
       uniquify-separator " • "
+      uniquify-buffer-name-style 'reverse
       uniquify-ignore-buffers-re "^\\*")
 
 (put 'erase-buffer 'disabled nil)
@@ -99,7 +95,6 @@ The idea is to completely turn off backups for Tramp."
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

@@ -5,12 +5,11 @@
 
 ;;; Code:
 
-(bk/install-maybe 'smex)
+(bk/install-maybe 'amx)
+(require 'amx)
 
-(require 'smex)
-
-(setq smex-prompt-string "Here be dragons => ")
-(smex-initialize)
+(setq amx-prompt-string "Here be dragons => ")
+(amx-mode)
 
 (provide 'setup-smex)
 ;;; setup-smex.el ends here

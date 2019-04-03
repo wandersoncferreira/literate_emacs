@@ -40,21 +40,6 @@
 		  unless (eq preferred-javascript-mode (cdr entry))
 		  collect entry)))
 
-;; js2-mode
-(setq-default js2-bounce-indent-p nil)
-(eval-after-load 'js2-mode
-  '(progn
-     (setq-default js2-mode-show-parse-errors nil
-		   js2-mode-show-strict-warnings nil)
-     (autoload 'flycheck-get-checker-for-buffer "flycheck")
-     (defun sanityinc/enable-js2-checks-if-flycheck-inactive ()
-       (unless (flycheck-get-checker-for-buffer)
-	 (set (make-local-variable 'js2-mode-show-parse-errors) t)
-	 (set (make-local-variable 'js2-mode-show-strict-warnings) t)))
-     (add-hook 'js2-mode-hook 'sanityinc/enable-js2-checks-if-flycheck-inactive)
-     (add-hook 'js2-mode-hook (lambda () (setq mode-name "JS2")))
-     (js2-imenu-extras-setup)))
-
 ;; js-mode
 (setq-default js-indent-level preferred-javascript-indent-level)
 (add-to-list 'interpreter-mode-alist (cons "node" preferred-javascript-mode))

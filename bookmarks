@@ -9,7 +9,7 @@
  (position . 1545))
 ("org-capture-last-stored"
  (filename . "~/gtd/tickler.org")
- (front-context-string . "** The Emacs Gur")
- (rear-context-string . "ffers        |\n\n")
- (position . 3916))
+ (front-context-string . "** Learn it Your")
+ (rear-context-string . "using *C-h l*.\n\n")
+ (position . 4593))
 )

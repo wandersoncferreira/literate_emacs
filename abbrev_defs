@@ -107,6 +107,8 @@
 
 (define-abbrev-table 'dockerfile-mode-abbrev-table '())
 
+(define-abbrev-table 'edebug-eval-mode-abbrev-table '())
+
 (define-abbrev-table 'edit-abbrevs-mode-abbrev-table '())
 
 (define-abbrev-table 'elisp-byte-code-mode-abbrev-table '())
@@ -148,11 +150,16 @@
     ("bci" "brew cask install" nil 17)
     ("bi" "brew install" nil 26)
     ("devpython" "DBENV=development python" nil 0)
-    ("ppl" "print(\"\\n\\n\\n\\n\\n\")" nil 2)
+    ("lxb" "Disable dynamic scopes ---  -*- lexical-binding: t -*-" nil 1)
+    ("ppl" "print(\"\\n\\n\\n\\n\\n\")" nil 9)
     ("prodpython" "DBENV=production python" nil 1)
    ))
 
 (define-abbrev-table 'gnus-group-mode-abbrev-table '())
+
+(define-abbrev-table 'go-mode-abbrev-table '())
+
+(define-abbrev-table 'godoc-mode-abbrev-table '())
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
 
@@ -226,6 +233,8 @@
 
 (define-abbrev-table 'magit-submodule-list-mode-abbrev-table '())
 
+(define-abbrev-table 'magit-todos-list-mode-abbrev-table '())
+
 (define-abbrev-table 'message-mode-abbrev-table '())
 
 (define-abbrev-table 'messages-buffer-mode-abbrev-table '())
@@ -268,15 +277,23 @@
 
 (define-abbrev-table 'python-mode-abbrev-table '())
 
-(define-abbrev-table 'python-mode-skeleton-abbrev-table '())
+(define-abbrev-table 'python-mode-skeleton-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'quickrun/mode-abbrev-table '())
+
+(define-abbrev-table 'reb-lisp-mode-abbrev-table '())
+
+(define-abbrev-table 'reb-mode-abbrev-table '())
 
 (define-abbrev-table 'restclient-mode-abbrev-table '())
 
 (define-abbrev-table 'rjsx-mode-abbrev-table '())
 
 (define-abbrev-table 'ruby-mode-abbrev-table '())
+
+(define-abbrev-table 'rxt-help-mode-abbrev-table '())
 
 (define-abbrev-table 'sass-mode-abbrev-table '())
 
@@ -325,6 +342,8 @@
 (define-abbrev-table 'typescript-mode-abbrev-table '())
 
 (define-abbrev-table 'url-cookie-mode-abbrev-table '())
+
+(define-abbrev-table 'vc-dir-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-git-log-edit-mode-abbrev-table '())
 

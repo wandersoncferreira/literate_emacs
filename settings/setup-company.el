@@ -14,11 +14,21 @@
 
 (setq company-global-modes '(not eshell-mode shell-mode
                                  org-mode term-mode))
+
 (setq-default company-transformers '(company-sort-by-occurrence)
-              company-require-match nil
+              company-begin-commands '(self-insert-command)
+              company-require-match 'never
               company-show-numbers t
               company-idle-delay 0.1
-              company-minimum-prefix-length 2)
+              company-tooltip-align-annotations 't
+              company-minimum-prefix-length 1)
+
+;; redefine keys
+(define-key company-mode-map [remap indent-for-tab-command] #'company-indent-or-complete-common)
+(define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
+(define-key company-active-map (kbd "S-TAB") 'company-select-previous)
+(define-key company-active-map (kbd "<backtab>") 'company-select-previous)
 
 ;; stop lower-casing all the completions
 (setq company-dabbrev-downcase nil)

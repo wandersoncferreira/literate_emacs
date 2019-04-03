@@ -3,18 +3,15 @@
 ;;; Code:
 
 (bk/install-maybe 'ido-completing-read+)
-(bk/install-maybe 'ido-at-point)
 (bk/install-maybe 'ido-vertical-mode)
 
 (require 'ido)
-(require 'ido-at-point)
 (require 'ido-vertical-mode)
 (require 'ido-completing-read+)
 
 (ido-ubiquitous-mode)
 (ido-mode)
 (ido-everywhere)
-(ido-at-point-mode)
 (ido-vertical-mode)
 
 (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)

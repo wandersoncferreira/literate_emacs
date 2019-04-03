@@ -8,14 +8,6 @@
 (require 'dired)
 (require 'wdired)
 
-;;; reload dired after making changes
-(--each '(dired-do-rename
-          dired-do-copy
-          dired-do-delete
-          dired-create-directory
-          wdired-abort-changes)
-  (eval `(defadvice ,it (after revert-buffer activate)
-           (revert-buffer))))
 
 (let ((gls (executable-find "gls")))
   (when gls (setq insert-directory-program gls)))

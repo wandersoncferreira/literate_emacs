@@ -92,10 +92,8 @@ Return `default-directory' if no project was found."
                 mode-line-client
                 mode-line-modified
                 mode-line-remote
-                ;; mode-line-frame-identification -- this is for text-mode emacs only
                 " "
                 mode-line-buffer-info
-                ;; mode-line-buffer-identification
                 " "
                 mode-line-position
                 (:eval (selection-info))

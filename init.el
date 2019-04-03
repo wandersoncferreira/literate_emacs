@@ -20,11 +20,6 @@
                     gc-cons-percentage 0.1
                     file-name-handler-alist bk--file-name-handler-alist))))
 
-(setq package-enable-at-startup nil
-      package--init-file-ensured t)
-
-(package-initialize)
-
 (defconst init-osx? (eq system-type 'darwin))
 
 (defconst setting-dir (expand-file-name "settings" user-emacs-directory))
@@ -82,7 +77,6 @@
 
 (eval-after-load "python" '(require 'setup-python))
 (eval-after-load "js" '(require 'setup-javascript))
-(eval-after-load 'typescript-mode '(require 'setup-typescript))
 (eval-after-load "tex" '(require 'setup-latex))
 
 (defalias 're 'restart-emacs)

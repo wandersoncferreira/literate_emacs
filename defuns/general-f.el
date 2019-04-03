@@ -13,6 +13,7 @@
 
 (defun bk/restclient ()
   "Open the restclient buffer."
+  (interactive)
   (with-current-buffer (get-buffer-create "*restclient*")
     (restclient-mode)
     (pop-to-buffer (current-buffer))))

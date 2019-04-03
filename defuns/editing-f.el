@@ -30,6 +30,22 @@
                     (goto-char (point-max))
                     (line-number-at-pos)))))
 
+(defun kill-back-to-indentation ()
+  "Kill from point back to the first non-white space character on the line."
+  (interactive)
+  (let ((prev-pos (point)))
+    (back-to-indentation)
+    (kill-region (point) prev-pos)))
+
+(defun sanityinc/backward-up-sexp (arg)
+  "Jump up to the start of the ARG'th enclosing sexp."
+  (interactive "p")
+  (let ((ppss (syntax-ppss)))
+    (cond ((elt ppss 3)
+           (goto-char (elt ppss 8))
+           (sanityinc/backward-up-sexp (1- arg)))
+          ((backward-up-list arg)))))
+
 ;;;###autoload
 (defun open-line-above ()
   "Create a new line above the cursor."
@@ -93,11 +109,11 @@
 (defun bk/remove-python-print-statements ()
   "Function to remove all print statements from my python code."
   (interactive)
+  (goto-char (point-min))
   (save-excursion
-    (goto-char (point-min))
-    (when (re-search-forward "^print(" nil t)
+    (when (re-search-forward "^\s+print")
       (kill-whole-line)
-      (bk/remove-all-statements)))
+      (bk/remove-python-print-statements)))
   (message "All occurrences of the print statement were removed!"))
 
 

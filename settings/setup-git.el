@@ -7,7 +7,6 @@
 (bk/install-maybe 'browse-at-remote)
 (bk/install-maybe 'magit-todos)
 (bk/install-maybe 'gitconfig-mode)
-(bk/install-maybe 'yagist)
 (bk/install-maybe 'diff-hl)
 
 (require 'magit)
@@ -15,6 +14,12 @@
 
 (setq magit-no-confirm '(stage-all-changes
                          unstage-all-changes))
+
+(defun bk/magit-cursor-fix ()
+  (beginning-of-buffer)
+  (when (looking-at "#")
+    (forward-line 2)))
+(add-hook 'git-commit-mode-hook 'bk/magit-cursor-fix)
 
 (defun magit-quit-session ()
   "Restore the previous window configuration."

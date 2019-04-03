@@ -17,13 +17,15 @@
 (global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
 (global-set-key (kbd "C-x 4 u") 'winner-undo)
 (global-set-key (kbd "C-x 4 U") 'winner-redo)
+(global-set-key [remap backward-up-list] 'sanityinc/backward-up-sexp)
+(global-set-key (kbd "C-h C-m") 'discover-my-major)
 
 
 ;;; C-x {letter} are reserved for Emacs native essentials: buffers, window, frame, file, directory, etc.
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-x C-j") 'dired-jump)
-(global-set-key (kbd "C-x C-m") 'smex)
+(global-set-key (kbd "C-x C-m") 'amx)
 (global-set-key (kbd "C-x C-p") 'pop-global-mark)
 (global-set-key (kbd "C-x C-/") 'save-buffer)
 
@@ -45,7 +47,6 @@
 (global-set-key (kbd "C-c b") 'bk/scratch-buffer)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c e") 'eshell)
-(global-set-key (kbd "C-c f") 'hydra-flycheck/body)
 (global-set-key (kbd "C-c g") 'hydra-magit/body)
 (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
 (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
@@ -68,16 +69,25 @@
 (global-set-key (kbd "C-c C-\"") 'quick-switch-buffer)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
+;;;; C-M <letter>
+(global-set-key (kbd "C-M-<backspace>") 'kill-back-to-indentation)
+
 
 ;;;; ----------- hyper based keys -----------
 (global-set-key (kbd "H-w") #'aya-create)
 (global-set-key (kbd "H-y") #'aya-expand)
 
 
+;;;; ---------- function keys --------------
+(global-set-key (kbd "<f8>") 'neotree-toggle)
+
 ;;;;    -------- Meta based keys  -----------
 
 ;;; M-{letter} bindings
 (global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "M-&") 'vr/query-replace)
+(global-set-key (kbd "M-*") 'vr/replace)
+
 (global-set-key (kbd "M-c") #'fix-word-capitalize)
 (global-set-key (kbd "M-i") 'change-inner)
 (global-set-key (kbd "M-l") #'fix-word-downcase)
@@ -88,6 +98,7 @@
 (global-set-key (kbd "M-p") 'unhighlight-regexp)
 (global-set-key (kbd "M-u") #'fix-word-upcase)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "M-y") 'popup-kill-ring)
 
 (global-unset-key (kbd "M-t"))
 (global-set-key (kbd "M-g g") 'goto-line-with-feedback)
