@@ -32,12 +32,10 @@
   (when (file-regular-p file)
     (load file)))
 
-(load-packages-from-folder "maintainer")
 (load-packages-from-folder "third-party")
 
 (require 'setup-package)
 (require 'setup-appearance)
-(require 'setup-maintainer)
 (require 'setup-defaults)
 (require 'setup-ido)
 (require 'setup-org)
