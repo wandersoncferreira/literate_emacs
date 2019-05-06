@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
- windresize
- json-pretty-print-buffer
- org-table-insert-hline
- quickrun
- package-install
- load-theme
- package-refresh-contents
+ cquit
+ just-one-space
+ paredit-mode
+ customize-group
+ start-cider-repl-with-profile
+ cider
+ set-variable
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 15)
+ (cquit . 49)
  (windresize . 21)
  (emacs-uptime . 6)
  (package-delete . 1)
@@ -91,7 +91,7 @@
  (company-box-mode . 1)
  (ns-popup-font-panel . 2)
  (customize . 1)
- (customize-group . 1)
+ (customize-group . 4)
  (company-quickhelp-mode . 1)
  (spotlight-fast . 5)
  (rotate-window . 1)
@@ -114,7 +114,7 @@
  (webpaste-paste-region . 11)
  (global-hungry-delete-mode . 6)
  (cycle-spacing . 16)
- (just-one-space . 17)
+ (just-one-space . 26)
  (imgbb-upload . 1)
  (wiki-summary . 4)
  (ido-mode . 1)
@@ -207,7 +207,7 @@
  (find-file-in-current-directory . 1)
  (projectile-find-file-in-directory . 5)
  (bk/normalize-buffer . 2)
- (paredit-mode . 1)
+ (paredit-mode . 12)
  (global-whitespace-mode . 14)
  (ffip-diff-find-file . 1)
  (projectile-test-project . 1)
@@ -300,4 +300,9 @@
  (change-inner . 3)
  (fundamental-mode . 1)
  (org-table-insert-hline . 6)
+ (cider-jack-in-dev-profile . 2)
+ (start-cider-repl-with-profile . 5)
+ (cider-jack-in . 1)
+ (set-variable . 3)
+ (cider . 1)
 )

@@ -7,9 +7,6 @@
 
 ;;; Code:
 
-(require 'resurrect)
-(resurrect-mode +1)
-
 (require 'winner)
 (setq winner-boring-buffers
       '("*Completions*"

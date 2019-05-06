@@ -18,11 +18,12 @@
   (clj-refactor-mode +1)
   (cljr-add-keybindings-with-prefix "C-c C-m"))
 
-(defun cider-jack-in-test-profile ()
-  "Function to start clojure with test profile."
+(defun start-cider-repl-with-profile ()
   (interactive)
-  (let ((cider-lein-parameters (concat "with-profile +test"
-				       cider-lein-parameters)))
+  (letrec ((profile (read-string "Enter profile name: "))
+           (lein-parms (concat "with-profile +" profile " repl :headless")))
+    (message "lein-params set to: %s" lein-parms)
+    (set-variable 'cider-lein-parameters lein-parms)
     (cider-jack-in)))
 
 (defun cider-figwheel-repl ()
