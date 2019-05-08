@@ -37,15 +37,5 @@
 
 (setq set-mark-command-repeat-pop t)
 
-
-(with-eval-after-load 'json
-  (defun encode-json-array-of-numbers-on-one-line (encode array)
-    (let* ((json-encoding-pretty-print
-            (and json-encoding-pretty-print
-                 (not (loop for x across array always (numberp x)))))
-           (json-encoding-separator (if json-encoding-pretty-print "," ", ")))
-      (funcall encode array)))
-  (advice-add 'json-encode-array :around #'encode-json-array-of-numbers-on-one-line))
-
 (provide 'setup-advices)
 ;;; setup-advices.el ends here

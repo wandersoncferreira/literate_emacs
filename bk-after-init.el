@@ -31,7 +31,7 @@
 (defun clean-mode-line ()
   "Function for cleaning up the modeline."
   (interactive)
-  (loop for cleaner in mode-line-cleaner-alist
+  (cl-loop for cleaner in mode-line-cleaner-alist
         do (let* ((mode (car cleaner))
                   (mode-str (cdr cleaner))
                   (old-mode-str (cdr (assq mode minor-mode-alist))))

@@ -34,6 +34,12 @@
         (package-refresh-contents)
         (bk/install-maybe package min-version t)))))
 
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package)
+  (package-install 'diminish))
+
+
 (bk/install-maybe 'dash)
 (require 'dash)
 

@@ -19,30 +19,18 @@
       ns-pop-up-frames nil
       use-file-dialog nil
       use-dialog-box nil
-      visible-bell nil)
-
-(setq ring-bell-function 'ignore)
-
-(bk/install-maybe 'cyberpunk-theme)
+      visible-bell nil
+      ring-bell-function 'ignore)
 
 ;;; theme
-(defun bk/set-cyberpunk-theme ()
-  "Function to activate the cyberpunk theme."
-  (interactive)
-  (load-theme 'cyberpunk t))
-
-(defun bk/set-tsdh-theme ()
-  "Function to activate the leuven theme."
-  (interactive)
-  (load-theme 'tsdh-light t))
-
-(bk/install-maybe 'rebecca-theme)
-(load-theme 'rebecca t)
-
-(or-protected
- (not (set-frame-font "Monaco 15"))
- (not (set-frame-font "Liberation Mono 15"))
- (not (set-frame-font "Ubuntu Mono 15")))
+(use-package rebecca-theme
+  :ensure t
+  :config
+  (load-theme 'rebecca t)
+  (or-protected
+   (not (set-frame-font "Monaco 15"))
+   (not (set-frame-font "Liberation Mono 15"))
+   (not (set-frame-font "Ubuntu Mono 15"))))
 
 (if (eq window-system 'ns)
     (toggle-frame-maximized)
@@ -53,8 +41,11 @@
 (setq-default indicate-buffer-boundaries 'left)
 
 ;;; displays ugly form feed characters as tidy horizontal lines
-(bk/install-maybe 'page-break-lines)
-(global-page-break-lines-mode 1)
+(use-package page-break-lines
+  :ensure t
+  :demand t
+  :config
+  (global-page-break-lines-mode 1))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

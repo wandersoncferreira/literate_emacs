@@ -2,27 +2,31 @@
 ;;; Commentary:
 ;;; Code:
 
-
-(bk/install-maybe 'elpy)
-(bk/install-maybe 'electric-operator)
-(bk/install-maybe 'py-autopep8)
-
 ;; elpy is a framework to handle python buffers
-(require 'elpy)
-(elpy-enable)
-(delete `elpy-module-django elpy-modules)
-(delete `elpy-module-highlight-indentation elpy-modules)
+(use-package python
+  :mode ("\\.py\\'" . python-mode))
 
-;; correct spaces between elements in python buffers.
-(require 'electric-operator)
-(add-hook 'python-mode-hook 'electric-operator-mode)
+(use-package elpy
+  :ensure t
+  :after python
+  :config
+  (elpy-enable)
+  (pyvenv-activate "~/miniconda3")
+  (delete `elpy-module-django elpy-modules)
+  (delete `elpy-module-highlight-indentation elpy-modules))
 
-(pyvenv-activate "~/miniconda3")
+(use-package electric-operator
+  :ensure t
+  :after python
+  :hook (python-mode . electric-operator))
 
-;;; pep8 compliance
-(require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-(setq py-autopep8-options '("--max-line-length=150"))
+(use-package py-autopep8
+  :ensure t
+  :after python
+  :init
+  (setq py-autopep8-options '("--max-line-length=150"))
+  :config
+  (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
 
 
 (provide 'setup-python)

@@ -1,0 +1,3 @@
+(
+ (:id "sha1:a0eacc8b5e0c139dd1f9fba0c16244a60df9c6e6" :fingerprint "sha1:fe:da:42:66:6e:49:94:5a:54:7e:76:fc:c4:fa:b8:59:92:fc:20:68" :host "scci-homolog.certificadora.imb.br:443" :conditions (:unknown-ca :invalid))
+)

@@ -33,12 +33,6 @@
   :options '(js2-mode js-mode))
 
 (defconst preferred-javascript-indent-level 2)
-(eval-when-compile (require 'cl))
-(setq auto-mode-alist
-      (cons `("\\.\\(js\\|es6\\)\\(\\.erb\\)?\\'" . ,preferred-javascript-mode)
-	    (loop for entry in auto-mode-alist
-		  unless (eq preferred-javascript-mode (cdr entry))
-		  collect entry)))
 
 ;; js-mode
 (setq-default js-indent-level preferred-javascript-indent-level)

@@ -7,44 +7,21 @@
 
 ;;; Code:
 
-(require 'winner)
-(setq winner-boring-buffers
-      '("*Completions*"
-        "*Compile-Log*"
-        "*inferior-lisp*"
-        "*Fuzzy Completions*"
-        "*Apropos*"
-        "*Help*"
-        "*cvs*"
-        "*Buffer List*"
-        "*Ibuffer*"
-        "*esh command on file*"))
-(winner-mode 1)
-
-(require 'ibuffer)
-(setq ibuffer-formats
-      '((mark modified read-only vs-status-mini " "
-              (name 18 18 :left :elide)
-              " "
-              (size-h 9 -1 :right)
-              " "
-              (mode 16 16 :left :elide)
-              " "
-              (vc-status 16 16 :left)
-              " "
-              filename-and-process)))
-(setq ibuffer-filter-group-name-face 'font-lock-doc-face)
-(setq ibuffer-default-sorting-mode 'major-mode)
-(add-hook 'ibuffer-mode-hook (lambda nil (visual-line-mode -1)))
-
-(eval-after-load 'ibuffer
-  (define-ibuffer-column size-h
-    (:name "Size" :inline t)
-    (file-size-human-readable (buffer-size))))
-
-
-;;; popup-kill-ring
-(bk/install-maybe 'popup-kill-ring)
+(use-package winner
+  :init
+  (setq winner-boring-buffers
+        '("*Completions*"
+          "*Compile-Log*"
+          "*inferior-lisp*"
+          "*Fuzzy Completions*"
+          "*Apropos*"
+          "*Help*"
+          "*cvs*"
+          "*Buffer List*"
+          "*Ibuffer*"
+          "*esh command on file*"))
+  :config
+  (winner-mode +1))
 
 ;; scroll
 (setq scroll-step 1

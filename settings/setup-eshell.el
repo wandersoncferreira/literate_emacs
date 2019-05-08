@@ -14,7 +14,8 @@
 ;; some commands require a proper terminal to run and eshell can't handle
 (require 'em-term)
 (nconc eshell-visual-commands
-       '("bower" "htop" "docker" "top" "ssh" "ranger" "npm" "tail" "docker-compose"))
+       '("bower" "htop" "docker" "top" "ssh"
+         "ranger" "npm" "tail" "docker-compose"))
 
 (nconc eshell-visual-subcommands '(("docker" "build")
                                    ("docker-compose" "up")

@@ -1,19 +1,19 @@
 
 ;; ----- amx-history -----
 (
- cquit
+ bk/rgrep-fullscreen
+ magit-ediff-resolve
  just-one-space
- paredit-mode
  customize-group
- start-cider-repl-with-profile
- cider
- set-variable
+ quickrun
+ package-install
+ load-theme
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 49)
- (windresize . 21)
+ (cquit . 61)
+ (windresize . 23)
  (emacs-uptime . 6)
  (package-delete . 1)
  (package-install . 98)
@@ -40,7 +40,7 @@
  (load-theme . 74)
  (eshell . 3)
  (neotree . 2)
- (neotree-toggle . 6)
+ (neotree-toggle . 7)
  (tide-mode . 2)
  (fish-mode . 1)
  (package-refresh-contents . 43)
@@ -66,7 +66,7 @@
  (helm-spotify-plus-next . 6)
  (browse-at-remote . 9)
  (toggle-truncate-lines . 5)
- (magit-ediff-resolve . 24)
+ (magit-ediff-resolve . 27)
  (pydoc . 9)
  (pydoc-mode . 2)
  (Info-help . 1)
@@ -91,7 +91,7 @@
  (company-box-mode . 1)
  (ns-popup-font-panel . 2)
  (customize . 1)
- (customize-group . 4)
+ (customize-group . 5)
  (company-quickhelp-mode . 1)
  (spotlight-fast . 5)
  (rotate-window . 1)
@@ -114,7 +114,7 @@
  (webpaste-paste-region . 11)
  (global-hungry-delete-mode . 6)
  (cycle-spacing . 16)
- (just-one-space . 26)
+ (just-one-space . 27)
  (imgbb-upload . 1)
  (wiki-summary . 4)
  (ido-mode . 1)
@@ -169,9 +169,9 @@
  (bk/spell-buffer-pt-BR . 6)
  (flyspell-mode . 5)
  (customize-face . 2)
- (wgrep-change-to-wgrep-mode . 14)
- (wgrep-save-all-buffers . 16)
- (wgrep-finish-edit . 13)
+ (wgrep-change-to-wgrep-mode . 15)
+ (wgrep-save-all-buffers . 17)
+ (wgrep-finish-edit . 14)
  (pyimport-insert-missing . 1)
  (camcorder-record . 1)
  (giffy . 1)
@@ -196,7 +196,7 @@
  (elpy-config . 6)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
- (bk/rgrep-fullscreen . 7)
+ (bk/rgrep-fullscreen . 14)
  (whitespace-mode . 2)
  (getenv . 4)
  (compile . 4)

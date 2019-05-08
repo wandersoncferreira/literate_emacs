@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-
-;; owner information
-(setq user-full-name "Wanderson Ferreira"
-      user-mail-address "iagwanderson@gmail.com")
-
 ;; fix old security emacs problems
 (eval-after-load "enriched"
   '(defun enriched-decode-display-prop (start end &optional param)
@@ -14,10 +9,6 @@
 
 ;; garbage-collect on focus-out, emacs should feel snappier
 (add-hook 'focus-out-hook #'garbage-collect)
-
-(add-to-list 'exec-path "/Users/wandersonferreira/dotfiles/scripts")
-(add-to-list 'exec-path "/usr/local/bin")
-(add-to-list 'exec-path "/opt/local/bin/")
 
 (defun push-mark-no-activate ()
   "Sometimes you just want to explicitly set a mark into one place.
@@ -27,11 +18,10 @@ so you can get back to it later with `pop-to-mark-command'"
   (message "Pushed mark to ring."))
 
 (setq-default
- ad-redefinition-action 'accept           ; silence warnings for redefinition
- help-window-select t                     ; focus new help window when opened
- select-enable-clipboard t                ; merge system's and emacs' clipboard
- indent-tabs-mode nil
- )
+ ad-redefinition-action 'accept
+ help-window-select t
+ select-enable-clipboard t
+ indent-tabs-mode nil)
 
 ;;; auto save when losing focus
 (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
@@ -63,13 +53,21 @@ so you can get back to it later with `pop-to-mark-command'"
 (add-hook 'prog-mode-hook 'show-paren-mode)
 (add-hook 'prog-mode-hook 'subword-mode)
 
-(setq save-abbrevs 'silent)
-(add-hook 'text-mode-hook #'abbrev-mode)
-(add-hook 'prog-mode-hook #'abbrev-mode)
+(use-package abbrev
+  :hook ((text-mode . abbrev-mode)
+         (prog-mode . abbrev-mode))
+  :init
+  (setq save-abbrevs 'silent))
 
-(setq-default recentf-max-saved-items 1000
-              recentf-exclude '("/tmp/" "/ssh:"))
-(add-hook 'after-init-hook 'recentf-mode)
+
+(use-package recentf
+  :config
+  (setq-default recentf-max-saved-items 1000
+                recentf-max-menu-items 15
+                recentf-auto-cleanup 'never
+                recentf-exclude '("/tmp/" "/ssh:"))
+  (recentf-mode +1))
+
 
 (setq uniquify-after-kill-buffer-p t
       uniquify-separator " • "

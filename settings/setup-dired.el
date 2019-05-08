@@ -8,7 +8,6 @@
 (require 'dired)
 (require 'wdired)
 
-
 (let ((gls (executable-find "gls")))
   (when gls (setq insert-directory-program gls)))
 
