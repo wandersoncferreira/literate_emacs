@@ -1,19 +1,19 @@
 
 ;; ----- amx-history -----
 (
+ just-one-space
+ magit-status
  bk/rgrep-fullscreen
  magit-ediff-resolve
- just-one-space
- customize-group
- quickrun
  package-install
  load-theme
+ package-refresh-contents
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 61)
- (windresize . 23)
+ (cquit . 123)
+ (windresize . 24)
  (emacs-uptime . 6)
  (package-delete . 1)
  (package-install . 98)
@@ -66,7 +66,7 @@
  (helm-spotify-plus-next . 6)
  (browse-at-remote . 9)
  (toggle-truncate-lines . 5)
- (magit-ediff-resolve . 27)
+ (magit-ediff-resolve . 30)
  (pydoc . 9)
  (pydoc-mode . 2)
  (Info-help . 1)
@@ -114,7 +114,7 @@
  (webpaste-paste-region . 11)
  (global-hungry-delete-mode . 6)
  (cycle-spacing . 16)
- (just-one-space . 27)
+ (just-one-space . 31)
  (imgbb-upload . 1)
  (wiki-summary . 4)
  (ido-mode . 1)
@@ -140,7 +140,7 @@
  (pop-to-mark-command . 1)
  (bk/uptime-osx . 1)
  (kill-grep . 2)
- (flycheck-verify-setup . 13)
+ (flycheck-verify-setup . 14)
  (flycheck-mode . 2)
  (unbury-buffer . 3)
  (bury-buffer . 1)
@@ -169,9 +169,9 @@
  (bk/spell-buffer-pt-BR . 6)
  (flyspell-mode . 5)
  (customize-face . 2)
- (wgrep-change-to-wgrep-mode . 15)
- (wgrep-save-all-buffers . 17)
- (wgrep-finish-edit . 14)
+ (wgrep-change-to-wgrep-mode . 22)
+ (wgrep-save-all-buffers . 25)
+ (wgrep-finish-edit . 21)
  (pyimport-insert-missing . 1)
  (camcorder-record . 1)
  (giffy . 1)
@@ -196,7 +196,7 @@
  (elpy-config . 6)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
- (bk/rgrep-fullscreen . 14)
+ (bk/rgrep-fullscreen . 25)
  (whitespace-mode . 2)
  (getenv . 4)
  (compile . 4)
@@ -207,7 +207,7 @@
  (find-file-in-current-directory . 1)
  (projectile-find-file-in-directory . 5)
  (bk/normalize-buffer . 2)
- (paredit-mode . 12)
+ (paredit-mode . 18)
  (global-whitespace-mode . 14)
  (ffip-diff-find-file . 1)
  (projectile-test-project . 1)
@@ -305,4 +305,13 @@
  (cider-jack-in . 1)
  (set-variable . 3)
  (cider . 1)
+ (magit-blame-mode . 3)
+ (magit-blame-echo . 2)
+ (cider-doc . 1)
+ (revert-buffer . 2)
+ (global-auto-revert-mode . 2)
+ (bk/sudo-edit . 2)
+ (align-regexp . 1)
+ (magit . 2)
+ (magit-status . 2)
 )

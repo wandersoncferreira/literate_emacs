@@ -47,10 +47,11 @@
 (require 'setup-hydras)
 
 (when init-osx?
-  (require 'setup-mac)
-  (bk/install-maybe 'exec-path-from-shell)
-  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
-  (exec-path-from-shell-initialize))
+  (require 'setup-mac))
+
+(bk/install-maybe 'exec-path-from-shell)
+(exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
+(exec-path-from-shell-initialize)
 
 (require 'setup-smex)
 (require 'setup-projectile)

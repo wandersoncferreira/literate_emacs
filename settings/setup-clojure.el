@@ -28,6 +28,8 @@
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
+(defalias 'cider-default-connection 'cider-current-connection)
+
 (use-package flycheck-clojure
   :ensure t
   :after flycheck

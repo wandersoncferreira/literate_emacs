@@ -2,33 +2,15 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe 'magit)
-(bk/install-maybe 'git-timemachine)
 (bk/install-maybe 'browse-at-remote)
-(bk/install-maybe 'magit-todos)
 (bk/install-maybe 'gitconfig-mode)
 (bk/install-maybe 'diff-hl)
 
-(require 'magit)
-(require 'magit-todos)
-
-(setq magit-no-confirm '(stage-all-changes
-                         unstage-all-changes))
-
-(defun bk/magit-cursor-fix ()
-  (beginning-of-buffer)
-  (when (looking-at "#")
-    (forward-line 2)))
-(add-hook 'git-commit-mode-hook 'bk/magit-cursor-fix)
-
-(defun magit-quit-session ()
-  "Restore the previous window configuration."
-  (interactive)
-  (kill-buffer)
-  (jump-to-register :magit-fullscreen))
-
-(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
-(add-hook 'magit-mode-hook 'magit-todos-mode)
+(use-package magit
+  :ensure t
+  :init
+  (setq magit-no-confirm '(stage-all-changes
+                           unstage-all-changes)))
 
 (add-to-list 'auto-mode-alist '("\\.gitconfig$" . gitconfig-mode))
 (add-to-list 'auto-mode-alist '("\\.gitignore$" . gitignore-mode))
@@ -37,9 +19,6 @@
 (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 (add-hook 'after-init-hook 'global-diff-hl-mode)
 
-(with-eval-after-load 'diff-hl
-  (define-key diff-hl-mode-map (kbd "<left-fringe> <mouse-1>")
-    'diff-hl-diff-goto-hunk))
 
 (provide 'setup-git)
 ;;; setup-git.el ends here

@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <19/04/01 23:09:36 /Users/wandersoncferreira/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <19/05/13 09:24:56 /Users/wandersoncferreira/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -82,5 +82,23 @@
   ("gid-integer" 1000)
   ("uid-integer" 1000)
   ("trash" nil))
- ((tramp-file-name "ssh" nil nil "18.228.52.253" nil nil nil)
-  nil))
+ ((tramp-file-name "sudo" "root" nil "localhost" nil nil nil)
+  ("uname" "Darwin 18.5.0")
+  ("test" "test")
+  ("remote-path"
+   ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/usr/local/sbin" "/opt/local/bin"))
+  ("remote-shell" "/bin/sh")
+  ("locale" "LC_ALL=en_US.UTF-8")
+  ("readlink" nil)
+  ("perl-file-spec" t)
+  ("perl-cwd-realpath" t)
+  ("perl" "\\perl")
+  ("stat" nil)
+  ("id" "/usr/bin/id")
+  ("gid-integer" 0)
+  ("file-exists" "test -e")
+  ("case-insensitive" t)
+  ("gid-string" "wheel")
+  ("uid-integer" 0)
+  ("git" "\\git")
+  ("~root" "/var/root")))
