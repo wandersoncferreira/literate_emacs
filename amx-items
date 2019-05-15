@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ paredit-mode
+ jump-char-forward
+ eshell
  just-one-space
  magit-status
  bk/rgrep-fullscreen
- magit-ediff-resolve
- package-install
- load-theme
- package-refresh-contents
+ quickrun
 )
 
 ;; ----- amx-data -----
@@ -38,7 +38,7 @@
  (org-mode . 3)
  (typescript-mode . 1)
  (load-theme . 74)
- (eshell . 3)
+ (eshell . 4)
  (neotree . 2)
  (neotree-toggle . 7)
  (tide-mode . 2)
@@ -165,7 +165,7 @@
  (persp-next . 1)
  (persp-prev . 1)
  (toggle-frame-fullscreen . 1)
- (jump-char-forward . 1)
+ (jump-char-forward . 2)
  (bk/spell-buffer-pt-BR . 6)
  (flyspell-mode . 5)
  (customize-face . 2)
@@ -207,7 +207,7 @@
  (find-file-in-current-directory . 1)
  (projectile-find-file-in-directory . 5)
  (bk/normalize-buffer . 2)
- (paredit-mode . 18)
+ (paredit-mode . 20)
  (global-whitespace-mode . 14)
  (ffip-diff-find-file . 1)
  (projectile-test-project . 1)
@@ -314,4 +314,5 @@
  (align-regexp . 1)
  (magit . 2)
  (magit-status . 2)
+ (paredit . 1)
 )

@@ -39,7 +39,5 @@
 (add-to-list 'ido-ignore-directories "vendor")
 (add-to-list 'ido-ignore-files "\\.DS_Store")
 
-(setq magit-completing-read-function 'magit-ido-completing-read)
-
 (provide 'setup-ido)
 ;;; setup-ido.el ends here

@@ -2,17 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; expand region
-(bk/install-maybe 'ace-jump-mode)
-(bk/install-maybe 'fix-word)
-(bk/install-maybe 'jump-char)
-
 (use-package expand-region
   :ensure t
   :init
   (setq expand-region-fast-keys-enabled nil))
 
 (use-package multiple-cursors :ensure t)
+(use-package ace-jump-mode :ensure t)
+(use-package fix-word :ensure t)
 
 ;; auto fill
 (auto-fill-mode +1)

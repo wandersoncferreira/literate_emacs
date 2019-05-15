@@ -32,20 +32,9 @@
    (not (set-frame-font "Liberation Mono 15"))
    (not (set-frame-font "Ubuntu Mono 15"))))
 
-(if (eq window-system 'ns)
-    (toggle-frame-maximized)
-  (toggle-frame-fullscreen))
-
 ;; fringe
 (fringe-mode '(8 . 0))
 (setq-default indicate-buffer-boundaries 'left)
-
-;;; displays ugly form feed characters as tidy horizontal lines
-(use-package page-break-lines
-  :ensure t
-  :demand t
-  :config
-  (global-page-break-lines-mode 1))
 
 (use-package which-key
   :ensure t

@@ -10,7 +10,8 @@
   :ensure t
   :init
   (setq magit-no-confirm '(stage-all-changes
-                           unstage-all-changes)))
+                           unstage-all-changes))
+  (setq magit-completing-read-function 'magit-ido-completing-read))
 
 (add-to-list 'auto-mode-alist '("\\.gitconfig$" . gitconfig-mode))
 (add-to-list 'auto-mode-alist '("\\.gitignore$" . gitignore-mode))

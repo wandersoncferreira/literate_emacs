@@ -40,17 +40,17 @@
   (package-install 'diminish))
 
 
-(bk/install-maybe 'dash)
-(require 'dash)
+(use-package dash :ensure t)
 
-;;; automatically updates installed packages if at least `auto-package-update-interval' days have passed
-(bk/install-maybe 'auto-package-update)
-(require 'auto-package-update)
-(setq auto-package-update-interval 7
-      auto-package-update-prompt-before-update t
-      auto-package-update-delete-old-versions t
-      auto-package-update-hide-results t)
-(auto-package-update-maybe)
+(use-package auto-package-update
+  :ensure t
+  :init
+  (setq auto-package-update-interval 7
+        auto-package-update-prompt-before-update t
+        auto-package-update-delete-old-versions t
+        auto-package-update-hide-results t)
+  :config
+  (auto-package-update-maybe))
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

@@ -1,6 +1,4 @@
-;; -*- coding: utf-8; lexical-binding: t; -*-
-
-;;; setup-buffers --- Specific settings for buffers only
+;;; setup-buffers --- Specific settings for buffers only -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;; Maybe it's time to split my settings to be more specific about its behavior
