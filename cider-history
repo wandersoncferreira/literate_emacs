@@ -2,4 +2,4 @@
 ;; Automatically written history of CIDER REPL session
 ;; Edit at your own risk
 
-("qualified-ident?")
+("(go)" "(reset)" "(go)" "(reset)" "(go)" "(stop)" "(start)" "(reset)" "(stop)" "(refresh-all)" "(refresh)" "(start)" "(stop)" "(start)" "(refresh)" "(refresh-all)" "(stop)" "(start)" "(refresh)" "(refresh-all)" "(refresh)" "(require '[clojure.tools.namespace.repl :refer [refresh]])" "(use 'user :reload-all)" "(use user :reload-all)" "(stop)" "(start)" "(stop)" "(start)" "qualified-ident?")

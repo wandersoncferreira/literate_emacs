@@ -1,22 +1,22 @@
 
 ;; ----- amx-history -----
 (
- paredit-mode
- jump-char-forward
- eshell
+ cquit
+ customize-group
+ cider-ns-refresh
+ cider-ns-reload-all
  just-one-space
- magit-status
- bk/rgrep-fullscreen
+ paredit-mode
  quickrun
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 123)
+ (cquit . 143)
  (windresize . 24)
  (emacs-uptime . 6)
  (package-delete . 1)
- (package-install . 98)
+ (package-install . 100)
  (pomodoro-start . 2)
  (pomodoro-resume . 3)
  (pomodoro-stop . 2)
@@ -50,13 +50,13 @@
  (cider-jack-in-clojurescript . 1)
  (racket-mode . 1)
  (markdown-live-preview-mode . 8)
- (quickrun . 210)
+ (quickrun . 264)
  (git-timemachine . 8)
  (esup . 21)
  (show-paren-mode . 1)
  (electric-operator-mode . 3)
- (elpy-enable . 2)
- (elpy-mode . 1)
+ (elpy-enable . 4)
+ (elpy-mode . 2)
  (python-pytest-popup . 1)
  (yas-minor-mode . 2)
  (yas-expand . 1)
@@ -91,7 +91,7 @@
  (company-box-mode . 1)
  (ns-popup-font-panel . 2)
  (customize . 1)
- (customize-group . 5)
+ (customize-group . 7)
  (company-quickhelp-mode . 1)
  (spotlight-fast . 5)
  (rotate-window . 1)
@@ -114,7 +114,7 @@
  (webpaste-paste-region . 11)
  (global-hungry-delete-mode . 6)
  (cycle-spacing . 16)
- (just-one-space . 31)
+ (just-one-space . 37)
  (imgbb-upload . 1)
  (wiki-summary . 4)
  (ido-mode . 1)
@@ -169,9 +169,9 @@
  (bk/spell-buffer-pt-BR . 6)
  (flyspell-mode . 5)
  (customize-face . 2)
- (wgrep-change-to-wgrep-mode . 22)
- (wgrep-save-all-buffers . 25)
- (wgrep-finish-edit . 21)
+ (wgrep-change-to-wgrep-mode . 25)
+ (wgrep-save-all-buffers . 28)
+ (wgrep-finish-edit . 27)
  (pyimport-insert-missing . 1)
  (camcorder-record . 1)
  (giffy . 1)
@@ -193,10 +193,10 @@
  (emacs-lisp-mode . 3)
  (gitconfig-mode . 1)
  (elpy-check . 1)
- (elpy-config . 6)
+ (elpy-config . 7)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
- (bk/rgrep-fullscreen . 25)
+ (bk/rgrep-fullscreen . 38)
  (whitespace-mode . 2)
  (getenv . 4)
  (compile . 4)
@@ -207,7 +207,7 @@
  (find-file-in-current-directory . 1)
  (projectile-find-file-in-directory . 5)
  (bk/normalize-buffer . 2)
- (paredit-mode . 20)
+ (paredit-mode . 36)
  (global-whitespace-mode . 14)
  (ffip-diff-find-file . 1)
  (projectile-test-project . 1)
@@ -315,4 +315,10 @@
  (magit . 2)
  (magit-status . 2)
  (paredit . 1)
+ (erc . 1)
+ (transpose-words . 2)
+ (yank-pop . 1)
+ (cider-load-all-project-ns . 10)
+ (cider-ns-reload-all . 3)
+ (cider-ns-refresh . 2)
 )

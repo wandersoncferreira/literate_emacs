@@ -10,6 +10,8 @@
 ;; garbage-collect on focus-out, emacs should feel snappier
 (add-hook 'focus-out-hook #'garbage-collect)
 
+(windmove-default-keybindings)
+
 (defun push-mark-no-activate ()
   "Sometimes you just want to explicitly set a mark into one place.
 so you can get back to it later with `pop-to-mark-command'"

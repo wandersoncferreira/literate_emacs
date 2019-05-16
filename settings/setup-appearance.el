@@ -22,19 +22,14 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-;;; theme
-(use-package rebecca-theme
-  :ensure t
-  :config
-  (load-theme 'rebecca t)
-  (or-protected
-   (not (set-frame-font "Monaco 15"))
-   (not (set-frame-font "Liberation Mono 15"))
-   (not (set-frame-font "Ubuntu Mono 15"))))
+(use-package rebecca-theme :ensure t)
+(use-package zenburn-theme :ensure t)
 
-;; fringe
-(fringe-mode '(8 . 0))
-(setq-default indicate-buffer-boundaries 'left)
+(load-theme 'rebecca t)
+(or-protected
+ (not (set-frame-font "Monaco 15"))
+ (not (set-frame-font "Liberation Mono 15"))
+ (not (set-frame-font "Ubuntu Mono 15")))
 
 (use-package which-key
   :ensure t

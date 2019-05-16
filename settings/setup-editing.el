@@ -22,12 +22,5 @@
              nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
                     1 font-lock-warning-face t)))))
 
-(add-hook 'prog-mode-hook #'hs-minor-mode)
-
-;;; DEL during isearch should edit the search string, not jump back to the previous result.
-(eval-after-load 'isearch
-  '(define-key isearch-mode-map [remap isearch-delete-char] 'isearch-del-char))
-
-
 (provide 'setup-editing)
 ;;; setup-editing.el ends here
