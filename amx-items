@@ -1,30 +1,30 @@
 
 ;; ----- amx-history -----
 (
- cquit
- customize-group
- cider-ns-refresh
- cider-ns-reload-all
- just-one-space
- paredit-mode
+ server-start
+ windresize
+ webpaste-paste-region
  quickrun
+ bk/rgrep-fullscreen
+ eshell
+ package-install
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 143)
- (windresize . 24)
+ (cquit . 193)
+ (windresize . 27)
  (emacs-uptime . 6)
  (package-delete . 1)
- (package-install . 100)
+ (package-install . 101)
  (pomodoro-start . 2)
  (pomodoro-resume . 3)
  (pomodoro-stop . 2)
  (org-pomodoro . 1)
  (minions-mode . 1)
  (tomatinho . 1)
- (ctest . 2)
- (cider-test-run-ns-tests . 1)
+ (ctest . 5)
+ (cider-test-run-ns-tests . 4)
  (rgrep-fullscreen . 44)
  (print-buffer . 1)
  (rgrep . 8)
@@ -38,7 +38,7 @@
  (org-mode . 3)
  (typescript-mode . 1)
  (load-theme . 74)
- (eshell . 4)
+ (eshell . 6)
  (neotree . 2)
  (neotree-toggle . 7)
  (tide-mode . 2)
@@ -50,9 +50,9 @@
  (cider-jack-in-clojurescript . 1)
  (racket-mode . 1)
  (markdown-live-preview-mode . 8)
- (quickrun . 264)
+ (quickrun . 268)
  (git-timemachine . 8)
- (esup . 21)
+ (esup . 22)
  (show-paren-mode . 1)
  (electric-operator-mode . 3)
  (elpy-enable . 4)
@@ -66,7 +66,7 @@
  (helm-spotify-plus-next . 6)
  (browse-at-remote . 9)
  (toggle-truncate-lines . 5)
- (magit-ediff-resolve . 30)
+ (magit-ediff-resolve . 37)
  (pydoc . 9)
  (pydoc-mode . 2)
  (Info-help . 1)
@@ -111,10 +111,10 @@
  (undo-tree-redo . 5)
  (undo-tree-visualize . 1)
  (helm-undo-yank-text-at-point . 1)
- (webpaste-paste-region . 11)
+ (webpaste-paste-region . 12)
  (global-hungry-delete-mode . 6)
  (cycle-spacing . 16)
- (just-one-space . 37)
+ (just-one-space . 48)
  (imgbb-upload . 1)
  (wiki-summary . 4)
  (ido-mode . 1)
@@ -196,7 +196,7 @@
  (elpy-config . 7)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
- (bk/rgrep-fullscreen . 38)
+ (bk/rgrep-fullscreen . 48)
  (whitespace-mode . 2)
  (getenv . 4)
  (compile . 4)
@@ -207,7 +207,7 @@
  (find-file-in-current-directory . 1)
  (projectile-find-file-in-directory . 5)
  (bk/normalize-buffer . 2)
- (paredit-mode . 36)
+ (paredit-mode . 43)
  (global-whitespace-mode . 14)
  (ffip-diff-find-file . 1)
  (projectile-test-project . 1)
@@ -321,4 +321,12 @@
  (cider-load-all-project-ns . 10)
  (cider-ns-reload-all . 3)
  (cider-ns-refresh . 2)
+ (ansi-term . 1)
+ (auto-revert-mode . 1)
+ (cider-test-run-project-tests . 3)
+ (cider-test-run-test . 1)
+ (cider-restart . 1)
+ (cider-test-run-loaded-tests . 1)
+ (cljr-add-missing-libspec . 1)
+ (server-start . 1)
 )

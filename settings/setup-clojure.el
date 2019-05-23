@@ -22,6 +22,10 @@
         cider-prompt-for-symbol nil
         cider-repl-history-size 3000
         nrepl-hide-special-buffers nil)
+  (setq cider-print-options
+        '(("length" 80)
+          ("level" 20)
+          ("right-margin" 80)))
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'clojure-mode-hook #'cider-mode))
@@ -44,12 +48,24 @@
   :ensure t
   :init
   (setq cljr-favor-prefix-notation nil
-        cljr-favor-private-functions nil)
+        cljr-favor-private-functions nil
+        cljr-clojure-test-declaration
+        "[clojure.test :refer [deftest is testing]]")
+  
+  (setq cljr-magic-require-namespaces
+        '(("io" . "clojure.java.io")
+          ("set" . "clojure.set")
+          ("s" . "clojure.string")
+          ("walk" . "clojure.walk")
+          ("time" . "clj-time.core")
+          ("log" . "clojure.tools.logging")
+          ("json" . "cheshire.core")))
   :config
   (defun my-clojure-mode-hook ()
     "Activate the refactor library."
     (clj-refactor-mode +1)
     (cljr-add-keybindings-with-prefix "C-c C-m"))
+  (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
   (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
 
 

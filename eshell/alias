@@ -10,3 +10,5 @@ alias prodpython DBNENV=production python $1
 alias devpython DBNENV=development python $1
 alias gsm git submodule add $1
 alias ll ls -l
+alias k kubectl $*
+alias kg kubectl get pods -n $1

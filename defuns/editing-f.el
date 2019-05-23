@@ -172,6 +172,11 @@ in FILES and DIR without CONFIRM."
         (insert (elt kill-ring 1)))
       (ediff-buffers a b))))
 
+(defun get-first-two-words (sentence)
+  "Get first two words of a sentence concatenating by dash."
+  (let ((dados (split-string sentence "-")))
+    (concat (car dados) "-" (car (cdr dados)))))
 
 (provide 'editing-f)
 ;;; editing-f.el ends here
+
