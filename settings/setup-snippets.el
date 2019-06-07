@@ -7,22 +7,29 @@
 
 ;;; Code:
 
+(use-package yasnippet
+  :ensure t
+  :init
+  (setq yas-prompt-functions '(yas-ido-prompt yas-completing-prompt)
+        yas-verbosity 1
+        yas-wrap-around-region t)
+  :config
+  (yas-global-mode 1)
+  :bind (
+         :map yas-keymap
+         ("C-e" . yas/goto-end-of-active-field)
+         ("C-a" . yas/goto-start-of-active-field)
+         ("<return>" . yas-exit-all-snippets)
+         :map yas-minor-mode-map
+         ("TAB" . nil)
+         ("<tab>" . nil)
+         ("C-M-<return>" . yas-expand)))
 
-(bk/install-maybe 'yasnippet)
-(bk/install-maybe 'yasnippet-snippets)
-(bk/install-maybe 'clojure-snippets)
-(bk/install-maybe 'react-snippets)
-(bk/install-maybe 'go-snippets)
+(use-package yasnippet-snippets :ensure t)
+(use-package clojure-snippets :ensure t)
+(use-package go-snippets :ensure t)
+(use-package react-snippets :ensure t)
 
-(require 'yasnippet)
-
-(yas-global-mode 1)
-
-(require 'yasnippet-snippets)
-(require 'clojure-snippets)
-(require 'react-snippets)
-
-;; inter-field navigation
 (defun yas/goto-end-of-active-field ()
   "Go to the end of the active field."
   (interactive)
@@ -40,24 +47,6 @@
     (if (= (point) position)
         (move-beginning-of-line 1)
       (goto-char position))))
-
-(define-key yas-keymap (kbd "C-e") 'yas/goto-end-of-active-field)
-(define-key yas-keymap (kbd "C-a") 'yas/goto-start-of-active-field)
-
-;; jump to end of snippet definition
-(define-key yas-keymap (kbd "<return>") 'yas-exit-all-snippets)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "C-M-<return>") 'yas-expand)
-
-
-(setq yas-prompt-functions '(yas-ido-prompt yas-completing-prompt))
-(setq yas-verbosity 1)
-(setq yas-wrap-around-region t)
-
-
-;;; auto-yasnippet
-(bk/install-maybe 'auto-yasnippet)
 
 
 (provide 'setup-snippets)

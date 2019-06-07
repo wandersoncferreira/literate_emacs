@@ -68,6 +68,16 @@
   (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
   (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
 
+(defun fabrik-reset ()
+  "Reset `lacinia' GraphQL server."
+  (interactive)
+  (cider-insert-in-repl "(reset)" 't))
+
+(defun fabrik-refresh ()
+  "Refresh all namespaces of my project."
+  (interactive)
+  (cider-insert-in-repl "(refresh-all)" 't))
+
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here

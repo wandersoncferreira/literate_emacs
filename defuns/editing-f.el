@@ -172,10 +172,27 @@ in FILES and DIR without CONFIRM."
         (insert (elt kill-ring 1)))
       (ediff-buffers a b))))
 
-(defun get-first-two-words (sentence)
-  "Get first two words of a sentence concatenating by dash."
-  (let ((dados (split-string sentence "-")))
-    (concat (car dados) "-" (car (cdr dados)))))
+(defun eshell/kg (&rest args)
+  "Find status of pods in ARGS."
+  (let* ((env (car args)))
+    (with-current-buffer "*eshell*"
+      (insert "kubectl get pods -n " env)
+      (eshell-send-input))))
+
+(defun get-pod-name (pod env)
+  "Get POD name from correct ENV."
+  (let ((res (eshell-command-result (concat "kubectl get pods -n " env))))
+    (string-match (concat pod ".*") res 0)
+    (car (split-string (match-string 0 res) " "))))
+
+(defun eshell/kl (&rest args)
+  "Get logs from PODS and ENVS in ARGS."
+  (let* ((pod (car args))
+         (env (car (cdr args)))
+         (pod-name (get-pod-name pod env)))
+    (with-current-buffer "*eshell*"
+      (insert "kubectl logs -n " env " " pod-name " " pod "-" env " -f")
+      (eshell-send-input))))
 
 (provide 'editing-f)
 ;;; editing-f.el ends here

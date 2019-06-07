@@ -69,6 +69,7 @@
 (require 'setup-markdown)
 
 ;;; programming languages
+(require 'setup-sql)
 (require 'setup-clojure)
 (require 'setup-php)
 (require 'setup-go)

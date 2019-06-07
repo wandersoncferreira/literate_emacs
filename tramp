@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <19/05/13 09:24:56 /Users/wandersoncferreira/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <19/05/31 08:52:32 /Users/wandersoncferreira/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -101,4 +101,8 @@
   ("gid-string" "wheel")
   ("uid-integer" 0)
   ("git" "\\git")
-  ("~root" "/var/root")))
+  ("~root" "/var/root"))
+ ((tramp-file-name "ssh" nil nil "35.198.56.31" nil nil nil)
+  nil)
+ ((tramp-file-name "ssh" "ubuntu" nil "52.67.93.224" nil nil nil)
+  nil))

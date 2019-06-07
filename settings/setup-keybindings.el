@@ -73,11 +73,6 @@
 (global-set-key (kbd "C-M-<backspace>") 'kill-back-to-indentation)
 
 
-;;;; ----------- hyper based keys -----------
-(global-set-key (kbd "H-w") #'aya-create)
-(global-set-key (kbd "H-y") #'aya-expand)
-
-
 ;;;; ---------- function keys --------------
 (global-set-key (kbd "<f8>") 'neotree-toggle)
 
@@ -85,8 +80,6 @@
 
 ;;; M-{letter} bindings
 (global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "M-&") 'vr/query-replace)
-(global-set-key (kbd "M-*") 'vr/replace)
 
 (global-set-key (kbd "M-c") #'fix-word-capitalize)
 (global-set-key (kbd "M-i") 'change-inner)
@@ -96,7 +89,6 @@
 (global-set-key (kbd "M-p") 'unhighlight-regexp)
 (global-set-key (kbd "M-u") #'fix-word-upcase)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
-(global-set-key (kbd "M-y") 'popup-kill-ring)
 
 (global-unset-key (kbd "M-t"))
 (global-set-key (kbd "M-g g") 'goto-line-with-feedback)

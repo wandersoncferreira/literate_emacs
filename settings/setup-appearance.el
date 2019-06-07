@@ -23,12 +23,11 @@
       ring-bell-function 'ignore)
 
 (use-package rebecca-theme :ensure t)
-(use-package zenburn-theme :ensure t)
 
 (load-theme 'rebecca t)
 
 (or-protected
- (not (set-frame-font "Monaco 14"))
+ (not (set-frame-font "Monaco 15"))
  (not (set-frame-font "Liberation Mono 15"))
  (not (set-frame-font "Ubuntu Mono 15")))
 
