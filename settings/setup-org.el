@@ -14,9 +14,11 @@
 ;;; Getting Things Done
 (org-babel-load-file "~/.emacs.d/settings/gtd.org")
 
+
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((python . t)))
+ '((python . t)
+   (plantuml . t)))
 
 
 (eval-after-load 'org

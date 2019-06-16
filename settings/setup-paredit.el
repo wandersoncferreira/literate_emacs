@@ -25,8 +25,8 @@
   '(("M-s" "s-s" paredit-splice-sexp)
     ("M-<up>" "s-<up>" paredit-splice-sexp-killing-backward)
     ("M-<down>" "s-<down>" paredit-splice-sexp-killing-forward)
-    ("C-<right>" "s-<right>" paredit-forward-slurp-sexp)
-    ("C-<left>" "s-<left>" paredit-forward-barf-sexp)
+    ("C-<right>" "M-<right>" paredit-forward-slurp-sexp)
+    ("C-<left>" "M-<left>" paredit-forward-barf-sexp)
     ("C-M-<left>" "s-S-<left>" paredit-backward-slurp-sexp)
     ("C-M-<right>" "s-S-<right>" paredit-backward-barf-sexp)))
 

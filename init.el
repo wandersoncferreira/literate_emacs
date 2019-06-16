@@ -73,10 +73,10 @@
 (require 'setup-clojure)
 (require 'setup-php)
 (require 'setup-go)
-
-(eval-after-load "python" '(require 'setup-python))
-(eval-after-load "js" '(require 'setup-javascript))
-(eval-after-load "tex" '(require 'setup-latex))
+(require 'setup-python)
+(require 'setup-javascript)
+(require 'setup-latex)
+(require 'setup-pdf)
 
 (defalias 're 'restart-emacs)
 (defalias 'cquit 'cider-quit)

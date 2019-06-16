@@ -22,7 +22,6 @@
     (bartuka-mode . "")
     (beginend-prog-mode . "")
     (hardcore-mode . "")
-    (which-key-mode . "")
     (page-break-lines-mode . "")
     (whitespace-mode . "")
     (hs-minor-mode . ""))

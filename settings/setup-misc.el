@@ -15,6 +15,9 @@
 (bk/install-maybe 'dotenv-mode)
 (bk/install-maybe 'discover-my-major)
 
+(use-package plantuml-mode
+  :ensure t)
+
 (use-package change-inner :ensure t)
 (use-package wgrep :ensure t)
 (use-package vlf :ensure t)

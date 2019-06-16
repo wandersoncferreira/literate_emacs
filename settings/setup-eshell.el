@@ -43,8 +43,7 @@
 (add-hook 'eshell-mode-hook #'abbrev-mode)
 (add-hook 'eshell-mode-hook (lambda ()
                               (yas-global-mode -1)
-                              (yas-minor-mode -1)
-                              (which-key-mode -1)))
+                              (yas-minor-mode -1)))
 
 (provide 'setup-eshell)
 ;;; setup-eshell.el ends here

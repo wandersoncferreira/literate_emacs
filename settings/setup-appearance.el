@@ -22,20 +22,11 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-(use-package rebecca-theme :ensure t)
-
-(load-theme 'rebecca t)
-
 (or-protected
  (not (set-frame-font "Monaco 15"))
- (not (set-frame-font "Liberation Mono 15"))
- (not (set-frame-font "Ubuntu Mono 15")))
+ (not (set-frame-font "Inconsolata 12")))
 
-(use-package which-key
-  :ensure t
-  :diminish which-key-mode
-  :config
-  (which-key-mode +1))
+(load-theme 'leuven t)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

@@ -5,10 +5,16 @@
 
 ;;; Code:
 
-(bk/install-maybe 'auctex)
+(use-package tex-site
+  :ensure auctex
+  :config
+  (setq TeX-view-program-selection '())
+  (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools")))
 
-(require 'tex)
-(require 'tex-buf)
+(use-package reftex
+  :ensure t
+  :config
+  (setq reftex-cite-prompt-optional-args t))
 
 (setq TeX-auto-save t
       TeX-parse-self t
