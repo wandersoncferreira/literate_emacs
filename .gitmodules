@@ -1,18 +1,3 @@
 [submodule "maintainer/helm-spotify-plus"]
 	path = maintainer/helm-spotify-plus
 	url = https://github.com/wandersoncferreira/helm-spotify-plus
-[submodule "third-party/emacs-bash-completion"]
-	path = third-party/emacs-bash-completion
-	url = https://github.com/szermatt/emacs-bash-completion
-[submodule "third-party/ipinfo.el"]
-	path = third-party/ipinfo.el
-	url = https://github.com/dakra/ipinfo.el
-[submodule "third-party/resurrect"]
-	path = third-party/resurrect
-	url = https://github.com/fbkante/resurrect
-[submodule "third-party/mcfly"]
-	path = third-party/mcfly
-	url = https://github.com/with-emacs/mcfly
-[submodule "third-party/awesome-pair"]
-	path = third-party/awesome-pair
-	url = https://github.com/manateelazycat/awesome-pair
