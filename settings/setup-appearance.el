@@ -22,11 +22,12 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-(or-protected
- (not (set-frame-font "Monaco 15"))
- (not (set-frame-font "Inconsolata 12")))
-
-(load-theme 'leuven t)
+(use-package rebecca-theme
+  :ensure t
+  :config
+  (or-protected
+   (not (set-frame-font "Source Code Pro 14"))
+   (not (set-frame-font "Inconsolata 12"))))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
+ explain-shell
+ cljr-add-missing-libspec
  bk/sudo-edit
  hs-minor-mode
  auto-revert-mode
- windresize
- latex-preview-update
- quickrun
  package-install
+ quickrun
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 279)
+ (cquit . 282)
  (windresize . 29)
  (emacs-uptime . 6)
  (package-delete . 1)
@@ -263,7 +263,7 @@
  (which-key-mode . 1)
  (cljr-add-project-dependency . 1)
  (finder-by-keyword . 1)
- (explain-shell . 2)
+ (explain-shell . 3)
  (keep-lines . 1)
  (org-todo . 27)
  (guru-global-mode . 3)
@@ -327,7 +327,7 @@
  (cider-test-run-test . 1)
  (cider-restart . 1)
  (cider-test-run-loaded-tests . 1)
- (cljr-add-missing-libspec . 1)
+ (cljr-add-missing-libspec . 2)
  (server-start . 2)
  (version . 1)
  (inferior-lisp . 2)
@@ -348,5 +348,5 @@
  (latex-preview-update . 1)
  (hs-hide-block . 1)
  (hs-hide-level . 1)
- (latex-insert-block . 12)
+ (latex-insert-block . 24)
 )

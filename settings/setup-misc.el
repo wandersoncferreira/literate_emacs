@@ -11,7 +11,6 @@
 (bk/install-maybe 'quickrun)
 (bk/install-maybe 'windresize)
 (bk/install-maybe 'rotate)
-(bk/install-maybe 'keycast)
 (bk/install-maybe 'dotenv-mode)
 (bk/install-maybe 'discover-my-major)
 

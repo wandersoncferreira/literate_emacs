@@ -2,15 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;;###autoload
-(defun open-line-below ()
-  "Create a new line below the cursor."
-  (interactive)
-  (end-of-line)
-  (newline)
-  (indent-for-tab-command))
-
-;;;###autoload
 (defun goto-line-with-feedback ()
   "Show line numbers when `goto-line' is pressed."
   (interactive)
@@ -20,7 +11,6 @@
         (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
 
-;;;###autoload
 (defun comment-kill-all ()
   "Function to kill all comments in a buffer."
   (interactive)
@@ -45,15 +35,6 @@
            (goto-char (elt ppss 8))
            (sanityinc/backward-up-sexp (1- arg)))
           ((backward-up-list arg)))))
-
-;;;###autoload
-(defun open-line-above ()
-  "Create a new line above the cursor."
-  (interactive)
-  (beginning-of-line)
-  (newline)
-  (forward-line -1)
-  (indent-for-tab-command))
 
 ;;;###autoload
 (defun me/date-iso ()
@@ -116,8 +97,6 @@
       (bk/remove-python-print-statements)))
   (message "All occurrences of the print statement were removed!"))
 
-
-;;;###autoload
 (defun bk/rgrep-fullscreen (regexp &optional files dir confirm)
   "Open grep in full screen, saving windows and searching for REGEXP.
 in FILES and DIR without CONFIRM."
@@ -136,14 +115,12 @@ in FILES and DIR without CONFIRM."
   (delete-other-windows)
   (goto-char (point-min)))
 
-;;;###autoload
 (defun rgrep-quit-window ()
   "Simply jump to the register where all your windows are."
   (interactive)
   (kill-buffer)
   (jump-to-register ?$))
 
-;;;###autoload
 (defun rgrep-goto-file-and-close-rgrep ()
   "Go to file and close rgrep window."
   (interactive)
@@ -151,26 +128,6 @@ in FILES and DIR without CONFIRM."
   (kill-buffer "*grep*")
   (delete-other-windows)
   (message "Type C-x r j $ to return to pre-rgrep windows."))
-
-
-(defun bk/diff-last-2-yanks ()
-  "Run ediff on latest two entries in `kill-ring'."
-  (interactive)
-  ;; implementation depends on `lexical-binding' being t, otherwise
-  ;; #'clean-up will not be saved as closure to `ediff-cleanup-hook'
-  (let ((a (generate-new-buffer "*diff-yank*"))
-        (b (generate-new-buffer "*diff-yank*")))
-    (cl-labels ((clean-up ()
-                          (kill-buffer a)
-                          (kill-buffer b)
-                          (remove-hook 'ediff-cleanup-hook #'clean-up)
-                          (winner-undo)))
-      (add-hook 'ediff-cleanup-hook #'clean-up)
-      (with-current-buffer a
-        (insert (elt kill-ring 0)))
-      (with-current-buffer b
-        (insert (elt kill-ring 1)))
-      (ediff-buffers a b))))
 
 (defun eshell/kg (&rest args)
   "Find status of pods in ARGS."
