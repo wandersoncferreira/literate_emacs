@@ -2,8 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe 'dired-collapse)
-
+(use-package dired-collapse :ensure t)
 (require 'dired-x)
 (require 'dired)
 (require 'wdired)

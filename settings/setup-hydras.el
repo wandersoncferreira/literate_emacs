@@ -5,8 +5,7 @@
 
 ;;; Code:
 
-(bk/install-maybe 'hydra)
-
+(use-package hydra :ensure t)
 (defconst hydras-dir (expand-file-name "hydras" user-emacs-directory))
 (dolist (file (directory-files hydras-dir t "\\w+"))
   (when (file-regular-p file)

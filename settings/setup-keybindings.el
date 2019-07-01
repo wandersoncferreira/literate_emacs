@@ -117,7 +117,7 @@
 (set-register ?h '(file . "~/emacs-notes/7habits-effective-editing.org"))
 
 ;;; move lines
-(bk/install-maybe 'move-dup)
+(use-package move-dup :ensure t)
 (global-set-key [M-up] 'md/move-lines-up)
 (global-set-key [M-down] 'md/move-lines-down)
 (global-set-key [C-M-down] 'md/duplicate-down)

@@ -2,10 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-(bk/install-maybe 'browse-at-remote)
-(bk/install-maybe 'gitconfig-mode)
-(bk/install-maybe 'diff-hl)
-
+(use-package browse-at-remote :ensure t)
+(use-package gitconfig-mode :ensure t)
+(use-package diff-hl :ensure t)
 (use-package magit
   :ensure t
   :init

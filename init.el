@@ -7,6 +7,13 @@
 
 ;;; Code:
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
       (init-gc-cons-threshold (* 128 1024 1024))
       (bk--file-name-handler-alist file-name-handler-alist))
@@ -30,8 +37,6 @@
   (when (file-regular-p file)
     (load file)))
 
-(load-packages-from-folder "third-party")
-
 (require 'setup-package)
 (require 'setup-appearance)
 (require 'setup-defaults)
@@ -47,9 +52,11 @@
 (when init-osx?
   (require 'setup-mac))
 
-(bk/install-maybe 'exec-path-from-shell)
-(exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
-(exec-path-from-shell-initialize)
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
+  (exec-path-from-shell-initialize))
 
 (require 'setup-smex)
 (require 'setup-projectile)
@@ -70,10 +77,7 @@
 ;;; programming languages
 (require 'setup-sql)
 (require 'setup-clojure)
-(require 'setup-php)
-(require 'setup-go)
 (require 'setup-python)
-(require 'setup-javascript)
 (require 'setup-latex)
 (require 'setup-pdf)
 

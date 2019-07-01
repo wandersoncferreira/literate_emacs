@@ -4,19 +4,15 @@
 ;;; Code:
 
 ;;; install only packages
-(bk/install-maybe 'htmlize)
-(bk/install-maybe 'restclient)
-(bk/install-maybe 'yaml-mode)
-(bk/install-maybe 'graphviz-dot-mode)
-(bk/install-maybe 'quickrun)
-(bk/install-maybe 'windresize)
-(bk/install-maybe 'rotate)
-(bk/install-maybe 'dotenv-mode)
-(bk/install-maybe 'discover-my-major)
-
-(use-package plantuml-mode
-  :ensure t)
-
+(use-package htmlize :ensure t)
+(use-package restclient :ensure t)
+(use-package yaml-mode :ensure t)
+(use-package graphviz-dot-mode :ensure t)
+(use-package quickrun :ensure t)
+(use-package windresize :ensure t)
+(use-package rotate :ensure t)
+(use-package discover-my-major :ensure t)
+(use-package plantuml-mode :ensure t)
 (use-package change-inner :ensure t)
 (use-package wgrep :ensure t)
 (use-package vlf :ensure t)

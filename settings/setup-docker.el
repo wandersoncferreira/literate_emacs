@@ -5,12 +5,10 @@
 
 ;;; Code:
 
-(bk/install-maybe 'dockerfile-mode)
-(bk/install-maybe 'docker)
-(bk/install-maybe 'docker-compose-mode)
 
-(require 'docker)
-(require 'docker-tramp-compat)
+(use-package dockerfile-mode :ensure t)
+(use-package docker :ensure t)
+(use-package docker-compose-mode :ensure t)
 
 ;; open files in Docker containers
 (push

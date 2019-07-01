@@ -92,7 +92,7 @@
   (interactive)
   (goto-char (point-min))
   (save-excursion
-    (when (re-search-forward "^\s+print")
+    (when (re-search-forward "^\s+print")  
       (kill-whole-line)
       (bk/remove-python-print-statements)))
   (message "All occurrences of the print statement were removed!"))

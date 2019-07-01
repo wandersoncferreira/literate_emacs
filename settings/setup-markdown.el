@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(bk/install-maybe 'markdown-mode)
+(use-package markdown-mode :ensure t)
 (setq auto-mode-alist
       (cons '("\\.\\(m[k]d\\|markdown\\)\\'" . markdown-mode) auto-mode-alist))
 

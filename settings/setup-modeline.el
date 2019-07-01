@@ -69,6 +69,7 @@ Return `default-directory' if no project was found."
   "Get the column of the position `POS'."
   (save-excursion (goto-char pos)
                   (current-column)))
+
 (defun selection-info()
   "Information about the current selection."
   (when mark-active

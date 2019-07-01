@@ -20,27 +20,12 @@
 
 (package-initialize)
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-(defun bk/install-maybe (package &optional min-version no-refresh)
-  "Function to install a PACKAGE if not already present."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (package-install package)
-      (progn
-        (package-refresh-contents)
-        (bk/install-maybe package min-version t)))))
-
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package)
   (package-install 'diminish))
 
-
 (use-package dash :ensure t)
-
 (use-package auto-package-update
   :ensure t
   :init
