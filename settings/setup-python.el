@@ -10,10 +10,6 @@
   (delete `elpy-module-django elpy-modules)
   (delete `elpy-module-highlight-indentation elpy-modules))
 
-(use-package electric-operator
-  :ensure t
-  :hook (python-mode . electric-operator))
-
 (use-package py-autopep8
   :ensure t
   :init

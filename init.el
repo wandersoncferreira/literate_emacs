@@ -91,8 +91,6 @@
 (unless (server-running-p)
   (server-start))
 
-(load-file "~/.emacs.d/bk-after-init.el")
-
 ;; variables configured via the interactive `customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
