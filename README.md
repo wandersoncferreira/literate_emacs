@@ -13,6 +13,18 @@ git clone https://github.com/wandersoncferreira/dotfiles
 ln -s dotfiles ~/.emacs.d
 ```
 
+## installing external dependencies
+
+### Python
+
+In order to `Elpy` to work properly. You have to install the following Python packages:
+```python
+pip install jedi rope autopep8 yapf black flake8
+```
+
+You can check if everything went fine by running `M-x elpy-config`
+
+
 # features
 
 There are settings to handle a bunch of situations for a programmer. However, what can really make some difference on your daily usage is to be familiar with the `custom keybindings` that were added into the project.

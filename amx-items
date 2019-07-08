@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ elpy-config
  set-fill-column
  package-refresh-contents
  cquit
  shell
  evil-mode
  package-install
- help-for-help
 )
 
 ;; ----- amx-data -----
@@ -193,7 +193,7 @@
  (emacs-lisp-mode . 3)
  (gitconfig-mode . 1)
  (elpy-check . 1)
- (elpy-config . 8)
+ (elpy-config . 9)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
  (bk/rgrep-fullscreen . 71)
