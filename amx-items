@@ -1,18 +1,18 @@
 
 ;; ----- amx-history -----
 (
+ set-fill-column
+ package-refresh-contents
+ cquit
+ shell
  evil-mode
  package-install
  help-for-help
- load-theme
- quickrun
- shell
- bk/rgrep-fullscreen
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 335)
+ (cquit . 338)
  (windresize . 29)
  (emacs-uptime . 6)
  (package-delete . 1)
@@ -32,7 +32,7 @@
  (magit-blame . 9)
  (bk/rename-current-buffer-file . 5)
  (menu-set-font . 4)
- (shell . 26)
+ (shell . 27)
  (restclient-mode . 11)
  (json-mode . 16)
  (org-mode . 3)
@@ -43,7 +43,7 @@
  (neotree-toggle . 7)
  (tide-mode . 2)
  (fish-mode . 1)
- (package-refresh-contents . 44)
+ (package-refresh-contents . 45)
  (fish-completion-mode . 1)
  (speedbar . 2)
  (md/move-lines-up . 4)
@@ -334,7 +334,7 @@
  (cider-repl-tab . 1)
  (cider-repl-return . 1)
  (cljr-clean-ns . 2)
- (set-fill-column . 7)
+ (set-fill-column . 8)
  (emacsql-show-last-sql . 1)
  (sqlformat . 3)
  (fabrik-refresh . 13)

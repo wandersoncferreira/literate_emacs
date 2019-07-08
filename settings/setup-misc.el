@@ -21,5 +21,8 @@
   :config
   (setq webpaste-provider-priority '("dpaste.de")))
 
+(use-package helm-spotify-plus
+  :ensure t)
+
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

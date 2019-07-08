@@ -11,6 +11,10 @@
       org-confirm-elisp-link-function t
       org-confirm-babel-evaluate nil)
 
+(use-package ox-hugo
+  :ensure t
+  :after ox)
+
 ;;; Getting Things Done
 (org-babel-load-file "~/.emacs.d/settings/gtd.org")
 
