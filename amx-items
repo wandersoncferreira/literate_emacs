@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ global-linum-mode
+ global-hl-line-mode
  flycheck-mode
  linum-mode
- global-hl-line-mode
  dired-collapse-mode
  helm-spotify-plus
  paredit-mode
- bk/uptime-osx
 )
 
 ;; ----- amx-data -----
@@ -125,7 +125,7 @@
  (ivy-explorer-mode . 2)
  (goto-line-preview . 1)
  (linum-mode . 5)
- (global-linum-mode . 3)
+ (global-linum-mode . 4)
  (line-reminder-mode . 5)
  (auto-highlight-symbol-mode . 1)
  (py-autopep8 . 1)
@@ -154,7 +154,7 @@
  (shx . 1)
  (shx-global-mode . 1)
  (company-mode . 8)
- (global-hl-line-mode . 12)
+ (global-hl-line-mode . 13)
  (zoom-frame-in . 1)
  (zoom-frame-out . 1)
  (completion-at-point . 8)

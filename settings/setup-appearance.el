@@ -27,15 +27,5 @@
    (not (set-frame-font "Source Code Pro 14"))
    (not (set-frame-font "Inconsolata 12"))))
 
-;; highlight current line
-(global-hl-line-mode +1)
-
-;; line numbers in the buffer
-(use-package linum
-  :init
-  (setq linum-format " %3d ")
-  :config
-  (global-linum-mode +1))
-
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here
