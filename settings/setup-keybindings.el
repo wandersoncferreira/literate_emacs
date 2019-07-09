@@ -55,7 +55,6 @@
 (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause)
 (global-set-key (kbd "C-c p") 'hydra-projectile/body)
 (global-set-key (kbd "C-c s") 'hydra-system/body)
-(global-set-key (kbd "C-c w") 'google-this-search)
 
 ;;; C-c C-{letter} are reserved for major mode
 (global-set-key (kbd "C-c C-a") 'mc/edit-beginnings-of-lines)

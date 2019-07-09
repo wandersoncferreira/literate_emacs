@@ -1,5 +1,4 @@
-;;; Disable dynamic scopes ---  -*- lexical-binding: t -*- 
-;;; misc --- my miscellaneous
+;;; setup-misc --- Miscellaneous
 ;;; Commentary:
 ;;; Code:
 
@@ -16,13 +15,20 @@
 (use-package change-inner :ensure t)
 (use-package wgrep :ensure t)
 (use-package vlf :ensure t)
+(use-package neotree :ensure t)
+
 (use-package webpaste
   :ensure t
   :config
   (setq webpaste-provider-priority '("dpaste.de")))
 
-(use-package helm-spotify-plus
-  :ensure t)
+(use-package helm-spotify-plus :ensure t)
+
+(use-package aggressive-indent
+  :ensure t
+  :diminish aggressive-indent-mode
+  :config
+  (global-aggressive-indent-mode +1))
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

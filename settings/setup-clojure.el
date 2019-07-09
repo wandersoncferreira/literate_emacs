@@ -49,8 +49,7 @@
   :init
   (setq cljr-favor-prefix-notation nil
         cljr-favor-private-functions nil
-        cljr-clojure-test-declaration
-        "[clojure.test :refer [deftest is testing]]")
+        cljr-clojure-test-declaration "[clojure.test :refer [deftest is testing]]")
   
   (setq cljr-magic-require-namespaces
         '(("io" . "clojure.java.io")

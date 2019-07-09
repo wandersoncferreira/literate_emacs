@@ -1,20 +1,20 @@
 
 ;; ----- amx-history -----
 (
- elpy-config
- set-fill-column
- package-refresh-contents
- cquit
- shell
- evil-mode
- package-install
+ linum-mode
+ global-hl-line-mode
+ dired-collapse-mode
+ helm-spotify-plus
+ paredit-mode
+ bk/uptime-osx
+ emacs-uptime
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 338)
+ (cquit . 345)
  (windresize . 29)
- (emacs-uptime . 6)
+ (emacs-uptime . 8)
  (package-delete . 1)
  (package-install . 105)
  (pomodoro-start . 2)
@@ -37,7 +37,7 @@
  (json-mode . 16)
  (org-mode . 3)
  (typescript-mode . 1)
- (load-theme . 87)
+ (load-theme . 89)
  (eshell . 6)
  (neotree . 2)
  (neotree-toggle . 7)
@@ -50,7 +50,7 @@
  (cider-jack-in-clojurescript . 1)
  (racket-mode . 1)
  (markdown-live-preview-mode . 8)
- (quickrun . 411)
+ (quickrun . 429)
  (git-timemachine . 8)
  (esup . 22)
  (show-paren-mode . 1)
@@ -66,7 +66,7 @@
  (helm-spotify-plus-next . 6)
  (browse-at-remote . 9)
  (toggle-truncate-lines . 5)
- (magit-ediff-resolve . 46)
+ (magit-ediff-resolve . 52)
  (pydoc . 9)
  (pydoc-mode . 2)
  (Info-help . 1)
@@ -78,7 +78,7 @@
  (dired-subtree-toggle . 2)
  (dired-subtree-insert . 1)
  (dired-subtree-remove . 1)
- (dired-collapse-mode . 1)
+ (dired-collapse-mode . 2)
  (dired-quick-sort . 2)
  (ispell-change-dictionary . 9)
  (flyspell-buffer . 17)
@@ -111,7 +111,7 @@
  (undo-tree-redo . 5)
  (undo-tree-visualize . 1)
  (helm-undo-yank-text-at-point . 1)
- (webpaste-paste-region . 14)
+ (webpaste-paste-region . 16)
  (global-hungry-delete-mode . 6)
  (cycle-spacing . 16)
  (just-one-space . 50)
@@ -124,7 +124,7 @@
  (keycast-mode . 12)
  (ivy-explorer-mode . 2)
  (goto-line-preview . 1)
- (linum-mode . 3)
+ (linum-mode . 5)
  (global-linum-mode . 3)
  (line-reminder-mode . 5)
  (auto-highlight-symbol-mode . 1)
@@ -138,10 +138,10 @@
  (lt . 4)
  (torus-add-circle . 1)
  (pop-to-mark-command . 1)
- (bk/uptime-osx . 1)
+ (bk/uptime-osx . 2)
  (kill-grep . 2)
  (flycheck-verify-setup . 14)
- (flycheck-mode . 2)
+ (flycheck-mode . 3)
  (unbury-buffer . 3)
  (bury-buffer . 1)
  (resurrect-file . 2)
@@ -154,7 +154,7 @@
  (shx . 1)
  (shx-global-mode . 1)
  (company-mode . 8)
- (global-hl-line-mode . 11)
+ (global-hl-line-mode . 12)
  (zoom-frame-in . 1)
  (zoom-frame-out . 1)
  (completion-at-point . 8)
@@ -193,7 +193,7 @@
  (emacs-lisp-mode . 3)
  (gitconfig-mode . 1)
  (elpy-check . 1)
- (elpy-config . 9)
+ (elpy-config . 10)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
  (bk/rgrep-fullscreen . 71)
@@ -207,7 +207,7 @@
  (find-file-in-current-directory . 1)
  (projectile-find-file-in-directory . 5)
  (bk/normalize-buffer . 2)
- (paredit-mode . 45)
+ (paredit-mode . 50)
  (global-whitespace-mode . 14)
  (ffip-diff-find-file . 1)
  (projectile-test-project . 1)
@@ -334,7 +334,7 @@
  (cider-repl-tab . 1)
  (cider-repl-return . 1)
  (cljr-clean-ns . 2)
- (set-fill-column . 8)
+ (set-fill-column . 10)
  (emacsql-show-last-sql . 1)
  (sqlformat . 3)
  (fabrik-refresh . 13)
@@ -351,4 +351,6 @@
  (latex-insert-block . 41)
  (bk/improve-occur . 2)
  (help-for-help . 1)
+ (flycheck-clojure-setup . 1)
+ (helm-spotify-plus . 1)
 )

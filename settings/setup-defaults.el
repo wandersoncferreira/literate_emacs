@@ -53,11 +53,17 @@ so you can get back to it later with `pop-to-mark-command'"
 
 (add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)
-(add-hook 'prog-mode-hook 'subword-mode)
+
+
+(use-package subword
+  :diminish subword-mode
+  :config
+  (add-hook 'prog-mode-hook 'subword-mode))
 
 (use-package abbrev
   :hook ((text-mode . abbrev-mode)
          (prog-mode . abbrev-mode))
+  :diminish abbrev-mode
   :init
   (setq save-abbrevs 'silent))
 
@@ -78,10 +84,12 @@ so you can get back to it later with `pop-to-mark-command'"
 
 (put 'erase-buffer 'disabled nil)
 
-(require 'flyspell)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'text-mode-hook 'flyspell-mode)
-(define-key flyspell-mode-map (kbd "C-,") nil)
+(use-package flyspell
+  :diminish flyspell-mode
+  :config
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (define-key flyspell-mode-map (kbd "C-,") nil))
 
 ;; to compare the contents of two test files, use M-x ediff-files.
 ;; open the two files you want to compare.
