@@ -24,11 +24,5 @@
 
 (use-package helm-spotify-plus :ensure t)
 
-(use-package aggressive-indent
-  :ensure t
-  :diminish aggressive-indent-mode
-  :config
-  (global-aggressive-indent-mode +1))
-
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

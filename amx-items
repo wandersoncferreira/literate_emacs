@@ -1,13 +1,13 @@
 
 ;; ----- amx-history -----
 (
+ flycheck-mode
  linum-mode
  global-hl-line-mode
  dired-collapse-mode
  helm-spotify-plus
  paredit-mode
  bk/uptime-osx
- emacs-uptime
 )
 
 ;; ----- amx-data -----
@@ -141,7 +141,7 @@
  (bk/uptime-osx . 2)
  (kill-grep . 2)
  (flycheck-verify-setup . 14)
- (flycheck-mode . 3)
+ (flycheck-mode . 4)
  (unbury-buffer . 3)
  (bury-buffer . 1)
  (resurrect-file . 2)
