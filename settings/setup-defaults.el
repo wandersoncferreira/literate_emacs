@@ -54,7 +54,6 @@ so you can get back to it later with `pop-to-mark-command'"
 (add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)
 
-
 (use-package subword
   :diminish subword-mode
   :config
@@ -66,7 +65,6 @@ so you can get back to it later with `pop-to-mark-command'"
   :diminish abbrev-mode
   :init
   (setq save-abbrevs 'silent))
-
 
 (use-package recentf
   :config

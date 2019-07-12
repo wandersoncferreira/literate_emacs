@@ -5,10 +5,8 @@
 
 ;;; Code:
 
-(bk/install-maybe 'helm)
-(bk/install-maybe 'multi)
-
-(autoload 'helm-spotify-plus "helm-spotify-plus" "Control spotify" t nil)
+(use-package helm-spotify-plus
+  :ensure t)
 
 (provide 'setup-maintainer)
 ;;; setup-maintainer.el ends here

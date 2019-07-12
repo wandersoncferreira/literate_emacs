@@ -5,12 +5,6 @@
 
 ;;; Code:
 
-(defun load-theme--disable-old-theme (theme &rest args)
-  "Disable current THEME before loading new one."
-  (mapcar #'disable-theme custom-enabled-themes))
-
-(advice-add 'load-theme :before #'load-theme--disable-old-theme)
-
 (defadvice magit-status (around magit-fullscreen activate)
   "Advice for magit status to show in fullscreen."
   (window-configuration-to-register :magit-fullscreen)

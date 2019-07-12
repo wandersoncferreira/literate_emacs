@@ -1,22 +1,22 @@
 
 ;; ----- amx-history -----
 (
+ bk/delete-current-buffer-file
+ bk/rgrep-fullscreen
+ magit-blame
+ blink-cursor-mode
+ load-theme
+ package-install
  global-linum-mode
- global-hl-line-mode
- flycheck-mode
- linum-mode
- dired-collapse-mode
- helm-spotify-plus
- paredit-mode
 )
 
 ;; ----- amx-data -----
 (
- (cquit . 345)
+ (cquit . 352)
  (windresize . 29)
  (emacs-uptime . 8)
  (package-delete . 1)
- (package-install . 105)
+ (package-install . 107)
  (pomodoro-start . 2)
  (pomodoro-resume . 3)
  (pomodoro-stop . 2)
@@ -29,7 +29,7 @@
  (print-buffer . 1)
  (rgrep . 9)
  (bk/insert-date . 3)
- (magit-blame . 9)
+ (magit-blame . 10)
  (bk/rename-current-buffer-file . 5)
  (menu-set-font . 4)
  (shell . 27)
@@ -37,7 +37,7 @@
  (json-mode . 16)
  (org-mode . 3)
  (typescript-mode . 1)
- (load-theme . 89)
+ (load-theme . 92)
  (eshell . 6)
  (neotree . 2)
  (neotree-toggle . 7)
@@ -50,7 +50,7 @@
  (cider-jack-in-clojurescript . 1)
  (racket-mode . 1)
  (markdown-live-preview-mode . 8)
- (quickrun . 429)
+ (quickrun . 431)
  (git-timemachine . 8)
  (esup . 22)
  (show-paren-mode . 1)
@@ -86,7 +86,7 @@
  (magit-todos-mode . 1)
  (magit-todos-list . 1)
  (global-prettify-symbols-mode . 2)
- (bk/delete-current-buffer-file . 18)
+ (bk/delete-current-buffer-file . 20)
  (json-pretty-print-buffer . 24)
  (company-box-mode . 1)
  (ns-popup-font-panel . 2)
@@ -196,7 +196,7 @@
  (elpy-config . 10)
  (clean-mode-line . 10)
  (prettify-symbols-mode . 3)
- (bk/rgrep-fullscreen . 71)
+ (bk/rgrep-fullscreen . 72)
  (whitespace-mode . 2)
  (getenv . 5)
  (compile . 4)
@@ -353,4 +353,6 @@
  (help-for-help . 1)
  (flycheck-clojure-setup . 1)
  (helm-spotify-plus . 1)
+ (blink-cursor-mode . 1)
+ (cider-load-buffer . 2)
 )

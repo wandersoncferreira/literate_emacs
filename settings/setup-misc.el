@@ -22,7 +22,19 @@
   :config
   (setq webpaste-provider-priority '("dpaste.de")))
 
-(use-package helm-spotify-plus :ensure t)
+(use-package pdf-tools
+  :ensure t
+  :init
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-annot-activate-created-annotations t)
+  :config
+  (pdf-tools-install)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
+(use-package sqlformat
+  :ensure t
+  :init
+  (setq sqlformat-command 'pgformatter))
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

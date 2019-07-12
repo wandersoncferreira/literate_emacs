@@ -30,6 +30,5 @@
 ;;; delete with c-x c-k to match file buffers and magit
 (define-key dired-mode-map (kbd "C-x C-k") 'dired-do-delete)
 
-
 (provide 'setup-dired)
 ;;; setup-dired.el ends here

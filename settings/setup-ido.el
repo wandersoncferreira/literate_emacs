@@ -15,12 +15,18 @@
   :config
   (ido-mode +1))
 
+(use-package amx
+  :ensure t
+  :init
+  (setq amx-prompt-string "Here be dragons => ")
+  :config
+  (amx-mode))
+
 (use-package ido-completing-read+
   :ensure t
   :after ido
   :config
   (ido-ubiquitous-mode +1))
-
 
 (use-package ido-vertical-mode
   :ensure t

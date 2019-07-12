@@ -148,7 +148,6 @@
 (define-abbrev-table 'global-abbrev-table
   '(
     ("bci" "brew cask install" nil 17)
-    ("bi" "brew install" nil 26)
     ("devpython" "DBENV=development python" nil 0)
     ("lxb" "Disable dynamic scopes ---  -*- lexical-binding: t -*-" nil 1)
     ("ppl" "print(\"\\n\\n\\n\\n\\n\")" nil 9)
