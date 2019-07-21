@@ -13,3 +13,4 @@ custom.el
 eshell/lastdir
 secrets/
 *.elc
+amx-items

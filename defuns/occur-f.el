@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;;###autoload
 (defun bk/improve-occur ()
   "Function to improve `occur' with the default value."
   (interactive)

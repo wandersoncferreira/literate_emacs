@@ -15,26 +15,12 @@
   :config
   (ido-mode +1))
 
-(use-package amx
+(use-package smex
   :ensure t
   :init
-  (setq amx-prompt-string "Here be dragons => ")
+  (setq smex-prompt-string "Here be dragons => ")
   :config
-  (amx-mode))
-
-(use-package ido-completing-read+
-  :ensure t
-  :after ido
-  :config
-  (ido-ubiquitous-mode +1))
-
-(use-package ido-vertical-mode
-  :ensure t
-  :after ido
-  :init
-  (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
-  :config
-  (ido-vertical-mode +1))
+  (smex-initialize))
 
 (setq ido-file-extensions-order '(".clj" ".py" ".org" ".php" ".rest"))
 (setq-default imenu-auto-rescan t)

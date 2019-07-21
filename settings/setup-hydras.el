@@ -5,17 +5,33 @@
 
 ;;; Code:
 
-(use-package hydra :ensure t)
-(defconst hydras-dir (expand-file-name "hydras" user-emacs-directory))
-(dolist (file (directory-files hydras-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
+(use-package hydra
+  :ensure t
+  :config
+  (defhydra hydra-magit (:color blue)
+    ("q" nil "quit" :column "Magit")
+    ("b" magit-blame "blame" :column "Do")
+    ("c" magit-clone "clone" :column "Do")
+    ("i" magit-init "init" :column "Do")
+    ("s" magit-status "status" :column "Do")
+    ("t" git-timemachine "time-travel" :column "TimeMachine")
+    )
+  (defhydra hydra-projectile (:color blue)
+  ("q" nil "quit" :column "Projectile")
 
-(require 'dired)
-(require 'ibuffer)
+  ("b" projectile-switch-to-buffer "list" :column "Buffers")
+  ("K" projectile-kill-buffers "kill all" :column "Buffers")
+  ("S" projectile-save-project-buffers "save all" :column "Buffers")
 
-(define-key dired-mode-map "." 'hydra-dired/body)
-(define-key ibuffer-mode-map "." 'hydra-ibuffer-main/body)
+  ("d" projectile-find-dir "directory" :column "Find")
+  ("D" projectile-dired "root" :column "Find")
+  ("f" projectile-find-file "file" :column "Find")
+  ("p" projectile-switch-project "project" :column "Find")
+
+  ("r" projectile-replace "replace" :column "Search")
+  ("R" projectile-replace-regexp "regexp replace" :column "Search")
+  ("g" bk/rgrep-fullscreen "grep" :column "Search")
+  ))
 
 (provide 'setup-hydras)
 ;;; setup-hydras.el ends here

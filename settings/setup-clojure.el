@@ -4,7 +4,7 @@
 
 
 (use-package clojure-mode
-  :ensure t
+  :load-path "contrib/clojure-mode/"
   :config
   (define-key clojure-mode-map [remap paredit-forward] 'clojure-forward-logical-sexp)
   (define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp))
@@ -68,6 +68,35 @@
     (cljr-add-keybindings-with-prefix "C-c C-m"))
   (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
   (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+
+;;; allow single semicolon comments on a line, only on emacs 26
+(if (version<= "26" emacs-version)
+    (progn
+      (defun clojure-indent-line ()
+        "Indent current line as Clojure code."
+        (interactive)
+        (if (clojure-in-docstring-p)
+            (save-excursion
+              (beginning-of-line)
+              (when (and (looking-at "^\\s-*")
+                         (<= (string-width (match-string-no-properties 0))
+                             (string-width (clojure-docstring-fill-prefix))))
+                (replace-match (clojure-docstring-fill-prefix))))
+          ;; `lisp-indent-line', but without special handling of comments
+          (let ((pos (- (point-max) (point)))
+                (indent (progn (beginning-of-line)
+                               (calculate-lisp-indent (lisp-ppss)))))
+            (when indent (indent-line-to indent))
+            ;; If initial point was within line's indentation,
+            ;; position after the indentation. Else stay at same point in text.
+            (if (> (- (point-max) pos) (point))
+                (goto-char (- (point-max) pos))))))
+      (add-hook 'clojure-mode-hook
+                (lambda ()
+                  (setq comment-indent-function 'comment-indent-default)
+                  (setq comment-add 0)
+                  (comment-normalize-vars))))
+  "running emacs 25 or lower")
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here

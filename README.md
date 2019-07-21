@@ -1,5 +1,7 @@
 # dotfiles
 
+Tested on Emacs 25+, but preferences are for Emacs 26+. [How to Install Emacs 26+](http://ubuntuhandbook.org/index.php/2019/02/install-gnu-emacs-26-1-ubuntu-18-04-16-04-18-10/)
+
 If you desire to install the package on your system, make sure that you do not have any folder on the `home` directory called `~/.emacs.d` or a file called `~.emacs`.
 
 After checking, you can run the following command:

@@ -7,13 +7,6 @@
 
 ;;; Code:
 
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
       (init-gc-cons-threshold (* 128 1024 1024))
       (bk--file-name-handler-alist file-name-handler-alist))
@@ -41,16 +34,12 @@
 (require 'setup-appearance)
 (require 'setup-defaults)
 (require 'setup-ido)
-(require 'setup-org)
 (require 'setup-dired)
-(require 'setup-buffers)
-(require 'setup-bk-mode)
 (require 'setup-git)
 (require 'setup-eshell)
 (require 'setup-hydras)
 
-(when init-osx?
-  (require 'setup-mac))
+(when init-osx? (require 'setup-mac))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -58,28 +47,20 @@
   (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
   (exec-path-from-shell-initialize))
 
-(require 'setup-smex)
+(require 'setup-company)
 (require 'setup-projectile)
 (require 'setup-editing)
 (require 'setup-misc)
-(require 'setup-mode-mapping)
 (require 'setup-keybindings)
 (require 'setup-snippets)
 (require 'setup-paredit)
 (require 'setup-grep)
 (require 'setup-advices)
 (require 'setup-expand)
-(require 'setup-modeline)
-(require 'setup-docker)
-(require 'setup-company)
 (require 'setup-markdown)
-
-;;; programming languages
-(require 'setup-sql)
 (require 'setup-clojure)
 (require 'setup-python)
 (require 'setup-latex)
-(require 'setup-pdf)
 
 (defalias 're 'restart-emacs)
 (defalias 'cquit 'cider-quit)
@@ -88,8 +69,7 @@
 (defalias 'qrr 'query-replace-regexp "Query replace regexp")
 
 (require 'server)
-(unless (server-running-p)
-  (server-start))
+(unless (server-running-p) (server-start))
 
 ;; variables configured via the interactive `customize' interface
 (when (file-exists-p custom-file)

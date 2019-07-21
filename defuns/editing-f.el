@@ -37,38 +37,6 @@
           ((backward-up-list arg)))))
 
 ;;;###autoload
-(defun me/date-iso ()
-  "Insert the current date, ISO format, eg. 2016-12-09."
-  (interactive)
-  (insert (format-time-string "%F")))
-
-(defun me/date-iso-with-time ()
-  "Insert the current date, ISO format with time, eg. 2016-12-09T14:34:54+0100."
-  (interactive)
-  (insert (format-time-string "%FT%T%z")))
-
-(defun me/date-long ()
-  "Insert the current date, long format, eg. December 09, 2016."
-  (interactive)
-  (insert (format-time-string "%B %d, %Y")))
-
-(defun me/date-long-with-time ()
-  "Insert the current date, long format, eg. December 09, 2016 - 14:34."
-  (interactive)
-  (insert (capitalize (format-time-string "%B %d, %Y - %H:%M"))))
-
-(defun me/date-short ()
-  "Insert the current date, short format, eg. 2016.12.09."
-  (interactive)
-  (insert (format-time-string "%Y.%m.%d")))
-
-(defun me/date-short-with-time ()
-  "Insert the current date, short format with time, eg. 2016.12.09 14:34."
-  (interactive)
-  (insert (format-time-string "%Y.%m.%d %H:%M")))
-
-
-;;;###autoload
 (defun bk/back-to-indentation-or-beginning ()
   "Function to dwm for line movements."
   (interactive)
@@ -153,4 +121,3 @@ in FILES and DIR without CONFIRM."
 
 (provide 'editing-f)
 ;;; editing-f.el ends here
-

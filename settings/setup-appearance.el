@@ -17,11 +17,6 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-(use-package plan9-theme
-  :ensure t
-  :config
-  (load-theme 'plan9 t))
-
 (or-protected
    (not (set-frame-font "Source Code Pro 14"))
    (not (set-frame-font "Inconsolata 12")))

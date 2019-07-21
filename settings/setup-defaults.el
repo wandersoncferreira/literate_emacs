@@ -50,7 +50,6 @@ so you can get back to it later with `pop-to-mark-command'"
 (add-hook 'after-init-hook 'delete-selection-mode)
 (add-hook 'after-init-hook 'global-auto-revert-mode)
 (add-hook 'after-init-hook 'savehist-mode)
-
 (add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)
 
@@ -101,6 +100,22 @@ so you can get back to it later with `pop-to-mark-command'"
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+
+(use-package winner
+  :init
+  (setq winner-boring-buffers
+        '("*Completions*"
+          "*Compile-Log*"
+          "*inferior-lisp*"
+          "*Fuzzy Completions*"
+          "*Apropos*"
+          "*Help*"
+          "*cvs*"
+          "*Buffer List*"
+          "*Ibuffer*"
+          "*esh command on file*"))
+  :config
+  (winner-mode +1))
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here
