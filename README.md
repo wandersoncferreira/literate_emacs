@@ -15,6 +15,27 @@ git clone https://github.com/wandersoncferreira/dotfiles
 ln -s dotfiles ~/.emacs.d
 ```
 
+## setup your own parameters
+
+In order to avoid changing core configurations, you can override the default behavior
+of this configuration by creating files in the **users/** folder.
+
+For example, let's say you do not like the default color theme and want to change it
+to *leuven*
+
+```shell
+touch users/my-settings.el
+```
+
+open the new created file and type:
+
+```emacs
+(load-theme 'leuven t)
+```
+
+That's it. Any other settings can be placed in this folder, even in separate files
+if you feel that this organizes your workflow better.
+
 ## installing external dependencies
 
 ### Python
