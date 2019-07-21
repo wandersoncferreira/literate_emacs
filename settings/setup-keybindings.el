@@ -87,6 +87,7 @@
 (global-set-key (kbd "M-o") 'change-outer)
 (global-set-key (kbd "M-p") 'unhighlight-regexp)
 (global-set-key (kbd "M-u") #'fix-word-upcase)
+(global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
 (global-unset-key (kbd "M-t"))
