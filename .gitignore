@@ -19,3 +19,4 @@ transient/
 .last-package-update-day
 cider-history
 projectile.cache
+bookmarks
