@@ -15,3 +15,7 @@ secrets/
 *.elc
 amx-items
 users/*.el
+transient/
+.last-package-update-day
+cider-history
+projectile.cache
