@@ -4,7 +4,7 @@
 
 
 (use-package clojure-mode
-  :load-path "contrib/clojure-mode/"
+  :ensure t
   :config
   (define-key clojure-mode-map [remap paredit-forward] 'clojure-forward-logical-sexp)
   (define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp))
