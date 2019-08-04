@@ -26,6 +26,8 @@
         '(("length" 80)
           ("level" 20)
           ("right-margin" 80)))
+  :bind (:map clojure-mode-map
+              (("C-c d" . ivy-clojuredocs-at-point)))
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'clojure-mode-hook #'cider-mode))
