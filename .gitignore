@@ -22,6 +22,7 @@ projectile.cache
 bookmarks
 network-security.data
 quelpa/
+.elfeed/
 request/
 tramp
 url/

@@ -24,7 +24,7 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-x C-j") 'dired-jump)
-(global-set-key (kbd "C-x C-m") 'smex)
+(global-set-key (kbd "C-x C-m") 'counsel-M-x)
 (global-set-key (kbd "C-x C-p") 'pop-global-mark)
 (global-set-key (kbd "C-x C-/") 'save-buffer)
 

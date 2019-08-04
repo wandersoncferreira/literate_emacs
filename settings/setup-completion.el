@@ -7,14 +7,16 @@
   :diminish ivy-mode
   :init
   (setq ivy-use-virtual-buffers t
-        ivy-virtual-abbreviate 'full
         ivy-count-format "%d/%d "
         enable-recursive-minibuffers t
         ivy-extra-directories nil)
+  (setq ivy-initial-inputs-alist nil)
   :bind (:map ivy-mode-map
               ("C-c w" . ivy-push-view)
               ("C-c W" . ivy-pop-view))
   :config
+  (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-immediate-done)
+  (define-key ivy-minibuffer-map (kbd "RET") #'ivy-alt-done)
   (ivy-mode +1))
 
 (use-package counsel
