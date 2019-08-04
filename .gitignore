@@ -20,3 +20,9 @@ transient/
 cider-history
 projectile.cache
 bookmarks
+network-security.data
+quelpa/
+request/
+tramp
+url/
+eshell/

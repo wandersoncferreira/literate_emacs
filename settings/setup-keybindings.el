@@ -12,7 +12,6 @@
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-z") 'bury-buffer)
-(global-set-key (kbd "C-x f") 'ido-recentf-open)
 (global-set-key (kbd "C-x 2") (split-window-func-with-other-buffer 'split-window-vertically))
 (global-set-key (kbd "C-x 3") (split-window-func-with-other-buffer 'split-window-horizontally))
 (global-set-key (kbd "C-x 4 u") 'winner-undo)
@@ -32,7 +31,7 @@
 ;;; C-{symbols} are reserved for user
 (global-unset-key (kbd "C-\\"))
 
-(global-set-key (kbd "C-:") 'hippie-expand-lines)
+;; (global-set-key (kbd "C-:") 'hippie-expand-lines)
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-+") 'er/contract-region)
 (global-set-key (kbd "C-;") 'flyspell-auto-correct-previous-word)
@@ -78,7 +77,7 @@
 ;;;;    -------- Meta based keys  -----------
 
 ;;; M-{letter} bindings
-(global-set-key (kbd "M-/") 'hippie-expand)
+;; (global-set-key (kbd "M-/") 'hippie-expand)
 
 (global-set-key (kbd "M-c") #'fix-word-capitalize)
 (global-set-key (kbd "M-i") 'change-inner)
@@ -87,7 +86,6 @@
 (global-set-key (kbd "M-o") 'change-outer)
 (global-set-key (kbd "M-p") 'unhighlight-regexp)
 (global-set-key (kbd "M-u") #'fix-word-upcase)
-(global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
 (global-unset-key (kbd "M-t"))

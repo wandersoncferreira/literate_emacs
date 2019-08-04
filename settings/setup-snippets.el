@@ -25,8 +25,7 @@
 
 (use-package yasnippet-snippets :ensure t)
 (use-package clojure-snippets :ensure t)
-(use-package go-snippets :ensure t)
-(use-package react-snippets :ensure t)
+
 
 (defun yas/goto-end-of-active-field ()
   "Go to the end of the active field."

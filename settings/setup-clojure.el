@@ -30,21 +30,13 @@
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'clojure-mode-hook #'cider-mode))
 
-(use-package flycheck
+(use-package emidje
   :ensure t
-  :init
-  (setq flycheck-check-syntax-automatically '(save))
+  :after cider
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (emidje-setup))
 
 (defalias 'cider-default-connection 'cider-current-connection)
-
-(use-package flycheck-clojure
-  :ensure t
-  :after flycheck
-  :config
-  (use-package let-alist :ensure t)
-  (flycheck-clojure-setup))
 
 (use-package clj-refactor
   :ensure t
@@ -69,7 +61,7 @@
   (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
   (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
 
-;;; allow single semicolon comments on a line, only on emacs 26
+;; allow single semicolon comments on a line, only on emacs 26
 (if (version<= "26" emacs-version)
     (progn
       (defun clojure-indent-line ()

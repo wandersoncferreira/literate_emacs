@@ -4,6 +4,7 @@
 
 (use-package browse-at-remote :ensure t)
 (use-package gitconfig-mode :ensure t)
+(use-package git-timemachine :ensure t)
 (use-package diff-hl :ensure t)
 (use-package magit
   :ensure t

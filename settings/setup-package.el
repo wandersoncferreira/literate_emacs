@@ -7,12 +7,11 @@
 
 (require 'package)
 
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (setq package-archive-priorities
-      '(
-        ("org" . 10)
+      '(("org" . 10)
         ("melpa" . 5)))
 
 (setq package-enable-at-startup nil
@@ -35,6 +34,8 @@
         auto-package-update-hide-results t)
   :config
   (auto-package-update-maybe))
+
+(use-package quelpa :ensure t)
 
 (provide 'setup-package)
 ;;; setup-package.el ends here

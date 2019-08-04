@@ -33,7 +33,7 @@
 (require 'setup-package)
 (require 'setup-appearance)
 (require 'setup-defaults)
-(require 'setup-ido)
+(require 'setup-completion)
 (require 'setup-dired)
 (require 'setup-git)
 (require 'setup-eshell)
@@ -47,6 +47,7 @@
   (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
   (exec-path-from-shell-initialize))
 
+(require 'setup-org)
 (require 'setup-company)
 (require 'setup-projectile)
 (require 'setup-editing)

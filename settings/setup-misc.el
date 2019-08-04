@@ -36,6 +36,9 @@
   :init
   (setq sqlformat-command 'pgformatter))
 
+(quelpa '(ivy-clojuredocs :repo "wandersoncferreira/ivy-clojuredocs" :fetcher github))
+(quelpa '(python-experiment :repo "wandersoncferreira/python-experiment" :fetcher github))
+
 (use-package elfeed
   :ensure t
   :init
@@ -55,8 +58,9 @@
         ("http://feeds.feedburner.com/stevelosh?format=xml" clojure)
         ("https://existentialtype.wordpress.com/feed/" functional)
         ("http://planet.clojure.in/atom.xml" clojure)
+        ("http://insideclojure.org/feed.xml" clojure)
+        ("https://yogthos.net/feed.xml" clojure)
         ("http://endlessparentheses.com/atom.xml" emacs)
-        ("https://www.reddit.com/r/emacs/.rss" emacs)
         ("http://www.blackhats.es/wordpress/?feed=rss2" emacs)
         ("http://www.howardism.org/index.xml" emacs)
         ("http://www.masteringemacs.org/feed/" emacs)
@@ -68,6 +72,12 @@
         ("http://emacs-fu.blogspot.com/feeds/posts/default" emacs)
         ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs)
         )))
+
+
+(use-package midnight
+  :ensure t
+  :config
+  (require 'midnight))
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

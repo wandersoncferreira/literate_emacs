@@ -18,8 +18,17 @@
       ring-bell-function 'ignore)
 
 (or-protected
-   (not (set-frame-font "Source Code Pro 14"))
-   (not (set-frame-font "Inconsolata 12")))
+ (not (set-frame-font "Monaco 14"))
+ (not (set-frame-font "Source Code Pro 14"))
+ (not (set-frame-font "Inconsolata 12")))
+
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (blink-cursor-mode -1))
+
+;;; don't defer screen updates when performing operations
+(setq redisplay-dont-pause t)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here
