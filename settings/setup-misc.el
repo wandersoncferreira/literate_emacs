@@ -37,7 +37,6 @@
   (setq sqlformat-command 'pgformatter))
 
 (quelpa '(ivy-clojuredocs :repo "wandersoncferreira/ivy-clojuredocs" :fetcher github))
-(quelpa '(python-experiment :repo "wandersoncferreira/python-experiment" :fetcher github))
 
 (use-package elfeed
   :ensure t
