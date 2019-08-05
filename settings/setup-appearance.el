@@ -18,7 +18,7 @@
       ring-bell-function 'ignore)
 
 (or-protected
- (not (set-frame-font "Monaco 14"))
+ (not (set-frame-font "Monaco 12"))
  (not (set-frame-font "Source Code Pro 14"))
  (not (set-frame-font "Inconsolata 12")))
 
