@@ -27,3 +27,5 @@ request/
 tramp
 url/
 eshell/
+var/
+etc

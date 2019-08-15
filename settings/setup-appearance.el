@@ -17,10 +17,22 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
+(setq initial-scratch-message "")
+
+;; set custom theme path
+(setq custom-theme-directory (concat user-emacs-directory "themes"))
+(dolist
+    (path (directory-files custom-theme-directory t "\\w+"))
+  (when (file-directory-p path)
+    (add-to-list 'custom-theme-load-path path)))
+
+(load-theme 'default-black t)
+
 (or-protected
- (not (set-frame-font "Monaco 12"))
+ (not (set-frame-font "Monaco 14"))
  (not (set-frame-font "Source Code Pro 14"))
  (not (set-frame-font "Inconsolata 12")))
+
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
@@ -29,6 +41,19 @@
 
 ;;; don't defer screen updates when performing operations
 (setq redisplay-dont-pause t)
+
+;;; highlight long lines
+(use-package whitespace
+  :hook (prog-mode . whitespace-mode)
+  :config
+  (setq whitespace-style '(face tabs empty trailing lines-tail))
+  (setq whitespace-line-column nil))
+
+;; change some colors for the diff-mode
+(eval-after-load 'diff-mode
+  '(progn
+     (set-face-foreground 'diff-added "green4")
+     (set-face-foreground 'diff-removed "red3")))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

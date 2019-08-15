@@ -5,6 +5,10 @@
 
 ;;; Code:
 
+(defadvice load-theme (before theme-dont-propagate activate)
+  "Disable all theme effects before enabling new ones."
+  (mapc #'disable-theme custom-enabled-themes))
+
 (defadvice magit-status (around magit-fullscreen activate)
   "Advice for magit status to show in fullscreen."
   (window-configuration-to-register :magit-fullscreen)

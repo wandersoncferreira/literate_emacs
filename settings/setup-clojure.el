@@ -40,13 +40,57 @@
 
 (defalias 'cider-default-connection 'cider-current-connection)
 
+;;; cider config to use Clojure inside Docker and have nagivation
+(eval-after-load "cider"
+  '(progn
+     (setq cider-docker-translations '(("/app/src" . "/home/wanderson/platform/datawall/src")
+                                       ("/src" . "/home/wanderson/platform/datawall/src")
+                                       ("/app" . "/home/wanderson/platform/datawall")
+                                       ("/root" . "/home/wanderson/")))
+     (defun cider--translate-docker (path)
+       "Attempt to translate the PATH.
+Looks at `cider-docker-translations' for (docker . host) alist of path
+prefixes.  TRANSLATIONS is an alist of docker prefix to host prefix."
+       (seq-some (lambda (translation)
+                   ;; (message "dentro do lambda")
+                   ;; (message (car translation))
+                   ;; (message "string")
+                   ;; (message path)
+                   (when (string-prefix-p (car translation) path)
+                     (message "dentro do translate docker...")
+                     (replace-regexp-in-string (format "^%s" (file-name-as-directory (car translation)))
+                                               (file-name-as-directory (cdr translation))
+                                               path)))
+                 cider-docker-translations))
+
+     (defun cider--file-path (path)
+       "Return PATH's local or tramp path using `cider-prefer-local-resources'.
+If no local or remote file exists, return nil."
+       (let* ((local-path (funcall cider-from-nrepl-filename-function path))
+              (tramp-path (and local-path (cider--client-tramp-filename local-path)))
+              (reverse-docker-path (cider--translate-docker local-path)))
+         ;; (message "DENTRO 1 cider")
+         ;; (message local-path)
+         ;; (message tramp-path)
+         ;; (message reverse-docker-path)
+         ;; (message "DENTRO 2 cider")
+         (cond ((equal local-path "") "")
+               ((and reverse-docker-path (file-exists-p reverse-docker-path)) reverse-docker-path)
+               ((and cider-prefer-local-resources (file-exists-p local-path))
+                local-path)
+               ((and tramp-path (file-exists-p tramp-path))
+                tramp-path)
+               ((and local-path (file-exists-p local-path))
+                local-path))))))
+
+
 (use-package clj-refactor
   :ensure t
   :init
   (setq cljr-favor-prefix-notation nil
         cljr-favor-private-functions nil
         cljr-clojure-test-declaration "[clojure.test :refer [deftest is testing]]")
-  
+
   (setq cljr-magic-require-namespaces
         '(("io" . "clojure.java.io")
           ("set" . "clojure.set")

@@ -53,7 +53,6 @@
 (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
 (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause)
 (global-set-key (kbd "C-c p") 'hydra-projectile/body)
-(global-set-key (kbd "C-c s") 'hydra-system/body)
 
 ;;; C-c C-{letter} are reserved for major mode
 (global-set-key (kbd "C-c C-a") 'mc/edit-beginnings-of-lines)
@@ -113,6 +112,8 @@
 ;; registers
 (set-register ?b '(file . "~/books.org"))
 (set-register ?h '(file . "~/emacs-notes/7habits-effective-editing.org"))
+(set-register ?e '(file . "~/.emacs.d/init.el"))
+(set-register ?i '(file . "~/notes/gtd/inbox.org"))
 
 ;;; move lines
 (use-package move-dup :ensure t)

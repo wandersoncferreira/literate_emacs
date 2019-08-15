@@ -47,6 +47,9 @@ so you can get back to it later with `pop-to-mark-command'"
       backup-directory-alist `(("." . ,(concat user-emacs-directory
                                                "backups"))))
 
+;; dont "ping Germany" when typing test.de<TAB>
+(setq ffap-machine-p-known 'reject)
+
 (add-hook 'after-init-hook 'delete-selection-mode)
 (add-hook 'after-init-hook 'global-auto-revert-mode)
 (add-hook 'after-init-hook 'savehist-mode)
@@ -116,6 +119,8 @@ so you can get back to it later with `pop-to-mark-command'"
           "*esh command on file*"))
   :config
   (winner-mode +1))
+
+(setq-default fill-column 70)
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

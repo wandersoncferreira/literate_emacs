@@ -24,6 +24,16 @@
   (package-install 'use-package)
   (package-install 'diminish))
 
+;; do not litter config
+(use-package no-littering
+  :ensure t
+  :demand t
+  :config
+  (setq mc/list-file (no-littering-expand-etc-file-name "mc-list.el"))
+  (setq auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  (setq abbrev-file-name (no-littering-expand-etc-file-name "abbrev.el")))
+
 (use-package dash :ensure t)
 (use-package auto-package-update
   :ensure t

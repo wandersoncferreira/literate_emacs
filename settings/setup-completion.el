@@ -9,15 +9,34 @@
   (setq ivy-use-virtual-buffers t
         ivy-count-format "%d/%d "
         enable-recursive-minibuffers t
-        ivy-extra-directories nil)
+        ivy-height 12
+        ivy-extra-directories nil
+        ivy-use-selectable-prompt t
+        ivy-on-del-error-function nil)
   (setq ivy-initial-inputs-alist nil)
   :bind (:map ivy-mode-map
-              ("C-c w" . ivy-push-view)
-              ("C-c W" . ivy-pop-view))
+              ("C-c e" . ivy-switch-buffer-eshell)
+              ("C-c v" . ivy-push-view)
+              ("C-c V" . ivy-pop-view))
   :config
   (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-immediate-done)
   (define-key ivy-minibuffer-map (kbd "RET") #'ivy-alt-done)
+
+  (defun ivy-ignore-non-shell-buffers (str)
+    (let ((buf (get-buffer str)))
+      (if buf
+          (with-current-buffer buf
+            (not (eq major-mode 'eshell-mode)))
+        t)))
+  (defun ivy-switch-buffer-eshell ()
+    "Like ivy-switch-buffer but only shows eshell buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers
+                                      '(ivy-ignore-non-shell-buffers))))
+      (ivy-switch-buffer)))
   (ivy-mode +1))
+
+(use-package ido-completing-read+ :ensure t)
 
 (use-package counsel
   :ensure t
@@ -36,12 +55,8 @@
               ([remap describe-function] . counsel-describe-function)
               ([remap finder-by-keyword] . counsel-package)))
 
-(use-package smex
-  :ensure t
-  :init
-  (setq smex-prompt-string "Here be dragons => ")
-  :config
-  (smex-initialize))
+(use-package flx :ensure t :defer t)
+(use-package smex :ensure t :disabled t :defer t)
 
 (provide 'setup-completion)
 ;;; setup-completion.el ends here

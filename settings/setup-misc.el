@@ -17,6 +17,14 @@
 (use-package vlf :ensure t)
 (use-package neotree :ensure t)
 
+(use-package alert
+  :ensure t
+  :config
+  (setq alert-default-style 'notification))
+
+(when (require 'so-long nil :noerror)
+  (global-so-long-mode 1))
+
 (use-package webpaste
   :ensure t
   :config
