@@ -30,6 +30,9 @@
   :config
   (setq webpaste-provider-priority '("dpaste.de")))
 
+(use-package helm-spotify-plus
+  :ensure t)
+
 (use-package sqlformat
   :ensure t
   :init
