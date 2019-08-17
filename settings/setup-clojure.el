@@ -11,6 +11,11 @@
 
 (use-package clojure-mode-extra-font-locking :ensure t)
 
+(use-package ivy-clojuredocs
+  :ensure t
+  :bind (:map clojure-mode-map
+              (("C-c d" . ivy-clojuredocs-at-point))))
+
 (use-package cider
   :ensure t
   :init
@@ -26,8 +31,6 @@
         '(("length" 80)
           ("level" 20)
           ("right-margin" 80)))
-  :bind (:map clojure-mode-map
-              (("C-c d" . ivy-clojuredocs-at-point)))
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'clojure-mode-hook #'cider-mode))
@@ -43,10 +46,11 @@
 ;;; cider config to use Clojure inside Docker and have nagivation
 (eval-after-load "cider"
   '(progn
-     (setq cider-docker-translations '(("/app/src" . "/home/wanderson/platform/datawall/src")
-                                       ("/src" . "/home/wanderson/platform/datawall/src")
-                                       ("/app" . "/home/wanderson/platform/datawall")
+     (setq cider-docker-translations '(("/app/src" . "/home/wanderson/platform/register/src")
+                                       ("/src" . "/home/wanderson/platform/register/src")
+                                       ("/app" . "/home/wanderson/platform/register")
                                        ("/root" . "/home/wanderson/")))
+
      (defun cider--translate-docker (path)
        "Attempt to translate the PATH.
 Looks at `cider-docker-translations' for (docker . host) alist of path

@@ -7,8 +7,15 @@
 
 (require 'package)
 
-(add-to-list 'package-archives '("melpa" . "https://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (when no-ssl (warn "\
+Your version of Emacs does not support SSL connections,
+which is unsafe because it allows man-in-the-middle attacks."))
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")) t)
+  (add-to-list 'package-archives (cons "org" (concat proto "://orgmode.org/elpa/")) t))
 
 (setq package-archive-priorities
       '(("org" . 10)
@@ -44,8 +51,6 @@
         auto-package-update-hide-results t)
   :config
   (auto-package-update-maybe))
-
-(use-package quelpa :ensure t)
 
 (provide 'setup-package)
 ;;; setup-package.el ends here
