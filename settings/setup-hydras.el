@@ -14,8 +14,8 @@
     ("c" magit-clone "clone" :column "Do")
     ("i" magit-init "init" :column "Do")
     ("s" magit-status "status" :column "Do")
-    ("t" git-timemachine "time-travel" :column "TimeMachine")
-    )
+    ("t" git-timemachine "time-travel" :column "TimeMachine"))
+
   (defhydra hydra-projectile (:color blue)
   ("q" nil "quit" :column "Projectile")
 
@@ -30,8 +30,7 @@
 
   ("r" projectile-replace "replace" :column "Search")
   ("R" projectile-replace-regexp "regexp replace" :column "Search")
-  ("g" bk/rgrep-fullscreen "grep" :column "Search")
-  ))
+  ("g" bk/rgrep-fullscreen "grep" :column "Search")))
 
 (provide 'setup-hydras)
 ;;; setup-hydras.el ends here

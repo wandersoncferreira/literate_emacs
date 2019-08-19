@@ -76,7 +76,7 @@
 ;;;;    -------- Meta based keys  -----------
 
 ;;; M-{letter} bindings
-;; (global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "M-/") 'hippie-expand)
 
 (global-set-key (kbd "M-c") #'fix-word-capitalize)
 (global-set-key (kbd "M-i") 'change-inner)

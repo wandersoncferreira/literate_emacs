@@ -33,8 +33,8 @@
 
 (dolist (it nasty-paredit-bindings)
   (let ((original (car it))
-	(replacement (cadr it))
-	(command (car (last it))))
+        (replacement (cadr it))
+        (command (car (last it))))
     (define-key paredit-mode-map (read-kbd-macro original) nil)
     (define-key paredit-mode-map (read-kbd-macro replacement) command)))
 

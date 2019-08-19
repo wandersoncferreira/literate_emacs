@@ -1,7 +1,7 @@
 ;;; setup-markdown --- Markdorn setup
 ;;; Commentary:
 
-;; 
+;;
 
 ;;; Code:
 

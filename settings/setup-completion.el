@@ -55,8 +55,13 @@
               ([remap describe-function] . counsel-describe-function)
               ([remap finder-by-keyword] . counsel-package)))
 
-(use-package flx :ensure t :defer t)
-(use-package smex :ensure t :disabled t :defer t)
+(use-package flx
+  :ensure t)
+
+(use-package smex
+  :ensure t
+  :config
+  (smex-initialize))
 
 (provide 'setup-completion)
 ;;; setup-completion.el ends here

@@ -20,13 +20,6 @@
   :config
   (global-company-mode +1))
 
-
-;; (define-key company-mode-map [remap indent-for-tab-command] #'company-indent-or-complete-common)
-;; (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-;; (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
-;; (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
-;; (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
-
 (defun ora-company-number ()
   "Choose the candidate based on his number at candidate list."
   (interactive)
