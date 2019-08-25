@@ -7,6 +7,8 @@
 
 (require 'package)
 
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
@@ -18,8 +20,9 @@ which is unsafe because it allows man-in-the-middle attacks."))
   (add-to-list 'package-archives (cons "org" (concat proto "://orgmode.org/elpa/")) t))
 
 (setq package-archive-priorities
-      '(("org" . 10)
-        ("melpa" . 5)))
+      '(("org" . 5)
+        ("melpa" . 20)
+        ("gnu" . 10)))
 
 (setq package-enable-at-startup nil
       package--init-file-ensured t)

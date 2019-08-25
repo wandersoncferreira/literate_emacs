@@ -24,13 +24,14 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
 (add-to-list 'load-path setting-dir)
+(require 'setup-package)
 
 (defconst defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
 
-(require 'setup-package)
+
 (require 'setup-appearance)
 (require 'setup-defaults)
 (require 'setup-completion)
