@@ -31,7 +31,7 @@ so you can get back to it later with `pop-to-mark-command'"
 (setq echo-keystrokes 0.1
       line-number-mode t
       column-number-mode t
-      enable-local-variables :safe
+      enable-local-variables t
       load-prefer-newer t
       tab-always-indent 'complete
       delete-old-versions t

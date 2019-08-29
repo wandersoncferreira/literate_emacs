@@ -46,22 +46,18 @@
 ;;; cider config to use Clojure inside Docker and have nagivation
 (eval-after-load "cider"
   '(progn
-     (setq cider-docker-translations '(("/app/src" . "/home/wanderson/platform/register/src")
-                                       ("/src" . "/home/wanderson/platform/register/src")
-                                       ("/app" . "/home/wanderson/platform/register")
-                                       ("/root" . "/home/wanderson/")))
+     (defcustom cider-docker-translations nil
+       "Translate docker endpoints to home dirs."
+       :type '(alist :key-type string :value-type string)
+       :group 'cider)
 
      (defun cider--translate-docker (path)
        "Attempt to translate the PATH.
 Looks at `cider-docker-translations' for (docker . host) alist of path
 prefixes.  TRANSLATIONS is an alist of docker prefix to host prefix."
+       (hack-dir-local-variables)
        (seq-some (lambda (translation)
-                   ;; (message "dentro do lambda")
-                   ;; (message (car translation))
-                   ;; (message "string")
-                   ;; (message path)
                    (when (string-prefix-p (car translation) path)
-                     (message "dentro do translate docker...")
                      (replace-regexp-in-string (format "^%s" (file-name-as-directory (car translation)))
                                                (file-name-as-directory (cdr translation))
                                                path)))
@@ -73,11 +69,6 @@ If no local or remote file exists, return nil."
        (let* ((local-path (funcall cider-from-nrepl-filename-function path))
               (tramp-path (and local-path (cider--client-tramp-filename local-path)))
               (reverse-docker-path (cider--translate-docker local-path)))
-         ;; (message "DENTRO 1 cider")
-         ;; (message local-path)
-         ;; (message tramp-path)
-         ;; (message reverse-docker-path)
-         ;; (message "DENTRO 2 cider")
          (cond ((equal local-path "") "")
                ((and reverse-docker-path (file-exists-p reverse-docker-path)) reverse-docker-path)
                ((and cider-prefer-local-resources (file-exists-p local-path))

@@ -27,7 +27,7 @@
     (add-to-list 'custom-theme-load-path path)))
 
 (or-protected
- (not (set-frame-font "Monaco 18"))
+ (not (set-frame-font "Monaco 14"))
  (not (set-frame-font "Source Code Pro 14"))
  (not (set-frame-font "Inconsolata 12")))
 
