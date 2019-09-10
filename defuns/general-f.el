@@ -23,6 +23,11 @@
   (browse-url (format "http://explainshell.com/explain?cmd=%s"
                       (url-encode-url cmd))))
 
+(defun bk/eval-buffer ()
+  (interactive)
+  (eval-buffer)
+  (message "Buffer evaluated!"))
+
 
 (provide 'general-f)
 ;;; general-f.el ends here

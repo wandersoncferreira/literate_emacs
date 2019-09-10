@@ -118,9 +118,49 @@ so you can get back to it later with `pop-to-mark-command'"
           "*Ibuffer*"
           "*esh command on file*"))
   :config
-  (winner-mode +1))
+  (add-hook 'after-init-hook 'winner-mode))
 
 (setq-default fill-column 70)
+
+(use-package switch-window
+  :ensure t
+  :config
+  (setq-default switch-window-shortcut-style 'alphabet
+                switch-window-timeout nil)
+  :bind
+  ("C-x o" . switch-window))
+
+;;; rearrange split windows
+(defun split-window-horizontally-instead ()
+  "Kill any other windows and re-split."
+  (interactive)
+  (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
+    (delete-other-windows)
+    (split-window-horizontally)
+    (when other-buffer
+      (set-window-buffer (next-window) other-buffer))))
+
+(defun split-window-vertically-instead ()
+  "Kill any other window and re-split."
+  (interactive)
+  (let ((other-buffer (and (next-window) (window-buffer (next-window)))))
+    (delete-other-windows)
+    (split-window-vertically)
+    (when other-buffer
+      (set-window-buffer (next-window) other-buffer))))
+
+;; Borrowed from http://postmomentum.ch/blog/201304/blog-on-emacs
+(defun sanityinc/split-window()
+  "Split the window to see the most recent buffer in the other window.
+Call a second time to restore the original window configuration."
+  (interactive)
+  (if (eq last-command 'sanityinc/split-window)
+      (progn
+        (jump-to-register :sanityinc/split-window)
+        (setq this-command 'sanityinc/unsplit-window))
+    (window-configuration-to-register :sanityinc/split-window)
+    (switch-to-buffer-other-window nil)))
+
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

@@ -5,7 +5,13 @@
 ;;; install only packages
 (use-package htmlize :ensure t)
 (use-package restclient :ensure t)
-(use-package yaml-mode :ensure t)
+
+(use-package yaml-mode
+  :ensure t
+  :config
+  (add-auto-mode 'yaml-mode "\\.yml\\.erb\\'")
+  (add-hook 'yaml-mode-hook 'goto-address-prog-mode))
+
 (use-package graphviz-dot-mode :ensure t)
 (use-package quickrun :ensure t)
 (use-package windresize :ensure t)
@@ -77,6 +83,25 @@
   :ensure t
   :config
   (require 'midnight))
+
+
+(defun eyeroll () (interactive) (insert "◔_◔"))
+(defun caruso () (interactive) (insert "( •_•) ( -_-)~⌐■-■ (⌐■_■)>"))
+(defun shrug () (interactive) (insert "¯\\_( )_/¯"))
+
+;;; move lines
+(use-package move-dup
+  :ensure t
+  :config
+  (global-set-key [M-up] 'md/move-lines-up)
+  (global-set-key [M-down] 'md/move-lines-down)
+  (global-set-key [C-M-down] 'md/duplicate-down)
+  (global-set-key [C-M-up] 'md/duplicate-up))
+
+
+(use-package edit-indirect
+  :ensure t)
+
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

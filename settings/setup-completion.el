@@ -7,13 +7,15 @@
   :diminish ivy-mode
   :init
   (setq ivy-use-virtual-buffers t
-        ivy-count-format "%d/%d "
+        ivy-count-format ""
         enable-recursive-minibuffers t
+        projectile-completion-system 'ivy
+        ivy-magic-tilde nil
+        ivy-dynamic-exhibit-delay-ms 150
+        ivy-use-selectable-prompt t
         ivy-height 12
         ivy-extra-directories nil
-        ivy-use-selectable-prompt t
         ivy-on-del-error-function nil)
-  (setq ivy-initial-inputs-alist nil)
   :bind (:map ivy-mode-map
               ("C-c e" . ivy-switch-buffer-eshell)
               ("C-c v" . ivy-push-view)

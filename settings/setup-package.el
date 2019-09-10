@@ -7,7 +7,11 @@
 
 (require 'package)
 
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"
+      epa-armor t
+      tls-checktrust 'ask
+      network-security-level 'high
+      gnutls-verify-error t)
 
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))

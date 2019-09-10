@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;
 ;; Organizing the Emacs keybindings to make it feel sane
-;; 
+;;
 ;;; Code:
 
 ;;;;    -------- Command based keys -----------
@@ -22,6 +22,8 @@
 
 ;;; C-x {letter} are reserved for Emacs native essentials: buffers, window, frame, file, directory, etc.
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "C-x |") 'split-window-horizontally-instead)
+(global-set-key (kbd "C-x _") 'split-window-vertically-instead)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-x C-j") 'dired-jump)
 (global-set-key (kbd "C-x C-m") 'counsel-M-x)
@@ -59,7 +61,7 @@
 (global-set-key (kbd "C-c C-b") 'ibuffer)
 (global-set-key (kbd "C-c C-e") 'mc/edit-ends-of-lines)
 (global-set-key (kbd "C-c C-i") 'bk/ido-menu)
-(global-set-key (kbd "C-c C-k") 'eval-buffer)
+(global-set-key (kbd "C-c C-k") 'bk/eval-buffer)
 (global-set-key (kbd "C-c C-l") 'mc/edit-lines)
 (global-set-key (kbd "C-c C-q") 'quickrun)
 (global-set-key (kbd "C-c C-r") 'set-rectangular-region-anchor)
@@ -72,6 +74,7 @@
 
 ;;;; ---------- function keys --------------
 (global-set-key (kbd "<f8>") 'neotree-toggle)
+(global-set-key (kbd "<f7>") 'sanityinc/split-window)
 
 ;;;;    -------- Meta based keys  -----------
 
@@ -115,12 +118,6 @@
 (set-register ?e '(file . "~/.emacs.d/init.el"))
 (set-register ?i '(file . "~/notes/gtd/inbox.org"))
 
-;;; move lines
-(use-package move-dup :ensure t)
-(global-set-key [M-up] 'md/move-lines-up)
-(global-set-key [M-down] 'md/move-lines-down)
-(global-set-key [C-M-down] 'md/duplicate-down)
-(global-set-key [C-M-up] 'md/duplicate-up)
 
 (provide 'setup-keybindings)
 ;;; setup-keybindings.el ends here

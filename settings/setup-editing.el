@@ -22,5 +22,11 @@
              nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
                     1 font-lock-warning-face t)))))
 
+(use-package whitespace-cleanup-mode
+  :ensure t
+  :diminish whitespace-mode
+  :config
+  (add-hook 'after-init-hook 'global-whitespace-cleanup-mode))
+
 (provide 'setup-editing)
 ;;; setup-editing.el ends here

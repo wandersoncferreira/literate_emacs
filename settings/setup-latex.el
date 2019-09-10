@@ -79,5 +79,14 @@
   (insert "\\end{document}\n"))
 
 
+(use-package pdf-tools
+  :ensure t
+  :init
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-annot-activate-created-annotations t)
+  :config
+  (pdf-tools-install)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
 (provide 'setup-latex)
 ;;; setup-latex.el ends here

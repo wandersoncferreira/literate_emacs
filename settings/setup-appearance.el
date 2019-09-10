@@ -44,7 +44,7 @@
 (use-package whitespace
   :hook (prog-mode . whitespace-mode)
   :config
-  (setq whitespace-style '(face tabs empty trailing lines-tail))
+  (setq whitespace-style '(face trailing lines-tail tabs))
   (setq whitespace-line-column nil))
 
 ;; change some colors for the diff-mode

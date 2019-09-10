@@ -79,6 +79,8 @@
 
 ;;; start eshell
 (eshell)
+(with-current-buffer "*eshell*" (setq pcomplete-cycle-completions nil))
+(set-face-foreground 'eshell-prompt "turquoise")
 
 ;;; conclude init by setting up specifics for the current user
 (setq user-settings-dir (concat user-emacs-directory "users/"))

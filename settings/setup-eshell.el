@@ -34,5 +34,10 @@
                               (yas-global-mode -1)
                               (yas-minor-mode -1)))
 
+(use-package better-shell
+  :ensure t
+  :bind (("<C-dead-diaeresis>" . better-shell-shell)
+         ("C-:" . better-shell-remote-open)))
+
 (provide 'setup-eshell)
 ;;; setup-eshell.el ends here
