@@ -53,5 +53,32 @@
      (set-face-foreground 'diff-added "green4")
      (set-face-foreground 'diff-removed "red3")))
 
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (setq sml/no-confirm-load-theme t
+        sml/theme 'respectful)
+  (sml/setup))
+
+(global-hl-line-mode +1)
+(set-face-background 'hl-line "#292b2e")
+
+;; set cursor color
+(set-cursor-color "#edac2c")
+
+;; Initialize in full screen
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;;Beacon minor mode
+(use-package beacon
+  :ensure t
+  :diminish beacon-mode
+  :init
+  (setq beacon-color "#edac2c")
+  (setq beacon-size 25)
+  (setq beacon-blink-delay 0.3)
+  :config
+  (beacon-mode 1))
+
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

@@ -33,5 +33,8 @@
        (setq markdown-command "pandoc -f markdown"))))
 
 
+(use-package flymd
+  :ensure t)
+
 (provide 'setup-markdown)
 ;;; setup-markdown.el ends here
