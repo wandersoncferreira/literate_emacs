@@ -27,11 +27,10 @@
 
 (use-package whitespace-cleanup-mode
   :ensure t
-  :diminish whitespace-mode
+  :diminish whitespace-cleanup-mode
   :config
   (add-hook 'after-init-hook
             'global-whitespace-cleanup-mode))
-
 
 (use-package ini-mode
   :ensure t)
