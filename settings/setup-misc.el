@@ -23,6 +23,14 @@
 (use-package vlf :ensure t)
 (use-package neotree :ensure t)
 
+(use-package atomic-chrome
+  :ensure t
+  :init
+  (setq atomic-chrome-url-major-mode-alist
+        '(("github\\.com" . gfm-mode)))
+  :config
+  (atomic-chrome-start-server))
+
 (use-package alert
   :ensure t
   :config

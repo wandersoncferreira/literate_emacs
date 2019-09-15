@@ -21,5 +21,8 @@
      (define-key grep-mode-map (kbd "C-<return>") 'rgrep-goto-file-and-close-rgrep)
      (define-key grep-mode-map (kbd "C-x C-s") 'wgrep-save-all-buffers)))
 
+(use-package ag
+  :ensure t)
+
 (provide 'setup-grep)
 ;;; setup-grep.el ends here

@@ -12,8 +12,11 @@
 (use-package fix-word :ensure t)
 
 ;; auto fill
-(auto-fill-mode +1)
-(setq-default fill-column 100)
+(ruler-mode +1)
+(setq-default fill-column 60)
+
+(add-hook 'org-mode-hook #'auto-fill-mode)
+(add-hook 'after-init-hook #'auto-fill-mode)
 
 ;;; programming mode settings
 (add-hook 'prog-mode-hook
@@ -26,7 +29,12 @@
   :ensure t
   :diminish whitespace-mode
   :config
-  (add-hook 'after-init-hook 'global-whitespace-cleanup-mode))
+  (add-hook 'after-init-hook
+            'global-whitespace-cleanup-mode))
+
+
+(use-package ini-mode
+  :ensure t)
 
 (provide 'setup-editing)
 ;;; setup-editing.el ends here
