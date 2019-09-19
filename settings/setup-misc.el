@@ -22,6 +22,7 @@
 (use-package wgrep :ensure t)
 (use-package vlf :ensure t)
 (use-package neotree :ensure t)
+(use-package restart-emacs :ensure t)
 
 (use-package atomic-chrome
   :ensure t

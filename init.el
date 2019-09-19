@@ -88,5 +88,8 @@
 (when (file-exists-p user-settings-dir)
   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
 
+;; disabled command
+(put 'narrow-to-region 'disabled nil)
+
 (provide 'init.el)
 ;;; init.el ends here

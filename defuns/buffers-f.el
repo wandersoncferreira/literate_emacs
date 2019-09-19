@@ -86,6 +86,11 @@
 	(deactivate-mark))
     (message "No selected region!")))
 
+(defun er-switch-to-previous-buffer ()
+  "Switch to previously open buffer."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer))))
+
 
 (provide 'buffers-f)
 ;;; buffers-f.el ends here
