@@ -12,7 +12,7 @@
 (use-package fix-word :ensure t)
 
 ;; auto fill
-(ruler-mode +1)
+(add-hook 'after-init-hook 'ruler-mode)
 (setq-default fill-column 60)
 
 (add-hook 'org-mode-hook #'auto-fill-mode)
@@ -34,6 +34,15 @@
 
 (use-package ini-mode
   :ensure t)
+
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode +1)
+  (define-key hl-todo-mode-map (kbd "C-x t p") 'hl-todo-previous)
+  (define-key hl-todo-mode-map (kbd "C-x t n") 'hl-todo-next)
+  (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
+  (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
 
 (provide 'setup-editing)
 ;;; setup-editing.el ends here

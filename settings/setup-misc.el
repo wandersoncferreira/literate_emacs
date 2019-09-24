@@ -4,13 +4,27 @@
 
 ;;; install only packages
 (use-package htmlize :ensure t)
-(use-package restclient :ensure t)
+(use-package restclient
+  :ensure t
+  :config
+  (add-auto-mode 'restclient-mode "\\.restclient\\'"))
 
 (use-package yaml-mode
   :ensure t
   :config
   (add-auto-mode 'yaml-mode "\\.yml\\.erb\\'")
   (add-hook 'yaml-mode-hook 'goto-address-prog-mode))
+
+(use-package json-mode
+  :ensure t
+  :config
+  (add-auto-mode 'json-mode "\\.json\\'"))
+
+
+(use-package adoc-mode
+  :ensure t
+  :config
+  (add-auto-mode 'adoc-mode "\\.txt\\'"))
 
 (use-package graphviz-dot-mode :ensure t)
 (use-package quickrun :ensure t)

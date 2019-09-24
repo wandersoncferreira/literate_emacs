@@ -3,6 +3,7 @@
 ;;; Code:
 
 (require 'dired)
+(require 'dired-x)
 
 (let ((gls (executable-find "gls")))
   (when gls (setq insert-directory-program gls)))
@@ -27,6 +28,15 @@
 
 (advice-add 'dired-readin :after #'bk/dired-directories-first)
 
+(defun dired-back-to-start-of-files ()
+  (interactive)
+  (backward-char (- (current-column) 2)))
+
+(define-key dired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)
+
+;;; enable 'a'-keybinding in dired - which opens file and closes dired
+(put 'dired-find-alternate-file 'disabled nil)
+
 ;;; delete with c-x c-k to match file buffers and magit
 (define-key dired-mode-map (kbd "C-x C-k") 'dired-do-delete)
 
@@ -42,6 +52,7 @@
   :config
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
+
 
 (provide 'setup-dired)
 ;;; setup-dired.el ends here

@@ -11,6 +11,12 @@
 
 (use-package clojure-mode-extra-font-locking :ensure t)
 
+(defadvice clojure-test-run-tests (before save-first activate)
+  (save-buffer))
+
+(defadvice nrepl-load-current-buffer (before save-first activate)
+  (save-buffer))
+
 (use-package ivy-clojuredocs
   :ensure t
   :bind (:map clojure-mode-map
@@ -23,17 +29,22 @@
         cider-repl-use-pretty-printing t
         cider-repl-use-clojure-font-lock t
         cider-repl-result-prefix ";; => "
+        cider-save-file-on-load t
         cider-repl-wrap-history t
         cider-prompt-for-symbol nil
+        cider-repl-pop-to-buffer-on-connect nil
         cider-repl-history-size 3000
         nrepl-hide-special-buffers nil)
+
   (setq cider-print-options
         '(("length" 80)
           ("level" 20)
           ("right-margin" 80)))
   :config
   (add-hook 'cider-mode-hook #'eldoc-mode)
-  (add-hook 'clojure-mode-hook #'cider-mode))
+  (add-hook 'clojure-mode-hook #'cider-mode)
+  (define-key cider-mode-map (kbd "C-c C-q") 'nrepl-close)
+  (define-key cider-mode-map (kbd "C-c C-Q") 'cider-quit))
 
 (use-package emidje
   :ensure t
@@ -115,6 +126,21 @@ If no local or remote file exists, return nil."
     (cljr-add-keybindings-with-prefix "C-c C-m"))
   (define-key clj-refactor-map (kbd "C-x C-r") 'cljr-rename-file)
   (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+
+(defun clj-goto-toplevel ()
+  (interactive)
+  (cljr--goto-toplevel))
+
+(define-key clojure-mode-map (kbd "C-S-M-u") 'clj-goto-toplevel)
+
+(defun clj-duplicate-top-level-form ()
+  (interactive)
+  (save-excursion
+    (cljr--goto-toplevel)
+    (insert (cljr--extract-sexp) "\n")
+    (cljr--just-one-blank-line)))
+
+(define-key clojure-mode-map (kbd "M-s d") 'clj-duplicate-top-level-form)
 
 ;; allow single semicolon comments on a line, only on emacs 26
 (if (version<= "26" emacs-version)
