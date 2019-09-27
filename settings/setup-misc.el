@@ -125,6 +125,13 @@
 (use-package edit-indirect
   :ensure t)
 
+(use-package deft
+  :ensure t
+  :init
+  (setq deft-extensions '("txt" "org")
+        deft-directory "~/notes"
+        deft-recursive t))
+
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here
