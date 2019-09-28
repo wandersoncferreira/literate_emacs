@@ -27,10 +27,9 @@
     (add-to-list 'custom-theme-load-path path)))
 
 (or-protected
- (not (set-frame-font "Monaco 14"))
+ (not (set-frame-font "Monaco 12"))
  (not (set-frame-font "Source Code Pro 14"))
  (not (set-frame-font "Inconsolata 12")))
-
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
@@ -60,11 +59,9 @@
         sml/theme 'respectful)
   (sml/setup))
 
-(global-hl-line-mode +1)
-(set-face-background 'hl-line "#292b2e")
+(use-package zenburn-theme :ensure t)
 
-;; set cursor color
-(set-cursor-color "#edac2c")
+(load-theme 'zenburn t)
 
 ;; Initialize in full screen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -79,6 +76,36 @@
   (setq beacon-blink-delay 0.3)
   :config
   (beacon-mode 1))
+
+(setq theme-background-color (frame-parameter nil 'background-color))
+
+;;; show time in modeline when using Emacs in fullscreen [lgmoneda]
+(global-set-key (kbd "<f9>") (lambda () (interactive)
+                               (toggle-frame-fullscreen)
+                               (sit-for 1)
+                               (if (eq (cdr (assoc 'fullscreen (frame-parameters))) 'fullboth)
+                                   (display-time-mode 1)
+                                 (display-time-mode 0))))
+
+(global-hl-line-mode +1)
+(zenburn-with-color-variables
+  (custom-theme-set-faces
+   'zenburn
+   `(hl-line ((t (:background ,zenburn-bg+1))))))
+
+(set-face-foreground 'highlight nil)
+
+;;; more thinner window divisions
+(fringe-mode '(5 . 3))
+
+;;; outside border to make it better in fullscreen mode
+(add-to-list 'default-frame-alist '(internal-border-width . 2))
+
+;; set cursor color
+(set-cursor-color "#edac2c")
+
+;;; it helps me out managing where should I stop writing.
+(ruler-mode +1)
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

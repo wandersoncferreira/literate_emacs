@@ -132,6 +132,11 @@
         deft-directory "~/notes"
         deft-recursive t))
 
+(use-package highlight-numbers
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'highlight-numbers-mode))
+
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here
