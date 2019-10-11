@@ -59,9 +59,10 @@
         sml/theme 'respectful)
   (sml/setup))
 
-(use-package zenburn-theme :ensure t)
-
-(load-theme 'zenburn t)
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (load-theme 'zenburn t))
 
 ;; Initialize in full screen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -106,6 +107,15 @@
 
 ;;; it helps me out managing where should I stop writing.
 (ruler-mode +1)
+
+(use-package dashboard
+  :ensure t
+  :init
+  (setq dashboard-items '((recents . 7)
+                          (bookmarks . 3)
+                          (agenda . 7)))
+  :config
+  (dashboard-setup-startup-hook))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

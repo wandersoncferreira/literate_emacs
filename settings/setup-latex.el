@@ -26,6 +26,10 @@
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
+(with-eval-after-load 'tex
+  (add-to-list 'safe-local-variable-values
+               '(TeX-command-extra-options . "-shell-escape")))
+
 (defun bk/latex-template-article ()
   "Personal LaTeX template."
   (interactive)

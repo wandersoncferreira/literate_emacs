@@ -12,6 +12,7 @@
         projectile-completion-system 'ivy
         ivy-magic-tilde nil
         ivy-dynamic-exhibit-delay-ms 150
+        ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create
         ivy-use-selectable-prompt t
         ivy-height 12
         ivy-extra-directories nil
@@ -38,6 +39,15 @@
       (ivy-switch-buffer)))
   (ivy-mode +1))
 
+(use-package ivy-rich
+  :ensure t
+  :after ivy
+  :init
+  (setq ivy-rich-parse-remote-buffer nil
+        ivy-rich-path-style 'abbrev)
+  :config
+  (ivy-rich-set-display-transformer))
+
 (use-package ido-completing-read+ :ensure t)
 
 (use-package counsel
@@ -60,10 +70,23 @@
 (use-package flx
   :ensure t)
 
-(use-package smex
+(use-package prescient
   :ensure t
+  :defer t
   :config
-  (smex-initialize))
+  (prescient-persist-mode))
+
+(use-package ivy-prescient
+  :ensure t
+  :after ivy
+  :config
+  (ivy-prescient-mode))
+
+(use-package company-prescient
+  :ensure t
+  :after company
+  :config
+  (company-prescient-mode))
 
 (provide 'setup-completion)
 ;;; setup-completion.el ends here

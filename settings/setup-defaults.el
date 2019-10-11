@@ -73,7 +73,18 @@ so you can get back to it later with `pop-to-mark-command'"
   (setq-default recentf-max-saved-items 1000
                 recentf-max-menu-items 15
                 recentf-auto-cleanup 'never
-                recentf-exclude '("/tmp/" "/ssh:"))
+                recentf-exclude '((expand-file-name package-user-dir)
+                                  ".cache"
+                                  ".cask"
+                                  ".elfeed"
+                                  "bookmarks"
+                                  "cache"
+                                  "ido.*"
+                                  "recentf"
+                                  "url"
+                                  "COMMIT_EDITMSG\\'"
+                                  "/tmp/"
+                                  "/ssh:"))
   (recentf-mode +1))
 
 
@@ -199,8 +210,13 @@ Call a second time to restore the original window configuration."
 (use-package easy-kill
   :ensure t
   :config
-  (global-set-key [remap kill-ring-save] #'easy-kill)
-  (global-set-key [remap mark-sexp] #'easy-mark))
+  (global-set-key [remap kill-ring-save] 'easy-kill)
+  (global-set-key [remap mark-sexp] 'easy-mark))
+
+(use-package which-func
+  :defer 5
+  :config
+  (which-func-mode +1))
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

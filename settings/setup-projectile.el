@@ -13,7 +13,8 @@
   :init
   (setq projectile-mode-line-prefix ""
         projectile-completion-system 'ivy
-        projectile-switch-project-action 'projectile-find-file)
+        projectile-switch-project-action 'projectile-find-file
+        projectile-globally-ignored-file-suffixes '(".csv" ".svg" ".pdf" ".asc" ".doc"))
   :config
   (add-to-list 'projectile-other-file-alist '("clj" "py" "sql" "org"))
   (add-to-list 'projectile-other-file-alist '("org" "clj"))

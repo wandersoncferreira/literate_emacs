@@ -24,13 +24,19 @@
 (use-package adoc-mode
   :ensure t
   :config
-  (add-auto-mode 'adoc-mode "\\.txt\\'"))
+  (add-auto-mode 'adoc-mode "\\.txt\\'")
+  (add-auto-mode 'adoc-mode "\\.asc\\'"))
 
 (use-package graphviz-dot-mode :ensure t)
 (use-package quickrun :ensure t)
 (use-package windresize :ensure t)
 (use-package rotate :ensure t)
 (use-package discover-my-major :ensure t)
+
+(use-package disk-usage
+  :ensure t
+  :commands (disk-usage))
+
 (use-package plantuml-mode :ensure t)
 (use-package change-inner :ensure t)
 (use-package wgrep :ensure t)
@@ -130,6 +136,7 @@
   :init
   (setq deft-extensions '("txt" "org")
         deft-directory "~/notes"
+        deft-auto-save-interval 200
         deft-recursive t))
 
 (use-package highlight-numbers
@@ -137,6 +144,17 @@
   :config
   (add-hook 'prog-mode-hook #'highlight-numbers-mode))
 
+(use-package format-all :ensure t)
+
+(use-package eww
+  :ensure nil
+  :commands (eww)
+  :config
+  (setq browse-url-browser-function 'eww-browse-url)
+  (defun rename-eww-hook ()
+    "Rename EWW's buffer so sites open in new page."
+    (rename-buffer "eww" t))
+  (add-hook 'eww-mode-hook #'rename-eww-hook))
 
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

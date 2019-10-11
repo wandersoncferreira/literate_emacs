@@ -44,5 +44,18 @@
   (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
   (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
 
+(use-package crux
+  :ensure t
+  :bind (("C-c o" . crux-open-with)
+         ("M-o" . crux-smart-open-line)
+         ("C-c n" . crux-cleanup-buffer-or-region)
+         ("C-c f" . crux-recentf-find-file)
+         ("C-c u" . crux-view-url)
+         ("C-c e" . crux-eval-and-replace)
+         ("C-c w" . crux-swap-windows)
+         ("C-c t" . crux-visit-term-buffer)
+         ("C-c k" . crux-kill-other-buffers)
+         ([remap move-beginning-of-line] . crux-move-beginning-of-line)))
+
 (provide 'setup-editing)
 ;;; setup-editing.el ends here

@@ -7,7 +7,7 @@
   (interactive)
   (let ((buf (get-buffer "*scratch*")))
     (if buf
-	(switch-to-buffer buf)
+        (switch-to-buffer buf)
       (switch-to-buffer (get-buffer-create "*scratch*"))
       (lisp-interaction-mode))))
 
@@ -32,29 +32,29 @@
   "Renames current buffer and file it is visiting."
   (interactive)
   (let* ((name (buffer-name))
-	 (filename (buffer-file-name))
-	 (new-name (read-file-name "New name: " filename)))
+         (filename (buffer-file-name))
+         (new-name (read-file-name "New name: " filename)))
     (if (get-buffer new-name)
-	(error "A buffer named '%s' already exists!" new-name)
+        (error "A buffer named '%s' already exists!" new-name)
       (rename-file filename new-name 1)
       (rename-buffer new-name)
       (set-visited-file-name new-name)
       (set-buffer-modified-p nil)
       (message "File '%s' sucessfully renamed to '%s'"
-	       name (file-name-nondirectory new-name)))))
+               name (file-name-nondirectory new-name)))))
 
 (defun bk/delete-current-buffer-file ()
   "Remove file connected to current buffer and kill buffer."
   (interactive)
   (let ((filename (buffer-file-name))
-	(buffer (current-buffer))
-	(name (buffer-name)))
+        (buffer (current-buffer))
+        (name (buffer-name)))
     (if (not (and filename (file-exists-p filename)))
-	(ido-kill-buffer)
+        (ido-kill-buffer)
       (when (yes-or-no-p "Are you sure you want to remove this file? ")
-	(delete-file filename)
-	(kill-buffer buffer)
-	(message "File '%s' sucessfully removed" filename)))))
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' sucessfully removed" filename)))))
 
 (defun bk/spell-buffer-pt-BR ()
   "Function to spell check inside the buffer."
@@ -73,8 +73,8 @@
   (interactive "r")
   (if (use-region-p)
       (let ((num-words (count-words-region start end)))
-	(add-abbrev global-abbrev-table "Global" num-words)
-	(deactivate-mark))
+        (add-abbrev global-abbrev-table "Global" num-words)
+        (deactivate-mark))
     (message "No selected region!")))
 
 (defun bk/add-region-local-abbrev (start end)
@@ -82,14 +82,23 @@
   (interactive "r")
   (if (use-region-p)
       (let ((num-words (count-words-region start end)))
-	(add-mode-abbrev num-words)
-	(deactivate-mark))
+        (add-mode-abbrev num-words)
+        (deactivate-mark))
     (message "No selected region!")))
 
 (defun er-switch-to-previous-buffer ()
   "Switch to previously open buffer."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer))))
+
+(defun where-am-i ()
+  "Displays `buffer-file-name' when visiging a file.
+Otherwise the function display `buffer-name'"
+  (interactive)
+  (let ((dir-file (buffer-file-name)))
+    (if dir-file
+        (message dir-file)
+      (message (buffer-name)))))
 
 
 (provide 'buffers-f)

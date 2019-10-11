@@ -10,7 +10,7 @@
 
 (setq dired-recursive-copies 'always
       dired-recursive-deletes 'always
-      dired-listing-switches "-alh"
+      dired-listing-switches "-l"
       dired-ls-F-marks-symlinks nil
       dired-auto-revert-buffer t
       dired-dwim-target t)
