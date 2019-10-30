@@ -67,26 +67,13 @@
               ([remap describe-function] . counsel-describe-function)
               ([remap finder-by-keyword] . counsel-package)))
 
+(use-package smex
+  :ensure t
+  :config
+  (smex-initialize))
+
 (use-package flx
   :ensure t)
-
-(use-package prescient
-  :ensure t
-  :defer t
-  :config
-  (prescient-persist-mode))
-
-(use-package ivy-prescient
-  :ensure t
-  :after ivy
-  :config
-  (ivy-prescient-mode))
-
-(use-package company-prescient
-  :ensure t
-  :after company
-  :config
-  (company-prescient-mode))
 
 (provide 'setup-completion)
 ;;; setup-completion.el ends here
