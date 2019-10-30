@@ -39,15 +39,6 @@
       (ivy-switch-buffer)))
   (ivy-mode +1))
 
-(use-package ivy-rich
-  :ensure t
-  :after ivy
-  :init
-  (setq ivy-rich-parse-remote-buffer nil
-        ivy-rich-path-style 'abbrev)
-  :config
-  (ivy-rich-set-display-transformer))
-
 (use-package ido-completing-read+ :ensure t)
 
 (use-package counsel
