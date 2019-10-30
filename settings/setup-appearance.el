@@ -45,18 +45,6 @@
      (set-face-foreground 'diff-added "green4")
      (set-face-foreground 'diff-removed "red3")))
 
-(use-package smart-mode-line
-  :ensure t
-  :config
-  (setq sml/no-confirm-load-theme t
-        sml/theme 'respectful)
-  (sml/setup))
-
-(use-package zenburn-theme
-  :ensure t
-  :config
-  (load-theme 'zenburn t))
-
 ;; Initialize in full screen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -82,10 +70,6 @@
                                  (display-time-mode 0))))
 
 (global-hl-line-mode +1)
-(zenburn-with-color-variables
-  (custom-theme-set-faces
-   'zenburn
-   `(hl-line ((t (:background ,zenburn-bg+1))))))
 
 (set-face-foreground 'highlight nil)
 
