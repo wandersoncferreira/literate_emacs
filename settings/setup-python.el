@@ -13,7 +13,7 @@
 (use-package py-autopep8
   :ensure t
   :init
-  (setq py-autopep8-options '("--max-line-length=150"))
+  (setq py-autopep8-options '("--max-line-length=250"))
   :config
   (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
 

@@ -48,51 +48,14 @@
 ;; Initialize in full screen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;;Beacon minor mode
-(use-package beacon
-  :ensure t
-  :diminish beacon-mode
-  :init
-  (setq beacon-color "#edac2c")
-  (setq beacon-size 25)
-  (setq beacon-blink-delay 0.3)
-  :config
-  (beacon-mode 1))
-
 (setq theme-background-color (frame-parameter nil 'background-color))
-
-;;; show time in modeline when using Emacs in fullscreen [lgmoneda]
-(global-set-key (kbd "<f9>") (lambda () (interactive)
-                               (toggle-frame-fullscreen)
-                               (sit-for 1)
-                               (if (eq (cdr (assoc 'fullscreen (frame-parameters))) 'fullboth)
-                                   (display-time-mode 1)
-                                 (display-time-mode 0))))
 
 (global-hl-line-mode +1)
 
 (set-face-foreground 'highlight nil)
 
-;;; more thinner window divisions
-(fringe-mode '(5 . 3))
-
-;;; outside border to make it better in fullscreen mode
-(add-to-list 'default-frame-alist '(internal-border-width . 2))
-
 ;; set cursor color
 (set-cursor-color "#edac2c")
-
-;;; it helps me out managing where should I stop writing.
-(ruler-mode +1)
-
-(use-package dashboard
-  :ensure t
-  :init
-  (setq dashboard-items '((recents . 7)
-                          (bookmarks . 3)
-                          (agenda . 7)))
-  :config
-  (dashboard-setup-startup-hook))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

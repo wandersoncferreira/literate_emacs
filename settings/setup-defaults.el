@@ -206,13 +206,6 @@ Call a second time to restore the original window configuration."
         (setq ad-return-value dockernames))
     ad-do-it))
 
-;;; easy-kill
-(use-package easy-kill
-  :ensure t
-  :config
-  (global-set-key [remap kill-ring-save] 'easy-kill)
-  (global-set-key [remap mark-sexp] 'easy-mark))
-
 (use-package which-func
   :defer 5
   :config

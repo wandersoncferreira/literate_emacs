@@ -146,15 +146,5 @@
 
 (use-package format-all :ensure t)
 
-(use-package eww
-  :ensure nil
-  :commands (eww)
-  :config
-  (setq browse-url-browser-function 'eww-browse-url)
-  (defun rename-eww-hook ()
-    "Rename EWW's buffer so sites open in new page."
-    (rename-buffer "eww" t))
-  (add-hook 'eww-mode-hook #'rename-eww-hook))
-
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

@@ -80,7 +80,7 @@
 ;;;;    -------- Meta based keys  -----------
 
 ;;; M-{letter} bindings
-(global-set-key (kbd "M-/") 'hippie-expand)
+;; (global-set-key (kbd "M-/") 'hippie-expand)
 
 (global-set-key (kbd "M-c") #'fix-word-capitalize)
 (global-set-key (kbd "M-i") 'change-inner)
@@ -112,6 +112,14 @@
 ;;; zap to char
 (global-set-key (kbd "s-z") (lambda (char)
                               (interactive "cZap up to char backwards: " (zap-up-to-char -1 char))))
+
+;;; show time in modeline when using Emacs in fullscreen [lgmoneda]
+(global-set-key (kbd "<f9>") (lambda () (interactive)
+                               (toggle-frame-fullscreen)
+                               (sit-for 1)
+                               (if (eq (cdr (assoc 'fullscreen (frame-parameters))) 'fullboth)
+                                   (display-time-mode 1)
+                                 (display-time-mode 0))))
 
 ;; registers
 (set-register ?b '(file . "~/books.org"))
