@@ -5,14 +5,14 @@
 
 ;;; Code:
 
-(use-package counsel-projectile
-  :ensure t)
+;; (use-package counsel-projectile
+;;   :ensure t)
 
 (use-package projectile
   :ensure t
   :init
   (setq projectile-mode-line-prefix ""
-        projectile-completion-system 'ivy
+        projectile-completion-system 'ido
         projectile-switch-project-action 'projectile-find-file
         projectile-globally-ignored-file-suffixes '(".csv" ".svg" ".pdf" ".asc" ".doc"))
   :config

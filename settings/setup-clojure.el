@@ -52,7 +52,6 @@
   :config
   (emidje-setup))
 
-;;; syntax highlighting for midje
 ;; syntax hilighting for midje
 (add-hook 'clojure-mode-hook
           (lambda ()
@@ -114,7 +113,6 @@ If no local or remote file exists, return nil."
   (setq cljr-magic-require-namespaces
         '(("io" . "clojure.java.io")
           ("set" . "clojure.set")
-          ("s" . "clojure.string")
           ("walk" . "clojure.walk")
           ("time" . "clj-time.core")
           ("log" . "clojure.tools.logging")
@@ -170,6 +168,8 @@ If no local or remote file exists, return nil."
                   (setq comment-add 0)
                   (comment-normalize-vars))))
   "running emacs 25 or lower")
+
+(add-to-list 'auto-mode-alist '("\\.repl\\'" . clojure-mode))
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here

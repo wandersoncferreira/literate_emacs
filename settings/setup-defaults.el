@@ -206,10 +206,5 @@ Call a second time to restore the original window configuration."
         (setq ad-return-value dockernames))
     ad-do-it))
 
-(use-package which-func
-  :defer 5
-  :config
-  (which-func-mode +1))
-
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

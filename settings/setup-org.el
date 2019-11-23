@@ -91,6 +91,7 @@
 
 (use-package htmlize :ensure t)
 
+(use-package plantuml-mode :ensure t)
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((plantuml . t)))

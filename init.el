@@ -58,7 +58,6 @@
 (require 'setup-paredit)
 (require 'setup-grep)
 (require 'setup-advices)
-(require 'setup-expand)
 (require 'setup-markdown)
 (require 'setup-clojure)
 (require 'setup-python)
