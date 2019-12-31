@@ -5,9 +5,6 @@
 
 ;;; Code:
 
-;; (use-package counsel-projectile
-;;   :ensure t)
-
 (use-package projectile
   :ensure t
   :init
@@ -23,7 +20,7 @@
     (format " P[%s]" (projectile-project-name)))
   (setq projectile-mode-line-function 'projectile-short-mode-line)
   (setq projectile-enable-caching nil)
-  (counsel-projectile-mode +1))
+  (projectile-mode +1))
 
 (provide 'setup-projectile)
 ;;; setup-projectile.el ends here

@@ -38,6 +38,13 @@ which is unsafe because it allows man-in-the-middle attacks."))
   (package-install 'use-package)
   (package-install 'diminish))
 
+(eval-and-compile
+  (setq use-package-expand-minimally t
+        use-package-compute-statistics t
+        use-package-enable-imenu-support t))
+
+(use-package gnu-elpa-keyring-update :ensure t)
+
 ;; do not litter config
 (use-package no-littering
   :ensure t

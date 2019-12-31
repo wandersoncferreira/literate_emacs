@@ -29,7 +29,6 @@
 ;; (global-set-key (kbd "C-x C-m") 'counsel-M-x)
 (global-set-key (kbd "C-x C-m") 'smex)
 (global-set-key (kbd "C-x C-p") 'pop-global-mark)
-(global-set-key (kbd "C-x C-/") 'save-buffer)
 
 ;;; C-{symbols} are reserved for user
 (global-unset-key (kbd "C-\\"))
@@ -39,8 +38,7 @@
 (global-set-key (kbd "C-+") 'er/contract-region)
 (global-set-key (kbd "C-;") 'flyspell-auto-correct-previous-word)
 (global-set-key (kbd "C-*") 'isearch-forward-symbol-at-point)
-(global-set-key (kbd "<C-dead-acute>") 'ace-jump-mode)
-(global-set-key (kbd "C-\\") 'push-mark-no-activate)
+(global-set-key (kbd "C-\\") 'ace-jump-mode)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
@@ -123,8 +121,7 @@
                                  (display-time-mode 0))))
 
 ;; registers
-(set-register ?b '(file . "~/books.org"))
-(set-register ?h '(file . "~/emacs-notes/7habits-effective-editing.org"))
+(set-register ?p '(file . "~/practice.org"))
 (set-register ?e '(file . "~/.emacs.d/init.el"))
 (set-register ?i '(file . "~/notes/gtd/inbox.org"))
 

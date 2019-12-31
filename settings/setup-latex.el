@@ -82,7 +82,6 @@
   (insert "\\end{frame}\n")
   (insert "\\end{document}\n"))
 
-
 (use-package pdf-tools
   :ensure t
   :init

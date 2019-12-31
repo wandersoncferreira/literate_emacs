@@ -36,6 +36,9 @@ so you can get back to it later with `pop-to-mark-command'"
       tab-always-indent 'complete
       delete-old-versions t
       vc-make-backup-files t
+      compilation-always-kill t
+      compilation-ask-about-save nil
+      compilation-scroll-output t
       save-place-mode t
       save-place-file (expand-file-name ".places" user-emacs-directory)
       global-auto-revert-non-file-buffers t
@@ -69,23 +72,27 @@ so you can get back to it later with `pop-to-mark-command'"
   (setq save-abbrevs 'silent))
 
 (use-package recentf
+  :init
+  (setq recentf-max-saved-items 1000
+        recentf-max-menu-items 15
+        recentf-auto-cleanup 'never
+        recentf-exclude '((expand-file-name package-user-dir)
+                          ".cache"
+                          ".cask"
+                          ".elfeed"
+                          "bookmarks"
+                          "cache"
+                          "ido.*"
+                          "recentf"
+                          "url"
+                          "COMMIT_EDITMSG\\'"
+                          "/tmp/"
+                          "/ssh:"))
   :config
-  (setq-default recentf-max-saved-items 1000
-                recentf-max-menu-items 15
-                recentf-auto-cleanup 'never
-                recentf-exclude '((expand-file-name package-user-dir)
-                                  ".cache"
-                                  ".cask"
-                                  ".elfeed"
-                                  "bookmarks"
-                                  "cache"
-                                  "ido.*"
-                                  "recentf"
-                                  "url"
-                                  "COMMIT_EDITMSG\\'"
-                                  "/tmp/"
-                                  "/ssh:"))
   (recentf-mode +1))
+
+(save-place-mode +1)
+(setq-default history-length 500)
 
 
 (setq uniquify-after-kill-buffer-p t

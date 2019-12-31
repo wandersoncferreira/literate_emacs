@@ -19,6 +19,12 @@
                     gc-cons-percentage 0.1
                     file-name-handler-alist bk--file-name-handler-alist))))
 
+(setq site-run-file nil)
+
+(defconst *rg*
+  (executable-find "rg")
+  "Do we have ripgrep?")
+
 (defconst init-osx? (eq system-type 'darwin))
 (defconst setting-dir (expand-file-name "settings" user-emacs-directory))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -27,10 +33,10 @@
 (require 'setup-package)
 
 (defconst defuns-dir (expand-file-name "defuns" user-emacs-directory))
+
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
     (load file)))
-
 
 (require 'setup-appearance)
 (require 'setup-defaults)
@@ -75,11 +81,6 @@
 ;; variables configured via the interactive `customize' interface
 (when (file-exists-p custom-file)
   (load custom-file))
-
-;;; start eshell
-(eshell)
-(with-current-buffer "*eshell*" (setq pcomplete-cycle-completions nil))
-(set-face-foreground 'eshell-prompt "turquoise")
 
 ;;; conclude init by setting up specifics for the current user
 (setq user-settings-dir (concat user-emacs-directory "users/"))

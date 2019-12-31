@@ -17,8 +17,6 @@
 
 (add-hook 'org-mode-hook #'auto-fill-mode)
 (add-hook 'after-init-hook #'auto-fill-mode)
-
-;;; programming mode settings
 (add-hook 'prog-mode-hook
           (defun bk--add-watchwords ()
             (font-lock-add-keywords
@@ -31,9 +29,6 @@
   :config
   (add-hook 'after-init-hook
             'global-whitespace-cleanup-mode))
-
-(use-package ini-mode
-  :ensure t)
 
 (use-package hl-todo
   :ensure t

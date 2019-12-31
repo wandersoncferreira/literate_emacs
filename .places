@@ -1,0 +1,98 @@
+;;; -*- coding: utf-8 -*-
+(("/home/wand/.emacs.d/var/ido-save-directory-list.el" . 44055)
+ ("/home/wand/.emacs.d/var/elfeed/db/index" . 630)
+ ("/home/wand/secland/README.md" . 70)
+ ("/home/wand/secland/src/secland/securities/"
+  (dired-filename . "/home/wand/secland/src/secland/securities/contract.clj"))
+ ("/home/wand/secland/src/secland/"
+  (dired-filename . "/home/wand/secland/src/secland/rules"))
+ ("/home/wand/secland/src/secland/rules/general_payment.clj" . 503)
+ ("/home/wand/secland/src/secland/rules/"
+  (dired-filename . "/home/wand/secland/src/secland/rules/general_payment.clj"))
+ ("/home/wand/secland/src/secland/rules/core.clj" . 4732)
+ ("/home/wand/secland/src/secland/rules/interfaces.clj" . 778)
+ ("/home/wand/secland/src/secland/metrics/provision.clj" . 4220)
+ ("/home/wand/secland/src/secland/rules/payments.clj" . 773)
+ ("/home/wand/mercado-credito/src/mercado_credito/core.clj" . 2138)
+ ("/home/wand/secland/src/secland/securities/payment.clj" . 3997)
+ ("/home/wand/montag/src/montag/"
+  (dired-filename . "/home/wand/montag/src/montag/database.clj"))
+ ("/home/wand/readings/oop-in-common-lisp.asc" . 1409)
+ ("/home/wand/montag/src/montag/database.clj" . 1255)
+ ("/home/wand/montag/src/montag/notes.clj" . 2528)
+ ("/home/wand/.emacs.d/var/eshell/alias" . 99)
+ ("/home/wand/notes/gtd/inbox.org" . 10)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-27-what-went-wrong-with-it.asc" . 1026)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-28-extreme-programming.asc" . 558)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-28-is-tdd-dead.asc" . 86)
+ ("/home/wand/watch" . 29)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-29-art-of-logic.asc" . 135)
+ ("/home/wand/bartuka-blog/content/asc/posts/"
+  (dired-filename . "/home/wand/bartuka-blog/content/asc/posts/2019-12-29-functional-programming-design-patterns.asc"))
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-29-functional-programming-design-patterns.asc" . 556)
+ ("/home/wand/secland/project.clj" . 27)
+ ("/home/wand/secland/"
+  (dired-filename . "/home/wand/secland/src"))
+ ("/home/wand/secland/src/"
+  (dired-filename . "/home/wand/secland/src/secland"))
+ ("/home/wand/.emacs.d/settings/setup-appearance.el" . 886)
+ ("/home/wand/.emacs.d/settings/setup-misc.el" . 4568)
+ ("/home/wand/montag/src/montag/http.clj" . 431)
+ ("/home/wand/montag/src/montag/core.clj" . 2075)
+ ("/home/wand/montag/db/"
+  (dired-filename . "/home/wand/montag/db/database.sqlite"))
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-27-jim-coplien-debate-tdd.asc" . 112)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-26-making-architecture-matter.asc" . 95)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-26-core-design-principles.asc" . 112)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-25-solid-principles-oo-design.asc" . 111)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-25-linus-on-git.asc" . 71)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-25-kill-microservices.asc" . 113)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-25-future-doesnt-have-to-be-incremental.asc" . 86)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-12-01-ousterhout.asc" . 108)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-11-21-back-to-basics-oop.asc" . 99)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-10-10-philosophy-of-software-design.asc" . 95)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-10-01-design-composition.asc" . 114)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-09-20-clojure-java-interop.asc" . 92)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-09-01-design-after-agile.asc" . 109)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-08-21-running-with-scissors.asc" . 87)
+ ("/home/wand/bartuka-blog/content/asc/posts/2019-08-01-debugging-with-science.asc" . 117)
+ ("/home/wand/secland/resources/config.edn" . 657)
+ ("/home/wand/platform/register/Dockerfile" . 313)
+ ("/home/wand/platform/register/"
+  (dired-filename . "/home/wand/platform/register/entrypoint.sh"))
+ ("/home/wand/montag/project.clj" . 26)
+ ("/home/wand/montag/reflection.json" . 2696)
+ ("/home/wand/montag/src/"
+  (dired-filename . "/home/wand/montag/src/montag"))
+ ("/home/wand/"
+  (dired-filename . "/home/wand/montag"))
+ ("/home/wand/montag/"
+  (dired-filename . "/home/wand/montag/db"))
+ ("/home/wand/montag/Makefile" . 238)
+ ("/home/wand/secland/src/secland/lambdas/etl_metrics.clj" . 720)
+ ("/home/wand/notes/gtd/gtd.org" . 8842)
+ ("/home/wand/secland/src/secland/metrics/core.clj" . 7059)
+ ("/home/wand/secland/src/secland/metrics/"
+  (dired-filename . "/home/wand/secland/src/secland/metrics/core.clj"))
+ ("/home/wand/secland/src/secland/lambdas/"
+  (dired-filename . "/home/wand/secland/src/secland/lambdas/metrics.clj"))
+ ("/home/wand/secland/src/secland/lambdas/metrics.clj" . 1926)
+ ("/home/wand/.aws/credentials" . 271)
+ ("/home/wand/secland/src/secland/services/redshift.clj" . 3846)
+ ("/home/wand/secland/src/secland/s3.clj" . 1435)
+ ("/home/wand/.emacs.d/settings/"
+  (dired-filename . "/home/wand/.emacs.d/settings/setup-appearance.el"))
+ ("/home/wand/.emacs.d/custom.el" . 2)
+ ("/home/wand/scripts/default-fix" . 62)
+ ("/home/wand/Downloads/33fffcf4-5616-41b7-8ec8-871d317f00b5_1_1" . 9017)
+ ("/home/wand/.emacs.d/settings/setup-snippets.el" . 597)
+ ("/home/wand/secland/src/secland/securities/contract.clj" . 6183)
+ ("/home/wand/.emacs.d/init.el" . 942)
+ ("/home/wand/.emacs.d/"
+  (dired-filename . "/home/wand/.emacs.d/settings"))
+ ("/home/wand/.emacs.d/elpa/helm-core-20191223.1914/helm-core-autoloads.el" . 6801)
+ ("/home/wand/.emacs.d/elpa/"
+  (dired-filename . "/home/wand/.emacs.d/elpa/highlight-indentation-20181204.839"))
+ ("/home/wand/.emacs.d/settings/setup-package.el" . 1356)
+ ("/home/wand/.emacs.d/settings/setup-defaults.el" . 1138)
+ ("/home/wand/.emacs.d/elpa/doom-themes-20191224.1907/doom-themes-autoloads.el" . 13012))

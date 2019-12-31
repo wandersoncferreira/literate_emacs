@@ -5,7 +5,6 @@
 
 ;;; Code:
 
-
 (use-package company
   :ensure t
   :init
@@ -45,7 +44,6 @@
     (define-key map (kbd "<return>") nil)))
 
 (ora-activate-number)
-
 
 (provide 'setup-company)
 ;;; setup-company.el ends here

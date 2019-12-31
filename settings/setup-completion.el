@@ -3,6 +3,14 @@
 ;;; Code:
 
 (use-package ido
+  :init
+  (setq ido-enable-prefix nil
+        ido-enable-flex-matching t
+        ido-case-fold nil
+        ido-auto-merge-work-directories-length -1
+        ido-create-new-buffer 'always
+        ido-use-filename-at-point nil
+        ido-max-prospects 10)
   :config
   (ido-mode +1)
   (ido-everywhere +1))
@@ -16,9 +24,6 @@
   :ensure t
   :config
   (smex-initialize))
-
-(use-package flx
-  :ensure t)
 
 (provide 'setup-completion)
 ;;; setup-completion.el ends here

@@ -26,7 +26,6 @@
 (use-package yasnippet-snippets :ensure t)
 (use-package clojure-snippets :ensure t)
 
-
 (defun yas/goto-end-of-active-field ()
   "Go to the end of the active field."
   (interactive)
@@ -44,7 +43,6 @@
     (if (= (point) position)
         (move-beginning-of-line 1)
       (goto-char position))))
-
 
 (provide 'setup-snippets)
 ;;; setup-snippets.el ends here
