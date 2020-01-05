@@ -3,11 +3,21 @@
 ;;; Code:
 
 
+(use-package flycheck
+  :ensure t
+  :init
+  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (global-flycheck-mode))
+
+(use-package flycheck-clj-kondo
+  :ensure t)
+
 (use-package clojure-mode
   :ensure t
   :config
   (define-key clojure-mode-map [remap paredit-forward] 'clojure-forward-logical-sexp)
-  (define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp))
+  (define-key clojure-mode-map [remap paredit-backward] 'clojure-backward-logical-sexp)
+  (require 'flycheck-clj-kondo))
 
 (use-package clojure-mode-extra-font-locking :ensure t)
 
