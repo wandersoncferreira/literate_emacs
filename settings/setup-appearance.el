@@ -19,20 +19,21 @@
       visible-bell nil
       ring-bell-function 'ignore)
 
-(or-protected
- (not (set-frame-font "Monaco 11")))
-
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
-(use-package smart-mode-line
-  :ensure t
-  :init
-  (setq sml/theme 'light)
-  :config
-  (sml/setup))
+(dolist
+    (path (directory-files custom-theme-directory t "\\w+"))
+  (when (file-directory-p path)
+    (add-to-list 'custom-theme-load-path path)))
 
- (set-face-attribute 'region nil :background "lightyellow2")
+(defun set-default-theme ()
+  "Function to define the default theme."
+  (load-theme 'default-black t)
+  (or-protected
+   (not (set-frame-font "Monaco 10"))))
+
+(set-face-attribute 'region nil :background "lightyellow2")
 
 (defun bk/adjust-to-heavy-daylight ()
   (interactive)
@@ -43,11 +44,6 @@
   (interactive)
   (load-theme 'cyberpunk t)
   (set-frame-font "Monaco 11"))
-
-(use-package page-break-lines
-  :ensure t
-  :init
-  (global-page-break-lines-mode))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

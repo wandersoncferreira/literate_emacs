@@ -82,7 +82,7 @@
 (use-package webpaste
   :ensure t
   :config
-  (setq webpaste-provider-priority '("dpaste.de")))
+  (setq webpaste-provider-priority '("ix.io" "dpaste.org")))
 
 (use-package sqlformat
   :ensure t

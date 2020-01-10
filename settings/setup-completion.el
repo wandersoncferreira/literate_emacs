@@ -9,6 +9,7 @@
         ido-case-fold nil
         ido-auto-merge-work-directories-length -1
         ido-create-new-buffer 'always
+        ido-use-virtual-buffers t
         ido-use-filename-at-point nil
         ido-max-prospects 10)
   :config

@@ -56,25 +56,6 @@
   (define-key cider-mode-map (kbd "C-c C-q") 'nrepl-close)
   (define-key cider-mode-map (kbd "C-c C-Q") 'cider-quit))
 
-(use-package emidje
-  :ensure t
-  :after cider
-  :config
-  (emidje-setup))
-
-;; syntax hilighting for midje
-(add-hook 'clojure-mode-hook
-          (lambda ()
-            (setq inferior-lisp-program "lein repl")
-            (font-lock-add-keywords
-             nil
-             '(("(\\(facts?\\)"
-                (1 font-lock-keyword-face))
-               ("(\\(background?\\)"
-                (1 font-lock-keyword-face))))
-            (define-clojure-indent (fact 1))
-            (define-clojure-indent (facts 1))))
-
 (defalias 'cider-default-connection 'cider-current-connection)
 
 ;;; cider config to use Clojure inside Docker and have nagivation
