@@ -22,18 +22,19 @@
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
-(dolist
-    (path (directory-files custom-theme-directory t "\\w+"))
-  (when (file-directory-p path)
-    (add-to-list 'custom-theme-load-path path)))
+(global-hl-line-mode)
 
-(defun set-default-theme ()
-  "Function to define the default theme."
-  (load-theme 'default-black t)
-  (or-protected
-   (not (set-frame-font "Monaco 10"))))
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(add-to-list 'load-path "~/.emacs.d/themes")
+(load-theme 'tomorrow-night-bright t)
+(set-face-attribute 'default nil :height 110)
 
-(set-face-attribute 'region nil :background "lightyellow2")
+;; (set-face-attribute 'region nil :background "lightyellow2")
+
+(use-package popwin
+  :ensure t
+  :config
+  (popwin-mode +1))
 
 (defun bk/adjust-to-heavy-daylight ()
   (interactive)

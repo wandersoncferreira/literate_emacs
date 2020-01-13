@@ -24,7 +24,7 @@
 
 (use-package magit
   :ensure t
-  :init
+  :config
   (setq magit-no-confirm '(stage-all-changes
                            unstage-all-changes))
   (setq magit-completing-read-function 'magit-ido-completing-read))

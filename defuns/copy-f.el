@@ -33,7 +33,6 @@
 
 (global-set-key (kbd "C-c W") 'copy-backward-word)
 
-
 (defun copy-line (&optional arg)
   "Save current line into kill-ring without mark the line."
   (interactive "P")
@@ -42,7 +41,6 @@
 
 (global-set-key (kbd "C-c l") 'copy-line)
 
-
 (defun copy-paragraph (&optional arg)
   "Copy paragraphs at point"
   (interactive "P")
@@ -50,21 +48,3 @@
   (message "Copied PARAGRAPH"))
 
 (global-set-key (kbd "C-c P") 'copy-paragraph)
-
-(defun beginning-of-string (&optional arg)
-  (when (re-search-backward "[ \t]" (line-beginning-position) :noerror 1)
-    (forward-char 1)))
-
-(defun end-of-string (&optional arg)
-  (when (re-search-forward "[ \t]" (line-end-position) :noerror arg)
-    (backward-char 1)))
-
-
-(defun thing-copy-string-to-mark (&optional arg)
-  "Try to copy a string and paste it to the mark
-When used in shell-mode, it will paste string on shell prompt by default."
-  (interactive "P")
-  (copy-thing 'beginning-of-string 'end-of-string)
-  (message "Copied STRING"))
-
-(global-set-key (kbd "C-c s") 'thing-copy-string-to-mark)

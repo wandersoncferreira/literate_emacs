@@ -19,6 +19,8 @@
                     gc-cons-percentage 0.1
                     file-name-handler-alist bk--file-name-handler-alist))))
 
+(setenv "BROWSER" "qutebrowser")
+
 (setq site-run-file nil)
 
 (defconst *rg*
@@ -51,7 +53,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :config
-  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES"))
+  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES" "JAVA_HOME" "PATH"))
   (exec-path-from-shell-initialize))
 
 (require 'setup-org)

@@ -30,14 +30,87 @@
   (add-hook 'after-init-hook
             'global-whitespace-cleanup-mode))
 
-(use-package hl-todo
+(use-package hungry-delete
   :ensure t
   :config
-  (global-hl-todo-mode +1)
-  (define-key hl-todo-mode-map (kbd "C-x t p") 'hl-todo-previous)
-  (define-key hl-todo-mode-map (kbd "C-x t n") 'hl-todo-next)
-  (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
-  (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
+  (global-hungry-delete-mode))
 
-(provide 'setup-editing)
+(use-package aggressive-indent
+  :ensure t
+  :config
+  (global-aggressive-indent-mode 1))
+
+
+(global-set-key (kbd "M-\\") (lambda ()
+                               (interactive)
+                               (just-one-space -1)
+                               (delete-horizontal-space)))
+
+(setq split-height-threshold nil
+      split-width-threshold 0)
+
+(use-package hideshow
+  :ensure t
+  :demand t
+  :config
+  (defun hs-clojure-hide-namespace-and-folds ()
+    "Hide the first (ns ...) expression in the file, and also all
+the (^:fold ...) expressions."
+    (interactive)
+    (hs-life-goes-on
+     (save-excursion
+       (goto-char (point-min))
+       (when (ignore-errors (re-search-forward "^(ns "))
+         (hs-hide-block))
+       (when (ignore-errors (re-search-forward "\\^:fold"))
+         (hs-hide-block)
+         (next-line))
+       (beginning-of-buffer)
+       (while (ignore-errors (re-search-forward "^(s/fdef"))
+         (hs-hide-block)
+         (next-line)))))
+
+  (defun hs-clojure-mode-hook ()
+    (interactive)
+    (hs-minor-mode 1)
+    (hs-clojure-hide-namespace-and-folds))
+
+  (add-hook 'clojure-mode-hook 'hs-clojure-mode-hook)
+  (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+  (add-hook 'lisp-mode-hook 'hs-minor-mode))
+
+(use-package phi-search
+  :ensure t
+  :bind (("C-c s s" . phi-search)
+         ("C-c s r" . phi-search-backward)))
+
+;;; while searching, following commands are available:
+;;; URL: https://github.com/zk-phi/phi-search
+  ;; [C-s] - phi-search-again-or-next
+  ;; [C-r] - phi-search-again-or-previous
+  ;; [C-v] - phi-search-scroll-up
+  ;; [M-v] - phi-search-scroll-down
+  ;; [C-l] - phi-search-recenter
+  ;; [M-c] - phi-search-case-toggle
+  ;; [C-w] - phi-search-yank-word
+  ;; RET   - phi-search-complete
+  ;; C-RET - phi-search-complete-at-beginning
+  ;; C-c C-c phi-search-unlimit
+  ;; C-g   - phi-search-abort
+
+  (require 'phi-replace)
+
+  (global-set-key (kbd "M-%") 'phi-replace-query)
+
+
+  (use-package hl-todo
+    :ensure t
+    :config
+    (global-hl-todo-mode +1)
+    (define-key hl-todo-mode-map (kbd "C-x t p") 'hl-todo-previous)
+    (define-key hl-todo-mode-map (kbd "C-x t n") 'hl-todo-next)
+    (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
+    (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
+
+  (provide 'setup-editing)
 ;;; setup-editing.el ends here

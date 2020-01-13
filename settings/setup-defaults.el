@@ -54,7 +54,10 @@ so you can get back to it later with `pop-to-mark-command'"
 (setq ffap-machine-p-known 'reject)
 
 (add-hook 'after-init-hook 'delete-selection-mode)
+
 (add-hook 'after-init-hook 'global-auto-revert-mode)
+(setq auto-revert-verbose nil)
+
 (add-hook 'after-init-hook 'savehist-mode)
 (add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)

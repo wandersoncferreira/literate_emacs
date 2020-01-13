@@ -44,7 +44,7 @@
 
 ;;; C-c {letter} are reserved for user
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'er-switch-to-previous-buffer)
+(global-set-key (kbd "C-c b") 'stesla-rotate-buffers)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c r") 'restart-emacs)
 (global-set-key (kbd "C-c e") 'eshell)

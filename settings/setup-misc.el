@@ -10,12 +10,14 @@
 (use-package neotree :ensure t)
 (use-package restart-emacs :ensure t)
 (use-package edit-indirect :ensure t)
-;; (use-package helm-spotify-plus :ensure t)
+(use-package helm-spotify-plus :ensure t)
 (use-package graphviz-dot-mode :ensure t)
 (use-package quickrun :ensure t)
 (use-package windresize :ensure t)
 (use-package rotate :ensure t)
 (use-package discover-my-major :ensure t)
+
+(use-package groovy-mode :ensure t)
 
 (use-package which-key
   :ensure t
@@ -29,6 +31,11 @@
   :ensure t
   :config
   (add-auto-mode 'restclient-mode "\\.restclient\\'"))
+
+(use-package company-restclient
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-restclient))
 
 (use-package rg
   :ensure t

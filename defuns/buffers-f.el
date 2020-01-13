@@ -86,10 +86,6 @@
         (deactivate-mark))
     (message "No selected region!")))
 
-(defun er-switch-to-previous-buffer ()
-  "Switch to previously open buffer."
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer))))
 
 (defun where-am-i ()
   "Displays `buffer-file-name' when visiging a file.

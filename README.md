@@ -56,3 +56,9 @@ look at the file `settings/setup-keybindings.el`.
 
 
 have fun ;)
+
+
+# External Resources
+
+- [Alexander Yakushev - emacs.d](https://github.com/alexander-yakushev/.emacs.d)
+- [Magnars - emacs.d](https://github.com/magnars/.emacs.d)

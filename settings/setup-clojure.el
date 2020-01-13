@@ -36,6 +36,7 @@
   :ensure t
   :init
   (setq cider-repl-history-file "~/.emacs.d/cider-history"
+        cider-stacktrace-default-filters '(tooling dup)
         cider-repl-use-pretty-printing t
         cider-repl-use-clojure-font-lock t
         cider-repl-result-prefix ";; => "
@@ -56,7 +57,24 @@
   (define-key cider-mode-map (kbd "C-c C-q") 'nrepl-close)
   (define-key cider-mode-map (kbd "C-c C-Q") 'cider-quit))
 
+(use-package cider-eval-sexp-fu
+  :ensure t
+  :config
+  (require 'cider-eval-sexp-fu))
+
 (defalias 'cider-default-connection 'cider-current-connection)
+
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (setq inferior-lisp-program "lein repl")
+            (font-lock-add-keywords
+             nil
+             '(("(\\(facts?\\)"
+                (1 font-lock-keyword-face))
+               ("(\\(background?\\)"
+                (1 font-lock-keyword-face))))
+            (define-clojure-indent (fact 1))
+            (define-clojure-indent (facts 1))))
 
 ;;; cider config to use Clojure inside Docker and have nagivation
 (eval-after-load "cider"
@@ -161,6 +179,22 @@ If no local or remote file exists, return nil."
   "running emacs 25 or lower")
 
 (add-to-list 'auto-mode-alist '("\\.repl\\'" . clojure-mode))
+
+;;; these help me out with the way I usually develop web apps
+(defun cider-start-system ()
+  (interactive)
+  (cider-load-current-buffer)
+  (let ((ns (cider-current-ns)))
+    (cider-repl-set-ns ns)
+    (cider-interactive-eval (format "(println 'DEU')"))))
+
+(defun cider-refresh ()
+  (interactive)
+  (cider-interactive-eval (format "(user/reset)")))
+
+(defun cider-user-ns ()
+  (interactive)
+  (cider-repl-set-ns "user"))
 
 (provide 'setup-clojure)
 ;;; setup-clojure.el ends here
