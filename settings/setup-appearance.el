@@ -27,24 +27,14 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
 (load-theme 'tomorrow-night-bright t)
-(set-face-attribute 'default nil :height 110)
+(set-face-attribute 'default nil :height 130)
 
-;; (set-face-attribute 'region nil :background "lightyellow2")
+;; 2(set-face-attribute 'region nil :background "lightyellow2")
 
 (use-package popwin
   :ensure t
   :config
   (popwin-mode +1))
-
-(defun bk/adjust-to-heavy-daylight ()
-  (interactive)
-  (load-theme 'leuven t)
-  (set-frame-font "Monaco 12"))
-
-(defun bk/adjust-to-regular-daylight ()
-  (interactive)
-  (load-theme 'cyberpunk t)
-  (set-frame-font "Monaco 11"))
 
 (provide 'setup-appearance)
 ;;; setup-appearance.el ends here

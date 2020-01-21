@@ -49,36 +49,6 @@
 (setq split-height-threshold nil
       split-width-threshold 0)
 
-(use-package hideshow
-  :ensure t
-  :demand t
-  :config
-  (defun hs-clojure-hide-namespace-and-folds ()
-    "Hide the first (ns ...) expression in the file, and also all
-the (^:fold ...) expressions."
-    (interactive)
-    (hs-life-goes-on
-     (save-excursion
-       (goto-char (point-min))
-       (when (ignore-errors (re-search-forward "^(ns "))
-         (hs-hide-block))
-       (when (ignore-errors (re-search-forward "\\^:fold"))
-         (hs-hide-block)
-         (next-line))
-       (beginning-of-buffer)
-       (while (ignore-errors (re-search-forward "^(s/fdef"))
-         (hs-hide-block)
-         (next-line)))))
-
-  (defun hs-clojure-mode-hook ()
-    (interactive)
-    (hs-minor-mode 1)
-    (hs-clojure-hide-namespace-and-folds))
-
-  (add-hook 'clojure-mode-hook 'hs-clojure-mode-hook)
-  (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
-  (add-hook 'lisp-mode-hook 'hs-minor-mode))
-
 (use-package phi-search
   :ensure t
   :bind (("C-c s s" . phi-search)
