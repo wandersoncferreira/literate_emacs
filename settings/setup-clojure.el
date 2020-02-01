@@ -1,4 +1,4 @@
-;;; clojure-mode --- Clojure
+a;;; clojure-mode --- Clojure
 ;;; Commentary:
 ;;; Code:
 

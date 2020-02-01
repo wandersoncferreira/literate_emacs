@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(defun bk/uptime-osx ()
+(defun bk/uptime-box ()
   "Uptime for your OS."
   (interactive)
   (message
@@ -18,12 +18,14 @@
     (restclient-mode)
     (pop-to-buffer (current-buffer))))
 
-(defun explain-shell (cmd)
+(defun bk/explain-shell (cmd)
+  "Function to open a help at the CMD provided."
   (interactive (list (read-shell-command "Command: ")))
   (browse-url (format "http://explainshell.com/explain?cmd=%s"
                       (url-encode-url cmd))))
 
 (defun bk/eval-buffer ()
+  "Evaluate the current buffer with feedback."
   (interactive)
   (eval-buffer)
   (message "Buffer evaluated!"))

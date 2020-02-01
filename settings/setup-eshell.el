@@ -5,6 +5,11 @@
 
 ;;; Code:
 
+(require 'em-hist)
+(require 'em-glob)
+(require 'em-ls)
+(require 'em-cmpl)
+
 (setq eshell-save-history-on-exit t
       eshell-glob-case-insensitive t
       eshell-ls-use-colors t

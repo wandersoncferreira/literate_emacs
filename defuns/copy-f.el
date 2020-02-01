@@ -1,5 +1,10 @@
-;;; Let's try to make usage of the advices put in the EmacsWiki website
-;;; I agree that selecting what you want accurately is the most timing-consuming thing
+;;; copying --- A set of helpers to copy things
+;;; Commentary:
+
+;; Let's try to make usage of the advices put in the EmacsWiki website
+;; I agree that selecting what you want accurately is the most timing-consuming thing
+
+;;; Code:
 
 
 (defun get-point (symbol &optional arg)
@@ -48,3 +53,6 @@
   (message "Copied PARAGRAPH"))
 
 (global-set-key (kbd "C-c P") 'copy-paragraph)
+
+(provide 'copy-f)
+;;; copy-f.el ends here
