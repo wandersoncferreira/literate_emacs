@@ -154,5 +154,15 @@
         deft-text-mode 'org-mode
         deft-recursive t))
 
+(use-package pdf-tools
+  :pin manual
+  :config
+  (pdf-tools-install)
+  (setq pdf-info-epdfinfo-program "~/.emacs.d/elpa/pdf-tools-20191228.1005/epdfinfo")
+  (setq-default pdf-view-display-size 'fit-page)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
+
+
 (provide 'setup-misc)
 ;;; setup-misc.el ends here

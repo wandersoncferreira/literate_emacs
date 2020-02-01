@@ -5,9 +5,6 @@
 (require 'dired)
 (require 'dired-x)
 
-(let ((gls (executable-find "gls")))
-  (when gls (setq insert-directory-program gls)))
-
 (setq dired-recursive-copies 'always
       dired-recursive-deletes 'always
       dired-listing-switches "-l"
@@ -16,7 +13,6 @@
       dired-dwim-target t)
 
 (put 'dired-find-alternate-file 'disabled nil)
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 (defun bk/dired-directories-first ()
   "Sort dired listings with directories first."

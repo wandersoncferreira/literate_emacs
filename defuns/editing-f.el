@@ -119,5 +119,12 @@ in FILES and DIR without CONFIRM."
       (insert "kubectl logs -n " env " " pod-name " " pod "-" env " -f")
       (eshell-send-input))))
 
+(defun bk/toggle-whitespace ()
+  "Toggle the display of indentation and space characters."
+  (interactive)
+  (if (bound-and-true-p whitespace-mode)
+      (whitespace-mode -1)
+    (whitespace-mode)))
+
 (provide 'editing-f)
 ;;; editing-f.el ends here
