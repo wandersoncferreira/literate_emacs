@@ -93,6 +93,5 @@
   (insert "\\end{frame}\n")
   (insert "\\end{document}\n"))
 
-
 (provide 'setup-latex)
 ;;; setup-latex.el ends here

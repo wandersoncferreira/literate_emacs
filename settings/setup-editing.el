@@ -56,31 +56,31 @@
 
 ;;; while searching, following commands are available:
 ;;; URL: https://github.com/zk-phi/phi-search
-  ;; [C-s] - phi-search-again-or-next
-  ;; [C-r] - phi-search-again-or-previous
-  ;; [C-v] - phi-search-scroll-up
-  ;; [M-v] - phi-search-scroll-down
-  ;; [C-l] - phi-search-recenter
-  ;; [M-c] - phi-search-case-toggle
-  ;; [C-w] - phi-search-yank-word
-  ;; RET   - phi-search-complete
-  ;; C-RET - phi-search-complete-at-beginning
-  ;; C-c C-c phi-search-unlimit
-  ;; C-g   - phi-search-abort
+;; [C-s] - phi-search-again-or-next
+;; [C-r] - phi-search-again-or-previous
+;; [C-v] - phi-search-scroll-up
+;; [M-v] - phi-search-scroll-down
+;; [C-l] - phi-search-recenter
+;; [M-c] - phi-search-case-toggle
+;; [C-w] - phi-search-yank-word
+;; RET   - phi-search-complete
+;; C-RET - phi-search-complete-at-beginning
+;; C-c C-c phi-search-unlimit
+;; C-g   - phi-search-abort
 
-  (require 'phi-replace)
+(require 'phi-replace)
 
-  (global-set-key (kbd "M-%") 'phi-replace-query)
+(global-set-key (kbd "M-%") 'phi-replace-query)
 
 
-  (use-package hl-todo
-    :ensure t
-    :config
-    (global-hl-todo-mode +1)
-    (define-key hl-todo-mode-map (kbd "C-x t p") 'hl-todo-previous)
-    (define-key hl-todo-mode-map (kbd "C-x t n") 'hl-todo-next)
-    (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
-    (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode +1)
+  (define-key hl-todo-mode-map (kbd "C-x t p") 'hl-todo-previous)
+  (define-key hl-todo-mode-map (kbd "C-x t n") 'hl-todo-next)
+  (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
+  (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
 
-  (provide 'setup-editing)
+(provide 'setup-editing)
 ;;; setup-editing.el ends here

@@ -5,9 +5,11 @@
 
 ;;; Code:
 
-(use-package markdown-mode :ensure t)
-(setq auto-mode-alist
-      (cons '("\\.\\(m[k]d\\|markdown\\)\\'" . markdown-mode) auto-mode-alist))
+(use-package markdown-mode
+  :ensure t
+  :config
+  (setq auto-mode-alist
+        (cons '("\\.\\(m[k]d\\|markdown\\)\\'" . markdown-mode) auto-mode-alist)))
 
 (defun markdown-mode-hook-setup ()
   ;; Stolen from http://stackoverflow.com/a/26297700
@@ -24,6 +26,7 @@
   ;; don't wrap lines because there is table in `markdown-mode'
   (setq truncate-lines t)
   (setq imenu-create-index-function 'markdown-imenu-index))
+
 (add-hook 'markdown-mode-hook 'markdown-mode-hook-setup)
 
 (eval-after-load 'markdown-mode
