@@ -26,7 +26,6 @@
 (global-set-key (kbd "C-x _") 'split-window-vertically-instead)
 (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 (global-set-key (kbd "C-x C-j") 'dired-jump)
-;; (global-set-key (kbd "C-x C-m") 'counsel-M-x)
 (global-set-key (kbd "C-x C-m") 'smex)
 (global-set-key (kbd "C-x C-p") 'pop-global-mark)
 

@@ -43,13 +43,13 @@
     "Pass desired argument to `bk/font-sizes' for use on my small laptop monitor."
     (interactive)
     (when window-system
-      (bk/font-family-size bk/fixed-pitch-font-alt 10.75)))
+      (bk/font-family-size bk/fixed-pitch-font-alt 12)))
 
   (defun bk/desktop-fonts ()
     "Pass desired argument to `bk/font-sizes' for use on my larger desktop monitor."
     (interactive)
     (when window-system
-      (bk/font-family-size bk/fixed-pitch-font 10.75)))
+      (bk/font-family-size bk/fixed-pitch-font 12)))
 
   (defun bk/fonts-per-monitor ()
     "Choose between `bk/laptop-fonts' and `bk/desktop-fonts'

@@ -12,13 +12,6 @@
 
 (windmove-default-keybindings)
 
-(defun push-mark-no-activate ()
-  "Sometimes you just want to explicitly set a mark into one place.
-so you can get back to it later with `pop-to-mark-command'"
-  (interactive)
-  (push-mark (point) t nil)
-  (message "Pushed mark to ring."))
-
 (setq-default
  ad-redefinition-action 'accept
  help-window-select t
@@ -36,13 +29,8 @@ so you can get back to it later with `pop-to-mark-command'"
       tab-always-indent 'complete
       delete-old-versions t
       vc-make-backup-files t
-      compilation-always-kill t
-      compilation-ask-about-save nil
-      compilation-scroll-output t
       save-place-mode t
       save-place-file (expand-file-name ".places" user-emacs-directory)
-      global-auto-revert-non-file-buffers t
-      auto-revert-verbose nil
       backup-by-copying t
       create-lockfiles nil
       shift-select-mode nil
@@ -54,10 +42,7 @@ so you can get back to it later with `pop-to-mark-command'"
 (setq ffap-machine-p-known 'reject)
 
 (add-hook 'after-init-hook 'delete-selection-mode)
-
 (add-hook 'after-init-hook 'global-auto-revert-mode)
-(setq auto-revert-verbose nil)
-
 (add-hook 'after-init-hook 'savehist-mode)
 (add-hook 'prog-mode-hook 'electric-pair-mode)
 (add-hook 'prog-mode-hook 'show-paren-mode)
@@ -97,7 +82,6 @@ so you can get back to it later with `pop-to-mark-command'"
 (save-place-mode +1)
 (setq-default history-length 500)
 
-
 (setq uniquify-after-kill-buffer-p t
       uniquify-separator " • "
       uniquify-buffer-name-style 'reverse
@@ -111,19 +95,6 @@ so you can get back to it later with `pop-to-mark-command'"
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'text-mode-hook 'flyspell-mode)
   (define-key flyspell-mode-map (kbd "C-,") nil))
-
-;; to compare the contents of two test files, use M-x ediff-files.
-;; open the two files you want to compare.
-;; Press | to put the two files side by side
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-(setq ediff-split-window-function (quote split-window-horizontally))
-
-;;; utf-8 everywhere
-(set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8-unix)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
 
 (use-package winner
   :init
@@ -181,40 +152,6 @@ Call a second time to restore the original window configuration."
         (setq this-command 'sanityinc/unsplit-window))
     (window-configuration-to-register :sanityinc/split-window)
     (switch-to-buffer-other-window nil)))
-
-;;; tramp mode
-(use-package tramp
-  :init
-  (setq tramp-default-method "ssh"
-        tramp-backup-directory-alist backup-directory-alist
-        tramp-auto-save-directory "/tmp/tramp/"
-        tramp-chunksize 2000
-        tramp-use-ssh-controlmaster-options "ssh"))
-
-(use-package docker-tramp :ensure t)
-(require 'docker-tramp-compat)
-
-;; Open files in Docker containers like so: /docker:drunk_bardeen:/etc/passwd
-(push
- (cons
-  "docker"
-  '((tramp-login-program "docker")
-    (tramp-login-args (("exec" "-it") ("%h") ("/bin/bash")))
-    (tramp-remote-shell "/bin/sh")
-    (tramp-remote-shell-args ("-i") ("-c"))))
- tramp-methods)
-
-(defadvice tramp-completion-handle-file-name-all-completions
-  (around dotemacs-completion-docker activate)
-  "(tramp-completion-handle-file-name-all-completions \"\" \"/docker:\" returns
-    a list of active Docker container names, followed by colons."
-  (if (equal (ad-get-arg 1) "/docker:")
-      (let* ((dockernames-raw (shell-command-to-string "docker ps | perl -we 'use strict; $_ = <>; m/^(.*)NAMES/ or die; my $offset = length($1); while(<>) {substr($_, 0, $offset, q()); chomp; for(split m/\\W+/) {print qq($_:\n)} }'"))
-             (dockernames (cl-remove-if-not
-                           #'(lambda (dockerline) (string-match ":$" dockerline))
-                           (split-string dockernames-raw "\n"))))
-        (setq ad-return-value dockernames))
-    ad-do-it))
 
 (provide 'setup-defaults)
 ;;; setup-defaults.el ends here

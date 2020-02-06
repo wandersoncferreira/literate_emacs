@@ -96,6 +96,27 @@ Otherwise the function display `buffer-name'"
         (message dir-file)
       (message (buffer-name)))))
 
+(defun bk/what-line ()
+  "Print the current buffer line number and narrowed line number of point."
+  (let ((start (point-min))
+        (n (line-number-at-pos)))
+    (if (= start 1)
+        n
+      (save-excursion
+        (save-restriction
+          (widen)
+          (+ n (line-number-at-pos start) -1) n)))))
+
+(defconst *base-path* "/home/wand/platform/")
+
+(defun bk/refactor->mark-line ()
+  (interactive)
+  (let* ((line-number (bk/what-line))
+         (full-filename (buffer-file-name (window-buffer (minibuffer-selected-window))))
+         (filename (second (split-string full-filename *base-path*))))
+    (kill-new (concat "File: " filename  "  ----  " "line: " (format "%d" line-number)))
+    (message "line saved!")))
+
 
 (provide 'buffers-f)
 ;;; buffers-f.el ends here

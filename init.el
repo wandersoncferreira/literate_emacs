@@ -27,7 +27,6 @@
   (executable-find "rg")
   "Do we have ripgrep?")
 
-(defconst init-osx? (eq system-type 'darwin))
 (defconst setting-dir (expand-file-name "settings" user-emacs-directory))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
