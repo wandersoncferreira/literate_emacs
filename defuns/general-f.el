@@ -30,6 +30,13 @@
   (eval-buffer)
   (message "Buffer evaluated!"))
 
+(defun what-is-my-ip ()
+  "Find my current public IP number."
+  (interactive)
+  (message "IP: %s"
+           (with-current-buffer (url-retrieve-synchronously "https://api.ipify.org")
+             (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
+
 
 (provide 'general-f)
 ;;; general-f.el ends here

@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+;;; 0. Faster startup
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
       (init-gc-cons-threshold (* 128 1024 1024))
       (bk--file-name-handler-alist file-name-handler-alist))
@@ -47,8 +48,6 @@
 (require 'setup-eshell)
 (require 'setup-hydras)
 
-(when init-osx? (require 'setup-mac))
-
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -69,6 +68,7 @@
 (require 'setup-clojure)
 (require 'setup-python)
 (require 'setup-latex)
+(require 'setup-cheatsheet)
 
 (defalias 're 'restart-emacs)
 (defalias 'cquit 'cider-quit)
