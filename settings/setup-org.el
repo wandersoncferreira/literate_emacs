@@ -80,12 +80,10 @@
 ;; after changing the state of any TODO item, save the current buffer.
 (add-hook 'org-trigger-hook 'save-buffer)
 
-(use-package plantuml-mode :ensure t)
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((plantuml . t)))
 
-(setq org-plantuml-jar-path (expand-file-name "/home/wand/plantuml.jar"))
 (setq org-startup-with-inline-images t)
 
 (provide 'setup-org)

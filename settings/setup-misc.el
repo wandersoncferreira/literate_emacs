@@ -3,7 +3,21 @@
 ;;; Code:
 
 (use-package htmlize :ensure t)
-(use-package plantuml-mode :ensure t)
+
+(use-package plantuml-mode
+  :ensure t
+  :config
+  (require 'ob-plantuml)
+  (let ((plantuml-directory (concat user-emacs-directory "var/"))
+        (plantuml-link "https://superb-dca2.dl.sourceforge.net/project/plantuml/plantuml.jar"))
+    (let ((plantuml-target (concat plantuml-directory "plantuml.jar")))
+      (if (not (f-exists? plantuml-target))
+          (progn (message "Downloading plantuml.jar")
+                 (shell-command
+                  (mapconcat 'identity (list "wget" plantuml-link "-O" plantuml-target) " "))
+                 (kill-buffer "*Shell Command Output*")))
+      (setq org-plantuml-jar-path plantuml-target))))
+
 (use-package change-inner :ensure t)
 (use-package wgrep :ensure t)
 (use-package vlf :ensure t)
@@ -16,6 +30,29 @@
 (use-package windresize :ensure t)
 (use-package rotate :ensure t)
 (use-package discover-my-major :ensure t)
+
+;;; kill first, ask later
+(use-package viking-mode
+  :ensure t
+  :init
+  (setq viking-greedy-kill nil
+        viking-enable-region-kill t
+        viking-use-expand-region-when-loaded t
+        viking-kill-functions (list '(lambda ()
+                                       (if (region-active-p)
+                                           (kill-region (region-beginning) (region-end))
+                                         (delete-char 1 t)))
+                                    '(lambda ()
+                                       (insert (pop kill-ring))
+                                       (kill-new "")
+                                       (viking-kill-word)
+                                       (kill-append " " nil))
+                                    'viking-kill-line-from-point
+                                    'viking-kill-line
+                                    'viking-kill-paragraph
+                                    'viking-kill-buffer))
+  :config
+  (viking-global-mode))
 
 (use-package groovy-mode :ensure t)
 

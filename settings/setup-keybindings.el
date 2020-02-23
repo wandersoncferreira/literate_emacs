@@ -60,7 +60,7 @@
 (global-set-key (kbd "C-c C-b") 'ibuffer)
 (global-set-key (kbd "C-c C-e") 'mc/edit-ends-of-lines)
 (global-set-key (kbd "C-c C-i") 'bk/ido-menu)
-(global-set-key (kbd "C-c C-k") 'bk/eval-buffer)
+(global-set-key (kbd "C-c x") 'bk/eval-buffer)
 (global-set-key (kbd "C-c C-l") 'mc/edit-lines)
 (global-set-key (kbd "C-c C-q") 'quickrun)
 (global-set-key (kbd "C-c C-r") 'set-rectangular-region-anchor)
