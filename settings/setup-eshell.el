@@ -81,9 +81,7 @@
 (add-hook 'eshell-mode-hook
           (lambda ()
             (define-key eshell-mode-map (kbd "C-M-a") 'eshell-previous-prompt)
-            (define-key eshell-mode-map (kbd "C-M-e") 'eshell-next-prompt)
-            ))
-
+            (define-key eshell-mode-map (kbd "C-M-e") 'eshell-next-prompt)))
 
 (defun eshell-pop--kill-and-delete-window ()
   (unless (one-window-p)

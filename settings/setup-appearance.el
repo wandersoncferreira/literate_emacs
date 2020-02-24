@@ -8,7 +8,6 @@
 (and (fboundp 'tooltip-mode) (fboundp 'x-show-tip) (tooltip-mode -1))
 (and (fboundp 'blink-cursor-mode) (blink-cursor-mode (- (*) (*) (*))))
 
-
 (setq custom-safe-themes t
       font-lock-maximum-decoration t
       truncate-partial-width-windows nil

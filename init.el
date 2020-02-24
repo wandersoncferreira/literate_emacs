@@ -66,6 +66,7 @@
 (require 'setup-advices)
 (require 'setup-markdown)
 (require 'setup-clojure)
+(require 'setup-scala)
 (require 'setup-python)
 (require 'setup-latex)
 (require 'setup-cheatsheet)

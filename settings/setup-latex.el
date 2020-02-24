@@ -7,7 +7,6 @@
 
 ;; to use pdfview with auctex
 
-
 (use-package tex-site
   :ensure auctex
   :config

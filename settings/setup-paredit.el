@@ -41,11 +41,5 @@
 (define-key paredit-mode-map (kbd "s-r") 'paredit-raise-sexp)
 (define-key paredit-mode-map (kbd "\\") nil)
 
-
-(use-package eros
-  :ensure t
-  :config
-  (add-hook 'emacs-lisp-mode-hook 'eros-mode))
-
 (provide 'setup-paredit)
 ;;; setup-paredit.el ends here
