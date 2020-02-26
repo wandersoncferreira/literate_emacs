@@ -58,6 +58,7 @@
 (require 'setup-company)
 (require 'setup-projectile)
 (require 'setup-editing)
+(require 'setup-media)
 (require 'setup-misc)
 (require 'setup-keybindings)
 (require 'setup-snippets)

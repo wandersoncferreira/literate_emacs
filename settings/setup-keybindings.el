@@ -48,11 +48,6 @@
 (global-set-key (kbd "C-c r") 'restart-emacs)
 (global-set-key (kbd "C-c e") 'eshell)
 (global-set-key (kbd "C-c g") 'hydra-magit/body)
-(global-set-key (kbd "C-c m s") 'helm-spotify-plus)
-(global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
-(global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
-(global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
-(global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause)
 (global-set-key (kbd "C-c p") 'hydra-projectile/body)
 
 ;;; C-c C-{letter} are reserved for major mode

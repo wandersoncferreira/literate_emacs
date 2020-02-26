@@ -82,5 +82,11 @@
   (define-key hl-todo-mode-map (kbd "C-x t o") 'hl-todo-occur)
   (define-key hl-todo-mode-map (kbd "C-x t i") 'hl-todo-insert))
 
+;;; writeroom, a focus mode!
+(use-package writeroom-mode
+  :ensure t
+  :init
+  (setq writeroom-width 150))
+
 (provide 'setup-editing)
 ;;; setup-editing.el ends here
