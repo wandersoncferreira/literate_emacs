@@ -62,3 +62,5 @@ have fun ;)
 
 - [Alexander Yakushev - emacs.d](https://github.com/alexander-yakushev/.emacs.d)
 - [Magnars - emacs.d](https://github.com/magnars/.emacs.d)
+- [Mike Zemansky - Using Emacs](https://www.youtube.com/playlist?list=PL9KxKa8NpFxIcNQa9js7dQQIHc81b0-Xg)
+- [Protesilaos - GNU Emacs](https://www.youtube.com/playlist?list=PL8Bwba5vnQK14z96Gil86pLMDO2GnOhQ6)

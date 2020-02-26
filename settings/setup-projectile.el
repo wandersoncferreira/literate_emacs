@@ -15,9 +15,11 @@
   :config
   (add-to-list 'projectile-other-file-alist '("clj" "py" "sql" "org"))
   (add-to-list 'projectile-other-file-alist '("org" "clj"))
+
   (defun projectile-short-mode-line ()
     "Short version of the default projectile mode line."
     (format " P[%s]" (projectile-project-name)))
+
   (setq projectile-mode-line-function 'projectile-short-mode-line)
   (setq projectile-enable-caching nil)
   (projectile-mode +1))

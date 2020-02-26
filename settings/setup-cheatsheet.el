@@ -27,6 +27,14 @@
                 :key "C-x 4 u"
                 :description "Undo the last window configuration setup")
 
+(cheatsheet-add :group 'Window
+                :key "<f9>"
+                :description "Change Emacs to Full Screen mode.")
+
+(cheatsheet-add :group 'Window
+                :key "M-x writeroom"
+                :description "Focus mode to deep work!")
+
 
 ;;; emacs lisp
 (cheatsheet-add :group 'Emacs-Lisp

@@ -21,21 +21,37 @@
       eshell-prefer-lisp-functions nil
       eshell-destroy-buffer-when-process-dies t)
 
-(setq eshell-prompt-function
-      (lambda ()
-        (concat
-         (propertize "┌─[" 'face `(:foreground "#5317ac"))
-         (propertize (user-login-name) 'face `(:foreground "red"))
-         (propertize "@" 'face `(:foreground "#5317ac"))
-         (propertize (system-name) 'face `(:foreground "lightblue"))
-         (propertize "]──[" 'face `(:foreground "#5317ac"))
-         (propertize (format-time-string "%H:%M" (current-time)) 'face `(:foreground "lightblue"))
-         (propertize "]──[" 'face `(:foreground "#5317ac"))
-         (propertize (concat (eshell/pwd)) 'face `(:foreground "black"))
-         (propertize "]\n" 'face `(:foreground "#5317ac"))
-         (propertize "└─>" 'face `(:foreground "#5317ac"))
-         (propertize (if (= (user-uid) 0) " # " " $ ") 'face `(:foreground "#5317ac"))
-         )))
+(if (eq (car custom-enabled-themes) 'modus-operandi)
+    (setq eshell-prompt-function
+          (lambda ()
+            (concat
+             (propertize "┌─[" 'face `(:foreground "#5317ac"))
+             (propertize (user-login-name) 'face `(:foreground "red"))
+             (propertize "@" 'face `(:foreground "#5317ac"))
+             (propertize (system-name) 'face `(:foreground "lightblue"))
+             (propertize "]──[" 'face `(:foreground "#5317ac"))
+             (propertize (format-time-string "%H:%M" (current-time)) 'face `(:foreground "lightblue"))
+             (propertize "]──[" 'face `(:foreground "#5317ac"))
+             (propertize (concat (eshell/pwd)) 'face `(:foreground "black"))
+             (propertize "]\n" 'face `(:foreground "#5317ac"))
+             (propertize "└─>" 'face `(:foreground "#5317ac"))
+             (propertize (if (= (user-uid) 0) " # " " $ ") 'face `(:foreground "#5317ac"))
+             )))
+  (setq eshell-prompt-function
+        (lambda ()
+          (concat
+           (propertize "┌─[" 'face `(:foreground "#ed92f8"))
+           (propertize (user-login-name) 'face `(:foreground "red"))
+           (propertize "@" 'face `(:foreground "#ed92f8"))
+           (propertize (system-name) 'face `(:foreground "lightblue"))
+           (propertize "]──[" 'face `(:foreground "#ed92f8"))
+           (propertize (format-time-string "%H:%M" (current-time)) 'face `(:foreground "lightblue"))
+           (propertize "]──[" 'face `(:foreground "#ed92f8"))
+           (propertize (concat (eshell/pwd)) 'face `(:foreground "lightblue"))
+           (propertize "]\n" 'face `(:foreground "#ed92f8"))
+           (propertize "└─>" 'face `(:foreground "#ed92f8"))
+           (propertize (if (= (user-uid) 0) " # " " $ ") 'face `(:foreground "#ed92f8"))
+           ))))
 
 (defun eshell-clear-buffer ()
   "Clear terminal."
@@ -81,9 +97,7 @@
 (add-hook 'eshell-mode-hook
           (lambda ()
             (define-key eshell-mode-map (kbd "C-M-a") 'eshell-previous-prompt)
-            (define-key eshell-mode-map (kbd "C-M-e") 'eshell-next-prompt)
-            ))
-
+            (define-key eshell-mode-map (kbd "C-M-e") 'eshell-next-prompt)))
 
 (defun eshell-pop--kill-and-delete-window ()
   (unless (one-window-p)

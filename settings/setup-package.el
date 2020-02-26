@@ -56,6 +56,7 @@ which is unsafe because it allows man-in-the-middle attacks."))
   (setq abbrev-file-name (no-littering-expand-etc-file-name "abbrev.el")))
 
 (use-package dash :ensure t)
+
 (use-package auto-package-update
   :ensure t
   :init

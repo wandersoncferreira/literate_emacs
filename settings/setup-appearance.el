@@ -8,6 +8,20 @@
 (and (fboundp 'tooltip-mode) (fboundp 'x-show-tip) (tooltip-mode -1))
 (and (fboundp 'blink-cursor-mode) (blink-cursor-mode (- (*) (*) (*))))
 
+(setq theme-background-color (frame-parameter nil 'background-color))
+
+;;; display time in the modeline
+(setq display-time-format "%Hh%M ")
+(setq display-time-default-load-average nil)
+
+;;; show time in modeline when using emacs in fullscreen
+(global-set-key (kbd "<f9>") (lambda ()
+                               (interactive)
+                               (toggle-frame-fullscreen)
+                               (sit-for 1)
+                               (if (eq (cdr (assoc 'fullscreen (frame-parameters))) 'fullboth)
+                                   (display-time-mode 1)
+                                 (display-time-mode 0))))
 
 (setq custom-safe-themes t
       font-lock-maximum-decoration t
@@ -62,13 +76,12 @@ the maximum width of my laptop's screen."
         (bk/desktop-fonts))))
   :hook (after-init . bk/fonts-per-monitor))
 
-(use-package modus-operandi-theme
-  :ensure t
-  :config
-  (load-theme 'modus-operandi t))
+(use-package modus-operandi-theme :ensure t)
+(use-package modus-vivendi-theme :ensure t)
 
-;; (set-face-attribute 'default nil :height 130)
-;; (set-face-attribute 'region nil :background "lightyellow2")
+;;; default theme
+(load-theme 'modus-vivendi t)
+
 
 (use-package popwin
   :ensure t
