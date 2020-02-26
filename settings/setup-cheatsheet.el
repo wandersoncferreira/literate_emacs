@@ -2,10 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package cheatsheet
-  :ensure t)
+(use-package cheatsheet :ensure t)
 
-;;; common
 (cheatsheet-add :group 'Common
                 :key "C-c r"
                 :description "Restart Emacs")
@@ -22,7 +20,18 @@
                 :key "C-M-<up>"
                 :description "Duplicate line or region up")
 
-;;; window
+(cheatsheet-add :group 'Ido
+                :key "C-SPC"
+                :description "Confirm search in Ido and restart the search from there")
+
+(cheatsheet-add :group 'Ido
+                :key "M-e"
+                :description "Edit a search in ido minibuffer")
+
+(cheatsheet-add :group 'Ido
+                :key "M-r"
+                :description "Toggle the search to regexp mode.")
+
 (cheatsheet-add :group 'Window
                 :key "C-x 4 u"
                 :description "Undo the last window configuration setup")
@@ -32,16 +41,18 @@
                 :description "Change Emacs to Full Screen mode.")
 
 (cheatsheet-add :group 'Window
+                :key "C-x 4 d"
+                :description "Ido Dired other window")
+
+(cheatsheet-add :group 'Window
                 :key "M-x writeroom"
                 :description "Focus mode to deep work!")
 
 
-;;; emacs lisp
 (cheatsheet-add :group 'Emacs-Lisp
                 :key "C-c x"
                 :description "Evaluate buffer")
 
-;;; code
 (cheatsheet-add :group 'Code
                 :key "C-c g"
                 :description "Prefix to access MAGIT functionalities")

@@ -11,20 +11,55 @@
         ido-create-new-buffer 'always
         ido-use-virtual-buffers t
         ido-use-filename-at-point nil
-        ido-max-prospects 10)
+        ido-max-prospects 10
+        ido-all-frames nil
+        ido-confirm-unique-completion nil
+        ido-completion-buffer-all-completions nil
+        ido-default-buffer-method 'selected-window
+        ido-use-url-at-point nil
+        ido-use-faces t
+        ido-max-window-height 1
+        ido-decorations
+        '(""
+          ""
+          "  |  "
+          "  | ..."
+          "["
+          "]"
+          " [No match] "
+          " [Matched] "
+          " [Not readable] "
+          " [Too big] "
+          " [Confirm] "
+          ))
+  :hook
+  (minibuffer-setup . (lambda ()
+                        (visual-line-mode 1)
+                        (setq-local truncate-lines nil)
+                        (setq-local resize-mini-windows nil)
+                        (setq-local max-mini-window-height 1)))
   :config
   (ido-mode +1)
-  (ido-everywhere +1))
+  (ido-everywhere +1)
+  :bind (:map ido-common-completion-map
+              ("M-e" . ido-edit-input)
+              ("M-r" . ido-toggle-regexp)))
 
 (use-package ido-completing-read+
   :ensure t
   :config
   (ido-ubiquitous-mode +1))
 
-(use-package smex
+(use-package amx
   :ensure t
+  :after (ido ido-completing-read+)
+  :init
+  (setq amx-backend 'ido
+        amx-save-file (no-littering-expand-var-file-name "amx-items")
+        amx-history-length 10
+        amx-show-key-bindings nil)
   :config
-  (smex-initialize))
+  (amx-mode 1))
 
 ;;; isearch enhancements
 ;;; C-h k C-s to get an awesome help menu with all the extra keys you can use with `isearch'
