@@ -37,6 +37,14 @@
            (with-current-buffer (url-retrieve-synchronously "https://api.ipify.org")
              (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
 
+(defun bk/dired-open-file ()
+  "In dired, open the file named on this line."
+  (interactive)
+  (let* ((file (dired-get-filename nil t)))
+    (message "Opening %s..." file)
+    (call-process "xdg-open" nil 0 nil file)
+    (message "Opening %s done" file)))
+
 
 (provide 'general-f)
 ;;; general-f.el ends here

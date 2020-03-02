@@ -76,11 +76,10 @@ the maximum width of my laptop's screen."
         (bk/desktop-fonts))))
   :hook (after-init . bk/fonts-per-monitor))
 
-(use-package modus-operandi-theme :ensure t)
-(use-package modus-vivendi-theme :ensure t)
-
-;;; default theme
-(load-theme 'modus-vivendi t)
+(use-package modus-operandi-theme
+  :ensure t
+  :config
+  (load-theme 'modus-operandi t))
 
 
 (use-package popwin
