@@ -1,13 +1,11 @@
-;;; init.el --- Emacs settings -*- lexical-binding: t -*-
+;;; init.el -- Emacs -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
-;; Author: Wanderson Ferreira
-;; Emacs user since 2017
+;; The beginning of a Literate Emacs setup
+;; Heavily inspired by the work of Protesilaos on Emacs
 
 ;;; Code:
-
-;;; 0. Faster startup
 (let ((normal-gc-cons-threshold (* 20 1024 1024))
       (init-gc-cons-threshold (* 128 1024 1024))
       (bk--file-name-handler-alist file-name-handler-alist))
@@ -20,79 +18,36 @@
                     gc-cons-percentage 0.1
                     file-name-handler-alist bk--file-name-handler-alist))))
 
-(setenv "BROWSER" "qutebrowser")
+(require 'package)
 
-(setq site-run-file nil)
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/"))
 
-(defconst *rg*
-  (executable-find "rg")
-  "Do we have ripgrep?")
+;; initialize the packages, avoiding a re-initialisation
+(unless (bound-and-true-p package--initialized)
+  (setq package-enable-at-startup nil)
+  (package-initialize))
 
-(defconst setting-dir (expand-file-name "settings" user-emacs-directory))
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; make sure `use-package' is available
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package)
+  (package-install 'diminish)
+  (package-install 'dash))
 
-(add-to-list 'load-path setting-dir)
-(require 'setup-package)
+;; configure `use-package' prior to loading it
+(eval-and-compile
+  (setq use-package-always-ensure nil
+	use-package-always-defer nil
+	use-package-always-demand nil
+	use-package-expand-minimally nil
+	use-package-enable-imenu-support t))
 
-(defconst defuns-dir (expand-file-name "defuns" user-emacs-directory))
+(eval-when-compile
+  (require 'use-package))
 
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
+(require 'org)
+(setq vc-follow-symlinks t)
+(org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 
-(require 'setup-appearance)
-(require 'setup-defaults)
-(require 'setup-completion)
-(require 'setup-dired)
-(require 'setup-git)
-(require 'setup-eshell)
-(require 'setup-hydras)
-
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-copy-envs '("LANG" "LC_ALL" "LC_CTYPES" "JAVA_HOME" "PATH"))
-  (exec-path-from-shell-initialize))
-
-(require 'setup-org)
-(require 'setup-company)
-(require 'setup-projectile)
-(require 'setup-editing)
-(require 'setup-media)
-(require 'setup-misc)
-(require 'setup-keybindings)
-(require 'setup-snippets)
-(require 'setup-paredit)
-(require 'setup-grep)
-(require 'setup-advices)
-(require 'setup-markdown)
-(require 'setup-clojure)
-(require 'setup-scala)
-(require 'setup-python)
-(require 'setup-latex)
-(require 'setup-cheatsheet)
-
-(defalias 're 'restart-emacs)
-(defalias 'cquit 'cider-quit)
-(defalias 'ctest 'cider-test-run-test)
-(defalias 'yes-or-no-p 'y-or-n-p)
-(defalias 'qrr 'query-replace-regexp "Query replace regexp")
-
-(require 'server)
-(unless (server-running-p) (server-start))
-
-;; variables configured via the interactive `customize' interface
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-;;; conclude init by setting up specifics for the current user
-(setq user-settings-dir (concat user-emacs-directory "users/"))
-(add-to-list 'load-path user-settings-dir)
-(when (file-exists-p user-settings-dir)
-  (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
-
-;; disabled command
-(put 'narrow-to-region 'disabled nil)
-
-(provide 'init.el)
 ;;; init.el ends here
