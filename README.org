@@ -15,6 +15,24 @@ can spent a lifetime here and does not scratch the surface of all
 hidden treasures. Therefore, let's try to push the bar a little bit
 higher this time.
 
+I am editing this file very often, therefore is needed a smarter way
+to jump directly to it. I like to use registers for that.
+#+BEGIN_SRC emacs-lisp
+  (set-register ?e '(file . "~/.emacs.d/README.org"))
+#+END_SRC
+
+=registers= are storages for text, positions, window layouts and more.
+The following table describe the most used commands for me.
+
+| Keybindings | Description                                   |
+|-------------+-----------------------------------------------|
+| C-x r s R   | copy the region into register R               |
+| C-x r r R   | copy the region-rectangle into register R     |
+| C-x r SPC r | save the position of point into register R    |
+| C-x r f R   | copy the frame configuration into register R  |
+| C-x r w R   | copy the window configuration into register R |
+| C-x r j R   | jump to the register                          |
+
 * Startup
 
 Since an error may occur in loading any file, I set some debugging
@@ -162,6 +180,11 @@ Typing yes/no is obnoxious when y/n will do
   (fset #'yes-or-no-p #'y-or-n-p)
 #+END_SRC
 
+The minibuffer should never be larger than its usual one-line size.
+#+BEGIN_SRC emacs-lisp
+  (setq resize-mini-windows nil)
+#+END_SRC
+
 Emacs "updates" its ui more often than it needs to, so we slow it down slightly.
 #+BEGIN_SRC emacs-lisp
   (setq idle-update-delay 1)
@@ -245,6 +268,39 @@ Disable annoying blink-matching-paren
   (setq blink-matching-paren nil)
 #+END_SRC
 
+Let’s try for the 1000x time, the highlighting of the current line.
+#+BEGIN_SRC emacs-lisp
+  (global-hl-line-mode +1)
+#+END_SRC
+
+After I learned about =M-x customize= I am reading some options there
+that appeals me.
+
+As I always remember from my first /init.el/ read, from Magnars,
+"Emacs Kings do not use shift-selection-mode".
+#+BEGIN_SRC emacs-lisp
+  (setq shift-select-mode nil)
+#+END_SRC
+
+Let's see these trailing white-spaces.
+#+BEGIN_SRC emacs-lisp
+  (setq show-trailing-whitespace t)
+#+END_SRC
+
+More default settings
+#+BEGIN_SRC emacs-lisp
+  (setq-default ad-redefinition-action 'accept
+                help-window-select t
+                select-enable-clipboard t)
+#+END_SRC
+
+Don’t ping Germany when typing test.de<TAB>
+#+BEGIN_SRC emacs-lisp
+  (setq ffap-machine-p-known 'reject)
+#+END_SRC
+
+** History
+
 Savehist keeps track of some history.
 #+BEGIN_SRC emacs-lisp
   (require 'savehist)
@@ -305,36 +361,6 @@ completion framework to populate their "virtual buffers" list.
   (add-hook 'dired-mode-hook 'contrib/recentf-add-dired-directory)
 #+END_SRC
 
-Let’s try for the 1000x time, the highlighting of the current line.
-#+BEGIN_SRC emacs-lisp
-  (global-hl-line-mode +1)
-#+END_SRC
-
-After I learned about =M-x customize= I am reading some options there
-that appeals me.
-
-As I always remember from my first /init.el/ read, from Magnars,
-"Emacs Kings do not use shift-selection-mode".
-#+BEGIN_SRC emacs-lisp
-  (setq shift-select-mode nil)
-#+END_SRC
-
-Let's see these trailing white-spaces.
-#+BEGIN_SRC emacs-lisp
-  (setq show-trailing-whitespace t)
-#+END_SRC
-
-More default settings
-#+BEGIN_SRC emacs-lisp
-  (setq-default ad-redefinition-action 'accept
-                help-window-select t
-                select-enable-clipboard t)
-#+END_SRC
-
-Don’t ping Germany when typing test.de<TAB>
-#+BEGIN_SRC emacs-lisp
-  (setq ffap-machine-p-known 'reject)
-#+END_SRC
 
 Just remember where the point is in any given file. This can often be
 a subtle reminder of what you were doing the last time you visited
@@ -570,6 +596,7 @@ this beauty in it.
     | M-s h u                       | undo the highlight                         |
     | C-s M-r                       | toggle regexp search                       |
 
+
 ** Authentication Source
 
 Auth Source is a generic interface for common backends such as your
@@ -714,7 +741,7 @@ Let’s use =ace-window= to enhance the movement between windows.
     (aw-background t)
     :config
     (ace-window-display-mode -1)
-    (global-set-key (kbd "M-o") 'ace-window))
+    (global-set-key (kbd "C-c o") 'ace-window))
 #+END_SRC
 
 For quickly movement like go sideways/up and down we can use the
@@ -727,6 +754,29 @@ this.
 #+END_SRC
 
 The idea is to use M-<arrows> to move.
+
+A undo switch-window is a nice idea. I think this ease the process of
+going back and forth between two windows.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x O") (lambda ()
+                                  (interactive)
+                                  (other-window -1)))
+#+END_SRC
+
+
+In my use cases, 95% of time that I use the split window function, I
+desire to move the cursor to the new window.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key "\C-x2" (lambda ()
+                            (interactive)
+                            (split-window-vertically)
+                            (other-window 1)))
+
+  (global-set-key "\C-x3" (lambda ()
+                            (interactive)
+                            (split-window-horizontally)
+                            (other-window 1)))
+#+END_SRC
 ** Cheatsheet from default behavior
 
 No one should remember everything, only out mechanical memory can do
@@ -917,6 +967,20 @@ and using the arrows.
 #+END_SRC
 
 There is always more to do in Emacs than we have words to explain.
+** Change inner
+
+I got very hook up with this kind of feature when I was a vimmer back
+in 2014. The change inner interface is very fast and intuitive way to
+mark text that need to be edited.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package change-inner
+    :ensure t
+    :config
+    (global-set-key (kbd "M-i") 'change-inner)
+    (global-set-key (kbd "M-o") 'change-outer))
+#+END_SRC
+
 ** Region Selection
 
 One of the functionalities I cannot live without is `expand-region' or
@@ -939,6 +1003,11 @@ get back to its original state.
   (use-package restart-emacs :ensure t)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (use-package windresize
+    :ensure t)
+#+END_SRC
+
 *** Plantuml
 
 Plantuml is an open-source tool allowing users to create UML diagrams
@@ -952,6 +1021,28 @@ design a specific diagram can be found [[https://plantuml.com/][here]].
     :config
     (require 'ob-plantuml)
     (setq org-plantuml-jar-path "/home/wand/plantuml.jar"))
+#+END_SRC
+
+** Pomodoro
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tomatinho
+    :ensure t
+    :bind
+    ("<f12>" . tomatinho))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (cheatsheet-add-group 'Pomodoro
+                        '(:key "F12" :description "Display pomodoro buffer.")
+                        '(:key "Enter" :description "Forgoes the current pomodoro or leaves a break")
+                        '(:key "S-Enter" :description "Deliberately pauses")
+                        '(:key "R" :description "Resets the timer")
+                        '(:key "TAB" :description "Toggles between display modes")
+                        '(:key "q" :description "Kills the buffer")
+                        '(:key "Q" :description "Turns off Tomatinho")
+                        '(:key "S" :description "Stick to the grid")
+                        )
 #+END_SRC
 
 ** Webjump
@@ -993,6 +1084,13 @@ Unfortunately, I have to deal with YAML files on my daily basis.
     :config
     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this))
+#+END_SRC
+
+* Restclient
+
+#+BEGIN_SRC emacs-lisp
+  (use-package restclient
+    :ensure t)
 #+END_SRC
 
 * Completion
@@ -1105,9 +1203,39 @@ Let's build a custom cheatsheet for our ido usage.
 
 * Org
 
+Org offers you the basic tools to organize your life in
+super-efficient ways using nothing but plain text.
+
 Changing some sensible defaults for Org mode. For example, it asks you
 about every code block evaluation and it annoys me because if I typed
 to evaluate why does I need to confirm it again?
+
+Basic configs
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    (setq org-deadline-warning-days 3
+          org-todo-keywords
+          '((sequence "TODO(t)" "|" "DONE(D)" "|" "CANCELLED(C)")
+            (sequence "ACT(a)" "|" "ACTED(A)")
+            (sequence "STUDY(s)" "|" "STUDIED(S)")
+            (sequence "BUY(b)" "|" "BOUGHT(B)")
+            (sequence "MEET(m)" "|" "MET(M)" "|" "POSTPONED(P)"))
+          org-fontify-done-headline t
+          org-enforce-todo-dependencies t
+          org-enforce-todo-checkbox-dependencies t
+          org-track-ordered-property-with-tag t
+          org-highest-priority ?A
+          org-lowest-priority ?C
+          org-default-priority ?A)
+    ;; log
+    (setq org-log-done 'time
+          org-log-note-clock-out nil
+          org-log-redeadline nil
+          org-log-reschedule nil
+          org-read-date-prefer-future 'time)
+    )
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   (setq org-confirm-babel-evaluate nil)
@@ -1119,29 +1247,71 @@ buffer to edit code.
   (setq org-src-window-setup 'current-window)
 #+END_SRC
 
-Org agenda is something great! I need to rely more on that.
+Org agenda is something great! I need to rely more on that. Some fun
+facts about the config below:
+
+   - Specifiers that start with the caret sign (^) represent prompts
+     for further user input. The pattern =^{TEXT}= is a prompt whose
+     name is =TEXT=.
+   - You can also offer possible answers by =^{TEXT|ONE|TWO|THREE}=,
+     where the first entry is the text of the prompt and all the rest
+     are the available choices.
+   - The =%?= determines where the point should be once the template
+     is filled in.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-capture
+    :after org
+    :config
+    (setq org-capture-templates
+          '(("b" "Basic task" entry
+             (file+headline "~/todo.org" "Basic tasks that need to be reviewed")
+             "* %?")
+            ("c" "Capture some concise actionable item and exit immediately" entry
+             (file+headline "~/todo.org" "Task list without a defined date")
+             "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
+            ("t" "Task of importance with a tag, deadline, and further editable space" entry
+             (file+headline "~/todo.org" "Task list with a date")
+             "* %^{Scope of task||TODO [#A]|STUDY [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
+            ("r" "Reply to an email" entry
+             (file+headline "~/todo.org" "Mail correspondence")
+             "* TODO [#B] %:subject\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
+            ("i" "Idea")
+            ("ia" "Activity or event" entry
+             (file+headline "~/ideas.org" "Activities or events")
+             "* ACT %^{Act about what}%? :private:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+            ("ie" "Essay or publication" entry
+             (file+headline "~/ideas.org" "Essays or publications")
+             "* STUDY %^{Expound on which thesis}%? :private:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
+
+    (defun contrib/org-capture-no-delete-windows (oldfun args)
+      (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+        (apply oldfun args)))
+
+    (with-eval-after-load "org-capture"
+      (advice-add 'org-capture-place-template :around 'contrib/org-capture-no-delete-windows))
+
+    :bind ("C-c c" . org-capture))
+#+END_SRC
+
+Org agenda is other impressive thing inside Org mode
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files (list "~/calendar-captalys.org"
-                               "~/todo.org"))
-
-
-  (setq org-capture-templates
-        '(("a" "Appointment Captalys" entry (file "~/calendar-captalys.org")
-           "* %?\n\n%T\n\n:PROPERTIES:\n\n:END:\n\n")
-          ("t" "To Do Item" entry (file+headline
-                                   "~/todo.org" "To Do")
-           "* TODO %?\n%u" :prepend t)))
+                               "~/gcal-captalys.org"
+                               "~/todo.org"
+                               "~/ideas.org"))
 
   (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture)
-  (global-set-key (kbd "C-c l") 'org-store-link)
 #+END_SRC
 
-Add a timestamp when a task is done.
+Let’s build some brain dump into our cheat-sheet interface.
 #+BEGIN_SRC emacs-lisp
-  (setq org-log-done 'time)
+  (cheatsheet-add-group
+   'Org-Agenda
+   '(:key "a" :description "keep track of all the items with dates assigned")
+   '(:key "t" :description "list all your tasks")
+   '(:key "n" :description "combined view"))
 #+END_SRC
-
 
 ** Calendar
 
@@ -1211,9 +1381,8 @@ all in our heads. This is perfect usage for a cheatsheet.
 
 #+BEGIN_SRC emacs-lisp
   (cheatsheet-add-group 'Org
-			'(:key "C-c C-w" :description "Move item to other location"))
+            '(:key "C-c C-w" :description "Move item to other location"))
 #+END_SRC
-
 * Projects
 
 #+BEGIN_SRC emacs-lisp
@@ -1603,6 +1772,7 @@ How to use Slack on emacs? Some terminology from the website:
 | slack-channel-list-update  | update channel list                                                                |
 | slack-message-embed-mentio | use to mention to user                                                             |
 | slack-file-upload          | uploads a file                                                                     |
+
 * Programming
 
 Control your whitespaces!
@@ -1738,7 +1908,6 @@ Eval entire buffer and bring a nice message.
 Emacs and Clojure is a perfect match! You can find more information
 about this love affair in this [[https://youtu.be/O6g5C4jUCUc][video]].
 
-
 **clojure-mode**: all you expects from a programming language major
   mode (and more!)
   - font-lock
@@ -1807,14 +1976,34 @@ welcome in Clojure buffers.
     :ensure t)
 #+END_SRC
 
+When you run the tests or load the buffer it usually has some modified
+state happening because and the following advice will save the buffer
+before trying to apply the functions.
+
+#+BEGIN_SRC emacs-lisp
+  (defadvice clojure-test-run-tests (before save-first activate)
+    (save-buffer))
+
+  (defadvice nrepl-load-current-buffer (before save-first activate)
+    (save-buffer))
+#+END_SRC
+
 
 Let’s build our cheat-sheet once again.
 #+BEGIN_SRC emacs-lisp
-  (cheatsheet-add-group 'Clojure
-                        '(:key "C-c SPC" :description "Vertically align some forms")
-                        '(:key "f (in report test buffer)" :description "Re-run the failing tests")
-                        '(:key "C-u C-M-x" :description "Instrument a function to debug"))
+  (cheatsheet-add-group
+   'Clojure
+   '(:key "C-c SPC" :description "Vertically align some forms")
+   '(:key "f (in report test buffer)" :description "Re-run the failing tests")
+   '(:key "C-u C-M-x" :description "Instrument a function to debug")
+   '(:key "C-x C-e" :description "cider eval last sexp")
+   '(:key "C-c M-p" :description "cider insert last sexp in repl")
+   '(:key "C-c C-b" :description "cider interrupt")
+   '(:key "C-c C-v n" :description "cider eval ns form")
+   '(:key "C-c C-z" :description "cider switch to repl buffer"))
 #+END_SRC
+
+
 ** Python
 
 #+BEGIN_SRC emacs-lisp
