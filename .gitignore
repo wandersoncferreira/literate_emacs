@@ -5,3 +5,6 @@ eshell/
 projectile-bookmarks.eld
 smex-items
 transient/
+bookmarks
+ido.last
+projectile.cache
