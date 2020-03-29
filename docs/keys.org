@@ -1,0 +1,42 @@
+#+title: Keybindings learned
+#+author: Wanderson Ferreira
+
+--- smartparens
+
+| Bindings | Description                   |
+|----------+-------------------------------|
+| C-S-a    | move to the end of the sexp   |
+| C-S-d    | move to the start of the sexp |
+| C-M-d    | move down forward of sexp     |
+|          |                               |
+
+--- flycheck
+
+| Bindings | Description         |
+|----------+---------------------|
+| C-c ! n  | find next error     |
+| C-c ! p  | find previous error |
+
+
+--- docker
+
+| Bindings                     | Description                                     |
+|------------------------------+-------------------------------------------------|
+| C-c C-b                      | build dockerfile                                |
+| M-x bk/docker-add-build-args | custom fn to insert build args prior to C-c C-b |
+| C-c d                        | build docker-compose files                      |
+
+
+--- bookmarks
+
+| Bindings | Description                                                   |
+|----------+---------------------------------------------------------------|
+| C-x r m  | assign a bookmark (works inside the docker container as well) |
+| C-x r l  | restore the bookmark                                          |
+
+
+--- generics
+| Bindings         | Description                                              |
+|------------------+----------------------------------------------------------|
+| C-c <arrow-keys> | smart-shift the region or thing at point with arrow keys |
+|                  |                                                          |

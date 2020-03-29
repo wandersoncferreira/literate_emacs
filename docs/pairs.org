@@ -1,0 +1,86 @@
+#+TITLE: Handle your parentheses
+#+AUTHOR: Wanderson Ferreira
+
+Smartparens:
+
+
+A very important command to keep in mind is the =C-u M-x
+sp-cheat-sheet= it will be used very often if you wish to learn the
+internal options this package offers you. There are tons of use cases
+and most of them you pass unnoticed by you when you are working in
+your daily basis.
+
+* Default bindings
+
+Default bindings provides by =sp-use-smartparens-bindings=.
+
+| binding         | function name                   | description                            |
+|-----------------+---------------------------------+----------------------------------------|
+| C-M-f           | sp-forward-sexp                 | Move across one balances sexp          |
+| C-M-b           | sp-backward-sexp                | Move backward across one balanced sexp |
+| C-M-d           | sp-down-sexp                    | [[sp-down-sexp]]                           |
+| C-M-a           | sp-backward-down-sexp           | [[sp-down-sexp]]                           |
+| C-S-d           | sp-beginning-of-sexp            |                                        |
+| C-S-a           | sp-end-of-sexp                  |                                        |
+| C-M-e           | sp-up-sexp                      |                                        |
+| C-M-u           | sp-backward-up-sexp             |                                        |
+| C-M-n           | sp-next-sexp                    |                                        |
+| C-M-p           | sp-previous-sexp                |                                        |
+| C-M-k           | sp-kill-sexp                    |                                        |
+| C-M-w           | sp-copy-sexp                    |                                        |
+| M-<delete>      | sp-unwrap-sexp                  |                                        |
+| M-<backspace>   | sp-backward-unwrap-sexp         |                                        |
+| C-<right>       | sp-forward-slurp-sexp           |                                        |
+| C-<left>        | sp-forward-barf-sexp            |                                        |
+| C-M-<left>      | sp-backward-slurp-sexp          |                                        |
+| C-M-<right>     | sp-backward-barf-sexp           |                                        |
+| M-D             | sp-splice-sexp                  |                                        |
+| C-M-<delete>    | sp-splice-sexp-killing-forward  |                                        |
+| C-M-<backspace> | sp-splice-sexp-killing-backward |                                        |
+| C-S-<backspace> | sp-splice-sexp-killing-around   |                                        |
+| C-]             | sp-select-next-thing-exchange   |                                        |
+| C-M-]           | sp-select-next-thing            |                                        |
+| C-M-SPC         | sp-mark-sexp                    |                                        |
+| M-F             | sp-forward-symbol               |                                        |
+| M-B             | sp-backward-symbol              |                                        |
+
+** sp-down-sexp
+
+   Move forward down one level of sexp.
+
+   Here we need to understand what is *down* for structural code
+   navigation, then we can understand what this function does.
+   
+   If you have the following construct in elisp =(foo (bar (baz)))=
+   the order of execution is from inside out despite the fact that the
+   code structure looks more like this:
+
+   -> foo
+   -----> bar
+   ---------> baz
+
+   Therefore, go =down= means go down this latter, however, what =down
+   backwards= means? Probably you went down one step of the letter but
+   now you are positioned at the end of it instead of the beginning.
+
+   Examples:
+
+  |foo (bar (baz quux)) -> foo (|bar (baz quux))
+
+  |foo (bar (baz quux)) -> foo (bar (|baz quux)) ;; 2
+
+  |foo (bar (baz (quux) blab)) -> foo (bar (baz (|quux) blab)) ;; C-u
+
+  (foo (bar baz) |quux) -> (|foo (bar baz) quux)
+
+  (blab foo |(bar baz) quux) -> (|blab foo (bar baz) quux) ;; C-u C-u
+
+
+* Region wrapping
+
+  To wrap a region in a pair, simply select the region and type the
+  /opening/ pair and the region will be wrapped from both sides.
+
+
+* Bibliografy
+  - [[https://ebzzry.io/en/emacs-pairs/][Emacs Pairs]]: 

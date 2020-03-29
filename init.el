@@ -1,6 +1,12 @@
-;;; init.el --- My configs
+;;; init.el --- My configs -*- lexical-binding: t -*-
+
 ;;; Commentary:
+
+;; Do what you want, but learn your tool very very well.  This is my
+;; attempt to keep my emacs-fu sharpe.
+
 ;;; Code:
+
 (require 'package)
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -11,27 +17,86 @@
   (package-refresh-contents))
 
 (defvar my-external-packages '(cider
-			       paredit
+			       smartparens
 			       clojure-mode
 			       magit
 			       change-inner
+			       smart-shift
 			       flycheck
 			       flycheck-clj-kondo
 			       smex
+			       docker
+			       docker-tramp
+			       dockerfile-mode
+			       docker-compose-mode
+			       eshell-bookmark
 			       projectile
 			       tomatinho
 			       expand-region
 			       restclient
 			       json-mode
 			       multiple-cursors
-			       color-theme-sanityinc-tomorrow))
+			       markdown-mode
+			       night-owl-theme))
 
 (dolist (pkg my-external-packages)
   (unless (package-installed-p pkg)
     (package-install pkg)))
 
-(require 'smex)
+;; add new paths to emacs
+(setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
+(setq exec-path (append exec-path '("/home/wand/scripts")))
+
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
 (smex-initialize)
+
+;; help to change text
+(global-smart-shift-mode t)
+
+;; docker
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(add-to-list 'auto-mode-alist '("DockerfileDev\\'" . dockerfile-mode))
+
+(defun bk/dockerfile-add-build-args ()
+  "Add env variables to your docker build."
+  (interactive)
+  (let* ((vars (read-from-minibuffer "sequence of <envName>=<envValue>: "))
+	 (split-vars (split-string vars " ")))
+    (setq dockerfile-build-args nil)
+    (dolist (v split-vars)
+      (add-to-list 'dockerfile-build-args v))
+    (setq docker-build-history-args vars)))
+
+(require 'docker-compose-mode)
+(add-to-list 'auto-mode-alist '("docker-compose[^/]*\\.yml\\'" . docker-compose-mode))
+
+(require 'docker)
+
+(defun bk/docker-compose-custom-envs ()
+  "Add usual env variables to Emacs environment."
+  (interactive)
+  (let* ((idu (shell-command-to-string "id -u"))
+	 (idg (shell-command-to-string "id -g"))
+	 (uid (string-join (vector (string-trim idu) ":" (string-trim idg)))))
+    (setenv "WEBSERVER_PORT" "3000")
+    (setenv "CURRENT_UID" uid)
+    (message "setenv WEBSERVER_PORT=300 CURRENT_UID=$(id -u):$(id -g) done!")))
+
+(global-set-key (kbd "C-c d") 'docker)
+
+(add-hook 'eshell-mode-hook 'eshell-bookmark-setup)
+
+(defun bk/docker-cleanup-buffers ()
+  "Delete all the docker buffers created."
+  (interactive)
+  (kill-matching-buffers "docker" nil t))
+
+;; git
+(require 'magit)
+(add-to-list 'magit-no-confirm 'stage-all-changes)
 
 (require 'dired-x)
 
@@ -65,7 +130,7 @@
 
 (set-register ?e '(file . "~/.emacs.d/init.el"))
 (set-register ?t '(file . "~/org/todo.org"))
-
+(set-register ?k '(file . "~/.emacs.d/docs/keys.org"))
 
 ;; `C-a' first takes you to the first non-whitespace char as
 ;; `back-to-indentation' on a line, and if pressed again takes you to
@@ -91,17 +156,47 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (scroll-bar-mode -1)
 
 ;; enable modes
-(electric-pair-mode)
 (show-paren-mode)
 (delete-selection-mode)
 (pending-delete-mode)
-(ido-mode)
-(ido-everywhere)
+(global-eldoc-mode t)
 
-(add-hook 'lisp-mode-hook #'enable-paredit-mode)
-(add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-(add-hook 'clojure-mode-hook #'enable-paredit-mode)
-(add-hook 'clojure-mode-hook #'eldoc-mode)
+(require 'ido)
+(setq ido-use-virtual-buffers t)
+(setq ido-use-faces nil)
+
+(ido-mode t)
+(ido-everywhere t)
+(recentf-mode t)
+
+(add-hook 'text-mode-hook #'auto-fill-mode)
+
+(require 'smartparens)
+(setq sp-highlight-pair-overlay nil)
+
+(add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+(add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+
+(with-eval-after-load "smartparens"
+  ;; remove some pairs
+  (sp-pair "'" nil :actions :rem)
+  (sp-pair "`" nil :actions :rem)
+
+  ;; include new wrap of pairs
+  (sp-pair "(" ")" :wrap "M-(")
+  (sp-pair "[" "]" :wrap "M-[")
+  
+  (sp-use-smartparens-bindings)		;enable default smartparens bindings
+
+  (sp-local-tag 'markdown-mode "c" "```clojure" "```")
+  (sp-local-tag 'markdown-mode "e" "```elisp" "```")
+  (sp-local-tag 'markdown-mode "b" "```bash" "```")
+  (sp-local-tag 'markdown-mode "p" "```python" "```")
+
+  (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object))
+
+(add-hook 'clojure-mode-hook 'eldoc-mode)
 
 (require 'projectile)
 (with-eval-after-load 'projectile
@@ -111,6 +206,7 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (setq tab-always-indent 'complete)
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+(setq custom-safe-themes t)
 
 (require 'em-alias)
 (add-hook 'eshell-mode-hook
@@ -121,6 +217,7 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (defvar mode-line-cleaner-alist
   `((paredit-mode . " π ")
     (eldoc-mode . "")
+    (auto-fill-mode . "")
     (auto-revert-mode . "")
     (clojure-mode . "λ")
     (emacs-lisp-mode . "λ")))
@@ -139,7 +236,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (add-hook 'after-change-major-mode-hook #'clean-mode-line)
 
-(require 'org)
 (require 'org-capture)
 (setq org-directory "/home/wand/org")
 (setq org-agenda-files (list "/home/wand/org/todo.org"))
@@ -180,9 +276,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (global-set-key (kbd "C-.") 'bk/ido-menu)
 
-(add-to-list 'exec-path "/home/wand/scripts")
-
-(require 'url-http)
 (defvar url-http-end-of-headers)
 (defun bk/ip ()
   "Find my current public IP address."
@@ -196,10 +289,17 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(load-theme 'sanityinc-tomorrow-night t)
-
 (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
+(autoload 'markdown-mode "markdown-mode"
+  "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+(autoload 'gfm-mode "markdown-mode"
+  "Major mode for editing Github flavored markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 
 ;;; after calling the `org-todo', the org mode tries to store some
@@ -221,21 +321,35 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (require 'flycheck-clj-kondo)
 
+;; integrate emacs kill ring with the system clipboard.
+(setq save-interprogram-paste-before-kill t)
+
+;; aesthetics
+(load-theme 'night-owl t)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
  '(package-selected-packages
    (quote
-    (flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
+    (highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
  '(safe-local-variable-values
    (quote
-    ((cider-docker-translations
+    ((eval font-lock-add-keywords nil
+	   (\`
+	    (((\,
+	       (concat "("
+		       (regexp-opt
+			(quote
+			 ("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl"))
+			t)
+		       "\\_>"))
+	      1
+	      (quote font-lock-variable-name-face)))))
+     (cider-docker-translations
       ("/app/src" . "/home/wand/platform/seu-barriga/src")
       ("/app/test" . "/home/wand/platform/seu-barriga/test"))
      (cider-docker-translations
@@ -251,4 +365,8 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
  )
 
 (provide 'init)
+;; Local Variables:
+;; coding: utf-8
+;; no-byte-compile: t
+;; End:
 ;;; init.el ends here
