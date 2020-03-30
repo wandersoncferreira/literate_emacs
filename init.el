@@ -19,12 +19,17 @@
 (defvar my-external-packages '(cider
 			       smartparens
 			       clojure-mode
+			       clj-refactor
+			       which-key
+			       avy
 			       magit
+			       git-timemachine
 			       change-inner
 			       smart-shift
 			       flycheck
 			       flycheck-clj-kondo
 			       smex
+			       plantuml-mode
 			       docker
 			       docker-tramp
 			       dockerfile-mode
@@ -37,11 +42,15 @@
 			       json-mode
 			       multiple-cursors
 			       markdown-mode
-			       night-owl-theme))
+			       zenburn-theme))
 
 (dolist (pkg my-external-packages)
   (unless (package-installed-p pkg)
     (package-install pkg)))
+
+;; plantuml
+(require 'ob-plantuml)
+(setq org-plantuml-jar-path "/home/wand/plantuml.jar")
 
 ;; add new paths to emacs
 (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
@@ -51,6 +60,18 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
 (smex-initialize)
+
+;; aesthetics
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
+
+(defun bk/font-family-size (family size)
+  "Set frame font to FAMILY at SIZE."
+  (set-frame-font
+   (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
+
+(bk/font-family-size "Source Code Pro Medium" 12)
+(load-theme 'zenburn t)
 
 ;; help to change text
 (global-smart-shift-mode t)
@@ -70,10 +91,7 @@
       (add-to-list 'dockerfile-build-args v))
     (setq docker-build-history-args vars)))
 
-(require 'docker-compose-mode)
 (add-to-list 'auto-mode-alist '("docker-compose[^/]*\\.yml\\'" . docker-compose-mode))
-
-(require 'docker)
 
 (defun bk/docker-compose-custom-envs ()
   "Add usual env variables to Emacs environment."
@@ -89,6 +107,16 @@
 
 (add-hook 'eshell-mode-hook 'eshell-bookmark-setup)
 
+(defun eshell-clear-buffer ()
+  "Clear the terminal buffer."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(add-hook 'eshell-mode-hook (lambda ()
+			      (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+
 (defun bk/docker-cleanup-buffers ()
   "Delete all the docker buffers created."
   (interactive)
@@ -99,6 +127,14 @@
 (add-to-list 'magit-no-confirm 'stage-all-changes)
 
 (require 'dired-x)
+
+(defun bk/dired-xdg-open ()
+  "Open the file at point with xdg-open."
+  (interactive)
+  (let ((file (dired-get-filename nil t)))
+    (message "Opening %s..." file)
+    (call-process "xdg-open" nil 0 nil file)
+    (message "Opening %s done" file)))
 
 (global-set-key "\C-x3" (lambda ()
 			  (interactive)
@@ -159,7 +195,11 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (show-paren-mode)
 (delete-selection-mode)
 (pending-delete-mode)
-(global-eldoc-mode t)
+(global-eldoc-mode +1)
+(which-key-mode +1)
+
+;; input one char, jump to it with a tree
+(global-set-key (kbd "C-;") 'avy-goto-char)
 
 (require 'ido)
 (setq ido-use-virtual-buffers t)
@@ -171,12 +211,16 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
-(require 'smartparens)
 (setq sp-highlight-pair-overlay nil)
 
 (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
 (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+(add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+
+(add-hook 'clojure-mode-hook (lambda ()
+			       (clj-refactor-mode t)
+			       (cljr-add-keybindings-with-prefix "C-c C-m")))
 
 (with-eval-after-load "smartparens"
   ;; remove some pairs
@@ -196,9 +240,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
   (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object))
 
-(add-hook 'clojure-mode-hook 'eldoc-mode)
-
-(require 'projectile)
 (with-eval-after-load 'projectile
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (setq projectile-mode-line-prefix "Proj"))
@@ -239,7 +280,7 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (require 'org-capture)
 (setq org-directory "/home/wand/org")
 (setq org-agenda-files (list "/home/wand/org/todo.org"))
-(setq org-todo-keywords '((sequence "TODO(t)" "|" "DONE(D)" "|" "CANCELLED(C)")
+(setq org-todo-keywords '((sequence "TODO(t)" "|" "DOING(d)" "|" "DONE(D)" "|" "CANCELLED(C)")
 			  (sequence "STUDY(s)" "|" "STUDIED(S)")
 			  (sequence "ACT(a)" "|" "ACTED(A)")))
 (setq org-capture-templates
@@ -314,8 +355,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (advice-add 'org-store-log-note :after (lambda (&rest _rest)
 					 (org-save-all-org-buffers)))
 
-
-(require 'flycheck)
 (setq flycheck-check-syntax-automatically '(mode-enabled save))
 (global-flycheck-mode)
 
@@ -324,10 +363,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 ;; integrate emacs kill ring with the system clipboard.
 (setq save-interprogram-paste-before-kill t)
 
-;; aesthetics
-(load-theme 'night-owl t)
-
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -335,7 +370,7 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
+    (avy which-key hc-zenburn-theme anti-zenburn-theme zenburn-theme git-timemachine plantuml-mode clj-refactor highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
  '(safe-local-variable-values
    (quote
     ((eval font-lock-add-keywords nil
@@ -357,12 +392,13 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
       ("/app/test" . "/home/wand/platform/banker/test"))
      (cider-docker-translations
       ("/app/src" . "/home/wand/platform/register/src"))))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(button ((t (:foreground "#89C5C8" :underline t)))))
 
 (provide 'init)
 ;; Local Variables:

@@ -1,0 +1,10 @@
+#+title: Clojure programming language
+
+
+* Design Thoughts
+
+  1. order the arguments of your functions from least frequent
+     changing ones to the most
+  2. order the arguments in a way that is easier to use `partial`
+     without need to wrap functions around your function to flip
+     argument order.
