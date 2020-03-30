@@ -19,6 +19,7 @@
 (defvar my-external-packages '(cider
 			       smartparens
 			       clojure-mode
+			       clojure-mode-extra-font-locking
 			       clj-refactor
 			       which-key
 			       avy
@@ -71,7 +72,46 @@
    (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
 
 (bk/font-family-size "Source Code Pro Medium" 12)
+
+(require 'clojure-mode-extra-font-locking)
+
 (load-theme 'zenburn t)
+
+(require 'ibuffer)
+(setq ibuffer-expert t)
+(setq ibuffer-saved-filter-groups
+      '(("Main"
+	 ("Directories" (mode . dired-mode))
+	 ("Rest" (mode . restclient-mode))
+	 ("Docker" (or
+		    (mode . docker-compose-mode)
+		    (mode . dockerfile-mode)))
+	 ("Programming" (or
+			 (mode . clojure-mode)
+			 (mode . emacs-lisp-mode)
+			 (mode . python-mode)))
+	 ("Org" (mode . org-mode))
+	 ("Markdown" (or
+		      (mode . markdown-mode)
+		      (mode . gfm-mode)))
+	 ("Git" (or
+		 (mode . magit-blame-mode)
+		 (mode . magit-cherry-mode)
+		 (mode . magit-diff-mode)
+		 (mode . magit-log-mode)
+		 (mode . magit-process-mode)
+		 (mode . magit-status-mode)))
+	 ("Emacs" (or
+		   (name . "^\\*Help\\*$")
+		   (name . "^\\*Custom.*")
+		   (name . "^\\*Org Agenda\\*$")
+		   (name . "^\\*info\\*$")
+		   (name . "^\\*scratch\\*$")
+		   (name . "^\\*Backtrace\\*$")
+		   (name . "^\\*Messages\\*$"))))))
+
+(add-hook 'ibuffer-mode-hook (lambda ()
+			       (ibuffer-switch-to-saved-filter-groups "Main")))
 
 ;; help to change text
 (global-smart-shift-mode t)
@@ -195,8 +235,11 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (show-paren-mode)
 (delete-selection-mode)
 (pending-delete-mode)
-(global-eldoc-mode +1)
-(which-key-mode +1)
+(global-eldoc-mode)
+(which-key-mode)
+(line-number-mode)
+(column-number-mode)
+(size-indication-mode)
 
 ;; input one char, jump to it with a tree
 (global-set-key (kbd "C-;") 'avy-goto-char)
@@ -215,7 +258,9 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
 (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+
 (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+(add-hook 'clojure-mode-hook #'subword-mode)
 (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
 
 (add-hook 'clojure-mode-hook (lambda ()
@@ -242,7 +287,7 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (with-eval-after-load 'projectile
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (setq projectile-mode-line-prefix "Proj"))
+  (setq projectile-mode-line-prefix " Proj"))
 (projectile-mode)
 
 (setq tab-always-indent 'complete)
@@ -261,6 +306,7 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
     (auto-fill-mode . "")
     (auto-revert-mode . "")
     (clojure-mode . "λ")
+    (which-key-mode . "")
     (emacs-lisp-mode . "λ")))
 
 (defun clean-mode-line ()
@@ -368,9 +414,10 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(cider-enlighten-mode nil)
  '(package-selected-packages
    (quote
-    (avy which-key hc-zenburn-theme anti-zenburn-theme zenburn-theme git-timemachine plantuml-mode clj-refactor highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
+    (clojure-mode-extra-font-locking avy which-key hc-zenburn-theme anti-zenburn-theme zenburn-theme git-timemachine plantuml-mode clj-refactor highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
  '(safe-local-variable-values
    (quote
     ((eval font-lock-add-keywords nil
