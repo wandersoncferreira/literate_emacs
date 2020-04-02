@@ -1,0 +1,9 @@
+#+TITLE: Emacs Movements
+#+AUTHOR: Wanderson Ferreira
+
+
+* Basic Movements
+
+* References
+
+  - [[https://masteringemacs.org/article/effective-editing-movement][Effective Editing I: Movement]] - by Mastering Emacs

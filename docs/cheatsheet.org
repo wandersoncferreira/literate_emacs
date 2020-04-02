@@ -1,0 +1,96 @@
+--- smartparens
+
+| Bindings | Description                   |
+|----------+-------------------------------|
+| C-S-a    | move to the end of the sexp   |
+| C-S-d    | move to the start of the sexp |
+| C-M-d    | move down forward of sexp     |
+|          |                               |
+
+--- flycheck
+
+| Bindings | Description         |
+|----------+---------------------|
+| C-c ! n  | find next error     |
+| C-c ! p  | find previous error |
+
+
+--- docker
+
+| Bindings                     | Description                                     |
+|------------------------------+-------------------------------------------------|
+| C-c C-b                      | build dockerfile                                |
+| M-x bk/docker-add-build-args | custom fn to insert build args prior to C-c C-b |
+| C-c d                        | build docker-compose files                      |
+
+
+--- bookmarks
+
+| Bindings | Description                                                   |
+|----------+---------------------------------------------------------------|
+| C-x r m  | assign a bookmark (works inside the docker container as well) |
+| C-x r l  | restore the bookmark                                          |
+
+
+--- generics
+| Bindings          | Description                                                                        |
+|-------------------+------------------------------------------------------------------------------------|
+| C-c <arrow-keys>  | smart-shift the region or thing at point with arrow keys                           |
+| C-> and C-<       | multiple cursors, works onthe selected thing too                                   |
+| M-x describe-face | very useful to find out what is the face at point                                  |
+| C-x a g           | (global abbrev) to add a abbrev, type the text you want to expand and then call it |
+| C-x a pipe        | (mode abbrev)                                                                      |
+|                   |                                                                                    |
+
+
+
+
+-- clojure
+
+Pay attention to the fringe, when you evaluate code the fringe becomes blue.
+
+| Bindings               | Description                                                                                             |
+|------------------------+---------------------------------------------------------------------------------------------------------|
+| C-c C-d  d             | documentation of the function                                                                           |
+| C-c C-z                | switch to repl buffer                                                                                   |
+| C-c C-c                | evaluate the top-level form                                                                             |
+| C-c C-d a              | apropos, you don't remember exactly the name of the function that you need.. search for it using regexp |
+| C-u C-c C-z            | switch to repl buffer and switch the namespace to the proper namespace                                  |
+| C-c M-t v              | trace a specific var                                                                                    |
+| M-x cider-inspect-expr | inspector of a single expr (very valuable to nested deep structure)                                     |
+| C-u C-c C-c            | instrument function to interactive debugger                                                             |
+| M-x cider-enlighten    | place the values besides the vars                                                                       |
+| M-x cider-browse-ns    | look at the documentation of the fns defined in the ns                                                  |
+| C-c C-o                | (in the repl) the last output is cleaned                                                                |
+
+
+--- ripgrep
+| Bindings | Descriptions                           |
+|----------+----------------------------------------|
+| M-s g    | start ripgrep in the git root folder   |
+| l        | list all saved searches                |
+| e        | convert buffer to be editable          |
+| s        | saving the searches                    |
+| M-x M-p  | (minibuffer) use the last search input |
+
+
+
+--- snippets
+| Bindings                | Descriptions                                  |
+|-------------------------+-----------------------------------------------|
+| C-c y                   | make the expansions if a snippet is available |
+| M-x yas-describe-tables | cheat sheet  to help you out                  |
+
+
+--- buffers
+
+| Bindings | Descriptions                          |
+|----------+---------------------------------------|
+| C-x C-b  | ibuffer buffer                        |
+| d        | mark for deletion                     |
+| x        | execute the deletion                  |
+| /        | start filtering                       |
+| m        | mark buffers                          |
+| k        | delete temporarily the buffers marked |
+| t        | toggle the mark                       |
+| g        | retrieve the buffer back to normal    |

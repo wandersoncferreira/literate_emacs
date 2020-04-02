@@ -1,0 +1,80 @@
+#+TITLE: Classes
+
+My notes and findings about classes in programming languages.
+
+* [Java] When to use nested, local, anonumous classes, and lambda expressions
+
+  - Anonymous class: Use it if you need to declare fields or
+    additional methods. They enable you to declare and instantiate a
+    class at the same time. 
+
+* [Clojure] Protocols
+
+** [[https://stackoverflow.com/questions/4509782/simple-explanation-of-clojure-protocols][SO response]]
+   The purpose of Protocols in Clojure is to solve the Expression
+   Problem in an efficient manner.
+
+   So, what's the Expression Problem? It refers to the basic problem
+   of extensibility: our programs manipulate data types using
+   operations. As our programs evolve, we need to extend them with new
+   data types and new operations. And particularly, we want to be able
+   to add new operations which work with the existing data types, and
+   we want to add new data types which work with the existing
+   operations.
+
+   And we want this to be true /extension/, i.e. we don't want to
+   modify the /existing/ program, we want to respect the existing
+   abstractions, we want out extensions to be separate modules, in
+   separately namespaces, separately compiled, separately deployed,
+   separately type checked. We want them to be type-safe.
+
+   The extension problem is, how do you actually provide extensibility
+   in a language?
+
+   It turns out that for typical naive implementations of
+   procedural and/or functional programming, it is very easy to add
+   new operations (procedures, functions), but very hard to add new
+   data types, since basically the operations work with the data types
+   using some sort of case discrimination (=switch=, =case=, =pattern
+   matching=) and you need to add new cases to them, i.e. modify
+   existing code.
+
+   <...missing bits...>
+   
+   Note that Clojure actually already has a mechanism for solving the
+   EP: Multimethods. The problem that OO has with the EP is that they
+   bundle operations and types together. With multimethods they are
+   separate. The problem that FP has is that they bundle the operation
+   and the case discrimination together. Again, with multimethods they
+   are separate.
+
+   Why protocols if we already have multimethods?
+
+   The main thing Protocols offer over multimethods is Grouping: you
+   can group multiple functions together and say "these 3 functions
+   together form Protocol =Foo=". You cannot do that with
+   multimethods, they always stand on their own. For example, you
+   could declare that a =Stack= Protocol consists of both a =push= and
+   a =pop= function /together/.
+
+   So, Why not just add the capability to group multimethods together?
+   There's a purely pragmatic reason, and it is why I used the word
+   "efficient" in my introductory sentence: performance.
+
+   Protocols, restrict you to dispatch only on the /first/ argument
+   and /only/ on its type (or as a special case on =nil=).
+
+   This is not a limitation on the idea of Protocols per se, it is a
+   pragmatic choice to get access to the performance optimizations of
+   the underlying platform. In particular, it means that Protocols
+   have a trivial mapping to JVM/CLI interfaces, which makes them very
+   fast. Fast enough, in fact, to be able to rewrite those parts of
+   clojure which are currently written in java or c# in clojure
+   itself.
+
+   Clojure has actually already had Protocols since version 1.0: =Seq=
+   is a protocol, for example. But until 1.2, you couldn't write
+   Protocols in clojure, you had to write them in the host language.
+** References
+
+   1. [[https://www.ibm.com/developerworks/library/j-clojure-protocols/][Solve the Expression Problem with Clojure]] - by Stuart Sierra
