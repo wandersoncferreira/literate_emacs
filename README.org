@@ -32,6 +32,7 @@ his team.
 
 #+begin_src emacs-lisp :tangle yes
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 #+end_src
 
 We need to refresh the archives to make this change to take place.
@@ -68,16 +69,12 @@ details.
 
 * Old configuration
 #+begin_src emacs-lisp :tangle yes
-  (defvar my-external-packages '(cider
-				 smartparens
+  (defvar my-external-packages '(smartparens
 				 elfeed
 				 rg
 				 company
 				 company-quickhelp
 				 company-restclient
-				 clojure-mode
-				 clojure-mode-extra-font-locking
-				 clj-refactor
 				 which-key
 				 yasnippet
 				 yasnippet-snippets
@@ -135,8 +132,6 @@ details.
      (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
 
   (bk/font-family-size "Source Code Pro Medium" 12)
-
-  (require 'clojure-mode-extra-font-locking)
 
   (defun bk/load-light-theme ()
     "Load a light theme for the day."
@@ -361,11 +356,6 @@ details.
   (global-set-key (kbd "C-c ;") 'avy-goto-char)
 
   ;; completions
-  (setq ido-use-virtual-buffers t)
-  (setq ido-use-faces t)
-  (ido-mode t)
-  (ido-everywhere t)
-
   (recentf-mode t)
 
   (require 'company)
@@ -416,17 +406,6 @@ details.
   (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
 
-  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
-  (add-hook 'clojure-mode-hook #'subword-mode)
-  (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-
-  (add-hook 'clojure-mode-hook (lambda ()
-				 (clj-refactor-mode t)
-				 (cljr-add-keybindings-with-prefix "C-c C-m")))
-
-  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-
   (with-eval-after-load "smartparens"
     ;; remove some pairs
     (sp-pair "'" nil :actions :rem)
@@ -467,7 +446,6 @@ details.
       (yas-minor-mode . "")
       (auto-fill-mode . "")
       (auto-revert-mode . "")
-      (clojure-mode . "λ")
       (subword-mode . "")
       (flyspell-mode . "")
       (which-key-mode . "")
@@ -689,9 +667,48 @@ details.
       (load custom-file))
   #+end_src
 
+** Minibuffer
+
+  The following setting prevent the minibuffer to grow, therefore it
+  will be always 1 line height.
+
+#+begin_src emacs-lisp :tangle yes
+  (setq resize-mini-windows nil)
+  (setq max-mini-window-height 1)
+#+end_src
+
+** Help
+
 * Aesthetics
 * Completions
 ** Minibuffer (ido mode)
+
+The whole selling point to =ido-mode= is: switches between buffers and
+opens files and directories with a minimum of keystrokes.
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package ido
+    :ensure nil
+    :init (setq ido-use-virtual-buffers t
+		ido-use-faces t
+		ido-enable-flex-matching t
+		ido-create-new-buffer 'always)
+    :config
+    (ido-mode t)
+    (ido-everywhere t))
+#+end_src
+
+
+More functionality
+
+   1. After =C-x b=, the buffer at the head of the list can be killed
+      by pressing =C-k=.
+   2. After =C-x C-f=, you can delete (i.e. physically remove) the
+      file at the head of the list with =C-k=
+
+
+We can find a nice description of ido at the help page on [[help:ido][C-h P ido]].
+
 ** Company mode
 * Docker
 * RSS Feed
@@ -700,3 +717,135 @@ details.
 ** Time machine
 ** Aesthetics
 * Unified Modeling Language
+* Search
+* Shell
+* Clojure
+
+Unfortunately, Emacs does not have a builtin major mode for Clojure,
+however we have a great community that support any programming
+language available in the world as a major mode of emacs rsrs.
+
+The intent of a major mode is basically provide font-lock,
+indentation, navigation and refactoring for the target programming
+language.
+
+At the =clojure-mode= website recommends us to use the MELBA Stable
+bundle because the MELPA version is following a development branch of
+the library. As this mode is very important for me right now, I would
+like to stick to the more stable branch.
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package clojure-mode
+    :ensure t
+    :pin melpa-stable
+    :diminish (clojure-mode "λ")
+    :init
+    (setq clojure-align-forms-automatically t)
+    :config
+    (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+    (add-hook 'clojure-mode-hook #'subword-mode))
+#+end_src
+
+The previous setting =clojure-align-forms-automatically= makes the
+following example a default behavior and you don't need to manually
+align the values. **NOTE**: this is an experiment, 90% of the time
+this happened to me, that was the default behavior I wanted. Let's see
+how much the other 10% will annoy me now.
+
+#+BEGIN_SRC clojure :tangle yes
+  (def my-map
+    {:a-key 1
+     :other-key 2})
+
+  ;; after C-c SPC
+  (def my-map
+    {:a-key     1
+     :other-key 2})
+#+END_SRC
+
+
+There are several incredible examples of refactoring in the
+[[https://github.com/clojure-emacs/clojure-mode][clojure-mode]] website. 
+
+   1. TODO: Study refactoring support in clojure-mode.
+
+
+Provides additional refactoring support, but as we see from the
+=clojure-mode= github page, all these extra functionalities are
+migrating to the clojure mode package.
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package clj-refactor
+    :ensure t
+    :after (clojure-mode)
+    :config
+    (add-hook 'clojure-mode-hook (lambda ()
+				   (clj-refactor-mode t)
+				   (cljr-add-keybindings-with-prefix "C-c C-m"))))
+#+end_src
+
+
+We also improved the font-locking for built-in methods and macros of
+clojure.
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package clojure-mode-extra-font-locking
+    :ensure t
+    :after (clojure-mode))
+#+end_src
+
+Now comes the real deal for Clojure development, CIDER extends Emacs
+with support for interactive programming in Clojure. It basically
+connects the buffer to a nREPL and communicate back-and-forth to
+provide functionalities such as code completion, documentation,
+navigation, debugging, running tests, and many more.
+
+   1. TODO:  Study cider mode
+
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package cider
+    :ensure t
+    :after (clojure-mode)
+    :config
+    (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+    (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+    (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
+#+end_src
+
+When cider is not connected, I usually use some commands that makes no
+sense in =clojure-mode= and receive a non-sense error message that I
+never understand what is happening or even worse it just hands without
+no feedback.
+
+I will borrow the idea from Alex Baranosky and create a dummy function
+to provide some useful feedback message to my future self.
+
+#+begin_src emacs-lisp :tangle yes
+  (defun bk/nrepl-warn-when-not-connected ()
+    (interactive)
+    (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
+#+end_src
+
+And bind this to the most common keys that requires cider activated.
+
+#+begin_src emacs-lisp :tangle yes
+  (define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
+  (define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
+  (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
+#+end_src
+
+Clojure rocks!
+* Org mode
+
+Please, disable =flycheck= from org-src buffers. We always have errors
+in there related to some emacs-lisp checkers. Here is how to disable
+it.
+
+#+begin_src emacs-lisp :tangle yes
+  (defun disable-flycheck-in-org-src-block ()
+    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+  (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
+#+end_src
+

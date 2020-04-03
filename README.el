@@ -18,16 +18,12 @@
 (eval-when-compile
   '(require 'use-package))
 
-(defvar my-external-packages '(cider
-			       smartparens
+(defvar my-external-packages '(smartparens
 			       elfeed
 			       rg
 			       company
 			       company-quickhelp
 			       company-restclient
-			       clojure-mode
-			       clojure-mode-extra-font-locking
-			       clj-refactor
 			       which-key
 			       yasnippet
 			       yasnippet-snippets
@@ -85,8 +81,6 @@
    (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
 
 (bk/font-family-size "Source Code Pro Medium" 12)
-
-(require 'clojure-mode-extra-font-locking)
 
 (defun bk/load-light-theme ()
   "Load a light theme for the day."
@@ -311,11 +305,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (global-set-key (kbd "C-c ;") 'avy-goto-char)
 
 ;; completions
-(setq ido-use-virtual-buffers t)
-(setq ido-use-faces t)
-(ido-mode t)
-(ido-everywhere t)
-
 (recentf-mode t)
 
 (require 'company)
@@ -366,17 +355,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
 (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
 
-(add-hook 'clojure-mode-hook #'smartparens-strict-mode)
-(add-hook 'clojure-mode-hook #'subword-mode)
-(add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-
-(add-hook 'clojure-mode-hook (lambda ()
-			       (clj-refactor-mode t)
-			       (cljr-add-keybindings-with-prefix "C-c C-m")))
-
-(add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-(add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-
 (with-eval-after-load "smartparens"
   ;; remove some pairs
   (sp-pair "'" nil :actions :rem)
@@ -417,7 +395,6 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
     (yas-minor-mode . "")
     (auto-fill-mode . "")
     (auto-revert-mode . "")
-    (clojure-mode . "λ")
     (subword-mode . "")
     (flyspell-mode . "")
     (which-key-mode . "")
@@ -632,3 +609,56 @@ From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-
 
 (when (file-exists-p custom-file)
   (load custom-file))
+
+(setq resize-mini-windows nil)
+(setq max-mini-window-height 1)
+
+(use-package ido
+  :ensure nil
+  :init (setq ido-use-virtual-buffers t
+	      ido-use-faces t
+	      ido-enable-flex-matching t
+	      ido-create-new-buffer 'always)
+  :config
+  (ido-mode t)
+  (ido-everywhere t))
+
+(use-package clojure-mode
+  :ensure t
+  :diminish (clojure-mode "λ")
+  :config
+  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+  (add-hook 'clojure-mode-hook #'subword-mode))
+
+(use-package clj-refactor
+  :ensure t
+  :after (clojure-mode)
+  :config
+  (add-hook 'clojure-mode-hook (lambda ()
+				 (clj-refactor-mode t)
+				 (cljr-add-keybindings-with-prefix "C-c C-m"))))
+
+(use-package clojure-mode-extra-font-locking
+  :ensure t
+  :after (clojure-mode))
+
+(use-package cider
+  :ensure t
+  :after (clojure-mode)
+  :config
+  (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+  (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+  (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
+
+(defun bk/nrepl-warn-when-not-connected ()
+  (interactive)
+  (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
+
+(define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
+(define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
+(define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
+
+(defun disable-flycheck-in-org-src-block ()
+  (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+(add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
