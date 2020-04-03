@@ -6,7 +6,7 @@
  '(cider-enlighten-mode nil)
  '(package-selected-packages
    (quote
-    (yasnippet-snippets rg modus-vivendi-theme modus-operandi-theme elfeed ace-window windresize clojure-mode-extra-font-locking avy which-key hc-zenburn-theme anti-zenburn-theme zenburn-theme git-timemachine plantuml-mode clj-refactor highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
+    (toc-org yasnippet-snippets rg modus-vivendi-theme modus-operandi-theme elfeed ace-window windresize clojure-mode-extra-font-locking avy which-key hc-zenburn-theme anti-zenburn-theme zenburn-theme git-timemachine plantuml-mode clj-refactor highlight-indentation smart-shift night-owl-theme minimal-theme warm-night-theme monochrome-theme humanoid-themes nord-theme mlso-theme gotham-theme eshell-bookmark docker docker-compose-mode dockerfile-mode fantom-theme markdown-mode smartparens flycheck-clj-kondo flycheck multiple-cursors restclient color-theme-sanityinc-tomorrow json-mode tomatinho smex projectile paredit magit cider change-inner)))
  '(safe-local-variable-values
    (quote
     ((eval font-lock-add-keywords nil

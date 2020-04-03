@@ -1,11 +1,32 @@
 #+title: Emacs literate configuration
-#+OPTIONS: toc:2
 #+author: Wanderson Ferreira
 #+date: 2020:04:02
 
 The =Old configuration= node below has all my previous =init.el= and I
 am slowly refactoring into this literate configuration style. No
 breaking changes is expected.
+
+* Table of Contents                                                     :TOC:
+- [[#packages][Packages]]
+- [[#old-configuration][Old configuration]]
+- [[#defaults][Defaults]]
+  - [[#minibuffer][Minibuffer]]
+  - [[#help][Help]]
+- [[#aesthetics][Aesthetics]]
+- [[#completions][Completions]]
+  - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
+  - [[#company-mode][Company mode]]
+- [[#docker][Docker]]
+- [[#rss-feed][RSS Feed]]
+- [[#rest-client][Rest client]]
+- [[#version-control][Version Control]]
+  - [[#time-machine][Time machine]]
+  - [[#aesthetics-1][Aesthetics]]
+- [[#unified-modeling-language][Unified Modeling Language]]
+- [[#search][Search]]
+- [[#shell][Shell]]
+- [[#clojure][Clojure]]
+- [[#org-mode][Org mode]]
 
 * Packages
 
@@ -852,5 +873,12 @@ it.
     (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
   (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package toc-org
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook 'toc-org-mode))
 #+end_src
 
