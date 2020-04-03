@@ -1,4 +1,5 @@
 #+title: Emacs literate configuration
+#+OPTIONS: toc:2
 #+author: Wanderson Ferreira
 #+date: 2020:04:02
 
