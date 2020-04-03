@@ -2,6 +2,10 @@
 #+author: Wanderson Ferreira
 #+date: 2020:04:02
 
+The =Old configuration= node below has all my previous =init.el= and I
+am slowly refactoring into this literate configuration style. No
+breaking changes is expected.
+
 * Packages
 
 Emacs facility to download and install "packages" that implement
