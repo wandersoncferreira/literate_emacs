@@ -98,9 +98,6 @@ details.
   (defvar my-external-packages '(smartparens
 				 elfeed
 				 rg
-				 company
-				 company-quickhelp
-				 company-restclient
 				 which-key
 				 yasnippet
 				 yasnippet-snippets
@@ -113,15 +110,10 @@ details.
 				 flycheck
 				 flycheck-clj-kondo
 				 smex
-				 docker
-				 docker-tramp
-				 dockerfile-mode
-				 docker-compose-mode
 				 eshell-bookmark
 				 projectile
 				 tomatinho
 				 expand-region
-				 restclient
 				 json-mode
 				 multiple-cursors
 				 markdown-mode
@@ -210,34 +202,6 @@ details.
   ;; move text using C-c up/down
   (global-smart-shift-mode t)
 
-  ;; docker
-  (require 'dockerfile-mode)
-  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-  (add-to-list 'auto-mode-alist '("DockerfileDev\\'" . dockerfile-mode))
-
-  (defun bk/dockerfile-add-build-args ()
-    "Add env variables to your docker build."
-    (interactive)
-    (let* ((vars (read-from-minibuffer "sequence of <envName>=<envValue>: "))
-	   (split-vars (split-string vars " ")))
-      (setq dockerfile-build-args nil)
-      (dolist (v split-vars)
-	(add-to-list 'dockerfile-build-args v))
-      (setq docker-build-history-args vars)))
-
-  (add-to-list 'auto-mode-alist '("docker-compose[^/]*\\.yml\\'" . docker-compose-mode))
-
-  (defun bk/docker-compose-custom-envs ()
-    "Add usual env variables to Emacs environment."
-    (interactive)
-    (let* ((idu (shell-command-to-string "id -u"))
-	   (idg (shell-command-to-string "id -g"))
-	   (uid (string-join (vector (string-trim idu) ":" (string-trim idg)))))
-      (setenv "WEBSERVER_PORT" "3000")
-      (setenv "CURRENT_UID" uid)
-      (message "setenv WEBSERVER_PORT=3000 CURRENT_UID=$(id -u):$(id -g) done!")))
-
-  (global-set-key (kbd "C-c d") 'docker)
 
   (add-hook 'eshell-mode-hook 'eshell-bookmark-setup)
 
@@ -378,47 +342,6 @@ details.
   ;; completions
   (recentf-mode t)
 
-  (require 'company)
-  (setq company-require-match 'never
-	company-show-numbers t
-	company-transformers '(company-sort-by-occurrence)
-	company-idle-delay 0.3)
-
-  (add-to-list 'company-backends 'company-restclient)
-
-  (add-hook 'after-init-hook 'global-company-mode)
-
-  ;; very interesting behavior which is to choose the candidate based on its number
-  ;; this feature was implemented by ora in his blog post
-  (defun ora-company-number ()
-    "Choose the candidate based on his number at candidate list."
-    (interactive)
-    (let* ((k (this-command-keys))
-	   (re (concat "^" company-prefix k)))
-      (if (cl-find-if (lambda (s) (string-match re s)) company-candidates)
-	  (self-insert-command)
-	(company-complete-number (string-to-number k)))))
-
-  (defun ora-activate-number ()
-    "Activate the number-based choices in company."
-    (interactive)
-    (let ((map company-active-map))
-      (mapc
-       (lambda (x)
-	 (define-key map (format "%d" x) 'ora-company-number))
-       (number-sequence 0 9))
-      (define-key map " " (lambda ()
-			    (interactive)
-			    (company-abort)
-			    (self-insert-command 1)))
-      (define-key map (kbd "<return>") nil)))
-
-  (ora-activate-number)
-
-  ;; provide documentation to the candidates of company mode
-  (eval-after-load 'company
-    '(company-quickhelp-mode))
-
   (add-hook 'text-mode-hook #'auto-fill-mode)
 
   (setq sp-highlight-pair-overlay nil)
@@ -541,7 +464,7 @@ details.
 
   (defalias 'yes-or-no-p 'y-or-n-p)
 
-  (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
+  
   (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 
   (autoload 'markdown-mode "markdown-mode"
@@ -772,9 +695,115 @@ More functionality
 We can find a nice description of ido at the help page on [[help:ido][C-h P ido]].
 
 ** Company mode
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package company
+    :ensure t
+    :init
+    (setq company-require-match 'never
+	  company-show-numbers t
+	  company-transformers '(company-sort-by-occurrence)
+	  company-idle-delay 0.3)
+    :config
+    (add-hook 'after-init-hook #'global-company-mode))
+
+  (use-package company-quickhelp
+    :ensure t
+    :after company
+    :config
+    (company-quickhelp-mode))
+  
+  ;; very interesting behavior which is to choose the candidate based on its number
+  ;; this feature was implemented by ora in his blog post
+  (defun ora-company-number ()
+    "Choose the candidate based on his number at candidate list."
+    (interactive)
+    (let* ((k (this-command-keys))
+	   (re (concat "^" company-prefix k)))
+      (if (cl-find-if (lambda (s) (string-match re s)) company-candidates)
+	  (self-insert-command)
+	(company-complete-number (string-to-number k)))))
+
+  (defun ora-activate-number ()
+    "Activate the number-based choices in company."
+    (interactive)
+    (let ((map company-active-map))
+      (mapc
+       (lambda (x)
+	 (define-key map (format "%d" x) 'ora-company-number))
+       (number-sequence 0 9))
+      (define-key map " " (lambda ()
+			    (interactive)
+			    (company-abort)
+			    (self-insert-command 1)))
+      (define-key map (kbd "<return>") nil)))
+
+  (eval-after-load 'company
+    '(ora-activate-number))
+#+end_src
+
 * Docker
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package docker
+    :ensure t
+    :bind
+    ("C-c d" . docker))
+
+  (use-package docker-tramp
+    :ensure t)
+
+  (use-package dockerfile-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+    (add-to-list 'auto-mode-alist '("DockerfileDev\\'" . dockerfile-mode)))
+
+  (use-package docker-compose-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("docker-compose[^/]*\\.yml\\'" . docker-compose-mode)))
+
+  (defun bk/dockerfile-add-build-args ()
+    "Add env variables to your docker build."
+    (interactive)
+    (let* ((vars (read-from-minibuffer "sequence of <envName>=<envValue>: "))
+	   (split-vars (split-string vars " ")))
+      (setq dockerfile-build-args nil)
+      (dolist (v split-vars)
+	(add-to-list 'dockerfile-build-args v))
+      (setq docker-build-history-args vars)))
+
+
+  (defun bk/docker-compose-custom-envs ()
+    "Add usual env variables to Emacs environment."
+    (interactive)
+    (let* ((idu (shell-command-to-string "id -u"))
+	   (idg (shell-command-to-string "id -g"))
+	   (uid (string-join (vector (string-trim idu) ":" (string-trim idg)))))
+      (setenv "WEBSERVER_PORT" "3000")
+      (setenv "CURRENT_UID" uid)
+      (message "setenv WEBSERVER_PORT=3000 CURRENT_UID=$(id -u):$(id -g) done!")))
+
+#+end_src
+
 * RSS Feed
 * Rest client
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package restclient
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode)))
+
+  (use-package company-restclient
+    :ensure t
+    :after company
+    :config
+    (add-to-list 'company-backends 'company-restclient))
+
+#+end_src
+
 * Version Control
 ** Time machine
 ** Aesthetics
