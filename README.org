@@ -942,6 +942,28 @@ And bind this to the most common keys that requires cider activated.
   (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
 #+end_src
 
+
+Often I need to fire a repl and investigate some properties better, I
+have a =temp= project setup in my machine a simple =lein new temp=
+where I have some libraries already in the =project.clj= dependency
+available. The following function helps me get there quickly and
+require some frequent namespaces.
+
+#+begin_src emacs-lisp :tangle yes
+  (defun bk/repl ()
+    "Start an interactive repl in a temp project"
+    (interactive)
+    (cider-jack-in '(:project-dir "/home/wand/temp"))
+    (add-hook 'cider-connected-hook
+	      (lambda ()
+		(cider-repl-set-ns "user")
+		(cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
+		(cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
+		(cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
+		(cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
+		(cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
+#+end_src
+
 Clojure rocks!
 * Org mode
 
