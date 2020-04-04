@@ -113,7 +113,6 @@ details.
 				 flycheck
 				 flycheck-clj-kondo
 				 smex
-				 plantuml-mode
 				 docker
 				 docker-tramp
 				 dockerfile-mode
@@ -133,10 +132,6 @@ details.
   (dolist (pkg my-external-packages)
     (unless (package-installed-p pkg)
       (package-install pkg)))
-
-  ;; plantuml
-  (require 'ob-plantuml)
-  (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
 
   ;; add new paths to emacs
   (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
@@ -784,6 +779,50 @@ We can find a nice description of ido at the help page on [[help:ido][C-h P ido]
 ** Time machine
 ** Aesthetics
 * Unified Modeling Language
+
+The UML is a general-purpose, developmental, modeling language in the
+field of software engineering that is intended to provide a standard
+way to visualize the design of a system.
+
+   1. any activities (jobs)
+   2. individual components of the system
+   3. how the system will run
+   4. how entities interact with others
+   5. external user interfaces
+
+The UML diagrams represent two different views of a system model
+
+   - *Static* (or structural) view: emphasizes the static structure of
+     the system using objects, attributes, operations and
+     relationships. It includes class diagrams and composite structure
+     diagrams.
+   - *Dynamic* (or behavioral) view: emphasizes the dynamic behavior
+     of the system by showing collaborations among objects and changes
+     to the internal states of objects. This view includes sequence
+     diagrams, activity diagrams and state machine diagrams.
+
+Let's see a very interesting cheatsheet now:
+
+  [[./images/uml-1.png]]
+
+  [[./images/uml-2.png]]
+
+  [[./images/uml-3.png]]
+
+
+The internal setup in order to use it will happen though =PlantUML=
+which has an specific syntax but is very easy to pick it up, follow
+examples at the official documentation at [[https://plantuml.com/][webpage]].
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package plantuml-mode
+    :ensure t
+    :init
+    (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
+    :config
+    (require 'ob-plantuml))
+#+end_src
+
 * Search
 * Shell
 * Clojure
