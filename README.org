@@ -148,8 +148,7 @@ details.
   (smex-initialize)
 
   ;; aesthetics
-  (setq inhibit-startup-message t
-	inhibit-splash-screen t
+  (setq inhibit-splash-screen t
 	inhibit-startup-echo-area-message t)
 
   (defun bk/font-family-size (family size)
@@ -693,6 +692,48 @@ details.
       (load custom-file))
   #+end_src
 
+  Let's make a nice usage of =babashka= scripting for clojure and
+  print a random doc-string message in the initial of my Emacs
+  session.
+  #+begin_src emacs-lisp :tangle yes
+    (let ((clj-docstring (shell-command-to-string "docstring.clj")))
+      (when clj-docstring
+	(setq initial-scratch-message clj-docstring)))
+  #+end_src
+
+  The =docstring.clj= content is pretty small and it required [[https://github.com/borkdude/babashka][babashka]]
+  to be installed, the content:
+
+  #+BEGIN_SRC clojure
+    #!/usr/bin/env bb
+
+    (require '[clojure.repl])
+
+    (defmacro random-doc []
+      (let [sym (-> (ns-publics 'clojure.core) keys rand-nth)]
+	(if (:doc (meta (resolve sym)))
+	  `(clojure.repl/doc ~sym)
+	  `(random-doc))))
+
+    (random-doc)
+  #+END_SRC
+
+  I added the new file to my PATH variable. That's all.
+
+  #+begin_src emacs-lisp :tangle yes
+    (defun bk/clj-random-docstring ()
+      "Random doc-string into new buffer."
+      (interactive)
+      (let ((docstring (shell-command-to-string "docstring.clj"))
+	    (buffer-name "*Clojure Random Docs*"))
+	(when (get-buffer buffer-name)
+	  (kill-buffer buffer-name))
+	(get-buffer-create buffer-name)
+	(with-current-buffer buffer-name (insert docstring))
+	(switch-to-buffer-other-window buffer-name)
+	(special-mode)))
+  #+end_src
+
 ** Minibuffer
 
   The following setting prevent the minibuffer to grow, therefore it
@@ -769,6 +810,7 @@ like to stick to the more stable branch.
     (setq clojure-align-forms-automatically t)
     :config
     (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+    (add-hook 'clojure-mode-hook #'eldoc-mode)
     (add-hook 'clojure-mode-hook #'subword-mode))
 #+end_src
 
