@@ -40,6 +40,7 @@ breaking changes is expected.
 - [[#search][Search]]
 - [[#shell][Shell]]
 - [[#json][Json]]
+- [[#general-programming][General Programming]]
 - [[#markdown][Markdown]]
 - [[#clojure][Clojure]]
 - [[#parenthesis][Parenthesis]]
@@ -952,6 +953,20 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
     :config
     (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
 #+end_src
+
+* General Programming 
+
+Sometimes I place some TODO and FIXME words in the middle of my code
+so I can come back to it latter and work on the subjects. The
+following snippet will highlight these words to help me identify them.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'prog-mode-hook (defun bk--add-watchwords ()
+			      (font-lock-add-keywords
+			       nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
+				      1 font-lock-warning-face t)))))
+#+END_SRC
+
 
 * Markdown
 
