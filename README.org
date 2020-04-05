@@ -165,11 +165,13 @@ otherwise dark background.
   (defun bk/load-light-theme ()
     "Load a light theme for the day."
     (interactive)
+    (disable-theme 'modus-vivendi)
     (load-theme 'modus-operandi t))
 
   (defun bk/load-dark-theme ()
     "Load a dark theme for the night."
     (interactive)
+    (disable-theme 'modus-operandi)
     (load-theme 'modus-vivendi t))
 
   ;; before 17h just load my light theme pls
