@@ -47,6 +47,7 @@ Literate Emacs configuration style. This is part of my journey for
 - [[#markdown][Markdown]]
 - [[#latex][Latex]]
 - [[#clojure][Clojure]]
+- [[#sql][SQL]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
 - [[#projects][Projects]]
@@ -182,21 +183,15 @@ Emacs opens up with the light background if launched before 18pm,
 otherwise dark background.
 
 #+begin_src emacs-lisp
-  (use-package modus-operandi-theme :ensure t)
-
-  (defun bk/load-light-theme ()
-    "Load a light theme for the day."
-    (interactive)
+  (use-package modus-operandi-theme
+    :ensure t
+    :init
+    (setq modus-operandi-theme-proportional-fonts nil
+	  modus-operandi-theme-scale-headings nil
+	  modus-operandi-theme-visible-fringes t
+	  modus-operandi-theme-distinct-org-blocks t)
+    :config
     (load-theme 'modus-operandi t))
-
-  (defun bk/load-dark-theme ()
-    "Load a dark theme for the night."
-    (interactive))
-
-  ;; before 17h just load my light theme pls
-  (if (< (string-to-number (format-time-string "%H" (current-time))) 17)
-      (bk/load-light-theme)
-    (bk/load-dark-theme))
 #+end_src
 
 I like the default font, but why not change it towards a more
@@ -625,7 +620,6 @@ retrieve and display completion candidates.
 	  company-transformers '(company-sort-by-occurrence)
 	  company-idle-delay 0.5)
     :config
-    (company-tng-configure-default)
     (global-company-mode t))
 #+end_src
 
@@ -1406,6 +1400,41 @@ require some frequent namespaces.
 
 
 Clojure rocks!
+
+* SQL
+
+#+begin_src emacs-lisp
+  (use-package sqlup-mode
+    :ensure t
+    :config
+    (add-hook 'sql-mode-hook 'sqlup-mode)
+    (add-hook 'sql-interactive-hook 'sqlup-mode)
+    (add-to-list 'sqlup-blacklist "name"))
+#+end_src
+
+This Emacs library provides commands and a minor mode for easily
+reformating SQL using external programs such as pgformatter which can
+be installed in Arch Linux using =yaourt -S pgformatter-git=
+
+#+begin_src emacs-lisp
+  (use-package sqlformat
+    :ensure t
+    :init
+    (setq sqlformat-command 'pgformatter
+	  sqlformat-args '("-s2" "-g"))
+    :config
+    (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+#+end_src
+
+Indentation is also important
+
+#+begin_src emacs-lisp
+  (use-package sql-indent
+    :ensure t
+    :config
+    (add-hook 'sql-mode-hook 'sqlind-minor-mode))
+#+end_src
+
 * Parenthesis
 
 #+begin_src emacs-lisp 
