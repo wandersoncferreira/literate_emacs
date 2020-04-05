@@ -20,6 +20,8 @@ breaking changes is expected.
   - [[#ibuffer][Ibuffer]]
   - [[#minibuffer][Minibuffer]]
   - [[#help][Help]]
+  - [[#webjump][Webjump]]
+  - [[#authentication-source][Authentication Source]]
 - [[#editing-text][Editing Text]]
   - [[#multiple-cursors][Multiple Cursors]]
   - [[#custom-functions][Custom functions]]
@@ -32,6 +34,7 @@ breaking changes is expected.
 - [[#linters][Linters]]
 - [[#docker][Docker]]
 - [[#rss-feed][RSS Feed]]
+- [[#slack][Slack]]
 - [[#rest-client][Rest client]]
 - [[#version-control][Version Control]]
   - [[#time-machine][Time machine]]
@@ -41,6 +44,7 @@ breaking changes is expected.
 - [[#shell][Shell]]
 - [[#json][Json]]
 - [[#general-programming][General Programming]]
+  - [[#whitespaces][Whitespaces]]
 - [[#markdown][Markdown]]
 - [[#latex][Latex]]
 - [[#clojure][Clojure]]
@@ -127,6 +131,25 @@ details.
   (setq exec-path (append exec-path '("/usr/local/bin")))
 #+end_src
 
+I've been using qutebrowser as my main browser for more than one year
+now. Idk, I like keyboard centric products.
+#+BEGIN_SRC emacs-lisp
+  (setq browse-url-browser-function 'browse-url-generic
+	browse-url-generic-program "qutebrowser")
+#+END_SRC
+
+Garbage collect on focus-out, Emacs should feel snappier.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'focus-out-hook #'garbage-collect)
+#+END_SRC
+
+Fix old security Emacs problems
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load "enriched"
+    '(defun enriched-decode-display-prop (start end &optional param)
+       (list start end)))
+#+END_SRC
+
 * Aesthetics
 
 Disable unnecessary GUI.
@@ -205,15 +228,28 @@ Let's remove some crunchy messages at startup time.
       (load custom-file))
   #+end_src
 
+Show current key-sequence in minibuffer, like vim does. Any feedback
+after typing is better UX than no feedback at all.
+#+BEGIN_SRC emacs-lisp
+  (setq echo-keystrokes 0.02)
+#+END_SRC
+
+Say you copied a link from your web browser, then switched to Emacs to
+paste it somewhere. Before you do that, you notice something you want
+to kill. Doing that will place the last kill to the clipboard, thus
+overriding the thing you copied earlier. We can have a kill ring
+solution:
+#+BEGIN_SRC emacs-lisp
+  (setq save-interprogram-paste-before-kill t)
+#+END_SRC
+
 #+begin_src emacs-lisp
   (setq tab-always-indent 'complete)
   (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
   (setq custom-safe-themes t)
 
+  (defalias 'cquit 'cider-quit)
   (defalias 'yes-or-no-p 'y-or-n-p)
-
-  ;; integrate emacs kill ring with the system clipboard.
-  (setq save-interprogram-paste-before-kill t)
 
   ;; built in htop
   (setq proced-auto-update-flag t
@@ -445,6 +481,37 @@ Clean all the registers you saved.
 
 ** Help
 
+** Webjump
+
+Provide a nice keyboard interface to web pages of your choosing.
+
+Adding urban dictionary to webjump.
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load "webjump"
+    '(add-to-list 'webjump-sites '("Urban Dictionary" . [simple-query
+							 "www.urbandictionary.com"
+							 "http://www.urbandictionary.com/define.php?term="
+							 ""])))
+
+  (global-set-key (kbd "C-c j") 'webjump)
+#+END_SRC
+
+** Authentication Source
+
+Auth Source is a generic interface for common backends such as your
+operating sysetm's keychain and your local ~/.authinfo file. Auth
+Source solves the problem of mapping passwords and usernames to hosts.
+
+Debugging auth issues
+#+BEGIN_SRC emacs-lisp
+  (setq auth-source-debug t)
+#+END_SRC
+
+We need to tell auth-source where to look for secrets.
+#+BEGIN_SRC emacs-lisp
+  (setq auth-sources '((:source "~/.emacs.d/secrets/.authinfo")))
+#+END_SRC
+
 * Editing Text
 
 #+begin_src emacs-lisp
@@ -511,8 +578,13 @@ Clean all the registers you saved.
 * Completions
 ** Minibuffer (ido mode)
 
-The whole selling point to =ido-mode= is: switches between buffers and
-opens files and directories with a minimum of keystrokes.
+Ido - interactive do - help us with switching between buffers, opening
+files and directories with a minimum of keystrokes. As you type in a
+substring, the list of buffers or files currently matching the
+substring are displayed as you type.
+
+There is an amazing [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Ido]] about Ido contains more details about how
+to leverage its functionalities to improve your productivity.
 
 #+begin_src emacs-lisp 
   (use-package ido
@@ -795,6 +867,105 @@ the word, " Xah", let's fix that.
     '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
 #+END_SRC
 
+* Slack
+
+Slack from Emacs? :O Why not? I am having a terrible time configuring
+all my workspaces lately. Therefore, it sounds like a perfect
+opportunity to leverage the best tool for the job once again.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package slack
+    :ensure t
+    :init
+    (setq slack-buffer-emojify t
+	  slack-prefer-current-team t
+	  slack-buffer-function #'switch-to-buffer
+	  slack-completing-read-function #'ido-completing-read
+	  slack-display-team-name nil)
+    :config
+    (slack-register-team
+     :name "captalysdev"
+     :default t
+     :token (auth-source-pick-first-password
+	     :host "slack.com"
+	     :user "captalysdev")
+     :subscribed-channels '(onboarding geral dev)
+     :full-and-display-names t)
+
+    (slack-register-team
+     :name "clojurians"
+     :token (auth-source-pick-first-password
+	     :host "slack.com"
+	     :user "clojurians")
+     :subscribed-channels '(beginners reitit))
+
+    (slack-register-team
+     :name "captalys-oficial"
+     :token (auth-source-pick-first-password
+	     :host "slack.com"
+	     :user "captalys-oficial")
+     :subscribed-channels '(devops)
+     :full-and-display-names t))
+
+#+END_SRC
+
+Bring up the mentions menu with `@', and insert a space afterwards.
+#+BEGIN_SRC emacs-lisp
+  (define-key slack-mode-map "@"
+    (defun endless/slack-message-embed-mention ()
+      (interactive)
+      (call-interactively #'slack-message-embed-mention)
+      (insert " ")))
+#+END_SRC
+
+
+CRUD on messages
+#+BEGIN_SRC emacs-lisp
+  (define-key slack-mode-map (kbd "C-c C-d") #'slack-message-delete)
+  (define-key slack-mode-map (kbd "C-c C-e") #'slack-message-edit)
+  (define-key slack-mode-map (kbd "C-c C-k") #'slack-channel-leave)
+#+END_SRC
+
+Circe is a client for IRC in Emacs. It tries to have sane defaults,
+and integrates well with the rest of the editor.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package circe :ensure t)
+#+END_SRC
+
+Emojify is an Emacs extension to display emojis.
+#+BEGIN_SRC emacs-lisp
+
+  (use-package emojify :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package alert
+    :commands (alert)
+    :init
+    (setq alert-default-style 'libnotify))
+#+END_SRC
+
+
+How to use Slack on emacs? Some terminology from the website:
+
+| Function                   | Description                                                                        |
+|----------------------------+------------------------------------------------------------------------------------|
+| im                         | an IM (instant message) is a direct message between you and exactly one other user |
+| channel                    | A channel is a slack channel which you are a member of                             |
+| group                      | Any chat (direct message or channel) which isn't an IM is a group                  |
+| slack-register-team        | set team configuration and create team                                             |
+| slack-change-current-team  | change slack-current-team var                                                      |
+| slack-start                | do authorize and initialze                                                         |
+| slack-ws-close             | turn off websocket connection                                                      |
+| slack-group-select         | select group from list                                                             |
+| slack-im-select            | select direct message from list                                                    |
+| slack-channel-select       | select channel from list                                                           |
+| slack-group-list-update    | update group list                                                                  |
+| slack-channel-list-update  | update channel list                                                                |
+| slack-message-embed-mentio | use to mention to user                                                             |
+| slack-file-upload          | uploads a file                                                                     |
+
 * Rest client
 
 #+begin_src emacs-lisp 
@@ -892,6 +1063,29 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
     ("M-s g" . bk/search-git-root-or-dir))
 #+end_src
 
+    You can invoke it using =C-s= and typing your desired search
+    string. Also, if you want to use the regexp flavour you can use
+    =M-C-s=.
+
+    Run =C-h k C-s= yo get an /awesome/ help menu with all the extra
+    keys you can use with =isearch=. These are the ones I use the
+    most:
+
+    | Keybindings                   | Description                                |
+    |-------------------------------+--------------------------------------------|
+    | C-s                           | search forward                             |
+    | C-r                           | search backward                            |
+    | M-C-s                         | search forward using regexp                |
+    | M-C-r                         | search backward using regexp               |
+    | C-s C-w                       | search word at point                       |
+    | M-s                           | is a prefix while in isearch mode          |
+    | (while isearch activated) M-r | turn your regular isearch into regexp mode |
+    | M-s .                         | search for thing at point                  |
+    | M-s o                         | get the results in occur buffer            |
+    | M-s h r                       | highlight regexp                           |
+    | M-s h u                       | undo the highlight                         |
+    | C-s M-r                       | toggle regexp search                       |
+
 * Shell
 
 #+begin_src emacs-lisp 
@@ -940,6 +1134,28 @@ following snippet will highlight these words to help me identify them.
 			      (font-lock-add-keywords
 			       nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
 				      1 font-lock-warning-face t)))))
+#+END_SRC
+
+** Whitespaces
+
+Control your whitespaces!
+
+#+BEGIN_SRC emacs-lisp
+  (require 'whitespace)
+  (setq whitespace-style '(trailing lines space-before-tab
+                    indentation space-after-tab))
+  (setq whitespace-line-column 100)
+  (whitespace-mode +1)
+#+END_SRC
+
+A less intrusive ‘delete-trailing-whitespaces’ on save.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ws-butler
+    :ensure t
+    :diminish ws-butler-mode
+    :config
+    (ws-butler-global-mode +1))
 #+END_SRC
 
 * Markdown
@@ -1248,6 +1464,11 @@ it.
     (add-hook 'org-mode-hook 'toc-org-mode))
 #+end_src
 
+I need to control the window that pops up when I open the Org Src
+buffer to edit code.
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+#+END_SRC
 
 #+begin_src emacs-lisp 
   (require 'org-capture)
@@ -1367,6 +1588,19 @@ it.
     (if (or arg (not buffer-file-name))
         (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
       (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+  (defun bk/kill-buffer-and-file (buffer-name)
+    "Removes file connected to current buffer and kills buffer."
+    (interactive "bKill buffer and its file:")
+    (let* ((buffer (get-buffer buffer-name))
+	   (filename (buffer-file-name buffer)))
+      (if (not (and filename (file-exists-p filename)))
+	  (error "Buffer '%s' is not visiting a file!" buffer-name)
+	(delete-file filename)
+	(kill-buffer buffer))))
 #+END_SRC
 
 * Keys
