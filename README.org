@@ -287,6 +287,47 @@ Very useful bit of code to include Dired buffers in the recentf list.
 
 ** Registers
 
+Emacs registers are compartments where you can save text, rectangles,
+positions, and other things for later use. Once you save text or a
+rectangle in a register, you can copy it into the buffer once or many
+times; once you save a position in a register, you can jump back to
+that position once or many times.
+
+For more information: `C-h r' and then letter *i* to search for
+registers and the amazing video from [[https://youtu.be/u1YoF4ycLTY][Protesilaos]].
+
+The prefix to all commands of registers is *C-x r*
+
+
+| command             | description                         |
+|---------------------+-------------------------------------|
+| M-x view-register R | see what register R contains        |
+| C-x r s             | save region to register             |
+| C-x r i             | insert text from a register         |
+| C-x r n             | record a number defaults to 0       |
+| C-x r +             | increment a number from register    |
+| C-x r SPC           | record a position into register     |
+| C-x r j             | jump to positions or windows config |
+| C-x r w             | save a window configuration         |
+| C-x r f             | save a frame configuration          |
+
+
+Important note: the data saved into the register is persistent as long
+as you don't override it.
+
+The way to specify a number, is to use an universal argument e.g.
+*C-u <number> C-x n*
+
+
+Clean all the registers you saved.
+#+BEGIN_SRC emacs-lisp
+  (defun bk/clear-registers ()
+    "Remove all saved registers."
+    (interactive)
+    (setq register-alist nil))
+#+END_SRC
+
+
 #+begin_src emacs-lisp :tangle yes
   (set-register ?e '(file . "~/.emacs.d/init.el"))
   (set-register ?t '(file . "~/org/todo.org"))
