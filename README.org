@@ -625,24 +625,50 @@ Ease the task of changing window quickly.
   (use-package ace-window
     :ensure t
     :init
-    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
-	  aw-background nil)
+    (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p)
+	  aw-background nil
+	  aw-scope 'frame
+	  aw-dispatch-alist
+	  '((?s aw-swap-window "swap window")
+	    (?2 aw-split-window-vert "split window vertically")
+	    (?3 aw-split-window-horz "split window horizontally")
+	    (?? aw-show-dispatch-help)))
     :config
+    (ace-window-display-mode -1)
     (global-set-key (kbd "C-x o") 'ace-window))
 #+end_src
 
 ** Winner
 
-#+begin_src emacs-lisp :tangle yes
+Winner is a built-in tool that keeps a record of buffer and window
+layout changes. It then allows us to move back and forth in the
+history of said changes. The mnemonic is related to Emacs default
+commands to operating on windows (C-x 4) and the undo operations with
+[uU] letter. 
+
+There are some buffers that winner will not restore, I list them in
+the *winner-boring-buffers*.
+
+#+BEGIN_SRC emacs-lisp
   (use-package winner
     :ensure nil
+    :hook (after-init . winner-mode)
     :init
     (setq winner-dont-bind-my-keys t)
-    :config
-    (add-hook 'after-init-hook 'winner-mode)
-    (global-set-key (kbd "C-x 4 u") 'winner-undo)
-    (global-set-key (kbd "C-x 4 U") 'winner-redo))
-#+end_src
+    (setq winner-boring-buffers
+	  '("*Completions*"
+	    "*Compile-Log*"
+	    "*inferior-lisp*"
+	    "*Fuzzy Completions*"
+	    "*Apropos*"
+	    "*Help*"
+	    "*cvs*"
+	    "*Buffer List*"
+	    "*Ibuffer*"
+	    "*esh command on file*"))
+    :bind (("C-x 4 u" . winner-undo)
+	   ("C-x 4 U" . winner-redo)))
+#+END_SRC
 
 * Dired
 
@@ -740,6 +766,10 @@ Ease the task of changing window quickly.
 
 * RSS Feed
 
+I like to read about programming, but Emacs and Clojure are by far the
+most interesting communities I know so far, therefore, my feeds have
+many links from these subjects.
+
 #+begin_src emacs-lisp :tangle yes
   (use-package elfeed
     :ensure t
@@ -773,6 +803,21 @@ Ease the task of changing window quickly.
 	    ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs))))
 
 #+end_src
+
+By default, s run a live filter and you can type something like "Xah"
+to dynamically narrow the list of stories to those containing that
+string. The only problem is that you need an extra whitespace before
+the word, " Xah", let's fix that.
+
+#+BEGIN_SRC emacs-lisp
+  (defun bk/elfeed-search-live-filter-space ()
+    "Insert space when running elfeed filter"
+    (interactive)
+    (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
+      (elfeed-search-live-filter)))
+
+  (define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space)
+#+END_SRC
 
 * Rest client
 
