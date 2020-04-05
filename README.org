@@ -11,12 +11,16 @@ breaking changes is expected.
 - [[#operating-system][Operating System]]
 - [[#aesthetics][Aesthetics]]
 - [[#defaults][Defaults]]
+  - [[#case-switch][Case switch]]
   - [[#registers][Registers]]
   - [[#abbreviation][Abbreviation]]
   - [[#imenu][Imenu]]
   - [[#ibuffer][Ibuffer]]
   - [[#minibuffer][Minibuffer]]
   - [[#help][Help]]
+- [[#editing-text][Editing Text]]
+  - [[#multiple-cursors][Multiple Cursors]]
+  - [[#custom-functions][Custom functions]]
 - [[#completions][Completions]]
   - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
   - [[#company-mode][Company mode]]
@@ -31,6 +35,8 @@ breaking changes is expected.
 - [[#unified-modeling-language][Unified Modeling Language]]
 - [[#search][Search]]
 - [[#shell][Shell]]
+- [[#json][Json]]
+- [[#markdown][Markdown]]
 - [[#clojure][Clojure]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
@@ -38,6 +44,7 @@ breaking changes is expected.
 - [[#spelling][Spelling]]
 - [[#snippets][Snippets]]
 - [[#pomodoro][Pomodoro]]
+- [[#general-custom-functions][General custom functions]]
 - [[#keys][Keys]]
 - [[#migrating][MIGRATING]]
 
@@ -173,6 +180,17 @@ Let's remove some crunchy messages at startup time.
       (load custom-file))
   #+end_src
 
+** Case switch
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package fix-word
+    :ensure t
+    :config
+    (global-set-key (kbd "M-u") #'fix-word-upcase)
+    (global-set-key (kbd "M-l") #'fix-word-downcase)
+    (global-set-key (kbd "M-c") #'fix-word-capitalize))
+#+end_src
+
 ** Registers
 
 #+begin_src emacs-lisp :tangle yes
@@ -301,6 +319,48 @@ Let's remove some crunchy messages at startup time.
 #+end_src
 
 ** Help
+
+* Editing Text
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package smart-shift
+    :ensure t
+    :config
+    (global-smart-shift-mode t))
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package change-inner :ensure t)
+#+end_src
+
+** Multiple Cursors
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package multiple-cursors :ensure t)
+
+#+end_src
+
+** Custom functions
+
+#+begin_src emacs-lisp :tangle yes
+  ;; `C-a' first takes you to the first non-whitespace char as
+  ;; `back-to-indentation' on a line, and if pressed again takes you to
+  ;; the actual beginning of the line.
+  (defun smarter-move-beginning-of-line (arg)
+    "Move depending on ARG to beginning of visible line or not.
+    From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/."
+    (interactive "^p")
+    (setq arg (or arg 1))
+    (when (/= arg 1)
+      (let ((line-move-visual nil))
+	(forward-line (1- arg))))
+    (let ((orig-point (point)))
+      (back-to-indentation)
+      (when (= orig-point (point))
+	(move-beginning-of-line 1))))
+
+  (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
+#+end_src
 
 * Completions
 ** Minibuffer (ido mode)
@@ -649,6 +709,26 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 	      (eshell/alias "ee" "find-file-other-window $1")))
 #+end_src
 
+* Json
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package json-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
+#+end_src
+
+* Markdown
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package markdown-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
+#+end_src
+
 * Clojure
 
 Unfortunately, Emacs does not have a builtin major mode for Clojure,
@@ -986,7 +1066,33 @@ it.
     ("<f10" . tomatinho))
 #+end_src
 
+* General custom functions
+
+#+begin_src emacs-lisp :tangle yes
+  (defvar url-http-end-of-headers)
+  (defun bk/ip ()
+    "Find my current public IP address."
+    (interactive)
+    (let* ((endpoint "https://api.ipify.org")
+	   (myip (with-current-buffer (url-retrieve-synchronously endpoint)
+		   (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
+      (kill-new myip)
+      (message "IP: %s" myip)))
+#+end_src
+
 * Keys
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package which-key
+    :ensure t
+    :init
+    (setq which-key-add-column-padding 12)
+    (setq which-key-allow-imprecise-window-fit t)
+    (setq which-key-echo-keystrokes 0.2)
+    (setq which-key-idle-delay 0.8)
+    :config
+    (which-key-mode))
+#+end_src
 
 #+begin_src emacs-lisp :tangle yes
   (global-set-key "\C-x3" (lambda ()
@@ -1024,14 +1130,8 @@ it.
   (defvar my-external-packages '(which-key
   				 avy
 				 ace-window
-				 change-inner
-				 smart-shift
 				 smex
 				 expand-region
-				 json-mode
-				 multiple-cursors
-				 markdown-mode
-				 fix-word
 				 ))
 
   (dolist (pkg my-external-packages)
@@ -1039,28 +1139,6 @@ it.
       (package-install pkg)))
 
   (smex-initialize)
-
-  ;; help to change text
-  ;; move text using C-c up/down
-  (global-smart-shift-mode t)
-
-  ;; `C-a' first takes you to the first non-whitespace char as
-  ;; `back-to-indentation' on a line, and if pressed again takes you to
-  ;; the actual beginning of the line.
-  (defun smarter-move-beginning-of-line (arg)
-    "Move depending on ARG to beginning of visible line or not.
-  From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/."
-    (interactive "^p")
-    (setq arg (or arg 1))
-    (when (/= arg 1)
-      (let ((line-move-visual nil))
-	(forward-line (1- arg))))
-    (let ((orig-point (point)))
-      (back-to-indentation)
-      (when (= orig-point (point))
-	(move-beginning-of-line 1))))
-
-  (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
 
   ;; disable modes
   (menu-bar-mode -1)
@@ -1075,13 +1153,6 @@ it.
   (global-prettify-symbols-mode t)
   (display-time-mode t)
   (blink-cursor-mode 0)
-
-  (setq which-key-add-column-padding 12)
-  (setq which-key-allow-imprecise-window-fit t)
-  (setq which-key-echo-keystrokes 0.2)
-  (setq which-key-idle-delay 0.8)
-
-  (which-key-mode)
 
   (line-number-mode)
   (column-number-mode)
@@ -1109,28 +1180,7 @@ it.
   (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
   (setq custom-safe-themes t)
 
-  (defvar url-http-end-of-headers)
-  (defun bk/ip ()
-    "Find my current public IP address."
-    (interactive)
-    (let* ((endpoint "https://api.ipify.org")
-	   (myip (with-current-buffer (url-retrieve-synchronously endpoint)
-		   (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
-      (kill-new myip)
-      (message "IP: %s" myip)))
-
   (defalias 'yes-or-no-p 'y-or-n-p)
-
-  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
-
-  (autoload 'markdown-mode "markdown-mode"
-    "Major mode for editing Markdown files" t)
-  (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-
-  (autoload 'gfm-mode "markdown-mode"
-    "Major mode for editing Github flavored markdown files" t)
-  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
   ;; integrate emacs kill ring with the system clipboard.
   (setq save-interprogram-paste-before-kill t)
@@ -1141,8 +1191,5 @@ it.
 	proced-descend t)
 
   ;; words
-  (global-set-key (kbd "M-u") #'fix-word-upcase)
-  (global-set-key (kbd "M-l") #'fix-word-downcase)
-  (global-set-key (kbd "M-c") #'fix-word-capitalize)
 #+end_src
 
