@@ -2,9 +2,8 @@
 #+author: Wanderson Ferreira
 #+date: 2020:04:02
 
-The =Old configuration= node below has all my previous =init.el= and I
-am slowly refactoring into this literate configuration style. No
-breaking changes is expected.
+Literate Emacs configuration style. This is part of my journey for
+/Teach myself programming in 10 years/.
 
 * Table of Contents                                                     :TOC:
 - [[#packages][Packages]]
