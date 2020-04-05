@@ -110,7 +110,7 @@ details.
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package)
-    (package-install 'diminish))
+    (package-install 'delight))
 
   (eval-when-compile
     '(require 'use-package))
@@ -141,7 +141,14 @@ Enabling some builtin modes that are very helpful.
   (global-prettify-symbols-mode t)
   (display-time-mode t)
   (blink-cursor-mode 0)
-  (add-hook 'text-mode-hook #'auto-fill-mode)
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package simple
+    :ensure nil
+    :delight auto-fill-mode
+    :config
+    (add-hook 'text-mode-hook #'auto-fill-mode))
 #+end_src
 
 Protesilaos has two very interesting themes, light and dark background
@@ -223,7 +230,6 @@ Emacs. More explanation about them will follow in future.
   (pending-delete-mode t)
   (global-eldoc-mode t)
 
-
   (line-number-mode)
   (column-number-mode)
   (size-indication-mode)
@@ -270,7 +276,11 @@ Emacs. More explanation about them will follow in future.
 ** Abbreviation
 
 #+begin_src emacs-lisp :tangle yes
-  (setq-default abbrev-mode t)
+  (use-package abbrev
+    :ensure nil
+    :delight abbrev-mode
+    :config
+    (setq-default abbrev-mode t))
 
   (defun bk/add-region-local-abbrev (start end)
     "Go from START to END and add the selected text to a local abbrev."
@@ -477,6 +487,7 @@ retrieve and display completion candidates.
 #+begin_src emacs-lisp :tangle yes
   (use-package company
     :ensure t
+    :delight company-mode
     :init
     (setq company-show-numbers t
 	  company-tooltip-limit 10
@@ -595,6 +606,7 @@ Ease the task of changing window quickly.
 #+begin_src emacs-lisp :tangle yes
   (use-package flycheck
     :ensure t
+    :delight flycheck-mode
     :init
     (setq flycheck-check-syntax-automatically '(mode-enabled save))
     :config
@@ -1062,6 +1074,12 @@ Clojure rocks!
 
 * Org mode
 
+When using =RET= over a link, please go to it.
+
+#+begin_src emacs-lisp :tangle yes
+  (setq org-return-follows-link t)
+#+end_src
+
 Please, disable =flycheck= from org-src buffers. We always have errors
 in there related to some emacs-lisp checkers. Here is how to disable
 it.
@@ -1118,12 +1136,13 @@ it.
 #+begin_src emacs-lisp :tangle yes
   (use-package projectile
     :ensure t
+    :delight '(:eval (concat " " (projectile-project-name)))
     :init
-    (setq projectile-mode-line-prefix " Proj")
+    (setq projectile-completion-system 'ido)
     :config
-    (projectile-mode)
-    :bind (:map projectile-mode-map
-		("C-c p" . projectile-command-map)))
+    (projectile-mode t)
+    :bind-keymap
+    ("C-c p" . projectile-command-map))
 
 #+end_src
 
@@ -1142,8 +1161,12 @@ it.
     (ispell-change-dictionary "en_US")
     (flyspell-buffer))
 
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (add-hook 'text-mode-hook 'flyspell-mode)
+  (use-package flyspell
+    :ensure nil
+    :delight flyspell-mode
+    :config
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+    (add-hook 'text-mode-hook 'flyspell-mode))
 #+end_src
 
 * Snippets
@@ -1151,6 +1174,7 @@ it.
 #+begin_src emacs-lisp :tangle yes
   (use-package yasnippet
     :ensure t
+    :delight yas-minor-mode
     :config
     (yas-global-mode +1)
     (define-key yas-minor-mode-map (kbd "<tab>") nil)
@@ -1190,6 +1214,7 @@ it.
 #+begin_src emacs-lisp :tangle yes
   (use-package which-key
     :ensure t
+    :delight which-key-mode
     :init
     (setq which-key-add-column-padding 12)
     (setq which-key-allow-imprecise-window-fit t)
