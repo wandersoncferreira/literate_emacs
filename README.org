@@ -239,7 +239,26 @@ Emacs. More explanation about them will follow in future.
 ** Recentf
 
 #+begin_src emacs-lisp :tangle yes
-  (recentf-mode t)
+  (use-package recentf
+    :ensure nil
+    :init
+    (setq recentf-max-saved-items 500
+	  recentf-max-menu-items 15
+	  recentf-show-file-shortcuts-flag nil
+	  recentf-auto-cleanup 'never)
+    :config
+    (recentf-mode t))
+#+end_src
+
+Very useful bit of code to include Dired buffers in the recentf list.
+#+begin_src emacs-lisp :tangle yes
+  (defun contrib/recentf-add-dired-directories ()
+    "Include Dired buffers in the `recentf' list."
+    (when (add (stringp dired-directory)
+	       (equal "" (file-name-nondirectory dired-directory)))
+      (recentf-add-file dired-directory)))
+
+  (add-hook 'dired-mode-hook 'contrib/recentf-add-dired-directories)
 #+end_src
 
 ** Extended Command
