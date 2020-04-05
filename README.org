@@ -31,6 +31,7 @@ breaking changes is expected.
 - [[#clojure][Clojure]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
+- [[#projects][Projects]]
 - [[#keys][Keys]]
 
 * Packages
@@ -148,8 +149,7 @@ Let's remove some crunchy messages at startup time.
 * Old configuration
 
 #+begin_src emacs-lisp :tangle yes
-  (defvar my-external-packages '(rg
-				 which-key
+  (defvar my-external-packages '(which-key
 				 yasnippet
 				 yasnippet-snippets
 				 avy
@@ -159,8 +159,6 @@ Let's remove some crunchy messages at startup time.
 				 change-inner
 				 smart-shift
 				 smex
-				 eshell-bookmark
-				 projectile
 				 tomatinho
 				 expand-region
 				 json-mode
@@ -185,18 +183,6 @@ Let's remove some crunchy messages at startup time.
   ;; help to change text
   ;; move text using C-c up/down
   (global-smart-shift-mode t)
-
-  (add-hook 'eshell-mode-hook 'eshell-bookmark-setup)
-
-  (defun eshell-clear-buffer ()
-    "Clear the terminal buffer."
-    (interactive)
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (eshell-send-input)))
-
-  (add-hook 'eshell-mode-hook (lambda ()
-				(local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
   ;; git
   (require 'magit)
@@ -268,20 +254,9 @@ Let's remove some crunchy messages at startup time.
 
   (add-hook 'text-mode-hook #'auto-fill-mode)
 
-  (with-eval-after-load 'projectile
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (setq projectile-mode-line-prefix " Proj"))
-  (projectile-mode)
-
   (setq tab-always-indent 'complete)
   (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
   (setq custom-safe-themes t)
-
-  (require 'em-alias)
-  (add-hook 'eshell-mode-hook
-	    (lambda ()
-	      (eshell/alias "e" "find-file $1")
-	      (eshell/alias "ee" "find-file-other-window $1")))
 
   (defvar mode-line-cleaner-alist
     `((eldoc-mode . "")
@@ -412,22 +387,6 @@ Let's remove some crunchy messages at startup time.
 
   (global-set-key (kbd "C-x a g") 'bk/add-region-global-abbrev)
 
-  ;; grep
-
-  (require 'rg)
-  (rg-define-search bk/search-git-root-or-dir
-    :query ask
-    :format regexp
-    :files "everything"
-    :dir (let ((vc (vc-root-dir)))
-	   (if vc
-	       vc
-	     default-directory))
-    :confirm prefix
-    :flags ("--hidden -g !.git"))
-
-  (global-set-key (kbd "M-s g") 'bk/search-git-root-or-dir)
-
   ;; snippets
   (yas-global-mode +1)
   (define-key yas-minor-mode-map (kbd "<tab>") nil)
@@ -444,6 +403,7 @@ Let's remove some crunchy messages at startup time.
     (when (file-exists-p custom-file)
       (load custom-file))
   #+end_src
+
 ** Ibuffer
 
 #+begin_src emacs-lisp :tangle yes
@@ -792,7 +752,53 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 #+end_src
 
 * Search
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package rg
+    :ensure t
+    :config
+    (rg-define-search bk/search-git-root-or-dir
+      :query ask
+      :format regexp
+      :files "everything"
+      :dir (let ((vc (vc-root-dir)))
+	     (if vc
+		 vc
+	       default-directory))
+      :confirm prefix
+      :flags ("--hidden -g !.git"))
+    :bind
+    ("M-s g" . bk/search-git-root-or-dir))
+#+end_src
+
 * Shell
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package eshell-bookmark
+    :ensure t
+    :config
+    (add-hook 'eshell-mode-hook 'eshell-bookmark-setup))
+
+  (defun eshell-clear-buffer ()
+    "Clear the terminal buffer."
+    (interactive)
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (eshell-send-input)))
+
+  (add-hook 'eshell-mode-hook (lambda ()
+				(local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+  (require 'em-alias)
+  (add-hook 'eshell-mode-hook
+	    (lambda ()
+	      (eshell/alias "e" "find-file $1")
+	      (eshell/alias "ee" "find-file-other-window $1")))
+#+end_src
+
 * Clojure
 
 Unfortunately, Emacs does not have a builtin major mode for Clojure,
@@ -1069,6 +1075,20 @@ it.
 				 (org-save-all-org-buffers)))
   (advice-add 'org-store-log-note :after (lambda (&rest _rest)
 					   (org-save-all-org-buffers)))
+
+#+end_src
+
+* Projects
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package projectile
+    :ensure t
+    :init
+    (setq projectile-mode-line-prefix " Proj")
+    :config
+    (projectile-mode)
+    :bind (:map projectile-mode-map
+		("C-c p" . projectile-command-map)))
 
 #+end_src
 
