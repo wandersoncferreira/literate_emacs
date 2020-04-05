@@ -42,6 +42,7 @@ breaking changes is expected.
 - [[#json][Json]]
 - [[#general-programming][General Programming]]
 - [[#markdown][Markdown]]
+- [[#latex][Latex]]
 - [[#clojure][Clojure]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
@@ -67,7 +68,7 @@ good and make our life so much easier that is hard to avoid them
 altogether.
 
 Let's initialize the package system.
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (require 'package)
 
   (unless (bound-and-true-p package--initialized)
@@ -80,14 +81,14 @@ packages, I like to use another external repository called [[https://melpa.org/#
 is currently maintained by the community and curated by Purcell's and
 his team.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 #+end_src
 
 We need to refresh the archives to make this change to take place.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
     (package-refresh-contents))
 #+end_src
@@ -95,7 +96,7 @@ We need to refresh the archives to make this change to take place.
 Also, by default Emacs also automatically loads all installed packages
 in subsequent Emacs session. I want to disable it.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (setq package-enable-at-startup nil)
 #+end_src
 
@@ -107,19 +108,18 @@ don't need it. Fortunately, Jon Wiegley made our lives easier by
 creating =use-package=, please look for =C-h P use-package= to more
 details.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package)
     (package-install 'delight))
 
-  (eval-when-compile
-    '(require 'use-package))
+  (require 'use-package)
 #+end_src
 
 * Operating System
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
   (setq exec-path (append exec-path '("/home/wand/scripts")))
 
@@ -130,21 +130,21 @@ details.
 * Aesthetics
 
 Disable unnecessary GUI.
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 #+end_src
 
 Enabling some builtin modes that are very helpful.
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (show-paren-mode t)
   (global-prettify-symbols-mode t)
   (display-time-mode t)
   (blink-cursor-mode 0)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package simple
     :ensure nil
     :delight auto-fill-mode
@@ -159,21 +159,17 @@ enjoying it very much. I did a very rudimentary configuration where
 Emacs opens up with the light background if launched before 18pm,
 otherwise dark background.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package modus-operandi-theme :ensure t)
-  (use-package modus-vivendi-theme :ensure t)
 
   (defun bk/load-light-theme ()
     "Load a light theme for the day."
     (interactive)
-    (disable-theme 'modus-vivendi)
     (load-theme 'modus-operandi t))
 
   (defun bk/load-dark-theme ()
     "Load a dark theme for the night."
-    (interactive)
-    (disable-theme 'modus-operandi)
-    (load-theme 'modus-vivendi t))
+    (interactive))
 
   ;; before 17h just load my light theme pls
   (if (< (string-to-number (format-time-string "%H" (current-time))) 17)
@@ -184,7 +180,7 @@ otherwise dark background.
 I like the default font, but why not change it towards a more
 programming-friendlier one: Source Code Pro.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (defun bk/font-family-size (family size)
     "Set frame font to FAMILY at SIZE."
     (set-frame-font
@@ -194,7 +190,7 @@ programming-friendlier one: Source Code Pro.
 #+end_src
 
 Let's remove some crunchy messages at startup time.
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (setq inhibit-splash-screen t
 	inhibit-startup-echo-area-message t)
 #+end_src
@@ -202,14 +198,14 @@ Let's remove some crunchy messages at startup time.
 * Defaults
 
   Files...
-  #+begin_src emacs-lisp :tangle yes
+  #+begin_src emacs-lisp
     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
     (when (file-exists-p custom-file)
       (load custom-file))
   #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (setq tab-always-indent 'complete)
   (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
   (setq custom-safe-themes t)
@@ -228,7 +224,7 @@ Let's remove some crunchy messages at startup time.
 Enable some built in modes to add critical functionality to
 Emacs. More explanation about them will follow in future.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (delete-selection-mode t)
   (pending-delete-mode t)
   (global-eldoc-mode t)
@@ -241,7 +237,7 @@ Emacs. More explanation about them will follow in future.
 
 ** Recentf
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package recentf
     :ensure nil
     :init
@@ -254,7 +250,7 @@ Emacs. More explanation about them will follow in future.
 #+end_src
 
 Very useful bit of code to include Dired buffers in the recentf list.
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (defun contrib/recentf-add-dired-directories ()
     "Include Dired buffers in the `recentf' list."
     (when (add (stringp dired-directory)
@@ -268,7 +264,7 @@ Very useful bit of code to include Dired buffers in the recentf list.
 
 =smex= is an improved version of =extended-command= or =M-x=
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package smex
     :ensure t
     :config
@@ -277,7 +273,7 @@ Very useful bit of code to include Dired buffers in the recentf list.
 
 ** Case switch
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package fix-word
     :ensure t
     :config
@@ -329,7 +325,7 @@ Clean all the registers you saved.
 #+END_SRC
 
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (set-register ?e '(file . "~/.emacs.d/init.el"))
   (set-register ?t '(file . "~/org/todo.org"))
   (set-register ?c '(file . "~/.emacs.d/docs/cheatsheet.org"))
@@ -338,7 +334,7 @@ Clean all the registers you saved.
 
 ** Abbreviation
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package abbrev
     :ensure nil
     :delight abbrev-mode
@@ -370,7 +366,7 @@ Clean all the registers you saved.
 
 ** Imenu
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
     ;;; imenu - produces menus for accessing locations in documents
   ;; for source-code buffer the locations to index are typically definitions
   ;; of functions, variables, and so on.
@@ -401,7 +397,7 @@ Clean all the registers you saved.
 
 ** Ibuffer
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 
   (use-package ibuffer
     :ensure nil
@@ -453,7 +449,7 @@ Clean all the registers you saved.
   The following setting prevent the minibuffer to grow, therefore it
   will be always 1 line height.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (setq resize-mini-windows nil)
   (setq max-mini-window-height 1)
 #+end_src
@@ -462,29 +458,29 @@ Clean all the registers you saved.
 
 * Editing Text
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package smart-shift
     :ensure t
     :config
     (global-smart-shift-mode t))
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package change-inner :ensure t)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package expand-region :ensure t)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package avy
     :ensure t
     :config
     (global-set-key (kbd "C-c ;") 'avy-goto-char))
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package eldoc
     :ensure nil
     :delight eldoc-mode)
@@ -496,14 +492,14 @@ Clean all the registers you saved.
 
 ** Multiple Cursors
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package multiple-cursors :ensure t)
 
 #+end_src
 
 ** Custom functions
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   ;; `C-a' first takes you to the first non-whitespace char as
   ;; `back-to-indentation' on a line, and if pressed again takes you to
   ;; the actual beginning of the line.
@@ -529,7 +525,7 @@ Clean all the registers you saved.
 The whole selling point to =ido-mode= is: switches between buffers and
 opens files and directories with a minimum of keystrokes.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package ido
     :ensure nil
     :init (setq ido-use-virtual-buffers t
@@ -557,7 +553,7 @@ Company is a text completion framework for Emacs. The name stands for
 "complete anything". It uses pluggable back-ends and front-ends to
 retrieve and display completion candidates.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package company
     :ensure t
     :delight company-mode
@@ -577,7 +573,7 @@ If you are familiar with other IDE you should have noticed they
 provide some documentation for the completion candidates. Fortunately,
 there is a great package to provide it for company.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package company-quickhelp
       :ensure t
       :after company
@@ -590,7 +586,7 @@ enable us to choose the candidate based on its number. This solution
 was stolen from [[https://oremacs.com/2017/12/27/company-numbers/][link]] with some customization and simplification to
 provide only what I saw useful.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (defun ora-company-number ()
     "Choose the candidate based on his number at candidate list."
     (interactive)
@@ -622,7 +618,7 @@ provide only what I saw useful.
 
 Ease the task of changing window quickly.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package ace-window
     :ensure t
     :init
@@ -673,9 +669,8 @@ the *winner-boring-buffers*.
 
 * Dired
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (require 'dired-x)
-  (global-set-key (kbd "C-x C-j") 'dired-jump)
 
   ;; useful option when I want to rename/move files in dired
   (setq dired-dwim-target t)
@@ -703,7 +698,7 @@ the *winner-boring-buffers*.
 
 * Linters
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package flycheck
     :ensure t
     :delight flycheck-mode
@@ -717,7 +712,7 @@ the *winner-boring-buffers*.
 
 * Docker
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package docker
     :ensure t
     :bind
@@ -771,7 +766,7 @@ I like to read about programming, but Emacs and Clojure are by far the
 most interesting communities I know so far, therefore, my feeds have
 many links from these subjects.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package elfeed
     :ensure t
     :commands (elfeed elfeed-update)
@@ -817,12 +812,13 @@ the word, " Xah", let's fix that.
     (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
       (elfeed-search-live-filter)))
 
-  (define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space)
+  (eval-after-load 'elfeed
+    '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
 #+END_SRC
 
 * Rest client
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package restclient
     :ensure t
     :config
@@ -838,7 +834,7 @@ the word, " Xah", let's fix that.
 
 * Version Control
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package magit
     :ensure t
     :config
@@ -847,7 +843,7 @@ the word, " Xah", let's fix that.
 
 ** Time machine
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package git-timemachine :ensure t)
 #+end_src
 
@@ -888,7 +884,7 @@ The internal setup in order to use it will happen though =PlantUML=
 which has an specific syntax but is very easy to pick it up, follow
 examples at the official documentation at [[https://plantuml.com/][webpage]].
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package plantuml-mode
     :ensure t
     :init
@@ -899,7 +895,7 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 
 * Search
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package rg
     :ensure t
     :config
@@ -919,7 +915,7 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 
 * Shell
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package eshell-bookmark
     :ensure t
     :config
@@ -937,7 +933,7 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (require 'em-alias)
   (add-hook 'eshell-mode-hook
 	    (lambda ()
@@ -947,7 +943,7 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 
 * Json
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package json-mode
     :ensure t
     :config
@@ -967,10 +963,9 @@ following snippet will highlight these words to help me identify them.
 				      1 font-lock-warning-face t)))))
 #+END_SRC
 
-
 * Markdown
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package markdown-mode
     :ensure t
     :config
@@ -978,6 +973,46 @@ following snippet will highlight these words to help me identify them.
     (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
     (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
 #+end_src
+
+* Latex
+
+#+BEGIN_SRC emacs-lisp 
+  (use-package tex-site
+    :ensure auctex
+    :config
+    (require 'latex)
+    (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+          TeX-source-correlate-start-server t)
+
+    ;; to refresh the buffer after compilation
+    (add-hook 'TeX-after-compilation-finished-functions
+              #'TeX-revert-document-buffer))
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp 
+  (use-package reftex
+    :ensure t
+    :config
+    (setq reftex-cite-prompt-optional-args t))
+
+  (setq TeX-auto-save t
+        TeX-parse-self t
+        TeX-save-query nil
+        TeX-PDF-mode t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp 
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'Latex-math-mode)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+  (with-eval-after-load 'tex
+    (add-to-list 'safe-local-variable-values
+                 '(TeX-command-extra-options . "-shell-escape")))
+#+END_SRC
 
 * Clojure
 
@@ -994,7 +1029,7 @@ bundle because the MELPA version is following a development branch of
 the library. As this mode is very important for me right now, I would
 like to stick to the more stable branch.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package clojure-mode
     :ensure t
     :pin melpa-stable
@@ -1013,7 +1048,7 @@ align the values. **NOTE**: this is an experiment, 90% of the time
 this happened to me, that was the default behavior I wanted. Let's see
 how much the other 10% will annoy me now.
 
-#+BEGIN_SRC clojure :tangle yes
+#+BEGIN_SRC clojure 
   (def my-map
     {:a-key 1
      :other-key 2})
@@ -1035,7 +1070,7 @@ Provides additional refactoring support, but as we see from the
 =clojure-mode= github page, all these extra functionalities are
 migrating to the clojure mode package.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package clj-refactor
     :ensure t
     :delight clj-refactor-mode
@@ -1064,7 +1099,7 @@ migrating to the clojure mode package.
 We also improved the font-locking for built-in methods and macros of
 clojure.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package clojure-mode-extra-font-locking
     :ensure t
     :after (clojure-mode))
@@ -1079,7 +1114,7 @@ navigation, debugging, running tests, and many more.
    1. TODO:  Study cider mode
 
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package cider
     :ensure t
     :after (clojure-mode)
@@ -1097,7 +1132,7 @@ no feedback.
 I will borrow the idea from Alex Baranosky and create a dummy function
 to provide some useful feedback message to my future self.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (defun bk/nrepl-warn-when-not-connected ()
     (interactive)
     (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
@@ -1105,7 +1140,7 @@ to provide some useful feedback message to my future self.
 
 And bind this to the most common keys that requires cider activated.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
   (define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
   (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
@@ -1118,7 +1153,7 @@ where I have some libraries already in the =project.clj= dependency
 available. The following function helps me get there quickly and
 require some frequent namespaces.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (defun bk/repl ()
     "Start an interactive repl in a temp project"
     (interactive)
@@ -1136,7 +1171,7 @@ require some frequent namespaces.
   Let's make a nice usage of =babashka= scripting for clojure and
   print a random doc-string message in the initial of my Emacs
   session.
-  #+begin_src emacs-lisp :tangle yes
+  #+begin_src emacs-lisp 
     (let ((clj-docstring (shell-command-to-string "docstring.clj")))
       (when clj-docstring
 	(setq initial-scratch-message clj-docstring)))
@@ -1161,7 +1196,7 @@ require some frequent namespaces.
 
   I added the new file to my PATH variable. That's all.
 
-  #+begin_src emacs-lisp :tangle yes
+  #+begin_src emacs-lisp 
     (defun bk/clj-random-docstring ()
       "Random doc-string into new buffer."
       (interactive)
@@ -1179,7 +1214,7 @@ require some frequent namespaces.
 Clojure rocks!
 * Parenthesis
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package smartparens
     :ensure t
     :delight smartparens-strict-mode
@@ -1212,7 +1247,7 @@ Clojure rocks!
 
 When using =RET= over a link, please go to it.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (setq org-return-follows-link t)
 #+end_src
 
@@ -1220,14 +1255,14 @@ Please, disable =flycheck= from org-src buffers. We always have errors
 in there related to some emacs-lisp checkers. Here is how to disable
 it.
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (defun disable-flycheck-in-org-src-block ()
     (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
   (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package toc-org
     :ensure t
     :config
@@ -1235,7 +1270,7 @@ it.
 #+end_src
 
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (require 'org-capture)
   (setq org-directory "/home/wand/org")
   (setq org-confirm-babel-evaluate nil)
@@ -1269,7 +1304,7 @@ it.
 
 * Projects
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package projectile
     :ensure t
     :delight '(:eval (concat " " (projectile-project-name)))
@@ -1284,7 +1319,7 @@ it.
 
 * Spelling
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (defun bk/spell-buffer-pt-BR ()
     "Spell check in portuguese."
     (interactive)
@@ -1307,7 +1342,7 @@ it.
 
 * Snippets
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package yasnippet
     :ensure t
     :delight yas-minor-mode
@@ -1318,13 +1353,13 @@ it.
     (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand))
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package yasnippet-snippets :ensure t)
 #+end_src
 
 * Pomodoro
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package tomatinho
     :ensure t
     :bind
@@ -1333,7 +1368,7 @@ it.
 
 * General custom functions
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (defvar url-http-end-of-headers)
   (defun bk/ip ()
     "Find my current public IP address."
@@ -1345,9 +1380,19 @@ it.
       (message "IP: %s" myip)))
 #+end_src
 
+
+#+BEGIN_SRC emacs-lisp 
+  (defun bk/sudo-edit (&optional arg)
+    "Function to edit file with super-user with optional ARG."
+    (interactive "P")
+    (if (or arg (not buffer-file-name))
+        (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
+      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+#+END_SRC
+
 * Keys
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp 
   (use-package which-key
     :ensure t
     :delight which-key-mode
@@ -1360,7 +1405,7 @@ it.
     (which-key-mode))
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (global-set-key "\C-x3" (lambda ()
 			    (interactive)
 			    (split-window-horizontally)
