@@ -442,6 +442,16 @@ Very useful bit of code to include Dired buffers in the recentf list.
     (global-set-key (kbd "C-c ;") 'avy-goto-char))
 #+end_src
 
+#+begin_src emacs-lisp :tangle yes
+  (use-package eldoc
+    :ensure nil
+    :delight eldoc-mode)
+
+  (use-package subword
+    :ensure nil
+    :delight subword-mode)
+#+end_src
+
 ** Multiple Cursors
 
 #+begin_src emacs-lisp :tangle yes
@@ -597,6 +607,7 @@ Ease the task of changing window quickly.
 
 #+begin_src emacs-lisp :tangle yes
   (require 'dired-x)
+  (global-set-key (kbd "C-x C-j") 'dired-jump)
 
   ;; useful option when I want to rename/move files in dired
   (setq dired-dwim-target t)
@@ -926,6 +937,7 @@ migrating to the clojure mode package.
 #+begin_src emacs-lisp :tangle yes
   (use-package clj-refactor
     :ensure t
+    :delight clj-refactor-mode
     :after (clojure-mode)
     :init
     (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
@@ -939,7 +951,8 @@ migrating to the clojure mode package.
 					  ("http" . "clj-http.core")
 					  ("a" . "clojure.core.async")
 					  ("jdbc" . "next.jdbc")
-					  ("s" . "clojure.alpha.specs")))
+					  ("s" . "clojure.spec.alpha")
+					  ("gen" . "clojure.spec.gen.alpha")))
     :config
     (add-hook 'clojure-mode-hook (lambda ()
 				   (clj-refactor-mode t)
@@ -1068,6 +1081,7 @@ Clojure rocks!
 #+begin_src emacs-lisp :tangle yes
   (use-package smartparens
     :ensure t
+    :delight smartparens-strict-mode
     :init
     (setq sp-highlight-pair-overlay nil)
     :config
@@ -1263,7 +1277,6 @@ it.
   (global-set-key (kbd "C-c e") 'eshell)
   (global-set-key (kbd "C-c g s") 'magit-status)
   (global-set-key (kbd "C-c C-k") 'eval-buffer)
-  (global-set-key (kbd "C-x C-j") 'dired-jump)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-c t") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
