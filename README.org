@@ -683,7 +683,6 @@ opens files and directories with a minimum of keystrokes.
     (ido-everywhere t))
 #+end_src
 
-
 More functionality
 
    1. After =C-x b=, the buffer at the head of the list can be killed
@@ -696,25 +695,43 @@ We can find a nice description of ido at the help page on [[help:ido][C-h P ido]
 
 ** Company mode
 
+Company is a text completion framework for Emacs. The name stands for
+"complete anything". It uses pluggable back-ends and front-ends to
+retrieve and display completion candidates.
+
 #+begin_src emacs-lisp :tangle yes
   (use-package company
     :ensure t
     :init
-    (setq company-require-match 'never
-	  company-show-numbers t
+    (setq company-show-numbers t
+	  company-tooltip-limit 10
+	  company-minimum-prefix-length 2
+	  company-tooltip-align-annotations t
 	  company-transformers '(company-sort-by-occurrence)
-	  company-idle-delay 0.3)
+	  company-idle-delay 0.5)
     :config
-    (add-hook 'after-init-hook #'global-company-mode))
+    (company-tng-configure-default)
+    (global-company-mode t))
+#+end_src
 
+If you are familiar with other IDE you should have noticed they
+provide some documentation for the completion candidates. Fortunately,
+there is a great package to provide it for company.
+
+#+begin_src emacs-lisp :tangle yes
   (use-package company-quickhelp
-    :ensure t
-    :after company
-    :config
-    (company-quickhelp-mode))
+      :ensure t
+      :after company
+      :config
+      (company-quickhelp-mode))
+#+end_src
   
-  ;; very interesting behavior which is to choose the candidate based on its number
-  ;; this feature was implemented by ora in his blog post
+Also, we numbered all the candidates and the following code will
+enable us to choose the candidate based on its number. This solution
+was stolen from [[https://oremacs.com/2017/12/27/company-numbers/][link]] with some customization and simplification to
+provide only what I saw useful.
+
+#+begin_src emacs-lisp :tangle yes
   (defun ora-company-number ()
     "Choose the candidate based on his number at candidate list."
     (interactive)
@@ -732,10 +749,10 @@ We can find a nice description of ido at the help page on [[help:ido][C-h P ido]
        (lambda (x)
 	 (define-key map (format "%d" x) 'ora-company-number))
        (number-sequence 0 9))
-      (define-key map " " (lambda ()
-			    (interactive)
-			    (company-abort)
-			    (self-insert-command 1)))
+      ;; (define-key map " " (lambda ()
+      ;; 			  (interactive)
+      ;; 			  (company-abort)
+      ;; 			  (self-insert-command 1)))
       (define-key map (kbd "<return>") nil)))
 
   (eval-after-load 'company
@@ -914,6 +931,19 @@ migrating to the clojure mode package.
   (use-package clj-refactor
     :ensure t
     :after (clojure-mode)
+    :init
+    (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
+					  ("set" . "clojure.set")
+					  ("walk" . "clojure.walk")
+					  ("zip" . "clojure.zip")
+					  ("time" . "clj-time.core")
+					  ("log" . "clojure.tools.logging")
+					  ("json" . "cheshire.core")
+					  ("client" . "org.httpkit.client")
+					  ("http" . "clj-http.core")
+					  ("a" . "clojure.core.async")
+					  ("jdbc" . "next.jdbc")
+					  ("s" . "clojure.alpha.specs")))
     :config
     (add-hook 'clojure-mode-hook (lambda ()
 				   (clj-refactor-mode t)
