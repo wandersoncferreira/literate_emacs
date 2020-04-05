@@ -8,9 +8,11 @@ breaking changes is expected.
 
 * Table of Contents                                                     :TOC:
 - [[#packages][Packages]]
+- [[#operating-system][Operating System]]
 - [[#aesthetics][Aesthetics]]
-- [[#old-configuration][Old configuration]]
 - [[#defaults][Defaults]]
+  - [[#abbreviation][Abbreviation]]
+  - [[#imenu][Imenu]]
   - [[#ibuffer][Ibuffer]]
   - [[#minibuffer][Minibuffer]]
   - [[#help][Help]]
@@ -32,7 +34,10 @@ breaking changes is expected.
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
 - [[#projects][Projects]]
+- [[#spelling][Spelling]]
+- [[#snippets][Snippets]]
 - [[#keys][Keys]]
+- [[#migrating][MIGRATING]]
 
 * Packages
 
@@ -99,6 +104,16 @@ details.
     '(require 'use-package))
 #+end_src
 
+* Operating System
+
+#+begin_src emacs-lisp :tangle yes
+  (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
+  (setq exec-path (append exec-path '("/home/wand/scripts")))
+
+  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+  (setq exec-path (append exec-path '("/usr/local/bin")))
+#+end_src
+
 * Aesthetics
 
 Protesilaos has two very interesting themes, light and dark background
@@ -146,145 +161,47 @@ Let's remove some crunchy messages at startup time.
 	inhibit-startup-echo-area-message t)
 #+end_src
 
-* Old configuration
+* Defaults
+
+  Files...
+  #+begin_src emacs-lisp :tangle yes
+    (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+    (when (file-exists-p custom-file)
+      (load custom-file))
+  #+end_src
+** Abbreviation
 
 #+begin_src emacs-lisp :tangle yes
-  (defvar my-external-packages '(which-key
-				 yasnippet
-				 yasnippet-snippets
-				 avy
-				 ace-window
-				 magit
-				 git-timemachine
-				 change-inner
-				 smart-shift
-				 smex
-				 tomatinho
-				 expand-region
-				 json-mode
-				 multiple-cursors
-				 markdown-mode
-				 fix-word
-				 ))
+  (setq-default abbrev-mode t)
 
-  (dolist (pkg my-external-packages)
-    (unless (package-installed-p pkg)
-      (package-install pkg)))
+  (defun bk/add-region-local-abbrev (start end)
+    "Go from START to END and add the selected text to a local abbrev."
+    (interactive "r")
+    (if (use-region-p)
+	(let ((num-words (count-words-region start end)))
+	  (add-mode-abbrev num-words)
+	  (deactivate-mark))
+      (message "No selected region!")))
 
-  ;; add new paths to emacs
-  (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
-  (setq exec-path (append exec-path '("/home/wand/scripts")))
+  (global-set-key (kbd "C-x a l") 'bk/add-region-local-abbrev)
 
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-  (setq exec-path (append exec-path '("/usr/local/bin")))
+  (defun bk/add-region-global-abbrev (start end)
+    "Go from START to END and add the selected text to global abbrev."
+    (interactive "r")
+    (if (use-region-p)
+	(let ((num-words (count-words-region start end)))
+	  (add-abbrev global-abbrev-table "Global" num-words)
+	  (deactivate-mark))
+      (message "No selected region!")))
 
-  (smex-initialize)
+  (global-set-key (kbd "C-x a g") 'bk/add-region-global-abbrev)
+#+end_src
 
-  ;; help to change text
-  ;; move text using C-c up/down
-  (global-smart-shift-mode t)
+** Imenu
 
-  ;; git
-  (require 'magit)
-  (add-to-list 'magit-no-confirm 'stage-all-changes)
-
-  (set-register ?e '(file . "~/.emacs.d/init.el"))
-  (set-register ?t '(file . "~/org/todo.org"))
-  (set-register ?c '(file . "~/.emacs.d/docs/cheatsheet.org"))
-
-  ;; `C-a' first takes you to the first non-whitespace char as
-  ;; `back-to-indentation' on a line, and if pressed again takes you to
-  ;; the actual beginning of the line.
-  (defun smarter-move-beginning-of-line (arg)
-    "Move depending on ARG to beginning of visible line or not.
-  From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/."
-    (interactive "^p")
-    (setq arg (or arg 1))
-    (when (/= arg 1)
-      (let ((line-move-visual nil))
-	(forward-line (1- arg))))
-    (let ((orig-point (point)))
-      (back-to-indentation)
-      (when (= orig-point (point))
-	(move-beginning-of-line 1))))
-
-  (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
-
-  ;; disable modes
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-
-  ;; enable modes
-  (show-paren-mode t)
-  (delete-selection-mode t)
-  (pending-delete-mode t)
-  (global-eldoc-mode t)
-  (global-prettify-symbols-mode t)
-  (display-time-mode t)
-  (blink-cursor-mode 0)
-
-  (setq which-key-add-column-padding 12)
-  (setq which-key-allow-imprecise-window-fit t)
-  (setq which-key-echo-keystrokes 0.2)
-  (setq which-key-idle-delay 0.8)
-
-  (which-key-mode)
-
-  (line-number-mode)
-  (column-number-mode)
-  (size-indication-mode)
-  (global-auto-revert-mode)
-
-
-  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
-	aw-background nil)
-  (global-set-key (kbd "C-x o") 'ace-window)
-
-  ;; winner
-  (setq winner-dont-bind-my-keys t)
-  (add-hook 'after-init-hook 'winner-mode)
-  (global-set-key (kbd "C-x 4 u") 'winner-undo)
-  (global-set-key (kbd "C-x 4 U") 'winner-redo)
-
-  ;; input one char, jump to it with a tree
-  (global-set-key (kbd "C-c ;") 'avy-goto-char)
-
-  (recentf-mode t)
-
-  (add-hook 'text-mode-hook #'auto-fill-mode)
-
-  (setq tab-always-indent 'complete)
-  (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-  (setq custom-safe-themes t)
-
-  (defvar mode-line-cleaner-alist
-    `((eldoc-mode . "")
-      (abbrev-mode . "")
-      (company-mode . "")
-      (yas-minor-mode . "")
-      (auto-fill-mode . "")
-      (auto-revert-mode . "")
-      (subword-mode . "")
-      (flyspell-mode . "")
-      (which-key-mode . "")
-      (emacs-lisp-mode . "λ")))
-
-  (defun clean-mode-line ()
-    "Clean your modeline."
-    (interactive)
-    (cl-loop for cleaner in mode-line-cleaner-alist
-	     do (let* ((mode (car cleaner))
-		       (mode-str (cdr cleaner))
-		       (old-mode-str (cdr (assq mode minor-mode-alist))))
-		  (when old-mode-str
-		    (setcar old-mode-str mode-str))
-		  (when (eq mode major-mode)
-		    (setq mode-name mode-str)))))
-
-  (add-hook 'after-change-major-mode-hook #'clean-mode-line)
-
-  ;;; imenu - produces menus for accessing locations in documents
+#+begin_src emacs-lisp :tangle yes
+    ;;; imenu - produces menus for accessing locations in documents
   ;; for source-code buffer the locations to index are typically definitions
   ;; of functions, variables, and so on.
   (require 'imenu)
@@ -310,99 +227,7 @@ Let's remove some crunchy messages at startup time.
 
   (global-set-key (kbd "C-.") 'bk/ido-menu)
 
-  (defvar url-http-end-of-headers)
-  (defun bk/ip ()
-    "Find my current public IP address."
-    (interactive)
-    (let* ((endpoint "https://api.ipify.org")
-	   (myip (with-current-buffer (url-retrieve-synchronously endpoint)
-		   (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
-      (kill-new myip)
-      (message "IP: %s" myip)))
-
-  (defalias 'yes-or-no-p 'y-or-n-p)
-
-  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
-
-  (autoload 'markdown-mode "markdown-mode"
-    "Major mode for editing Markdown files" t)
-  (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-
-  (autoload 'gfm-mode "markdown-mode"
-    "Major mode for editing Github flavored markdown files" t)
-  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
-
-  ;; spelling
-  (defun bk/spell-buffer-pt-BR ()
-    "Spell check in portuguese."
-    (interactive)
-    (ispell-change-dictionary "pt_BR")
-    (flyspell-buffer))
-
-  (defun bk/spell-buffer-en ()
-    "Spell check in english."
-    (interactive)
-    (ispell-change-dictionary "en_US")
-    (flyspell-buffer))
-
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (add-hook 'text-mode-hook 'flyspell-mode)
-
-  ;; integrate emacs kill ring with the system clipboard.
-  (setq save-interprogram-paste-before-kill t)
-
-
-  ;; built in htop
-  (setq proced-auto-update-flag t
-	proced-auto-update-interval 1
-	proced-descend t)
-
-  ;; words
-  (global-set-key (kbd "M-u") #'fix-word-upcase)
-  (global-set-key (kbd "M-l") #'fix-word-downcase)
-  (global-set-key (kbd "M-c") #'fix-word-capitalize)
-
-  (setq-default abbrev-mode t)
-
-  (defun bk/add-region-local-abbrev (start end)
-    "Go from START to END and add the selected text to a local abbrev."
-    (interactive "r")
-    (if (use-region-p)
-	(let ((num-words (count-words-region start end)))
-	  (add-mode-abbrev num-words)
-	  (deactivate-mark))
-      (message "No selected region!")))
-
-  (global-set-key (kbd "C-x a l") 'bk/add-region-local-abbrev)
-
-  (defun bk/add-region-global-abbrev (start end)
-    "Go from START to END and add the selected text to global abbrev."
-    (interactive "r")
-    (if (use-region-p)
-	(let ((num-words (count-words-region start end)))
-	  (add-abbrev global-abbrev-table "Global" num-words)
-	  (deactivate-mark))
-      (message "No selected region!")))
-
-  (global-set-key (kbd "C-x a g") 'bk/add-region-global-abbrev)
-
-  ;; snippets
-  (yas-global-mode +1)
-  (define-key yas-minor-mode-map (kbd "<tab>") nil)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
-  (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand)
 #+end_src
-
-* Defaults
-
-  Files...
-  #+begin_src emacs-lisp :tangle yes
-    (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-
-    (when (file-exists-p custom-file)
-      (load custom-file))
-  #+end_src
 
 ** Ibuffer
 
@@ -704,7 +529,20 @@ provide only what I saw useful.
 #+end_src
 
 * Version Control
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package magit
+    :ensure t
+    :config
+    (add-to-list 'magit-no-confirm 'stage-all-changes))
+#+end_src
+
 ** Time machine
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package git-timemachine :ensure t)
+#+end_src
+
 ** Aesthetics
 * Unified Modeling Language
 
@@ -1092,6 +930,41 @@ it.
 
 #+end_src
 
+* Spelling
+
+#+begin_src emacs-lisp :tangle yes
+  (defun bk/spell-buffer-pt-BR ()
+    "Spell check in portuguese."
+    (interactive)
+    (ispell-change-dictionary "pt_BR")
+    (flyspell-buffer))
+
+  (defun bk/spell-buffer-en ()
+    "Spell check in english."
+    (interactive)
+    (ispell-change-dictionary "en_US")
+    (flyspell-buffer))
+
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'text-mode-hook 'flyspell-mode)
+#+end_src
+
+* Snippets
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package yasnippet
+    :ensure t
+    :config
+    (yas-global-mode +1)
+    (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    (define-key yas-minor-mode-map (kbd "TAB") nil)
+    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand))
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package yasnippet-snippets :ensure t)
+#+end_src
+
 * Keys
 
 #+begin_src emacs-lisp :tangle yes
@@ -1123,5 +996,164 @@ it.
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
+#+end_src
+
+* MIGRATING
+
+#+begin_src emacs-lisp :tangle yes
+  (defvar my-external-packages '(which-key
+  				 avy
+				 ace-window
+				 change-inner
+				 smart-shift
+				 smex
+				 tomatinho
+				 expand-region
+				 json-mode
+				 multiple-cursors
+				 markdown-mode
+				 fix-word
+				 ))
+
+  (dolist (pkg my-external-packages)
+    (unless (package-installed-p pkg)
+      (package-install pkg)))
+
+  (smex-initialize)
+
+  ;; help to change text
+  ;; move text using C-c up/down
+  (global-smart-shift-mode t)
+
+  (set-register ?e '(file . "~/.emacs.d/init.el"))
+  (set-register ?t '(file . "~/org/todo.org"))
+  (set-register ?c '(file . "~/.emacs.d/docs/cheatsheet.org"))
+
+  ;; `C-a' first takes you to the first non-whitespace char as
+  ;; `back-to-indentation' on a line, and if pressed again takes you to
+  ;; the actual beginning of the line.
+  (defun smarter-move-beginning-of-line (arg)
+    "Move depending on ARG to beginning of visible line or not.
+  From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/."
+    (interactive "^p")
+    (setq arg (or arg 1))
+    (when (/= arg 1)
+      (let ((line-move-visual nil))
+	(forward-line (1- arg))))
+    (let ((orig-point (point)))
+      (back-to-indentation)
+      (when (= orig-point (point))
+	(move-beginning-of-line 1))))
+
+  (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
+
+  ;; disable modes
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  ;; enable modes
+  (show-paren-mode t)
+  (delete-selection-mode t)
+  (pending-delete-mode t)
+  (global-eldoc-mode t)
+  (global-prettify-symbols-mode t)
+  (display-time-mode t)
+  (blink-cursor-mode 0)
+
+  (setq which-key-add-column-padding 12)
+  (setq which-key-allow-imprecise-window-fit t)
+  (setq which-key-echo-keystrokes 0.2)
+  (setq which-key-idle-delay 0.8)
+
+  (which-key-mode)
+
+  (line-number-mode)
+  (column-number-mode)
+  (size-indication-mode)
+  (global-auto-revert-mode)
+
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+	aw-background nil)
+  (global-set-key (kbd "C-x o") 'ace-window)
+
+  ;; winner
+  (setq winner-dont-bind-my-keys t)
+  (add-hook 'after-init-hook 'winner-mode)
+  (global-set-key (kbd "C-x 4 u") 'winner-undo)
+  (global-set-key (kbd "C-x 4 U") 'winner-redo)
+
+  ;; input one char, jump to it with a tree
+  (global-set-key (kbd "C-c ;") 'avy-goto-char)
+
+  (recentf-mode t)
+
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+
+  (setq tab-always-indent 'complete)
+  (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+  (setq custom-safe-themes t)
+
+  (defvar mode-line-cleaner-alist
+    `((eldoc-mode . "")
+      (abbrev-mode . "")
+      (company-mode . "")
+      (yas-minor-mode . "")
+      (auto-fill-mode . "")
+      (auto-revert-mode . "")
+      (subword-mode . "")
+      (flyspell-mode . "")
+      (which-key-mode . "")
+      (emacs-lisp-mode . "λ")))
+
+  (defun clean-mode-line ()
+    "Clean your modeline."
+    (interactive)
+    (cl-loop for cleaner in mode-line-cleaner-alist
+	     do (let* ((mode (car cleaner))
+		       (mode-str (cdr cleaner))
+		       (old-mode-str (cdr (assq mode minor-mode-alist))))
+		  (when old-mode-str
+		    (setcar old-mode-str mode-str))
+		  (when (eq mode major-mode)
+		    (setq mode-name mode-str)))))
+
+  (add-hook 'after-change-major-mode-hook #'clean-mode-line)
+
+  (defvar url-http-end-of-headers)
+  (defun bk/ip ()
+    "Find my current public IP address."
+    (interactive)
+    (let* ((endpoint "https://api.ipify.org")
+	   (myip (with-current-buffer (url-retrieve-synchronously endpoint)
+		   (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
+      (kill-new myip)
+      (message "IP: %s" myip)))
+
+  (defalias 'yes-or-no-p 'y-or-n-p)
+
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
+  (autoload 'markdown-mode "markdown-mode"
+    "Major mode for editing Markdown files" t)
+  (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+  (autoload 'gfm-mode "markdown-mode"
+    "Major mode for editing Github flavored markdown files" t)
+  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+
+  ;; integrate emacs kill ring with the system clipboard.
+  (setq save-interprogram-paste-before-kill t)
+
+  ;; built in htop
+  (setq proced-auto-update-flag t
+	proced-auto-update-interval 1
+	proced-descend t)
+
+  ;; words
+  (global-set-key (kbd "M-u") #'fix-word-upcase)
+  (global-set-key (kbd "M-l") #'fix-word-downcase)
+  (global-set-key (kbd "M-c") #'fix-word-capitalize)
 #+end_src
 
