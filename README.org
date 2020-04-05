@@ -249,17 +249,6 @@ Emacs. More explanation about them will follow in future.
     (recentf-mode t))
 #+end_src
 
-Very useful bit of code to include Dired buffers in the recentf list.
-#+begin_src emacs-lisp
-  (defun contrib/recentf-add-dired-directories ()
-    "Include Dired buffers in the `recentf' list."
-    (when (add (stringp dired-directory)
-	       (equal "" (file-name-nondirectory dired-directory)))
-      (recentf-add-file dired-directory)))
-
-  (add-hook 'dired-mode-hook 'contrib/recentf-add-dired-directories)
-#+end_src
-
 ** Extended Command
 
 =smex= is an improved version of =extended-command= or =M-x=
@@ -672,18 +661,7 @@ the *winner-boring-buffers*.
 #+begin_src emacs-lisp 
   (require 'dired-x)
 
-  ;; useful option when I want to rename/move files in dired
   (setq dired-dwim-target t)
-
-  (defun bk/dired-directories-first ()
-    "Sort dired listings with directories first."
-    (save-excursion
-      (let (buffer-read-only)
-	(forward-line 2)
-	(sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
-      (set-buffer-modified-p nil)))
-
-  (advice-add 'dired-readin :after #'bk/dired-directories-first)
 
   (defun bk/dired-xdg-open ()
     "Open the file at point with xdg-open."
@@ -693,7 +671,8 @@ the *winner-boring-buffers*.
       (call-process "xdg-open" nil 0 nil file)
       (message "Opening %s done" file)))
 
-  (define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open)
+  (eval-after-load 'dired
+    '(define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open))
 #+end_src
 
 * Linters
