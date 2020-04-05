@@ -11,6 +11,7 @@ breaking changes is expected.
 - [[#operating-system][Operating System]]
 - [[#aesthetics][Aesthetics]]
 - [[#defaults][Defaults]]
+  - [[#registers][Registers]]
   - [[#abbreviation][Abbreviation]]
   - [[#imenu][Imenu]]
   - [[#ibuffer][Ibuffer]]
@@ -36,6 +37,7 @@ breaking changes is expected.
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
 - [[#snippets][Snippets]]
+- [[#pomodoro][Pomodoro]]
 - [[#keys][Keys]]
 - [[#migrating][MIGRATING]]
 
@@ -170,6 +172,16 @@ Let's remove some crunchy messages at startup time.
     (when (file-exists-p custom-file)
       (load custom-file))
   #+end_src
+
+** Registers
+
+#+begin_src emacs-lisp :tangle yes
+  (set-register ?e '(file . "~/.emacs.d/init.el"))
+  (set-register ?t '(file . "~/org/todo.org"))
+  (set-register ?c '(file . "~/.emacs.d/docs/cheatsheet.org"))
+
+#+end_src
+
 ** Abbreviation
 
 #+begin_src emacs-lisp :tangle yes
@@ -965,6 +977,15 @@ it.
   (use-package yasnippet-snippets :ensure t)
 #+end_src
 
+* Pomodoro
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package tomatinho
+    :ensure t
+    :bind
+    ("<f10" . tomatinho))
+#+end_src
+
 * Keys
 
 #+begin_src emacs-lisp :tangle yes
@@ -987,7 +1008,6 @@ it.
   (global-set-key (kbd "C-c C-k") 'eval-buffer)
   (global-set-key (kbd "C-x C-j") 'dired-jump)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (global-set-key (kbd "<f10>") 'tomatinho)
   (global-set-key (kbd "C-c t") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-=") 'er/expand-region)
@@ -1007,7 +1027,6 @@ it.
 				 change-inner
 				 smart-shift
 				 smex
-				 tomatinho
 				 expand-region
 				 json-mode
 				 multiple-cursors
@@ -1024,10 +1043,6 @@ it.
   ;; help to change text
   ;; move text using C-c up/down
   (global-smart-shift-mode t)
-
-  (set-register ?e '(file . "~/.emacs.d/init.el"))
-  (set-register ?t '(file . "~/org/todo.org"))
-  (set-register ?c '(file . "~/.emacs.d/docs/cheatsheet.org"))
 
   ;; `C-a' first takes you to the first non-whitespace char as
   ;; `back-to-indentation' on a line, and if pressed again takes you to
@@ -1093,32 +1108,6 @@ it.
   (setq tab-always-indent 'complete)
   (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
   (setq custom-safe-themes t)
-
-  (defvar mode-line-cleaner-alist
-    `((eldoc-mode . "")
-      (abbrev-mode . "")
-      (company-mode . "")
-      (yas-minor-mode . "")
-      (auto-fill-mode . "")
-      (auto-revert-mode . "")
-      (subword-mode . "")
-      (flyspell-mode . "")
-      (which-key-mode . "")
-      (emacs-lisp-mode . "λ")))
-
-  (defun clean-mode-line ()
-    "Clean your modeline."
-    (interactive)
-    (cl-loop for cleaner in mode-line-cleaner-alist
-	     do (let* ((mode (car cleaner))
-		       (mode-str (cdr cleaner))
-		       (old-mode-str (cdr (assq mode minor-mode-alist))))
-		  (when old-mode-str
-		    (setcar old-mode-str mode-str))
-		  (when (eq mode major-mode)
-		    (setq mode-name mode-str)))))
-
-  (add-hook 'after-change-major-mode-hook #'clean-mode-line)
 
   (defvar url-http-end-of-headers)
   (defun bk/ip ()
