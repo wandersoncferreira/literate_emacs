@@ -742,16 +742,45 @@ the *winner-boring-buffers*.
 
 * Linters
 
+=Flycheck= is a modern on-the-fly syntax checking extension for GNU
+Emacs, intended as replacement for the older Flymake.
+
 #+begin_src emacs-lisp 
   (use-package flycheck
     :ensure t
-    :delight flycheck-mode
     :init
-    (setq flycheck-check-syntax-automatically '(mode-enabled save))
+    (setq flycheck-check-syntax-automatically '(mode-enabled save)
+	  flycheck-display-errors-delay .3)
     :config
     (global-flycheck-mode))
 
   (use-package flycheck-clj-kondo :ensure t)
+#+end_src
+
+A very important command you should remember is =C-c ! v= or (=M-x
+flycheck-verify-setup=) that can help you verify for your current mode
+if everything is fine with your linter and it's backend.
+
+The following package implements a minor-mode for displaying errors
+from Flycheck right below their reporting location, using overlays.
+
+#+begin_src emacs-lisp
+  (use-package flycheck-inline
+    :ensure t
+    :after flycheck
+    :config
+    (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+#+end_src
+
+Integrate [[Unified Modeling Language]] with flycheck to automatically
+check the syntax of your plantuml files on the fly.
+
+#+begin_src emacs-lisp
+  (use-package flycheck-plantuml
+    :ensure t
+    :after flycheck
+    :config
+    (flycheck-plantuml-setup))
 #+end_src
 
 * Docker
