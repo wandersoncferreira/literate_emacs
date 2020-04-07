@@ -45,17 +45,23 @@ Literate Emacs configuration style. This is part of my journey for
 - [[#general-programming][General Programming]]
   - [[#whitespaces][Whitespaces]]
 - [[#markdown][Markdown]]
+- [[#pdf][PDF]]
 - [[#latex][Latex]]
 - [[#clojure][Clojure]]
 - [[#sql][SQL]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
+  - [[#revealjs][Reveal.js]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
 - [[#snippets][Snippets]]
 - [[#pomodoro][Pomodoro]]
 - [[#general-custom-functions][General custom functions]]
 - [[#keys][Keys]]
+- [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
+  - [[#key-bindings][Key Bindings]]
+  - [[#references][References]]
+- [[#references-1][References]]
 
 * Packages
 
@@ -87,7 +93,6 @@ his team.
 
 #+begin_src emacs-lisp
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 #+end_src
 
 We need to refresh the archives to make this change to take place.
@@ -150,21 +155,32 @@ Fix old security Emacs problems
        (list start end)))
 #+END_SRC
 
+Ease the font caching during GC.
+#+begin_src emacs-lisp
+  (setq inhibit-compacting-font-caches t)
+#+end_src
+
 * Aesthetics
 
-Disable unnecessary GUI.
+Since I never use the mouse with GNU Emacs, I prefer not to use
+invasive graphical elements.
 #+begin_src emacs-lisp
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+  (when window-system
+    (menu-bar-mode -1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    (tooltip-mode -1))
 #+end_src
 
 Enabling some builtin modes that are very helpful.
 #+begin_src emacs-lisp
   (show-paren-mode t)
   (global-prettify-symbols-mode t)
-  (display-time-mode t)
   (blink-cursor-mode 0)
+
+  (setq display-time-default-load-average nil
+	display-time-day-and-date t)
+  (display-time-mode t)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -173,25 +189,6 @@ Enabling some builtin modes that are very helpful.
     :delight auto-fill-mode
     :config
     (add-hook 'text-mode-hook #'auto-fill-mode))
-#+end_src
-
-Protesilaos has two very interesting themes, light and dark background
-based on contrast between the colors. This recently became available
-at the ELPA standard package repository which is fantastic. I am
-enjoying it very much. I did a very rudimentary configuration where
-Emacs opens up with the light background if launched before 18pm,
-otherwise dark background.
-
-#+begin_src emacs-lisp
-  (use-package modus-operandi-theme
-    :ensure t
-    :init
-    (setq modus-operandi-theme-proportional-fonts nil
-	  modus-operandi-theme-scale-headings nil
-	  modus-operandi-theme-visible-fringes t
-	  modus-operandi-theme-distinct-org-blocks t)
-    :config
-    (load-theme 'modus-operandi t))
 #+end_src
 
 I like the default font, but why not change it towards a more
@@ -259,8 +256,7 @@ Emacs. More explanation about them will follow in future.
   (pending-delete-mode t)
   (global-eldoc-mode t)
 
-  (line-number-mode)
-  (column-number-mode)
+  (column-number-mode 1)
   (size-indication-mode)
   (global-auto-revert-mode)
 #+end_src
@@ -1059,6 +1055,7 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 #+begin_src emacs-lisp 
   (use-package plantuml-mode
     :ensure t
+    :mode ("\\.plantuml\\'" "\\.puml\\'")
     :init
     (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
     :config
@@ -1191,6 +1188,34 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
 #+end_src
 
+* PDF
+
+PDF Tools is, among other things, a replacement of DocView for PDF
+files. The key difference is that pages are not pre-rendered by
+e.g. ghostscript and stored in the file-system, but rather created
+on-demand and stored in memory.
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :ensure t
+    :defer 1
+    :magic ("%PDF" . pdf-view-mode)
+    :init (pdf-tools-install :no-query))
+
+  (use-package pdf-view
+    :ensure nil
+    :after pdf-tools
+    :bind (:map pdf-view-mode-map
+		("C-s" . isearch-forward)
+		("d" . pdf-annot-delete)
+		("h" . pdf-annot-add-highlight-markup-annotation)
+		("t" . pdf-annot-add-text-annotation))
+    :custom
+    (pdf-view-display-size 'fit-page)
+    (pdf-view-resize-factor 1.1)
+    (pdf-view-use-unicode-ligther nil))
+#+end_src
+
 * Latex
 
 #+BEGIN_SRC emacs-lisp 
@@ -1249,7 +1274,6 @@ like to stick to the more stable branch.
 #+begin_src emacs-lisp 
   (use-package clojure-mode
     :ensure t
-    :pin melpa-stable
     :diminish (clojure-mode "λ")
     :init
     (setq clojure-align-forms-automatically t)
@@ -1460,6 +1484,8 @@ Indentation is also important
 #+begin_src emacs-lisp
   (use-package sql-indent
     :ensure t
+    :delight sql-mode "Σ "
+    :after (:any sql sql-interactive-mode)
     :config
     (add-hook 'sql-mode-hook 'sqlind-minor-mode))
 #+end_src
@@ -1557,6 +1583,21 @@ buffer to edit code.
   (advice-add 'org-store-log-note :after (lambda (&rest _rest)
 					   (org-save-all-org-buffers)))
 
+#+end_src
+
+** Reveal.js
+
+*** TODO More details from how to build one presentation using the package
+There an exhaustive documentation about Reveal.js in the github
+[[https://gitlab.com/oer/org-re-reveal][repository]], please follow the link if more is necessary.
+
+#+begin_src emacs-lisp
+  (use-package org-re-reveal
+    :ensure t
+    :after org
+    :custom
+    (org-reveal-mathjax t)
+    (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
 #+end_src
 
 * Projects
@@ -1704,3 +1745,185 @@ buffer to edit code.
 
 #+end_src
 
+* Emacs as my own Operating System
+
+#+BEGIN_SRC emacs-lisp
+  (use-package exwm
+    :ensure t
+    :init
+    (setq use-dialog-box nil
+	  exwm-workspace-number 2)
+    (setq exwm-input-simulation-keys
+	  '(([?\C-p] . [up])
+	    ([?\C-n] . [down])
+	    ([?\C-f] . [right])
+	    ([?\C-b] . [left])
+	    ([?\C-s] . [\C-f])
+	    ([?\s-w] . [\C-f4])
+	    ([?\s-v] . [\C-v])))
+    :config
+    (display-battery-mode t)
+
+    (require 'exwm)
+    (require 'exwm-config)
+    (exwm-config-default)
+
+    (require 'exwm-systemtray)
+    (setq exwm-systemtray-height 16)
+    (exwm-systemtray-enable)
+
+    (exwm-input-set-simulation-keys exwm-input-simulation-keys)
+
+    ;; universal Get-me-outta-here
+    (push ?\C-g exwm-input-prefix-keys)
+    (exwm-input-set-key (kbd "C-g") #'keyboard-quit)
+
+    (require 'exwm-randr)
+    (setq exwm-randr-workspace-output-plist '(1 "HDMI1" 2 "eDP1"))
+    (add-hook 'exwm-randr-screen-change-hook
+	      (lambda ()
+		(start-process-shell-command
+		 "xrandr" nil "xrandr --output eDP1 --mode 1600x900 --pos 0x0 --rotate normal --output DP1 --off --output DP2 --off --output HDMI1 --primary --mode 1680x1050 --pos 1600x0 --rotate normal --output HDMI2 --off --output VIRTUAL1 --off")))
+    (exwm-randr-enable))
+#+END_SRC
+
+   Now that I am using Emacs as my window manager I can use the meta keys
+   to provide operations over the windows itself, in other days, there
+   were reserved to i3wm operations.
+
+   #+BEGIN_SRC emacs-lisp
+     (exwm-input-set-key (kbd "s-R") #'exwm-reset)
+     (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
+     (exwm-input-set-key (kbd "s-h") #'windmove-left)
+     (exwm-input-set-key (kbd "s-j") #'windmove-down)
+     (exwm-input-set-key (kbd "s-k") #'windmove-up)
+     (exwm-input-set-key (kbd "s-l") #'windmove-right)
+   #+END_SRC
+
+   Ease the possibility of switching between workspace
+   #+BEGIN_SRC emacs-lisp
+     (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+
+     (dotimes (i 10)
+       (exwm-input-set-key (kbd (format "s-%d" i))
+			   `(lambda ()
+			      (interactive)
+			      (exwm-workspace-switch-create ,i))))
+   #+END_SRC
+
+   Ag has a very nice package to help us out in EXWM, the feature is
+   similar in usage to Org-SRC-Blocks, therefore you press =C-c '= on
+   input text boxes of other external apps and another window pops up so
+   you can have all the Emacs under the finger while editing.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package exwm-edit
+       :ensure t)
+   #+END_SRC
+
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package dmenu
+       :ensure t
+       :commands (dmenu)
+       :config
+       (exwm-input-set-key (kbd "s-d") #'dmenu))
+   #+END_SRC
+
+   I made a change in =qutebrowser= so every tab open is a new window of
+   qutebrowser, therefore I can search for the tabs using =C-x b= from
+   Emacs.
+
+   =:set -t tabs.tabs_are_window true=
+
+   More settings for qutebrowser can be found [[https://www.qutebrowser.org/doc/help/settings.html][here]].
+
+   Disabling floating window
+   #+BEGIN_SRC emacs-lisp
+     (setq exwm-manage-force-tiling t)
+   #+END_SRC
+
+** Key Bindings
+
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/keepmenu ()
+       "Call password manager."
+       (interactive)
+       (start-process-shell-command "pwd" nil "keepmenu"))
+
+     (defun bk/lock-screen ()
+       (interactive)
+       (start-process-shell-command "lock" nil "xscreensaver-command -lock"))
+
+     (defun bk/qutebrowse ()
+       (interactive)
+       (start-process-shell-command "browser" nil "qutebrowser"))
+   #+END_SRC
+
+   Regular keys to control audio using the package pulseaudio.
+   #+BEGIN_SRC emacs-lisp
+      (use-package pulseaudio-control
+       :ensure t
+       :config
+       (exwm-input-set-key
+	(kbd "<XF86AudioLowerVolume>")
+	#'pulseaudio-control-decrease-volume)
+
+       (exwm-input-set-key
+	(kbd "<XF86AudioRaiseVolume>")
+	#'pulseaudio-control-increase-volume)
+
+       (exwm-input-set-key
+	(kbd "<XF86AudioMute>")
+	#'pulseaudio-control-toggle-current-sink-mute))
+   #+END_SRC
+
+   Control the backlight level
+   #+BEGIN_SRC emacs-lisp
+     (use-package emacs
+       :ensure nil
+       :config
+       (exwm-input-set-key
+	(kbd "<XF86MonBrightnessDown>")
+	(lambda () (interactive)
+	  (start-process-shell-command "bdown" nil "xbacklight -dec 10")))
+
+       (exwm-input-set-key
+	(kbd "<XF86MonBrightnessUp>")
+	(lambda () (interactive)
+	  (start-process-shell-command "bdown" nil "xbacklight -inc 10"))))
+   #+END_SRC
+
+   More binding definitions
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/qutebrowser ()
+       "Open the browser"
+       (interactive)
+       (start-process-shell-command "brw" nil "qutebrowser"))
+
+     (defun bk/fix-caps-and-key-rate ()
+       "Capslock is another ctrl and key rate need to be higher"
+       (interactive)
+       (start-process-shell-command "caps" nil "setxkbmap -option ctrl:nocaps")
+       (start-process-shell-command "krate" nil "xset r rate 300 50")
+       (message "Ctrl and key rate fixed!"))
+
+     (use-package emacs
+       :ensure nil
+       :after (exwm)
+       :config
+       (exwm-input-set-key (kbd "s-q") #'bk/qutebrowser)
+       (exwm-input-set-key (kbd "C-c k") #'bk/fix-caps-and-key-rate))
+   #+END_SRC
+
+** References
+
+   1. [[https://github.com/ch11ng/exwm/wiki][EXWM User Guide]]
+   2. [[https://github.com/bvk/config/blob/master/emacs/wm.el][EXWM config with support for external monitor]]
+   3. [[https://www.reddit.com/r/emacs/comments/6huok9/exwm_configs/][Reddit EXWM Configs?]]
+   4. [[https://github.com/agzam/dot-spacemacs/tree/master/layers/ag-exwm][Ag layer for EXWM]]
+   5. [[https://github.com/kinleyd/configs/blob/master/init.el][Another great emacs.d focusing on EXWM]]
+   6. [[https://www.reddit.com/r/emacs/comments/74hetz/emacs_everywhere/][Emacs Everywhere]] - by u/ambrevar. Very nice post on reddit.
+* References
+
+  1. https://ambrevar.xyz/emacs/
