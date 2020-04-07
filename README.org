@@ -60,8 +60,7 @@ Literate Emacs configuration style. This is part of my journey for
 - [[#keys][Keys]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
   - [[#key-bindings][Key Bindings]]
-  - [[#references][References]]
-- [[#references-1][References]]
+- [[#references][References]]
 
 * Packages
 
@@ -1916,7 +1915,17 @@ There an exhaustive documentation about Reveal.js in the github
        (exwm-input-set-key (kbd "C-c k") #'bk/fix-caps-and-key-rate))
    #+END_SRC
 
-** References
+   Print screens are way to serious business.
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/print-from-region ()
+       "Print screen interactively."
+       (interactive)
+       (start-process-shell-command "pt" nil "scrot -s -e 'mv $f /home/wand/Pictures/'"))
+
+     (exwm-input-set-key (kbd "<print>") #'bk/print-from-region)
+   #+END_SRC
+
+* References
 
    1. [[https://github.com/ch11ng/exwm/wiki][EXWM User Guide]]
    2. [[https://github.com/bvk/config/blob/master/emacs/wm.el][EXWM config with support for external monitor]]
@@ -1924,6 +1933,4 @@ There an exhaustive documentation about Reveal.js in the github
    4. [[https://github.com/agzam/dot-spacemacs/tree/master/layers/ag-exwm][Ag layer for EXWM]]
    5. [[https://github.com/kinleyd/configs/blob/master/init.el][Another great emacs.d focusing on EXWM]]
    6. [[https://www.reddit.com/r/emacs/comments/74hetz/emacs_everywhere/][Emacs Everywhere]] - by u/ambrevar. Very nice post on reddit.
-* References
-
-  1. https://ambrevar.xyz/emacs/
+   7. https://ambrevar.xyz/emacs/
