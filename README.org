@@ -253,10 +253,7 @@ Emacs. More explanation about them will follow in future.
 #+begin_src emacs-lisp
   (delete-selection-mode t)
   (pending-delete-mode t)
-  (global-eldoc-mode t)
-
   (column-number-mode 1)
-  (size-indication-mode)
   (global-auto-revert-mode)
 #+end_src
 
@@ -1277,9 +1274,9 @@ like to stick to the more stable branch.
     :init
     (setq clojure-align-forms-automatically t)
     :config
-    (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
-    (add-hook 'clojure-mode-hook #'eldoc-mode)
-    (add-hook 'clojure-mode-hook #'subword-mode))
+    (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+    (add-hook 'clojure-mode-hook 'eldoc-mode)
+    (add-hook 'clojure-mode-hook 'subword-mode))
 #+end_src
 
 The previous setting =clojure-align-forms-automatically= makes the
@@ -1706,11 +1703,6 @@ There an exhaustive documentation about Reveal.js in the github
   (use-package which-key
     :ensure t
     :delight which-key-mode
-    :init
-    (setq which-key-add-column-padding 12)
-    (setq which-key-allow-imprecise-window-fit t)
-    (setq which-key-echo-keystrokes 0.2)
-    (setq which-key-idle-delay 0.8)
     :config
     (which-key-mode))
 #+end_src
@@ -1759,17 +1751,17 @@ There an exhaustive documentation about Reveal.js in the github
 	    ([?\C-b] . [left])
 	    ([?\C-s] . [\C-f])
 	    ([?\s-w] . [\C-f4])
-	    ([?\s-v] . [\C-v])))
+	    ([?\s-v] . [\C-v])
+	    ;; cut/paste
+	    ([?\M-w] . [\C-c])
+	    ([?\C-y] . [\C-v])
+	    ([?\C-w] . [\C-x])))
     :config
     (display-battery-mode t)
 
     (require 'exwm)
     (require 'exwm-config)
     (exwm-config-default)
-
-    (require 'exwm-systemtray)
-    (setq exwm-systemtray-height 16)
-    (exwm-systemtray-enable)
 
     (exwm-input-set-simulation-keys exwm-input-simulation-keys)
 
@@ -1791,7 +1783,6 @@ There an exhaustive documentation about Reveal.js in the github
    were reserved to i3wm operations.
 
    #+BEGIN_SRC emacs-lisp
-     (exwm-input-set-key (kbd "s-R") #'exwm-reset)
      (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
      (exwm-input-set-key (kbd "s-h") #'windmove-left)
      (exwm-input-set-key (kbd "s-j") #'windmove-down)
@@ -1817,16 +1808,17 @@ There an exhaustive documentation about Reveal.js in the github
 
    #+BEGIN_SRC emacs-lisp
      (use-package exwm-edit
-       :ensure t)
+       :ensure t
+       :after (exwm)
+       :config
+       (exwm-input-set-key (kbd "s-e") #'exwm-edit--compose))
    #+END_SRC
 
 
    #+BEGIN_SRC emacs-lisp
      (use-package dmenu
        :ensure t
-       :commands (dmenu)
-       :config
-       (exwm-input-set-key (kbd "s-d") #'dmenu))
+       :commands (dmenu))
    #+END_SRC
 
    I made a change in =qutebrowser= so every tab open is a new window of
@@ -1844,6 +1836,9 @@ There an exhaustive documentation about Reveal.js in the github
 
 ** Key Bindings
 
+   "Global key bindings" in EXWM work essentially anywhere, including
+   buffers that are currently in char mode. The bindings below should
+   be fairly straightforward.
    #+BEGIN_SRC emacs-lisp
      (defun bk/keepmenu ()
        "Call password manager."
@@ -1857,12 +1852,22 @@ There an exhaustive documentation about Reveal.js in the github
      (defun bk/qutebrowse ()
        (interactive)
        (start-process-shell-command "browser" nil "qutebrowser"))
+
+     (use-package emacs
+       :ensure nil
+       :config
+       (setq exwm-input-global-keys
+	     `(([?\s-r] . exwm-reset)
+	       ([?\s-d] . dmenu)
+	       ([?\s-p] . bk/keepmenu)
+	       ([?\s-l] . bk/lock-screen))))
    #+END_SRC
 
    Regular keys to control audio using the package pulseaudio.
    #+BEGIN_SRC emacs-lisp
-      (use-package pulseaudio-control
+     (use-package pulseaudio-control
        :ensure t
+       :after (exwm)
        :config
        (exwm-input-set-key
 	(kbd "<XF86AudioLowerVolume>")
@@ -1881,6 +1886,7 @@ There an exhaustive documentation about Reveal.js in the github
    #+BEGIN_SRC emacs-lisp
      (use-package emacs
        :ensure nil
+       :after (exwm)
        :config
        (exwm-input-set-key
 	(kbd "<XF86MonBrightnessDown>")
@@ -1923,6 +1929,47 @@ There an exhaustive documentation about Reveal.js in the github
        (start-process-shell-command "pt" nil "scrot -s -e 'mv $f /home/wand/Pictures/'"))
 
      (exwm-input-set-key (kbd "<print>") #'bk/print-from-region)
+   #+END_SRC
+
+   System tray
+   #+BEGIN_SRC emacs-lisp
+     (defun exwm-bk/nm-applet ()
+       (interactive)
+       (start-process-shell-command "applt" nil
+				    "nm-applet"))
+
+     (defun exwm-bk/bluetooth ()
+       (interactive)
+       (start-process-shell-command "bl-applt" nil
+				    "blueman-applet"))
+
+     (defun exwm-bk/xscreensaver ()
+       (interactive)
+       (start-process-shell-command "xs" nil
+				    "xscreensaver -no-splash"))
+
+     (defun exwm-bk/key-rate ()
+       (interactive)
+       (start-process-shell-command "key-rate" nil
+				    "xset r rate 300 50"))
+
+     (defun exwm-bk/nocaps ()
+       (interactive)
+       (start-process-shell-command "nocaps" nil
+				    "setxkbmap -option ctrl:nocaps"))
+
+     (use-package exwm-systemtray
+       :ensure nil
+       :after (exwm)
+       :init
+       (setq exwm-systemtray-height 16)
+       :config
+       (exwm-systemtray-enable)
+       (add-hook 'exwm-init-hook 'exwm-bk/nm-applet t)
+       (add-hook 'exwm-init-hook 'exwm-bk/bluetooth t)
+       (add-hook 'exwm-init-hook 'exwm-bk/xscreensaver)
+       (add-hook 'exwm-init-hook 'exwm-bk/key-rate)
+       (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
    #+END_SRC
 
 * References
