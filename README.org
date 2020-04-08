@@ -8,7 +8,7 @@ on a system running [[https://wiki.archlinux.org/][Arch Linux]] and Emacs 26.3, 
 configuration will be using the latest features and /not check/ for the
 system it's running on.
 
-***IMPORTANT*** The default configuration will setup Emacs Window
+*IMPORTANT* The default configuration will setup Emacs Window
 Manager (EXWM), use with caution, I will make some defensive
 configuration if you with to toggle this in the feature, for now, the
 only user target of this file is myself.
