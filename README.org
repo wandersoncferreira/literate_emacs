@@ -5,7 +5,7 @@
 Literate Emacs configuration style. This is part of my journey for
 /Teach myself programming in 10 years/.
 
-***IMPORTANT*** The default configuration will setup Emacs Window
+*IMPORTANT* The default configuration will setup Emacs Window
 Manager (EXWM), use with caution, I will make some defensive
 configuration if you with to toggle this in the feature, for now, the
 only user target of this file is myself.
