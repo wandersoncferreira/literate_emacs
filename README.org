@@ -40,12 +40,10 @@ only user target of this file is myself.
   - [[#winner][Winner]]
 - [[#dired][Dired]]
 - [[#tramp][TRAMP]]
-- [[#linters][Linters]]
 - [[#docker][Docker]]
 - [[#rss-feed][RSS Feed]]
 - [[#slack][Slack]]
 - [[#spotify][Spotify]]
-- [[#rest-client][Rest client]]
 - [[#version-control][Version Control]]
   - [[#magit][Magit]]
   - [[#time-machine][Time machine]]
@@ -57,16 +55,19 @@ only user target of this file is myself.
   - [[#ripgrep][Ripgrep]]
   - [[#isearch][Isearch]]
 - [[#shell][Shell]]
-- [[#json][Json]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][Whitespaces]]
-- [[#markdown][Markdown]]
+  - [[#clojure][Clojure]]
+  - [[#python][Python]]
+  - [[#sql][SQL]]
+  - [[#latex][Latex]]
+  - [[#linters][Linters]]
+- [[#additional-major-modes][Additional Major Modes]]
+  - [[#rest-client][Rest client]]
+  - [[#markdown][Markdown]]
+  - [[#json][Json]]
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
-- [[#latex][Latex]]
-- [[#clojure][Clojure]]
-- [[#python][Python]]
-- [[#sql][SQL]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
   - [[#revealjs][Reveal.js]]
@@ -77,7 +78,7 @@ only user target of this file is myself.
 - [[#general-custom-functions][General custom functions]]
 - [[#keys][Keys]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
-  - [[#buffers][Buffers]]
+  - [[#window-behaviour][Window behaviour]]
   - [[#key-bindings][Key Bindings]]
   - [[#important-commands][Important commands]]
 - [[#references][References]]
@@ -162,10 +163,6 @@ now. Idk, I like keyboard centric products.
 	browse-url-generic-program "qutebrowser")
 #+END_SRC
 
-Garbage collect on focus-out, Emacs should feel snappier.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'focus-out-hook #'garbage-collect)
-#+END_SRC
 
 Fix old security Emacs problems
 #+BEGIN_SRC emacs-lisp
@@ -253,11 +250,11 @@ Ease the font caching during GC.
 
     Control the fringe around the frame.
     #+BEGIN_SRC emacs-lisp
-      (setq default-frame-alist
-	    '((vertical-scroll-bars)
-	      (left-fringe . 3)
-	      (right-fringe . 0)
-	      (buffer-predicate . exwm-layout--other-buffer-predicate)))
+
+      (use-package fringe
+	:ensure nil
+	:config
+	(fringe-mode '(6 . 0)))
     #+END_SRC
 
 * Defaults
@@ -307,11 +304,6 @@ Ease the font caching during GC.
       (column-number-mode 1)
       (global-auto-revert-mode)
     #+end_src
-
-    Save the buffers when you lose focus.
-    #+BEGIN_SRC emacs-lisp
-      (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
-    #+END_SRC
 
 ** Recentf
 
@@ -811,49 +803,6 @@ the *winner-boring-buffers*.
     (setq tramp-backup-directory-alist backup-directory-alist)
   #+END_SRC
 
-* Linters
-
-=Flycheck= is a modern on-the-fly syntax checking extension for GNU
-Emacs, intended as replacement for the older Flymake.
-
-#+begin_src emacs-lisp 
-  (use-package flycheck
-    :ensure t
-    :init
-    (setq flycheck-check-syntax-automatically '(mode-enabled save)
-	  flycheck-display-errors-delay .3)
-    :config
-    (global-flycheck-mode))
-
-  (use-package flycheck-clj-kondo :ensure t)
-#+end_src
-
-A very important command you should remember is =C-c ! v= or (=M-x
-flycheck-verify-setup=) that can help you verify for your current mode
-if everything is fine with your linter and it's backend.
-
-The following package implements a minor-mode for displaying errors
-from Flycheck right below their reporting location, using overlays.
-
-#+begin_src emacs-lisp
-  (use-package flycheck-inline
-    :ensure t
-    :after flycheck
-    :config
-    (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
-#+end_src
-
-Integrate [[Unified Modeling Language]] with flycheck to automatically
-check the syntax of your plantuml files on the fly.
-
-#+begin_src emacs-lisp
-  (use-package flycheck-plantuml
-    :ensure t
-    :after flycheck
-    :config
-    (flycheck-plantuml-setup))
-#+end_src
-
 * Docker
 
 #+begin_src emacs-lisp 
@@ -1072,22 +1021,6 @@ How to use Slack on emacs? Some terminology from the website:
       (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
   #+END_SRC
 
-* Rest client
-
-#+begin_src emacs-lisp 
-  (use-package restclient
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode)))
-
-  (use-package company-restclient
-    :ensure t
-    :after company
-    :config
-    (add-to-list 'company-backends 'company-restclient))
-
-#+end_src
-
 * Version Control
 ** Magit
 
@@ -1262,15 +1195,6 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
     	      (eshell/alias "ee" "find-file-other-window $1")))
     #+end_src
 
-* Json
-
-#+begin_src emacs-lisp 
-  (use-package json-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
-#+end_src
-
 * General Programming 
 
 Sometimes I place some TODO and FIXME words in the middle of my code
@@ -1305,25 +1229,385 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     :config
     (ws-butler-global-mode +1))
 #+END_SRC
+** Clojure
 
-* Markdown
+ Unfortunately, Emacs does not have a builtin major mode for Clojure,
+ however we have a great community that support any programming
+ language available in the world as a major mode of emacs rsrs.
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package markdown-mode
-        :ensure t
-        :config
-        (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-        (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-        (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
-    #+END_SRC
+ The intent of a major mode is basically provide font-lock,
+ indentation, navigation and refactoring for the target programming
+ language.
 
-    #+BEGIN_SRC emacs-lisp
-      (eval-after-load 'markdown-mode
-	'(progn
-	   ;; `pandoc' is better than obsolete `markdown'
-	   (when (executable-find "pandoc")
-	     (setq markdown-command "pandoc -f markdown"))))
-    #+END_SRC
+ At the =clojure-mode= website recommends us to use the MELBA Stable
+ bundle because the MELPA version is following a development branch of
+ the library. As this mode is very important for me right now, I would
+ like to stick to the more stable branch.
+
+ #+begin_src emacs-lisp
+   (use-package clojure-mode
+     :ensure t
+     :diminish (clojure-mode "λ")
+     :init
+     (setq clojure-align-forms-automatically t)
+     :config
+     (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+     (add-hook 'clojure-mode-hook 'eldoc-mode)
+     (add-hook 'clojure-mode-hook 'subword-mode))
+ #+end_src
+
+ The previous setting =clojure-align-forms-automatically= makes the
+ following example a default behavior and you don't need to manually
+ align the values. **NOTE**: this is an experiment, 90% of the time
+ this happened to me, that was the default behavior I wanted. Let's see
+ how much the other 10% will annoy me now.
+
+ #+BEGIN_SRC clojure
+   (def my-map
+     {:a-key 1
+      :other-key 2})
+
+   ;; after C-c SPC
+   (def my-map
+     {:a-key     1
+      :other-key 2})
+ #+END_SRC
+
+
+ There are several incredible examples of refactoring in the
+ [[https://github.com/clojure-emacs/clojure-mode][clojure-mode]] website.
+
+    1. TODO: Study refactoring support in clojure-mode.
+
+
+ Provides additional refactoring support, but as we see from the
+ =clojure-mode= github page, all these extra functionalities are
+ migrating to the clojure mode package.
+
+ #+begin_src emacs-lisp
+   (use-package clj-refactor
+     :ensure t
+     :delight clj-refactor-mode
+     :after (clojure-mode)
+     :init
+     (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
+					   ("set" . "clojure.set")
+					   ("walk" . "clojure.walk")
+					   ("zip" . "clojure.zip")
+					   ("time" . "clj-time.core")
+					   ("log" . "clojure.tools.logging")
+					   ("json" . "cheshire.core")
+					   ("client" . "org.httpkit.client")
+					   ("http" . "clj-http.core")
+					   ("a" . "clojure.core.async")
+					   ("jdbc" . "next.jdbc")
+					   ("s" . "clojure.spec.alpha")
+					   ("gen" . "clojure.spec.gen.alpha")))
+     :config
+     (add-hook 'clojure-mode-hook (lambda ()
+				    (clj-refactor-mode t)
+				    (cljr-add-keybindings-with-prefix "C-c C-m"))))
+ #+end_src
+
+
+ We also improved the font-locking for built-in methods and macros of
+ clojure.
+
+ #+begin_src emacs-lisp
+   (use-package clojure-mode-extra-font-locking
+     :ensure t
+     :after (clojure-mode))
+ #+end_src
+
+ Now comes the real deal for Clojure development, CIDER extends Emacs
+ with support for interactive programming in Clojure. It basically
+ connects the buffer to a nREPL and communicate back-and-forth to
+ provide functionalities such as code completion, documentation,
+ navigation, debugging, running tests, and many more.
+
+    1. TODO:  Study cider mode
+
+
+ #+begin_src emacs-lisp
+   (use-package cider
+     :ensure t
+     :after (clojure-mode)
+     :config
+     (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+     (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+     (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
+ #+end_src
+
+ When cider is not connected, I usually use some commands that makes no
+ sense in =clojure-mode= and receive a non-sense error message that I
+ never understand what is happening or even worse it just hands without
+ no feedback.
+
+ I will borrow the idea from Alex Baranosky and create a dummy function
+ to provide some useful feedback message to my future self.
+
+ #+begin_src emacs-lisp
+   (defun bk/nrepl-warn-when-not-connected ()
+     (interactive)
+     (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
+ #+end_src
+
+ And bind this to the most common keys that requires cider activated.
+
+ #+begin_src emacs-lisp
+   (define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
+   (define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
+   (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
+ #+end_src
+
+
+ Often I need to fire a repl and investigate some properties better, I
+ have a =temp= project setup in my machine a simple =lein new temp=
+ where I have some libraries already in the =project.clj= dependency
+ available. The following function helps me get there quickly and
+ require some frequent namespaces.
+
+ #+begin_src emacs-lisp
+   (defun bk/repl ()
+     "Start an interactive repl in a temp project"
+     (interactive)
+     (cider-jack-in '(:project-dir "/home/wand/temp"))
+     (add-hook 'cider-connected-hook
+	       (lambda ()
+		 (cider-repl-set-ns "user")
+		 (cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
+		 (cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
+		 (cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
+		 (cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
+		 (cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
+ #+end_src
+
+   Let's make a nice usage of =babashka= scripting for clojure and
+   print a random doc-string message in the initial of my Emacs
+   session.
+   #+begin_src emacs-lisp
+     (let ((clj-docstring (shell-command-to-string "docstring.clj")))
+       (when clj-docstring
+	 (setq initial-scratch-message clj-docstring)))
+   #+end_src
+
+   The =docstring.clj= content is pretty small and it required [[https://github.com/borkdude/babashka][babashka]]
+   to be installed, the content:
+
+   #+BEGIN_SRC clojure
+     #!/usr/bin/env bb
+
+     (require '[clojure.repl])
+
+     (defmacro random-doc []
+       (let [sym (-> (ns-publics 'clojure.core) keys rand-nth)]
+	 (if (:doc (meta (resolve sym)))
+	   `(clojure.repl/doc ~sym)
+	   `(random-doc))))
+
+     (random-doc)
+   #+END_SRC
+
+   I added the new file to my PATH variable. That's all.
+
+   #+begin_src emacs-lisp
+     (defun bk/clj-random-docstring ()
+       "Random doc-string into new buffer."
+       (interactive)
+       (let ((docstring (shell-command-to-string "docstring.clj"))
+	     (buffer-name "*Clojure Random Docs*"))
+	 (when (get-buffer buffer-name)
+	   (kill-buffer buffer-name))
+	 (get-buffer-create buffer-name)
+	 (with-current-buffer buffer-name (insert docstring))
+	 (switch-to-buffer-other-window buffer-name)
+	 (special-mode)))
+   #+end_src
+
+
+ Clojure rocks!
+** Python
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package elpy
+       :ensure t
+       :config
+       (elpy-enable)
+       (pyvenv-activate "~/miniconda3")
+       (delete `elpy-module-django elpy-modules)
+       (delete `elpy-module-highlight-indentation elpy-modules))
+
+     (use-package py-autopep8
+       :ensure t
+       :init
+       (setq py-autopep8-options '("--max-line-length=250"))
+       :config
+       (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+   #+END_SRC
+** SQL
+
+ #+begin_src emacs-lisp
+   (use-package sqlup-mode
+     :ensure t
+     :config
+     (add-hook 'sql-mode-hook 'sqlup-mode)
+     (add-hook 'sql-interactive-hook 'sqlup-mode)
+     (add-to-list 'sqlup-blacklist "name"))
+ #+end_src
+
+ This Emacs library provides commands and a minor mode for easily
+ reformating SQL using external programs such as pgformatter which can
+ be installed in Arch Linux using =yaourt -S pgformatter-git=
+
+ #+begin_src emacs-lisp
+   (use-package sqlformat
+     :ensure t
+     :init
+     (setq sqlformat-command 'pgformatter
+	   sqlformat-args '("-s2" "-g"))
+     :config
+     (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+ #+end_src
+
+ Indentation is also important
+
+ #+begin_src emacs-lisp
+   (use-package sql-indent
+     :ensure t
+     :delight sql-mode "Σ "
+     :after (:any sql sql-interactive-mode)
+     :config
+     (add-hook 'sql-mode-hook 'sqlind-minor-mode))
+ #+end_src
+
+** Latex
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package tex-site
+     :ensure auctex
+     :config
+     (require 'latex)
+     (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+           TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+           TeX-source-correlate-start-server t)
+
+     ;; to refresh the buffer after compilation
+     (add-hook 'TeX-after-compilation-finished-functions
+               #'TeX-revert-document-buffer))
+ #+END_SRC
+
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package reftex
+     :ensure t
+     :config
+     (setq reftex-cite-prompt-optional-args t))
+
+   (setq TeX-auto-save t
+         TeX-parse-self t
+         TeX-save-query nil
+         TeX-PDF-mode t)
+ #+END_SRC
+
+ #+BEGIN_SRC emacs-lisp
+   (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+   (add-hook 'LaTeX-mode-hook 'Latex-math-mode)
+   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+   (with-eval-after-load 'tex
+     (add-to-list 'safe-local-variable-values
+                  '(TeX-command-extra-options . "-shell-escape")))
+ #+END_SRC
+
+** Linters
+
+ =Flycheck= is a modern on-the-fly syntax checking extension for GNU
+ Emacs, intended as replacement for the older Flymake.
+
+ #+begin_src emacs-lisp
+   (use-package flycheck
+     :ensure t
+     :init
+     (setq flycheck-check-syntax-automatically '(mode-enabled save)
+	   flycheck-display-errors-delay .3)
+     :config
+     (global-flycheck-mode))
+
+   (use-package flycheck-clj-kondo :ensure t)
+ #+end_src
+
+ A very important command you should remember is =C-c ! v= or (=M-x
+ flycheck-verify-setup=) that can help you verify for your current mode
+ if everything is fine with your linter and it's backend.
+
+ The following package implements a minor-mode for displaying errors
+ from Flycheck right below their reporting location, using overlays.
+
+ #+begin_src emacs-lisp
+   (use-package flycheck-inline
+     :ensure t
+     :after flycheck
+     :config
+     (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+ #+end_src
+
+ Integrate [[Unified Modeling Language]] with flycheck to automatically
+ check the syntax of your plantuml files on the fly.
+
+ #+begin_src emacs-lisp
+   (use-package flycheck-plantuml
+     :ensure t
+     :after flycheck
+     :config
+     (flycheck-plantuml-setup))
+ #+end_src
+
+* Additional Major Modes
+
+** Rest client
+
+ #+begin_src emacs-lisp
+   (use-package restclient
+     :ensure t
+     :config
+     (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode)))
+
+   (use-package company-restclient
+     :ensure t
+     :after company
+     :config
+     (add-to-list 'company-backends 'company-restclient))
+
+ #+end_src
+
+** Markdown
+
+     #+BEGIN_SRC emacs-lisp
+       (use-package markdown-mode
+         :ensure t
+         :config
+         (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+         (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+         (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
+     #+END_SRC
+
+     #+BEGIN_SRC emacs-lisp
+       (eval-after-load 'markdown-mode
+	 '(progn
+	    ;; `pandoc' is better than obsolete `markdown'
+	    (when (executable-find "pandoc")
+	      (setq markdown-command "pandoc -f markdown"))))
+     #+END_SRC
+
+** Json
+
+ #+begin_src emacs-lisp
+   (use-package json-mode
+     :ensure t
+     :config
+     (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
+ #+end_src
 
 * Notes
 
@@ -1370,299 +1654,6 @@ on-demand and stored in memory.
     (pdf-view-display-size 'fit-page)
     (pdf-view-resize-factor 1.1)
     (pdf-view-use-unicode-ligther nil))
-#+end_src
-
-* Latex
-
-#+BEGIN_SRC emacs-lisp 
-  (use-package tex-site
-    :ensure auctex
-    :config
-    (require 'latex)
-    (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-          TeX-source-correlate-start-server t)
-
-    ;; to refresh the buffer after compilation
-    (add-hook 'TeX-after-compilation-finished-functions
-              #'TeX-revert-document-buffer))
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp 
-  (use-package reftex
-    :ensure t
-    :config
-    (setq reftex-cite-prompt-optional-args t))
-
-  (setq TeX-auto-save t
-        TeX-parse-self t
-        TeX-save-query nil
-        TeX-PDF-mode t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp 
-  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (add-hook 'LaTeX-mode-hook 'Latex-math-mode)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-
-  (with-eval-after-load 'tex
-    (add-to-list 'safe-local-variable-values
-                 '(TeX-command-extra-options . "-shell-escape")))
-#+END_SRC
-
-* Clojure
-
-Unfortunately, Emacs does not have a builtin major mode for Clojure,
-however we have a great community that support any programming
-language available in the world as a major mode of emacs rsrs.
-
-The intent of a major mode is basically provide font-lock,
-indentation, navigation and refactoring for the target programming
-language.
-
-At the =clojure-mode= website recommends us to use the MELBA Stable
-bundle because the MELPA version is following a development branch of
-the library. As this mode is very important for me right now, I would
-like to stick to the more stable branch.
-
-#+begin_src emacs-lisp 
-  (use-package clojure-mode
-    :ensure t
-    :diminish (clojure-mode "λ")
-    :init
-    (setq clojure-align-forms-automatically t)
-    :config
-    (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
-    (add-hook 'clojure-mode-hook 'eldoc-mode)
-    (add-hook 'clojure-mode-hook 'subword-mode))
-#+end_src
-
-The previous setting =clojure-align-forms-automatically= makes the
-following example a default behavior and you don't need to manually
-align the values. **NOTE**: this is an experiment, 90% of the time
-this happened to me, that was the default behavior I wanted. Let's see
-how much the other 10% will annoy me now.
-
-#+BEGIN_SRC clojure 
-  (def my-map
-    {:a-key 1
-     :other-key 2})
-
-  ;; after C-c SPC
-  (def my-map
-    {:a-key     1
-     :other-key 2})
-#+END_SRC
-
-
-There are several incredible examples of refactoring in the
-[[https://github.com/clojure-emacs/clojure-mode][clojure-mode]] website. 
-
-   1. TODO: Study refactoring support in clojure-mode.
-
-
-Provides additional refactoring support, but as we see from the
-=clojure-mode= github page, all these extra functionalities are
-migrating to the clojure mode package.
-
-#+begin_src emacs-lisp 
-  (use-package clj-refactor
-    :ensure t
-    :delight clj-refactor-mode
-    :after (clojure-mode)
-    :init
-    (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
-					  ("set" . "clojure.set")
-					  ("walk" . "clojure.walk")
-					  ("zip" . "clojure.zip")
-					  ("time" . "clj-time.core")
-					  ("log" . "clojure.tools.logging")
-					  ("json" . "cheshire.core")
-					  ("client" . "org.httpkit.client")
-					  ("http" . "clj-http.core")
-					  ("a" . "clojure.core.async")
-					  ("jdbc" . "next.jdbc")
-					  ("s" . "clojure.spec.alpha")
-					  ("gen" . "clojure.spec.gen.alpha")))
-    :config
-    (add-hook 'clojure-mode-hook (lambda ()
-				   (clj-refactor-mode t)
-				   (cljr-add-keybindings-with-prefix "C-c C-m"))))
-#+end_src
-
-
-We also improved the font-locking for built-in methods and macros of
-clojure.
-
-#+begin_src emacs-lisp 
-  (use-package clojure-mode-extra-font-locking
-    :ensure t
-    :after (clojure-mode))
-#+end_src
-
-Now comes the real deal for Clojure development, CIDER extends Emacs
-with support for interactive programming in Clojure. It basically
-connects the buffer to a nREPL and communicate back-and-forth to
-provide functionalities such as code completion, documentation,
-navigation, debugging, running tests, and many more.
-
-   1. TODO:  Study cider mode
-
-
-#+begin_src emacs-lisp 
-  (use-package cider
-    :ensure t
-    :after (clojure-mode)
-    :config
-    (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-    (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-    (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
-#+end_src
-
-When cider is not connected, I usually use some commands that makes no
-sense in =clojure-mode= and receive a non-sense error message that I
-never understand what is happening or even worse it just hands without
-no feedback.
-
-I will borrow the idea from Alex Baranosky and create a dummy function
-to provide some useful feedback message to my future self.
-
-#+begin_src emacs-lisp 
-  (defun bk/nrepl-warn-when-not-connected ()
-    (interactive)
-    (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
-#+end_src
-
-And bind this to the most common keys that requires cider activated.
-
-#+begin_src emacs-lisp 
-  (define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
-  (define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
-  (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
-#+end_src
-
-
-Often I need to fire a repl and investigate some properties better, I
-have a =temp= project setup in my machine a simple =lein new temp=
-where I have some libraries already in the =project.clj= dependency
-available. The following function helps me get there quickly and
-require some frequent namespaces.
-
-#+begin_src emacs-lisp 
-  (defun bk/repl ()
-    "Start an interactive repl in a temp project"
-    (interactive)
-    (cider-jack-in '(:project-dir "/home/wand/temp"))
-    (add-hook 'cider-connected-hook
-	      (lambda ()
-		(cider-repl-set-ns "user")
-		(cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
-		(cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
-		(cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
-		(cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
-		(cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
-#+end_src
-
-  Let's make a nice usage of =babashka= scripting for clojure and
-  print a random doc-string message in the initial of my Emacs
-  session.
-  #+begin_src emacs-lisp 
-    (let ((clj-docstring (shell-command-to-string "docstring.clj")))
-      (when clj-docstring
-	(setq initial-scratch-message clj-docstring)))
-  #+end_src
-
-  The =docstring.clj= content is pretty small and it required [[https://github.com/borkdude/babashka][babashka]]
-  to be installed, the content:
-
-  #+BEGIN_SRC clojure
-    #!/usr/bin/env bb
-
-    (require '[clojure.repl])
-
-    (defmacro random-doc []
-      (let [sym (-> (ns-publics 'clojure.core) keys rand-nth)]
-	(if (:doc (meta (resolve sym)))
-	  `(clojure.repl/doc ~sym)
-	  `(random-doc))))
-
-    (random-doc)
-  #+END_SRC
-
-  I added the new file to my PATH variable. That's all.
-
-  #+begin_src emacs-lisp 
-    (defun bk/clj-random-docstring ()
-      "Random doc-string into new buffer."
-      (interactive)
-      (let ((docstring (shell-command-to-string "docstring.clj"))
-	    (buffer-name "*Clojure Random Docs*"))
-	(when (get-buffer buffer-name)
-	  (kill-buffer buffer-name))
-	(get-buffer-create buffer-name)
-	(with-current-buffer buffer-name (insert docstring))
-	(switch-to-buffer-other-window buffer-name)
-	(special-mode)))
-  #+end_src
-
-
-Clojure rocks!
-
-* Python
-
-  #+BEGIN_SRC emacs-lisp
-    (use-package elpy
-      :ensure t
-      :config
-      (elpy-enable)
-      (pyvenv-activate "~/miniconda3")
-      (delete `elpy-module-django elpy-modules)
-      (delete `elpy-module-highlight-indentation elpy-modules))
-
-    (use-package py-autopep8
-      :ensure t
-      :init
-      (setq py-autopep8-options '("--max-line-length=250"))
-      :config
-      (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
-  #+END_SRC
-
-* SQL
-
-#+begin_src emacs-lisp
-  (use-package sqlup-mode
-    :ensure t
-    :config
-    (add-hook 'sql-mode-hook 'sqlup-mode)
-    (add-hook 'sql-interactive-hook 'sqlup-mode)
-    (add-to-list 'sqlup-blacklist "name"))
-#+end_src
-
-This Emacs library provides commands and a minor mode for easily
-reformating SQL using external programs such as pgformatter which can
-be installed in Arch Linux using =yaourt -S pgformatter-git=
-
-#+begin_src emacs-lisp
-  (use-package sqlformat
-    :ensure t
-    :init
-    (setq sqlformat-command 'pgformatter
-	  sqlformat-args '("-s2" "-g"))
-    :config
-    (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
-#+end_src
-
-Indentation is also important
-
-#+begin_src emacs-lisp
-  (use-package sql-indent
-    :ensure t
-    :delight sql-mode "Σ "
-    :after (:any sql sql-interactive-mode)
-    :config
-    (add-hook 'sql-mode-hook 'sqlind-minor-mode))
 #+end_src
 
 * Parenthesis
@@ -1917,38 +1908,64 @@ There an exhaustive documentation about Reveal.js in the github
 
 * Emacs as my own Operating System
 
+  #+BEGIN_SRC emacs-lisp
+    (defun bk/keepmenu ()
+      "Call password manager."
+      (interactive)
+      (start-process-shell-command "pwd" nil "keepmenu"))
+
+    (defun bk/lock-screen ()
+      (interactive)
+      (start-process-shell-command "lock" nil "xscreensaver-command -lock"))
+
+    (defun bk/qutebrowse ()
+      (interactive)
+      (start-process-shell-command "browser" nil "qutebrowser"))
+  #+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
     :ensure t
     :init
-    (setq use-dialog-box nil
-	  exwm-workspace-number 2)
-    (setq exwm-input-simulation-keys
-	  '(([?\C-p] . [up])
-	    ([?\C-n] . [down])
-	    ([?\C-f] . [right])
-	    ([?\C-b] . [left])
-	    ([?\C-s] . [\C-f])
-	    ([?\s-w] . [\C-f4])
-	    ([?\s-v] . [\C-v])
-	    ([?\M-w] . [\C-c])
-	    ([?\C-y] . [\C-v])
-	    ([?\C-w] . [\C-x])))
+    (setq exwm-workspace-number 4)
     :config
     (display-battery-mode t)
+    (fringe-mode 1)
 
     (require 'exwm)
-    (require 'exwm-config)
-    (exwm-config-default)
+    (exwm-input-set-simulation-keys
+     '(([?\C-p] . [up])
+       ([?\C-n] . [down])
+       ([?\C-f] . [right])
+       ([?\C-b] . [left])
+       ([?\C-s] . [\C-f])
+       ([?\M-w] . [\C-c])
+       ([?\C-y] . [\C-v])
+       ([?\C-w] . [\C-x])))
 
-    (exwm-input-set-simulation-keys exwm-input-simulation-keys)
+    (setq exwm-input-global-keys
+	  `(([?\s-r] . exwm-reset)
+	    ([?\s-d] . dmenu)
+	    ([?\s-p] . bk/keepmenu)
+	    ([?\s-w] . exwm-workspace-switch)
+	    ([?\s-l] . bk/lock-screen)
+	    ,@(mapcar (lambda (i)
+			  `(,(kbd (format "s-%d" i)) .
+			    (lambda ()
+			      (interactive)
+			      (exwm-workspace-switch-create ,i))))
+			(number-sequence 0 9))))
+    (exwm-enable)
+
+    (require 'exwm-config)
+    (exwm-config-ido)
 
     ;; universal Get-me-outta-here
     (push ?\C-g exwm-input-prefix-keys)
     (exwm-input-set-key (kbd "C-g") #'keyboard-quit)
 
     (require 'exwm-randr)
-    (setq exwm-randr-workspace-output-plist '(1 "HDMI1" 2 "eDP1"))
+    (setq exwm-randr-workspace-output-plist '(0 "HDMI1" 1 "eDP1"))
     (add-hook 'exwm-randr-screen-change-hook
 	      (lambda ()
 		(start-process-shell-command
@@ -1966,17 +1983,6 @@ There an exhaustive documentation about Reveal.js in the github
      (exwm-input-set-key (kbd "s-j") #'windmove-down)
      (exwm-input-set-key (kbd "s-k") #'windmove-up)
      (exwm-input-set-key (kbd "s-l") #'windmove-right)
-   #+END_SRC
-
-   Ease the possibility of switching between workspace
-   #+BEGIN_SRC emacs-lisp
-     (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
-
-     (dotimes (i 10)
-       (exwm-input-set-key (kbd (format "s-%d" i))
-			   `(lambda ()
-			      (interactive)
-			      (exwm-workspace-switch-create ,i))))
    #+END_SRC
 
    Ag has a very nice package to help us out in EXWM, the feature is
@@ -2011,7 +2017,13 @@ There an exhaustive documentation about Reveal.js in the github
    #+BEGIN_SRC emacs-lisp
      (setq exwm-manage-force-tiling t)
    #+END_SRC
-** Buffers
+
+** Window behaviour
+
+   In stock Emacs, EXWM uses =char mode= and =line mode= to
+   distinguish between using the keyboard to control an application vs
+   using the keyboard to control the application's *buffer*.
+
 
    Rename buffers to match the X11 window class or title:
    #+BEGIN_SRC emacs-lisp
@@ -2033,27 +2045,6 @@ There an exhaustive documentation about Reveal.js in the github
    buffers that are currently in char mode. The bindings below should
    be fairly straightforward.
    #+BEGIN_SRC emacs-lisp
-     (defun bk/keepmenu ()
-       "Call password manager."
-       (interactive)
-       (start-process-shell-command "pwd" nil "keepmenu"))
-
-     (defun bk/lock-screen ()
-       (interactive)
-       (start-process-shell-command "lock" nil "xscreensaver-command -lock"))
-
-     (defun bk/qutebrowse ()
-       (interactive)
-       (start-process-shell-command "browser" nil "qutebrowser"))
-
-     (use-package emacs
-       :ensure nil
-       :config
-       (setq exwm-input-global-keys
-	     `(([?\s-r] . exwm-reset)
-	       ([?\s-d] . dmenu)
-	       ([?\s-p] . bk/keepmenu)
-	       ([?\s-l] . bk/lock-screen))))
    #+END_SRC
 
    Regular keys to control audio using the package pulseaudio.
@@ -2153,7 +2144,6 @@ There an exhaustive documentation about Reveal.js in the github
 
      (use-package exwm-systemtray
        :ensure nil
-       :after (exwm)
        :init
        (setq exwm-systemtray-height 16)
        :config
@@ -2181,3 +2171,4 @@ There an exhaustive documentation about Reveal.js in the github
    6. [[https://www.reddit.com/r/emacs/comments/74hetz/emacs_everywhere/][Emacs Everywhere]] - by u/ambrevar. Very nice post on reddit.
    7. https://ambrevar.xyz/emacs/
    8. [[https://github.com/wasamasa/dotemacs/blob/master/init.org][Literate emacs ]] - by wasamasa
+   9. [[https://github.com/farlado/dotemacs][Far from sane literate Emacs]] - by farlado
