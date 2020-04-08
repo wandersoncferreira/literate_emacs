@@ -3,12 +3,16 @@
 #+date: 2020:04:02
 
 Literate Emacs configuration style. This is part of my journey for
-/Teach myself programming in 10 years/.
+/Teach myself programming in 10 years/. I'm using this configuration
+on a system running [[https://wiki.archlinux.org/][Arch Linux]] and Emacs 26.3, that's why this
+configuration will be using the latest features and /not check/ for the
+system it's running on.
 
 ***IMPORTANT*** The default configuration will setup Emacs Window
 Manager (EXWM), use with caution, I will make some defensive
 configuration if you with to toggle this in the feature, for now, the
 only user target of this file is myself.
+
 
 * Table of Contents                                                     :TOC:
 - [[#packages][Packages]]
@@ -35,24 +39,33 @@ only user target of this file is myself.
 - [[#window][Window]]
   - [[#winner][Winner]]
 - [[#dired][Dired]]
+- [[#tramp][TRAMP]]
 - [[#linters][Linters]]
 - [[#docker][Docker]]
 - [[#rss-feed][RSS Feed]]
 - [[#slack][Slack]]
+- [[#spotify][Spotify]]
 - [[#rest-client][Rest client]]
 - [[#version-control][Version Control]]
+  - [[#magit][Magit]]
   - [[#time-machine][Time machine]]
   - [[#aesthetics-1][Aesthetics]]
+  - [[#miscellaneous][Miscellaneous]]
 - [[#unified-modeling-language][Unified Modeling Language]]
 - [[#search][Search]]
+  - [[#wgrep][Wgrep]]
+  - [[#ripgrep][Ripgrep]]
+  - [[#isearch][Isearch]]
 - [[#shell][Shell]]
 - [[#json][Json]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][Whitespaces]]
 - [[#markdown][Markdown]]
+- [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#latex][Latex]]
 - [[#clojure][Clojure]]
+- [[#python][Python]]
 - [[#sql][SQL]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
@@ -64,7 +77,9 @@ only user target of this file is myself.
 - [[#general-custom-functions][General custom functions]]
 - [[#keys][Keys]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
+  - [[#buffers][Buffers]]
   - [[#key-bindings][Key Bindings]]
+  - [[#important-commands][Important commands]]
 - [[#references][References]]
 
 * Packages
@@ -166,101 +181,137 @@ Ease the font caching during GC.
 
 * Aesthetics
 
-Since I never use the mouse with GNU Emacs, I prefer not to use
-invasive graphical elements.
-#+begin_src emacs-lisp
-  (when window-system
-    (menu-bar-mode -1)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1)
-    (tooltip-mode -1))
-#+end_src
+    Since I never use the mouse with GNU Emacs, I prefer not to use
+    invasive graphical elements.
+    #+begin_src emacs-lisp
+      (when window-system
+	(menu-bar-mode -1)
+	(tool-bar-mode -1)
+	(scroll-bar-mode -1)
+	(tooltip-mode -1))
+    #+end_src
 
-Enabling some builtin modes that are very helpful.
-#+begin_src emacs-lisp
-  (show-paren-mode t)
-  (global-prettify-symbols-mode t)
-  (blink-cursor-mode 0)
+    Enabling some builtin modes that are very helpful e.g. highlight
+    the positions of open/close of parenthesis, prettify symbols for
+    now basically converts a fn to a lambda symbol, but I intend to
+    expand the list of converted symbols.
 
-  (setq display-time-default-load-average nil
-	display-time-day-and-date t)
-  (display-time-mode t)
-#+end_src
+    #+begin_src emacs-lisp
+      (show-paren-mode t)
+      (global-prettify-symbols-mode t)
+      (blink-cursor-mode 0)
 
-#+begin_src emacs-lisp
-  (use-package simple
-    :ensure nil
-    :delight auto-fill-mode
-    :config
-    (add-hook 'text-mode-hook #'auto-fill-mode))
-#+end_src
+      (use-package time
+        :ensure nil
+        :init
+        (setq display-time-default-load-average nil
+    	  display-time-format "%Hh%M"
+    	  display-time-day-and-date t)
+        :config
+        (display-time-mode t))
+    #+end_src
 
-I like the default font, but why not change it towards a more
-programming-friendlier one: Source Code Pro.
+    #+begin_src emacs-lisp
+      (use-package simple
+        :ensure nil
+        :delight auto-fill-mode
+        :config
+        (add-hook 'text-mode-hook #'auto-fill-mode))
+    #+end_src
 
-#+begin_src emacs-lisp
-  (defun bk/font-family-size (family size)
-    "Set frame font to FAMILY at SIZE."
-    (set-frame-font
-     (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
+    The color theme is always a complicated matter. I've been trying
+    several ones, most recently I had settle with Protesilaos
+    =modus-{operandi,vivendi}= packages, but now I want to try =dakrone=
+    for a while.
 
-  (bk/font-family-size "Source Code Pro Medium" 12)
-#+end_src
+    #+BEGIN_SRC emacs-lisp
+      (use-package dakrone-theme
+        :ensure t
+        :config
+        (load-theme 'dakrone t))
+    #+END_SRC
 
-Let's remove some crunchy messages at startup time.
-#+begin_src emacs-lisp
-  (setq inhibit-splash-screen t
-	inhibit-startup-echo-area-message t)
-#+end_src
+    I like the default font, but why not change it towards a more
+    programming-friendlier one: Source Code Pro.
+
+    #+begin_src emacs-lisp
+      (defun bk/font-family-size (family size)
+        "Set frame font to FAMILY at SIZE."
+        (set-frame-font
+         (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
+
+      (bk/font-family-size "Source Code Pro Medium" 12)
+    #+end_src
+
+    Let's remove some crunchy messages at startup time.
+    #+begin_src emacs-lisp
+      (setq inhibit-splash-screen t
+    	use-file-dialog nil
+    	use-dialog-box nil
+    	inhibit-startup-echo-area-message t)
+    #+end_src
+
+    Control the fringe around the frame.
+    #+BEGIN_SRC emacs-lisp
+      (setq default-frame-alist
+	    '((vertical-scroll-bars)
+	      (left-fringe . 3)
+	      (right-fringe . 0)
+	      (buffer-predicate . exwm-layout--other-buffer-predicate)))
+    #+END_SRC
 
 * Defaults
 
-  Files...
-  #+begin_src emacs-lisp
-    (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+    Does not clutter my =init.el= file with customized variables.
+    #+begin_src emacs-lisp
+      (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+      (when (file-exists-p custom-file)
+        (load custom-file))
+    #+end_src
 
-    (when (file-exists-p custom-file)
-      (load custom-file))
-  #+end_src
+    Show current key-sequence in minibuffer, like vim does. Any feedback
+    after typing is better UX than no feedback at all.
+    #+BEGIN_SRC emacs-lisp
+      (setq echo-keystrokes 0.2)
+    #+END_SRC
 
-Show current key-sequence in minibuffer, like vim does. Any feedback
-after typing is better UX than no feedback at all.
-#+BEGIN_SRC emacs-lisp
-  (setq echo-keystrokes 0.02)
-#+END_SRC
+    Say you copied a link from your web browser, then switched to Emacs to
+    paste it somewhere. Before you do that, you notice something you want
+    to kill. Doing that will place the last kill to the clipboard, thus
+    overriding the thing you copied earlier. We can have a kill ring
+    solution:
+    #+BEGIN_SRC emacs-lisp
+      (setq save-interprogram-paste-before-kill t)
+    #+END_SRC
 
-Say you copied a link from your web browser, then switched to Emacs to
-paste it somewhere. Before you do that, you notice something you want
-to kill. Doing that will place the last kill to the clipboard, thus
-overriding the thing you copied earlier. We can have a kill ring
-solution:
-#+BEGIN_SRC emacs-lisp
-  (setq save-interprogram-paste-before-kill t)
-#+END_SRC
+    #+begin_src emacs-lisp
+      (setq tab-always-indent 'complete)
+      (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+      (setq custom-safe-themes t)
 
-#+begin_src emacs-lisp
-  (setq tab-always-indent 'complete)
-  (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-  (setq custom-safe-themes t)
+      (defalias 'cquit 'cider-quit)
+      (defalias 'yes-or-no-p 'y-or-n-p)
 
-  (defalias 'cquit 'cider-quit)
-  (defalias 'yes-or-no-p 'y-or-n-p)
+      ;; built in htop
+      (setq proced-auto-update-flag t
+    	proced-auto-update-interval 1
+    	proced-descend t)
+    #+end_src
 
-  ;; built in htop
-  (setq proced-auto-update-flag t
-	proced-auto-update-interval 1
-	proced-descend t)
-#+end_src
+    Enable some built in modes to add critical functionality to
+    Emacs. More explanation about them will follow in future.
 
-Enable some built in modes to add critical functionality to
-Emacs. More explanation about them will follow in future.
+    #+begin_src emacs-lisp
+      (delete-selection-mode t)
+      (pending-delete-mode t)
+      (column-number-mode 1)
+      (global-auto-revert-mode)
+    #+end_src
 
-#+begin_src emacs-lisp
-  (delete-selection-mode t)
-  (pending-delete-mode t)
-  (column-number-mode 1)
-  (global-auto-revert-mode)
-#+end_src
+    Save the buffers when you lose focus.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+    #+END_SRC
 
 ** Recentf
 
@@ -586,7 +637,10 @@ to leverage its functionalities to improve your productivity.
 		ido-create-new-buffer 'always)
     :config
     (ido-mode t)
-    (ido-everywhere t))
+    (ido-everywhere t)
+    :bind (:map ido-common-completion-map
+		("M-e" . ido-edit-input)
+		("M-r" . ido-toggle-regexp)))
 #+end_src
 
 More functionality
@@ -667,24 +721,24 @@ provide only what I saw useful.
 
 * Window
 
-Ease the task of changing window quickly.
+    Ease the task of changing window quickly.
 
-#+begin_src emacs-lisp 
-  (use-package ace-window
-    :ensure t
-    :init
-    (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p)
-	  aw-background nil
-	  aw-scope 'frame
-	  aw-dispatch-alist
-	  '((?s aw-swap-window "swap window")
-	    (?2 aw-split-window-vert "split window vertically")
-	    (?3 aw-split-window-horz "split window horizontally")
-	    (?? aw-show-dispatch-help)))
-    :config
-    (ace-window-display-mode -1)
-    (global-set-key (kbd "C-x o") 'ace-window))
-#+end_src
+    #+begin_src emacs-lisp
+      (use-package ace-window
+        :ensure t
+        :init
+        (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p)
+    	  aw-background nil
+    	  aw-scope 'frame
+    	  aw-dispatch-alist
+    	  '((?s aw-swap-window "swap window")
+    	    (?2 aw-split-window-vert "split window vertically")
+    	    (?3 aw-split-window-horz "split window horizontally")
+    	    (?? aw-show-dispatch-help)))
+        :config
+        (ace-window-display-mode -1)
+        (global-set-key (kbd "C-x o") 'ace-window))
+    #+end_src
 
 ** Winner
 
@@ -720,22 +774,42 @@ the *winner-boring-buffers*.
 
 * Dired
 
-#+begin_src emacs-lisp 
-  (require 'dired-x)
+    #+begin_src emacs-lisp
+      (require 'dired-x)
 
-  (setq dired-dwim-target t)
+      (setq dired-dwim-target t)
 
-  (defun bk/dired-xdg-open ()
-    "Open the file at point with xdg-open."
-    (interactive)
-    (let ((file (dired-get-filename nil t)))
-      (message "Opening %s..." file)
-      (call-process "xdg-open" nil 0 nil file)
-      (message "Opening %s done" file)))
+      (defun bk/dired-xdg-open ()
+        "Open the file at point with xdg-open."
+        (interactive)
+        (let ((file (dired-get-filename nil t)))
+          (message "Opening %s..." file)
+          (call-process "xdg-open" nil 0 nil file)
+          (message "Opening %s done" file)))
 
-  (eval-after-load 'dired
-    '(define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open))
-#+end_src
+      (eval-after-load 'dired
+        '(define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open))
+    #+end_src
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/dired-directories-first ()
+	"Sort dired listings with directories first."
+	(save-excursion
+	  (let (buffer-read-only)
+	    (forward-line 2)
+	    (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+	  (set-buffer-modified-p nil)))
+
+      (advice-add 'dired-readin :after #'bk/dired-directories-first)
+    #+END_SRC
+
+* TRAMP
+
+  If TRAMP makes backup files, they should be better be kept locally
+  than remote.
+  #+BEGIN_SRC emacs-lisp
+    (setq tramp-backup-directory-alist backup-directory-alist)
+  #+END_SRC
 
 * Linters
 
@@ -985,6 +1059,19 @@ How to use Slack on emacs? Some terminology from the website:
 | slack-message-embed-mentio | use to mention to user                                                             |
 | slack-file-upload          | uploads a file                                                                     |
 
+* Spotify
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package helm-spotify-plus
+      :ensure t
+      :config
+      (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
+      (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
+      (global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
+      (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
+      (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
+  #+END_SRC
+
 * Rest client
 
 #+begin_src emacs-lisp 
@@ -1002,21 +1089,49 @@ How to use Slack on emacs? Some terminology from the website:
 #+end_src
 
 * Version Control
+** Magit
 
-#+begin_src emacs-lisp 
-  (use-package magit
-    :ensure t
-    :config
-    (add-to-list 'magit-no-confirm 'stage-all-changes))
-#+end_src
+    #+begin_src emacs-lisp
+      (use-package magit
+        :ensure t
+        :config
+        (add-to-list 'magit-no-confirm 'stage-all-changes))
+    #+end_src
 
 ** Time machine
 
-#+begin_src emacs-lisp 
-  (use-package git-timemachine :ensure t)
-#+end_src
+    #+begin_src emacs-lisp
+      (use-package git-timemachine :ensure t)
+    #+end_src
 
 ** Aesthetics
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package diff-hl
+       :ensure t
+       :init
+       (setq diff-hl-side 'left)
+       :config
+       (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+       (diff-hl-flydiff-mode +1)
+       (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+       (global-diff-hl-mode +1))
+
+     (custom-set-faces
+      '(diff-hl-change ((t (:background "#3a81c3"))))
+      '(diff-hl-insert ((t (:background "#7ccd7c"))))
+      '(diff-hl-delete ((t (:background "#ee6363")))))
+   #+END_SRC
+
+** Miscellaneous
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package browse-at-remote :ensure t)
+     (use-package gitconfig-mode :ensure t)
+     (use-package gitignore-templates :ensure t)
+
+   #+END_SRC
+
 * Unified Modeling Language
 
 The UML is a general-purpose, developmental, modeling language in the
@@ -1065,23 +1180,34 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 
 * Search
 
-#+begin_src emacs-lisp 
-  (use-package rg
-    :ensure t
-    :config
-    (rg-define-search bk/search-git-root-or-dir
-      :query ask
-      :format regexp
-      :files "everything"
-      :dir (let ((vc (vc-root-dir)))
-	     (if vc
-		 vc
-	       default-directory))
-      :confirm prefix
-      :flags ("--hidden -g !.git"))
-    :bind
-    ("M-s g" . bk/search-git-root-or-dir))
-#+end_src
+** Wgrep
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package wgrep
+       :ensure t)
+   #+END_SRC
+
+** Ripgrep
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package rg
+        :ensure t
+        :config
+        (rg-define-search bk/search-git-root-or-dir
+          :query ask
+          :format regexp
+          :files "everything"
+          :dir (let ((vc (vc-root-dir)))
+    	     (if vc
+    		 vc
+    	       default-directory))
+          :confirm prefix
+          :flags ("--hidden -g !.git"))
+        :bind
+        ("M-s g" . bk/search-git-root-or-DIR))
+    #+END_SRC
+
+** Isearch
 
     You can invoke it using =C-s= and typing your desired search
     string. Also, if you want to use the regexp flavour you can use
@@ -1108,31 +1234,33 @@ examples at the official documentation at [[https://plantuml.com/][webpage]].
 
 * Shell
 
-#+begin_src emacs-lisp 
-  (use-package eshell-bookmark
-    :ensure t
-    :config
-    (add-hook 'eshell-mode-hook 'eshell-bookmark-setup))
+    #+begin_src emacs-lisp
+      (use-package eshell-bookmark
+        :ensure t
+        :config
+        (add-hook 'eshell-mode-hook 'eshell-bookmark-setup))
 
-  (defun eshell-clear-buffer ()
-    "Clear the terminal buffer."
-    (interactive)
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (eshell-send-input)))
+      (setenv "PAGER" "cat")
 
-  (add-hook 'eshell-mode-hook (lambda ()
-				(local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+      (defun eshell-clear-buffer ()
+        "Clear the terminal buffer."
+        (interactive)
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (eshell-send-input)))
 
-#+end_src
+      (add-hook 'eshell-mode-hook (lambda ()
+    				(local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
-#+begin_src emacs-lisp 
-  (require 'em-alias)
-  (add-hook 'eshell-mode-hook
-	    (lambda ()
-	      (eshell/alias "e" "find-file $1")
-	      (eshell/alias "ee" "find-file-other-window $1")))
-#+end_src
+    #+end_src
+
+    #+begin_src emacs-lisp
+      (require 'em-alias)
+      (add-hook 'eshell-mode-hook
+    	    (lambda ()
+    	      (eshell/alias "e" "find-file $1")
+    	      (eshell/alias "ee" "find-file-other-window $1")))
+    #+end_src
 
 * Json
 
@@ -1180,14 +1308,41 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 
 * Markdown
 
-#+begin_src emacs-lisp 
-  (use-package markdown-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-    (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-    (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
-#+end_src
+    #+BEGIN_SRC emacs-lisp
+      (use-package markdown-mode
+        :ensure t
+        :config
+        (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+        (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+        (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
+    #+END_SRC
+
+    #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'markdown-mode
+	'(progn
+	   ;; `pandoc' is better than obsolete `markdown'
+	   (when (executable-find "pandoc")
+	     (setq markdown-command "pandoc -f markdown"))))
+    #+END_SRC
+
+* Notes
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package deft
+      :ensure t
+      :config
+      (setq deft-default-extension "org"
+	    deft-use-filename-as-title nil
+	    deft-use-filter-string-for-filename t
+	    deft-file-naming-rules '((noslash . "-")
+				     (nospace . "-")
+				     (case-fn . downcase))
+	    deft-extensions '("txt" "org")
+	    deft-directory "~/notes"
+	    deft-auto-save-interval 0
+	    deft-text-mode 'org-mode
+	    deft-recursive t))
+  #+END_SRC
 
 * PDF
 
@@ -1454,6 +1609,25 @@ require some frequent namespaces.
 
 
 Clojure rocks!
+
+* Python
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package elpy
+      :ensure t
+      :config
+      (elpy-enable)
+      (pyvenv-activate "~/miniconda3")
+      (delete `elpy-module-django elpy-modules)
+      (delete `elpy-module-highlight-indentation elpy-modules))
+
+    (use-package py-autopep8
+      :ensure t
+      :init
+      (setq py-autopep8-options '("--max-line-length=250"))
+      :config
+      (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+  #+END_SRC
 
 * SQL
 
@@ -1838,6 +2012,21 @@ There an exhaustive documentation about Reveal.js in the github
    #+BEGIN_SRC emacs-lisp
      (setq exwm-manage-force-tiling t)
    #+END_SRC
+** Buffers
+
+   Rename buffers to match the X11 window class or title:
+   #+BEGIN_SRC emacs-lisp
+     (defun exwm-rename-buffer ()
+       (interactive)
+       (exwm-workspace-rename-buffer
+	(concat exwm-class-name ":"
+		(if (<= (length exwm-title) 50) exwm-title
+		  (concat (substring exwm-title 0 49))))))
+
+     (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
+     (add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
+
+   #+END_SRC
 
 ** Key Bindings
 
@@ -1977,6 +2166,12 @@ There an exhaustive documentation about Reveal.js in the github
        (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
    #+END_SRC
 
+** Important commands
+
+   | Keys | Command                    | Description                                 |
+   |------+----------------------------+---------------------------------------------|
+   | -    | exwm-workspace-move-window | send current window to a specific workspace |
+
 * References
 
    1. [[https://github.com/ch11ng/exwm/wiki][EXWM User Guide]]
@@ -1986,3 +2181,4 @@ There an exhaustive documentation about Reveal.js in the github
    5. [[https://github.com/kinleyd/configs/blob/master/init.el][Another great emacs.d focusing on EXWM]]
    6. [[https://www.reddit.com/r/emacs/comments/74hetz/emacs_everywhere/][Emacs Everywhere]] - by u/ambrevar. Very nice post on reddit.
    7. https://ambrevar.xyz/emacs/
+   8. [[https://github.com/wasamasa/dotemacs/blob/master/init.org][Literate emacs ]] - by wasamasa
