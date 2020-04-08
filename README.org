@@ -1931,7 +1931,6 @@ There an exhaustive documentation about Reveal.js in the github
 	    ([?\C-s] . [\C-f])
 	    ([?\s-w] . [\C-f4])
 	    ([?\s-v] . [\C-v])
-	    ;; cut/paste
 	    ([?\M-w] . [\C-c])
 	    ([?\C-y] . [\C-v])
 	    ([?\C-w] . [\C-x])))
