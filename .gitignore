@@ -18,3 +18,4 @@ emojis/
 request/
 secrets/
 dmenu-items
+*.elc

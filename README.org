@@ -15,8 +15,14 @@ only user target of this file is myself.
 
 
 * Table of Contents                                                     :TOC:
+- [[#dependencies][Dependencies]]
 - [[#packages][Packages]]
 - [[#operating-system][Operating System]]
+  - [[#async][Async]]
+  - [[#path][PATH]]
+  - [[#security][Security]]
+  - [[#garbage-collection][Garbage Collection]]
+  - [[#byte-compile][Byte-compile]]
 - [[#aesthetics][Aesthetics]]
 - [[#defaults][Defaults]]
   - [[#recentf][Recentf]]
@@ -31,6 +37,7 @@ only user target of this file is myself.
   - [[#webjump][Webjump]]
   - [[#authentication-source][Authentication Source]]
 - [[#editing-text][Editing Text]]
+  - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][Multiple Cursors]]
   - [[#custom-functions][Custom functions]]
 - [[#completions][Completions]]
@@ -78,11 +85,15 @@ only user target of this file is myself.
 - [[#general-custom-functions][General custom functions]]
 - [[#keys][Keys]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
+  - [[#system-package][System package]]
+  - [[#notification-daemon][Notification Daemon]]
   - [[#window-behaviour][Window behaviour]]
   - [[#key-bindings][Key Bindings]]
+  - [[#xdg-compliance-and-wm-settings][XDG Compliance and WM settings]]
   - [[#important-commands][Important commands]]
 - [[#references][References]]
 
+* Dependencies
 * Packages
 
 Emacs facility to download and install "packages" that implement
@@ -148,33 +159,99 @@ details.
 
 * Operating System
 
-#+begin_src emacs-lisp
-  (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
-  (setq exec-path (append exec-path '("/home/wand/scripts")))
+** Async
 
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-  (setq exec-path (append exec-path '("/usr/local/bin")))
-#+end_src
+  Asynchronous bytecode compilation and various other actions makes
+  Emacs look SIGNIFICANTLY less often which is a good thing.
+  #+BEGIN_SRC emacs-lisp
+    (use-package async
+      :ensure t
+      :defer t
+      :init
+      (dired-async-mode 1)
+      (async-bytecomp-package-mode 1)
+      :custom (async-bytecomp-allowed-packages '(all)))
+  #+END_SRC
 
-I've been using qutebrowser as my main browser for more than one year
-now. Idk, I like keyboard centric products.
-#+BEGIN_SRC emacs-lisp
-  (setq browse-url-browser-function 'browse-url-generic
-	browse-url-generic-program "qutebrowser")
-#+END_SRC
+** PATH
 
+   #+begin_src emacs-lisp
+     (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
+     (setq exec-path (append exec-path '("/home/wand/scripts")))
 
-Fix old security Emacs problems
-#+BEGIN_SRC emacs-lisp
-  (eval-after-load "enriched"
-    '(defun enriched-decode-display-prop (start end &optional param)
-       (list start end)))
-#+END_SRC
+     (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+     (setq exec-path (append exec-path '("/usr/local/bin")))
+   #+end_src
 
-Ease the font caching during GC.
-#+begin_src emacs-lisp
-  (setq inhibit-compacting-font-caches t)
-#+end_src
+   I've been using qutebrowser as my main browser for more than one year
+   now. Idk, I like keyboard centric products.
+   #+BEGIN_SRC emacs-lisp
+     (setq browse-url-browser-function 'browse-url-generic
+   	browse-url-generic-program "qutebrowser")
+   #+END_SRC
+
+** Security
+
+   Fix old security Emacs problems
+   #+BEGIN_SRC emacs-lisp
+     (eval-after-load "enriched"
+       '(defun enriched-decode-display-prop (start end &optional param)
+          (list start end)))
+   #+END_SRC
+
+** Garbage Collection
+
+   Garbage collection shouldn't happen during startup, as what will
+   slow Emacs down. Do it later.
+
+   Ease the font caching during GC.
+   #+begin_src emacs-lisp
+     (setq inhibit-compacting-font-caches t)
+   #+end_src
+
+   #+BEGIN_SRC emacs-lisp
+     (defun garbage-collect-defer ()
+       "Defer garbage collection."
+       (setq gc-cons-threshold most-positive-fixnum
+	     gc-cons-percentage 0.6))
+
+     (defun garbage-collect-restore ()
+       "Return garbage collection to normal parameters."
+       (setq gc-cons-threshold 16777216
+	     gc-cons-percentage 0.1))
+   #+END_SRC
+
+** Byte-compile
+
+   Byte-compiling the init file is surprisingly effective and helps
+   speed up startup quite a bit.
+   #+BEGIN_SRC emacs-lisp
+     (defun farl-init/compile-user-emacs-directory ()
+       "Recompile all files in `user-emacs-directory'."
+       (byte-recompile-directory user-emacs-directory 0))
+
+     (unless (file-exists-p (locate-user-emacs-file "init.elc"))
+       (add-hook 'after-init-hook #'farl-init/compile-user-emacs-directory))
+   #+END_SRC
+
+   If there's a difference in time between a file and its
+   byte-compiled counterpart, prefer the newer one.
+   #+BEGIN_SRC emacs-lisp
+     (setq load-prefer-newer t)
+   #+END_SRC
+
+   This is meant to happen when I save my Emacs configuration, so that
+   all bytecode is up to date. It adds some time to each save, but it
+   is worth it for never having to recompile my Emacs configuration
+   manually again.
+   #+BEGIN_SRC emacs-lisp
+     (defun byte-compile-config-files ()
+       "Byte-compile Emacs configuration files."
+       (when (string-match-p "literate-emacs.org" (buffer-file-name))
+	 (byte-recompile-directory user-emacs-directory 0)))
+
+     (add-hook 'after-save-hook #'byte-compile-config-files 100)
+   #+END_SRC
 
 * Aesthetics
 
@@ -184,8 +261,7 @@ Ease the font caching during GC.
       (when window-system
 	(menu-bar-mode -1)
 	(tool-bar-mode -1)
-	(scroll-bar-mode -1)
-	(tooltip-mode -1))
+	(scroll-bar-mode -1))
     #+end_src
 
     Enabling some builtin modes that are very helpful e.g. highlight
@@ -243,9 +319,7 @@ Ease the font caching during GC.
     Let's remove some crunchy messages at startup time.
     #+begin_src emacs-lisp
       (setq inhibit-splash-screen t
-    	use-file-dialog nil
-    	use-dialog-box nil
-    	inhibit-startup-echo-area-message t)
+	    inhibit-startup-echo-area-message t)
     #+end_src
 
     Control the fringe around the frame.
@@ -254,7 +328,7 @@ Ease the font caching during GC.
       (use-package fringe
 	:ensure nil
 	:config
-	(fringe-mode '(6 . 0)))
+	(fringe-mode '(8 . 0)))
     #+END_SRC
 
 * Defaults
@@ -505,14 +579,19 @@ Clean all the registers you saved.
 
 ** Minibuffer
 
-  The following setting prevent the minibuffer to grow, therefore it
-  will be always 1 line height.
+   The following setting prevent the minibuffer to grow, therefore it
+   will be always 1 line height.
 
-#+begin_src emacs-lisp
-  (setq resize-mini-windows nil)
-  (setq max-mini-window-height 1)
-#+end_src
+   #+begin_src emacs-lisp
+     (setq resize-mini-windows nil)
+     (setq max-mini-window-height 1)
+   #+end_src
 
+   When using the minibuffer, never do garbage collection.
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'minibuffer-setup-hook #'garbage-collect-defer)
+     (add-hook 'minibuffer-exit-hook #'garbage-collect-restore)
+   #+END_SRC
 ** Help
 
 ** Webjump
@@ -548,37 +627,51 @@ We need to tell auth-source where to look for secrets.
 
 * Editing Text
 
-#+begin_src emacs-lisp
-  (use-package smart-shift
-    :ensure t
-    :config
-    (global-smart-shift-mode t))
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package smart-shift
+       :ensure t
+       :config
+       (global-smart-shift-mode t))
+   #+end_src
 
-#+begin_src emacs-lisp
-  (use-package change-inner :ensure t)
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package change-inner :ensure t)
+   #+end_src
 
-#+begin_src emacs-lisp
-  (use-package expand-region :ensure t)
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package expand-region :ensure t)
+   #+end_src
 
-#+begin_src emacs-lisp 
-  (use-package avy
-    :ensure t
-    :config
-    (global-set-key (kbd "C-c ;") 'avy-goto-char))
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package avy
+       :ensure t
+       :config
+       (global-set-key (kbd "C-c ;") 'avy-goto-char))
+   #+end_src
 
-#+begin_src emacs-lisp 
-  (use-package eldoc
-    :ensure nil
-    :delight eldoc-mode)
+   #+begin_src emacs-lisp
+     (use-package eldoc
+       :ensure nil
+       :delight eldoc-mode)
 
-  (use-package subword
-    :ensure nil
-    :delight subword-mode)
-#+end_src
+     (use-package subword
+       :ensure nil
+       :delight subword-mode)
+   #+end_src
+
+** UTF-8
+
+   No one knows why this is not the default already.
+
+   #+BEGIN_SRC emacs-lisp
+     (prefer-coding-system 'utf-8)
+     (setq locale-coding-system 'utf-8)
+     (set-language-environment "UTF-8")
+     (set-default-coding-systems 'utf-8)
+     (set-terminal-coding-system 'utf-8)
+     (set-keyboard-coding-system 'utf-8)
+     (set-selection-coding-system 'utf-8)
+   #+END_SRC
 
 ** Multiple Cursors
 
@@ -1921,6 +2014,26 @@ There an exhaustive documentation about Reveal.js in the github
     (defun bk/qutebrowse ()
       (interactive)
       (start-process-shell-command "browser" nil "qutebrowser"))
+
+    (defun bk/double-monitor ()
+      (start-process-shell-command
+       "double-monitor"
+       nil
+       "xrandr --output eDP1 --mode 1600x900 --pos 0x0 --rotate normal --output HDMI1 --primary --mode 1680x1050 --pos 1600x0 --rotate normal"))
+
+    (defun bk/single-monitor ()
+      (start-process-shell-command
+       "x1-carbon"
+       nil
+       "xrandr --output eDP1 --primary --mode 1600x900 --pos 0x0 --rotate normal"))
+
+    (defun bk/setup-monitor ()
+      (interactive)
+      (let* ((cmd "xrandr | grep ' connected ' | awk '{ print$1 }'")
+	     (monitors (shell-command-to-string cmd)))
+	(if (= (length (split-string monitors " ")) 1)
+	    (bk/single-monitor)
+	  (bk/double-monitor))))
   #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1948,7 +2061,7 @@ There an exhaustive documentation about Reveal.js in the github
 	    ([?\s-d] . dmenu)
 	    ([?\s-p] . bk/keepmenu)
 	    ([?\s-w] . exwm-workspace-switch)
-	    ([?\s-l] . bk/lock-screen)
+	    ([?\C-c l] . bk/lock-screen)
 	    ,@(mapcar (lambda (i)
 			  `(,(kbd (format "s-%d" i)) .
 			    (lambda ()
@@ -1966,10 +2079,7 @@ There an exhaustive documentation about Reveal.js in the github
 
     (require 'exwm-randr)
     (setq exwm-randr-workspace-output-plist '(0 "HDMI1" 1 "eDP1"))
-    (add-hook 'exwm-randr-screen-change-hook
-	      (lambda ()
-		(start-process-shell-command
-		 "xrandr" nil "xrandr --output eDP1 --mode 1600x900 --pos 0x0 --rotate normal --output DP1 --off --output DP2 --off --output HDMI1 --primary --mode 1680x1050 --pos 1600x0 --rotate normal --output HDMI2 --off --output VIRTUAL1 --off")))
+    (add-hook 'exwm-randr-screen-change-hook #'bk/setup-monitor)
     (exwm-randr-enable))
 #+END_SRC
 
@@ -2018,6 +2128,35 @@ There an exhaustive documentation about Reveal.js in the github
      (setq exwm-manage-force-tiling t)
    #+END_SRC
 
+** System package
+
+   Oh, this is nice! I can control =pacman= from Emacs.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package system-packages
+       :ensure t
+       :config
+       (setq system-packages-use-sudo nil))
+   #+END_SRC
+
+** Notification Daemon
+
+   I need a notification daemon to alert me about all the statefull
+   things changing around me. For now, I will use [[https://dunst-project.org/][Dunst]].
+
+   #+BEGIN_SRC emacs-lisp
+     (call-process-shell-command "nohup dunst >/dev/null &" nil 0)
+   #+END_SRC
+
+   There is a function to send an alert to the daemon.
+   #+BEGIN_SRC emacs-lisp
+     (defun dunst-alert (header string &rest objects)
+       "Send an alert to the Dunst daemon."
+       (let ((string (funcall #'format string objects))
+	     (command (format "notify-send -a \"%s\" \"%s\"" header string)))
+	 (call-process-shell-command command nil 0)))
+   #+END_SRC
+
 ** Window behaviour
 
    In stock Emacs, EXWM uses =char mode= and =line mode= to
@@ -2039,6 +2178,18 @@ There an exhaustive documentation about Reveal.js in the github
 
    #+END_SRC
 
+   Window dividers make Emacs look far less sloppy, and provide
+   divisions between windows that are significantly more visible.
+   The color is grabbed from the mode line for consistency.
+   #+BEGIN_SRC emacs-lisp
+     (setq window-divider-default-right-width 3)
+     (let ((color (face-background 'mode-line)))
+       (dolist (face '(window-divider-first-pixel
+		       window-divider-last-pixel
+		       window-divider))
+	 (set-face-foreground face color)))
+     (window-divider-mode 1)
+   #+END_SRC
 ** Key Bindings
 
    "Global key bindings" in EXWM work essentially anywhere, including
@@ -2145,7 +2296,7 @@ There an exhaustive documentation about Reveal.js in the github
      (use-package exwm-systemtray
        :ensure nil
        :init
-       (setq exwm-systemtray-height 16)
+       (setq exwm-systemtray-height 20)
        :config
        (exwm-systemtray-enable)
        (add-hook 'exwm-init-hook 'exwm-bk/nm-applet t)
@@ -2153,6 +2304,44 @@ There an exhaustive documentation about Reveal.js in the github
        (add-hook 'exwm-init-hook 'exwm-bk/xscreensaver)
        (add-hook 'exwm-init-hook 'exwm-bk/key-rate)
        (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
+   #+END_SRC
+
+** XDG Compliance and WM settings
+
+   I am setting some environment variables.
+
+   #+BEGIN_SRC emacs-lisp
+     (setenv "XDG_CURRENT_DESKTOP" "emacs")
+     (setenv "QT_QPA_PLATFORMTHEME" "gtk2")
+   #+END_SRC
+
+   disabling screen blanking. I didn't notice this myself, but I often
+   watch videos and some blog posts on the web is talking about the
+   laptop dying because idling for too long.
+
+   #+BEGIN_SRC emacs-lisp
+
+     (start-process "Disable Blanking" nil "xset"
+		    "s" "off" "-dpms")
+   #+END_SRC
+
+   Disabling capslock for good. I might have two or three different
+   places doing this change, I really hate capslock, ctrl is the new
+   king.
+
+   #+BEGIN_SRC emacs-lisp
+     (start-process "Keyboard Layout" nil "setxkbmap -option ctrl:nocaps")
+   #+END_SRC
+
+   Start the compositor
+   #+BEGIN_SRC emacs-lisp
+     (start-process "Compositor" nil "xcompmgr")
+   #+END_SRC
+
+   Black out the root window for logging out gracefully.
+   #+BEGIN_SRC emacs-lisp
+     (start-process "Root window" nil "hsetroot"
+		    "-solid" "'#000000'")
    #+END_SRC
 
 ** Important commands
