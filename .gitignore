@@ -19,3 +19,4 @@ request/
 secrets/
 dmenu-items
 *.elc
+elpy/

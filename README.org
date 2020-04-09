@@ -26,6 +26,7 @@ only user target of this file is myself.
 - [[#aesthetics][Aesthetics]]
 - [[#defaults][Defaults]]
   - [[#recentf][Recentf]]
+  - [[#uniquify][Uniquify]]
   - [[#extended-command][Extended Command]]
   - [[#case-switch][Case switch]]
   - [[#registers][Registers]]
@@ -73,10 +74,15 @@ only user target of this file is myself.
   - [[#rest-client][Rest client]]
   - [[#markdown][Markdown]]
   - [[#json][Json]]
+  - [[#yaml][Yaml]]
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
+  - [[#defaults-1][Defaults]]
+  - [[#table-of-contents][Table of Contents]]
+  - [[#capture][Capture]]
+  - [[#structure-templates][Structure Templates]]
   - [[#revealjs][Reveal.js]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
@@ -89,7 +95,6 @@ only user target of this file is myself.
   - [[#notification-daemon][Notification Daemon]]
   - [[#window-behaviour][Window behaviour]]
   - [[#key-bindings][Key Bindings]]
-  - [[#xdg-compliance-and-wm-settings][XDG Compliance and WM settings]]
   - [[#important-commands][Important commands]]
 - [[#references][References]]
 
@@ -381,18 +386,39 @@ details.
 
 ** Recentf
 
-#+begin_src emacs-lisp
-  (use-package recentf
-    :ensure nil
-    :init
-    (setq recentf-max-saved-items 500
-	  recentf-max-menu-items 15
-	  recentf-show-file-shortcuts-flag nil
-	  recentf-auto-cleanup 'never)
-    :config
-    (recentf-mode t))
-#+end_src
+   This is a built-in mode that keeps track of the files you have
+   opened allowing you go back to them faster. It can also integrate
+   with a completion framework to populate a =virtual buffers= list.
 
+   #+BEGIN_SRC emacs-lisp
+     (use-package recentf
+       :ensure nil
+       :init
+       (setq recentf-max-saved-items 50
+	     recentf-max-menu-items 15
+	     recentf-show-file-shortcuts-flag nil
+	     recentf-auto-cleanup 'never)
+       :config
+       (recentf-mode t))
+   #+END_SRC
+
+** Uniquify
+
+   Uniquify buffer names dependent on file name. Emacs's traditional
+   method for making buffer names unique adds <2>, <3>, etc to the end
+   of (all but one of) the buffers. This settings change the default
+   behavior.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package uniquify
+       :ensure nil
+       :config
+       (setq uniquify-buffer-name-style 'post-forward-angle-brackets
+	     uniquify-separator " * "
+	     uniquify-after-kill-buffer-p t
+	     uniquify-strip-common-suffix t
+	     uniquify-ignore-buffers-re "^\\*"))
+   #+END_SRC
 ** Extended Command
 
 =smex= is an improved version of =extended-command= or =M-x=
@@ -530,13 +556,23 @@ Clean all the registers you saved.
 
 ** Ibuffer
 
-#+begin_src emacs-lisp
+   It provides a way of filtering and then grouping the list of
+   buffers that you currently have open. About the configuration
+   below:
 
-  (use-package ibuffer
-    :ensure nil
-    :init
-    (setq ibuffer-expert t)
-    (setq ibuffer-saved-filter-groups
+   | Default           | Explanation                                                |
+   |-------------------+------------------------------------------------------------|
+   | ibuffer-expert    | Stop asking for confirmation after every action in Ibuffer |
+   | ibyffer-auto-mode | Keeps the buffer list up to date                           |
+
+   #+begin_src emacs-lisp
+
+     (use-package ibuffer
+       :ensure nil
+       :init
+       (setq ibuffer-expert t)
+       (setq ibuffer-show-empty-filter-groups nil)
+       (setq ibuffer-saved-filter-groups
 	  '(("Main"
 	     ("Directories" (mode . dired-mode))
 	     ("Rest" (mode . restclient-mode))
@@ -547,6 +583,9 @@ Clean all the registers you saved.
 			     (mode . clojure-mode)
 			     (mode . emacs-lisp-mode)
 			     (mode . python-mode)))
+	     ("Browser" (or
+			 (name . "qutebrowser:\*")
+			 ))
 	     ("Org" (mode . org-mode))
 	     ("Markdown" (or
 			  (mode . markdown-mode)
@@ -566,16 +605,43 @@ Clean all the registers you saved.
 		       (name . "^\\*scratch\\*$")
 		       (name . "^\\*Backtrace\\*$")
 		       (name . "^\\*Messages\\*$"))))))
-    :config
-    (add-hook 'ibuffer-mode-hook (lambda ()
-				   (ibuffer-switch-to-saved-filter-groups "Main"))))
+       :config
+       (add-hook 'ibuffer-mode-hook
+		 (lambda ()
+		   (ibuffer-auto-mode 1)
+		   (ibuffer-switch-to-saved-filter-groups "Main"))))
+   #+end_src
 
-  (use-package ibuffer-vc
-    :ensure t
-    :after ibuffer
-    :config
-    (define-key ibuffer-mode-map (kbd "/ V") 'ibuffer-vc-set-filter-groups-by-vc-root))
-#+end_src
+   Package =ibuffer-vc= let you filter the Ibuffer by projects
+   definitions (in my case, every folder that has a =.git= folder
+   inside is considered a project).
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package ibuffer-vc
+       :ensure t
+       :after ibuffer
+       :config
+       (define-key ibuffer-mode-map (kbd "/ V") 'ibuffer-vc-set-filter-groups-by-vc-root))
+   #+END_SRC
+
+   Increasing the width of each column in ibuffer. Some buffers names
+   are very large in EXWM.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq ibuffer-formats
+	   '((mark modified read-only " "
+		   (name 60 60 :left :elide) ; change: 60s were originally 18s
+		   " "
+		   (size 9 -1 :right)
+		   " "
+		   (mode 16 16 :left :elide)
+		   " " filename-and-process)
+	     (mark " "
+		   (name 16 -1)
+		   " " filename)))
+   #+END_SRC
+
+   #+RESULTS:
 
 ** Minibuffer
 
@@ -705,104 +771,113 @@ We need to tell auth-source where to look for secrets.
 * Completions
 ** Minibuffer (ido mode)
 
-Ido - interactive do - help us with switching between buffers, opening
-files and directories with a minimum of keystrokes. As you type in a
-substring, the list of buffers or files currently matching the
-substring are displayed as you type.
+   Ido - interactive do - help us with switching between buffers, opening
+   files and directories with a minimum of keystrokes. As you type in a
+   substring, the list of buffers or files currently matching the
+   substring are displayed as you type.
 
-There is an amazing [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Ido]] about Ido contains more details about how
-to leverage its functionalities to improve your productivity.
+   There is an amazing [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Ido]] about Ido contains more details about how
+   to leverage its functionalities to improve your productivity.
 
-#+begin_src emacs-lisp 
-  (use-package ido
-    :ensure nil
-    :init (setq ido-use-virtual-buffers t
+   #+begin_src emacs-lisp
+     (use-package ido
+       :ensure nil
+       :init (setq ido-use-virtual-buffers t
 		ido-use-faces t
 		ido-enable-flex-matching t
 		ido-create-new-buffer 'always)
-    :config
-    (ido-mode t)
-    (ido-everywhere t)
-    :bind (:map ido-common-completion-map
+       :config
+       (ido-mode t)
+       (ido-everywhere t)
+       :bind (:map ido-common-completion-map
 		("M-e" . ido-edit-input)
 		("M-r" . ido-toggle-regexp)))
-#+end_src
+   #+end_src
 
-More functionality
+   More functionality
 
-   1. After =C-x b=, the buffer at the head of the list can be killed
-      by pressing =C-k=.
-   2. After =C-x C-f=, you can delete (i.e. physically remove) the
-      file at the head of the list with =C-k=
+      1. After =C-x b=, the buffer at the head of the list can be killed
+         by pressing =C-k=.
+      2. After =C-x C-f=, you can delete (i.e. physically remove) the
+         file at the head of the list with =C-k=
 
 
-We can find a nice description of ido at the help page on [[help:ido][C-h P ido]].
+   We can find a nice description of ido at the help page on [[help:ido][C-h P ido]].
 
 ** Company mode
 
-Company is a text completion framework for Emacs. The name stands for
-"complete anything". It uses pluggable back-ends and front-ends to
-retrieve and display completion candidates.
+   Company is a text completion framework for Emacs. The name stands for
+   "complete anything". It uses pluggable back-ends and front-ends to
+   retrieve and display completion candidates.
 
-#+begin_src emacs-lisp 
-  (use-package company
-    :ensure t
-    :delight company-mode
-    :init
-    (setq company-show-numbers t
-	  company-tooltip-limit 10
-	  company-minimum-prefix-length 2
-	  company-tooltip-align-annotations t
-	  company-transformers '(company-sort-by-occurrence)
-	  company-idle-delay 0.5)
-    :config
-    (global-company-mode t))
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package company
+       :ensure t
+       :delight company-mode
+       :init
+       (setq company-show-numbers t
+   	  company-dabbrev-downcase nil
+   	  company-dabbrev-ignore-case t
+   	  company-tooltip-limit 10
+   	  company-minimum-prefix-length 2
+   	  company-require-match 'never
+   	  company-tooltip-align-annotations t
+   	  company-transformers '(company-sort-by-occurrence)
+   	  company-idle-delay 0.5)
+       :config
+       (global-company-mode t))
+   #+end_src
 
-If you are familiar with other IDE you should have noticed they
-provide some documentation for the completion candidates. Fortunately,
-there is a great package to provide it for company.
+   If you are familiar with other IDE you should have noticed they
+   provide some documentation for the completion candidates. Fortunately,
+   there is a great package to provide it for company.
 
-#+begin_src emacs-lisp 
-  (use-package company-quickhelp
-      :ensure t
-      :after company
-      :config
-      (company-quickhelp-mode))
-#+end_src
-  
-Also, we numbered all the candidates and the following code will
-enable us to choose the candidate based on its number. This solution
-was stolen from [[https://oremacs.com/2017/12/27/company-numbers/][link]] with some customization and simplification to
-provide only what I saw useful.
+   #+begin_src emacs-lisp
+     (use-package pos-tip
+       :ensure t)
 
-#+begin_src emacs-lisp 
-  (defun ora-company-number ()
-    "Choose the candidate based on his number at candidate list."
-    (interactive)
-    (let* ((k (this-command-keys))
-	   (re (concat "^" company-prefix k)))
-      (if (cl-find-if (lambda (s) (string-match re s)) company-candidates)
-	  (self-insert-command)
-	(company-complete-number (string-to-number k)))))
+     (use-package company-quickhelp
+	 :ensure t
+	 :after company
+	 :init
+	 (setq company-quickhelp-delay nil)
+	 :config
+	 (company-quickhelp-mode)
+	 (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin))
+   #+end_src
 
-  (defun ora-activate-number ()
-    "Activate the number-based choices in company."
-    (interactive)
-    (let ((map company-active-map))
-      (mapc
-       (lambda (x)
-	 (define-key map (format "%d" x) 'ora-company-number))
-       (number-sequence 0 9))
-      ;; (define-key map " " (lambda ()
-      ;; 			  (interactive)
-      ;; 			  (company-abort)
-      ;; 			  (self-insert-command 1)))
-      (define-key map (kbd "<return>") nil)))
+   Also, we numbered all the candidates and the following code will
+   enable us to choose the candidate based on its number. This solution
+   was stolen from [[https://oremacs.com/2017/12/27/company-numbers/][link]] with some customization and simplification to
+   provide only what I saw useful.
 
-  (eval-after-load 'company
-    '(ora-activate-number))
-#+end_src
+   #+begin_src emacs-lisp
+     (defun ora-company-number ()
+       "Choose the candidate based on his number at candidate list."
+       (interactive)
+       (let* ((k (this-command-keys))
+   	   (re (concat "^" company-prefix k)))
+         (if (cl-find-if (lambda (s) (string-match re s)) company-candidates)
+   	  (self-insert-command)
+   	(company-complete-number (string-to-number k)))))
+
+     (defun ora-activate-number ()
+       "Activate the number-based choices in company."
+       (interactive)
+       (let ((map company-active-map))
+         (mapc
+          (lambda (x)
+   	 (define-key map (format "%d" x) 'ora-company-number))
+          (number-sequence 0 9))
+         ;; (define-key map " " (lambda ()
+         ;; 			  (interactive)
+         ;; 			  (company-abort)
+         ;; 			  (self-insert-command 1)))
+         (define-key map (kbd "<return>") nil)))
+
+     (eval-after-load 'company
+       '(ora-activate-number))
+   #+end_src
 
 * Window
 
@@ -1702,6 +1777,17 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
  #+end_src
 
+** Yaml
+
+   Unfortunately, I have to deal with YAML files on my daily basis.
+   #+BEGIN_SRC emacs-lisp
+     (use-package yaml-mode
+       :ensure t
+       :config
+       (add-hook 'yaml-mode-hook 'whitespace-mode)
+       (add-hook 'yaml-mode-hook 'subword-mode))
+   #+END_SRC
+
 * Notes
 
   #+BEGIN_SRC emacs-lisp
@@ -1782,67 +1868,89 @@ on-demand and stored in memory.
 
 * Org mode
 
-When using =RET= over a link, please go to it.
+** Defaults
 
-#+begin_src emacs-lisp 
-  (setq org-return-follows-link t)
-#+end_src
+   When using =RET= over a link, please go to it.
 
-Please, disable =flycheck= from org-src buffers. We always have errors
-in there related to some emacs-lisp checkers. Here is how to disable
-it.
+   #+begin_src emacs-lisp
+     (setq org-return-follows-link t)
+   #+end_src
 
-#+begin_src emacs-lisp 
-  (defun disable-flycheck-in-org-src-block ()
-    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+   Please, disable =flycheck= from org-src buffers. We always have errors
+   in there related to some emacs-lisp checkers. Here is how to disable
+   it.
 
-  (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
-#+end_src
+   #+begin_src emacs-lisp
+     (defun disable-flycheck-in-org-src-block ()
+       (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
-#+begin_src emacs-lisp 
-  (use-package toc-org
-    :ensure t
-    :config
-    (add-hook 'org-mode-hook 'toc-org-mode))
-#+end_src
+     (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
+   #+end_src
 
-I need to control the window that pops up when I open the Org Src
-buffer to edit code.
-#+BEGIN_SRC emacs-lisp
-  (setq org-src-window-setup 'current-window)
-#+END_SRC
+** Table of Contents
 
-#+begin_src emacs-lisp 
-  (require 'org-capture)
-  (setq org-directory "/home/wand/org")
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-agenda-files (list "/home/wand/org/todo.org"))
-  (setq org-todo-keywords '((sequence "TODO(t)" "|" "DOING(d)" "|" "DONE(D)" "|" "CANCELLED(C)")
-			    (sequence "STUDY(s)" "|" "STUDIED(S)")
-			    (sequence "ACT(a)" "|" "ACTED(A)")))
-  (setq org-capture-templates
-	'(("c" "Capture some concise actionable item and exist" entry
-	   (file+headline "todo.org" "Task list without a defined date")
-	   "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
-	  ("t" "Task of importance with a tag, deadline, and further editable space" entry
-	   (file+headline "todo.org" "Task list with a date")
-	   "* %^{Scope of task||TODO [#A]|STUDY [#A]|Act on} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")))
+   #+begin_src emacs-lisp
+     (use-package toc-org
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook 'toc-org-mode))
+   #+end_src
 
-  (setq org-agenda-window-setup 'only-window)
+   I need to control the window that pops up when I open the Org Src
+   buffer to edit code.
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-window-setup 'current-window)
+   #+END_SRC
 
-  ;;; after calling the `org-todo', the org mode tries to store some
-  ;;; sort of a "note" using `org-store-log-note' function. I want that
-  ;;; every modification done in my todo file save the file right after.
-  (advice-add 'org-deadline :after (lambda (&rest _rest)
-				     (org-save-all-org-buffers)))
-  (advice-add 'org-schedule :after (lambda (&rest _rest)
-				     (org-save-all-org-buffers)))
-  (advice-add 'org-todo :after (lambda (&rest _rest)
-				 (org-save-all-org-buffers)))
-  (advice-add 'org-store-log-note :after (lambda (&rest _rest)
-					   (org-save-all-org-buffers)))
+** Capture
 
-#+end_src
+   #+begin_src emacs-lisp
+     (require 'org-capture)
+     (setq org-directory "/home/wand/org")
+     (setq org-confirm-babel-evaluate nil)
+     (setq org-agenda-files (list "/home/wand/org/todo.org"))
+     (setq org-todo-keywords '((sequence "TODO(t)" "|" "DOING(d)" "|" "DONE(D)" "|" "CANCELLED(C)")
+   			    (sequence "STUDY(s)" "|" "STUDIED(S)")
+   			    (sequence "ACT(a)" "|" "ACTED(A)")))
+     (setq org-capture-templates
+   	'(("c" "Capture some concise actionable item and exist" entry
+   	   (file+headline "todo.org" "Task list without a defined date")
+   	   "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
+   	  ("t" "Task of importance with a tag, deadline, and further editable space" entry
+   	   (file+headline "todo.org" "Task list with a date")
+   	   "* %^{Scope of task||TODO [#A]|STUDY [#A]|Act on} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")))
+
+     (setq org-agenda-window-setup 'only-window)
+
+     ;;; after calling the `org-todo', the org mode tries to store some
+     ;;; sort of a "note" using `org-store-log-note' function. I want that
+     ;;; every modification done in my todo file save the file right after.
+     (advice-add 'org-deadline :after (lambda (&rest _rest)
+   				     (org-save-all-org-buffers)))
+     (advice-add 'org-schedule :after (lambda (&rest _rest)
+   				     (org-save-all-org-buffers)))
+     (advice-add 'org-todo :after (lambda (&rest _rest)
+   				 (org-save-all-org-buffers)))
+     (advice-add 'org-store-log-note :after (lambda (&rest _rest)
+   					   (org-save-all-org-buffers)))
+
+   #+end_src
+
+** Structure Templates
+
+   The "Easy Templates" as often is mentioned, is the standard way in
+   Emacs to handle inline code blocks when writing in literate
+   programming style.
+
+   You can find all the different available templates by `C-h v
+   org-structure-template-alist`.
+
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'org-structure-template-alist
+		  (list "elisp" (concat "#+BEGIN_SRC emacs-lisp\n"
+					"?\n"
+					"#+END_SRC")))
+   #+END_SRC
 
 ** Reveal.js
 
@@ -2019,7 +2127,7 @@ There an exhaustive documentation about Reveal.js in the github
       (start-process-shell-command
        "double-monitor"
        nil
-       "xrandr --output eDP1 --mode 1600x900 --pos 0x0 --rotate normal --output HDMI1 --primary --mode 1680x1050 --pos 1600x0 --rotate normal"))
+       "xrandr --output eDP1 --primary --mode 1600x900 --pos 0x0 --rotate normal --output HDMI1 --mode 1680x1050 --pos 1600x0 --rotate normal"))
 
     (defun bk/single-monitor ()
       (start-process-shell-command
@@ -2030,8 +2138,8 @@ There an exhaustive documentation about Reveal.js in the github
     (defun bk/setup-monitor ()
       (interactive)
       (let* ((cmd "xrandr | grep ' connected ' | awk '{ print$1 }'")
-	     (monitors (shell-command-to-string cmd)))
-	(if (= (length (split-string monitors " ")) 1)
+	     (monitors (split-string (shell-command-to-string cmd) "\n")))
+	(if (= (length monitors) 2)
 	    (bk/single-monitor)
 	  (bk/double-monitor))))
   #+END_SRC
@@ -2040,7 +2148,10 @@ There an exhaustive documentation about Reveal.js in the github
   (use-package exwm
     :ensure t
     :init
-    (setq exwm-workspace-number 4)
+    (setq exwm-workspace-number 4
+	  use-dialog-box nil
+	  exwm-workspace-show-all-buffers nil
+	  exwm-layout-show-all-buffers t)
     :config
     (display-battery-mode t)
     (fringe-mode 1)
@@ -2304,44 +2415,6 @@ There an exhaustive documentation about Reveal.js in the github
        (add-hook 'exwm-init-hook 'exwm-bk/xscreensaver)
        (add-hook 'exwm-init-hook 'exwm-bk/key-rate)
        (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
-   #+END_SRC
-
-** XDG Compliance and WM settings
-
-   I am setting some environment variables.
-
-   #+BEGIN_SRC emacs-lisp
-     (setenv "XDG_CURRENT_DESKTOP" "emacs")
-     (setenv "QT_QPA_PLATFORMTHEME" "gtk2")
-   #+END_SRC
-
-   disabling screen blanking. I didn't notice this myself, but I often
-   watch videos and some blog posts on the web is talking about the
-   laptop dying because idling for too long.
-
-   #+BEGIN_SRC emacs-lisp
-
-     (start-process "Disable Blanking" nil "xset"
-		    "s" "off" "-dpms")
-   #+END_SRC
-
-   Disabling capslock for good. I might have two or three different
-   places doing this change, I really hate capslock, ctrl is the new
-   king.
-
-   #+BEGIN_SRC emacs-lisp
-     (start-process "Keyboard Layout" nil "setxkbmap -option ctrl:nocaps")
-   #+END_SRC
-
-   Start the compositor
-   #+BEGIN_SRC emacs-lisp
-     (start-process "Compositor" nil "xcompmgr")
-   #+END_SRC
-
-   Black out the root window for logging out gracefully.
-   #+BEGIN_SRC emacs-lisp
-     (start-process "Root window" nil "hsetroot"
-		    "-solid" "'#000000'")
    #+END_SRC
 
 ** Important commands
