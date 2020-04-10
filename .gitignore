@@ -20,3 +20,5 @@ secrets/
 dmenu-items
 *.elc
 elpy/
+speed-type/
+var/

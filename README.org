@@ -94,6 +94,11 @@ only user target of this file is myself.
   - [[#revealjs][Reveal.js]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
+  - [[#correct-your-spelling-errors-on-the-fly][Correct your spelling errors on the fly]]
+  - [[#using-a-grammar--style-checker][Using a Grammar & Style Checker]]
+  - [[#synonyms][Synonyms]]
+  - [[#translate][Translate]]
+  - [[#typing][Typing]]
 - [[#snippets][Snippets]]
 - [[#pomodoro][Pomodoro]]
 - [[#advice][Advice]]
@@ -1993,6 +1998,44 @@ on-demand and stored in memory.
      (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
    #+end_src
 
+*** Manipulating Sections
+
+    Let's enable [[http://notesyoujustmightwanttosave.blogspot.com/2011/12/org-speed-keys.html][Org Speed Keys]]. The main purpose of Speed Keys is to
+    speed up the execution of the most common tasks you do in Org
+    Mode - like outline navigation, visibility cycling, and structure
+    editing. They also support basic clock commands and meta data
+    editing, however, in order to use them, the cursor needs to be at
+    the beginning of a headline.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq org-use-speed-commands t)
+    #+END_SRC
+
+    List of most randy commands:
+
+    | Key   | Description                                                      |
+    |-------+------------------------------------------------------------------|
+    | #     | toggle COMMENT-in for an org-header                              |
+    | s     | toggles narrowing to a subtree i.e. hide the rest of the doc     |
+    | I/O   | clock In/Out to the task defined by the current heading          |
+    | u     | jumping upwards to the parent heading                            |
+    | c     | for cycling structure below current heading, or C cycling global |
+    | i     | insert a new same-level heading below current heading            |
+    | w     | refile current heading                                           |
+    | t     | cycle through the available TODO states                          |
+    | ^     | sort children of the current subtree                             |
+    | n/p   | for next/previous visible heading                                |
+    | f/b   | for next/previous same-level heading                             |
+    | D/U   | move a heading Down/Up                                           |
+    | L/R   | recursively promote (move leftwards) or demote (more rightwards) |
+    | 1,2,3 | to mark a heading with priority                                  |
+
+*** Seamless Navigation Between Source Blocks
+
+    Toggle editing org-mode source blocks.
+    #+BEGIN_SRC emacs-lisp
+      (define-key org-src-mode-map (kbd "s-e") #'org-edit-src-exit)
+    #+END_SRC
 ** Table of Contents
 
    #+begin_src emacs-lisp
@@ -2090,27 +2133,171 @@ There an exhaustive documentation about Reveal.js in the github
 
 * Spelling
 
-#+begin_src emacs-lisp 
-  (defun bk/spell-buffer-pt-BR ()
-    "Spell check in portuguese."
-    (interactive)
-    (ispell-change-dictionary "pt_BR")
-    (flyspell-buffer))
+** Correct your spelling errors on the fly
 
-  (defun bk/spell-buffer-en ()
-    "Spell check in english."
-    (interactive)
-    (ispell-change-dictionary "en_US")
-    (flyspell-buffer))
+   #+begin_src emacs-lisp
+     (defun bk/spell-buffer-pt-BR ()
+       "Spell check in portuguese."
+       (interactive)
+       (ispell-change-dictionary "pt_BR")
+       (flyspell-buffer))
 
-  (use-package flyspell
-    :ensure nil
-    :delight flyspell-mode
-    :config
-    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-    (add-hook 'text-mode-hook 'flyspell-mode))
-#+end_src
+     (defun bk/spell-buffer-en ()
+       "Spell check in english."
+       (interactive)
+       (ispell-change-dictionary "en_US")
+       (flyspell-buffer))
 
+     (use-package flyspell
+       :ensure nil
+       :delight flyspell-mode
+       :config
+       (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+       (add-hook 'text-mode-hook 'flyspell-mode))
+   #+end_src
+
+** Using a Grammar & Style Checker
+
+   Let's install [[https://github.com/mhayashi1120/Emacs-langtool][a grammar and style checker]]. We get the offline tool
+   from the [[https://languagetool.org/download/LanguageTool-4.9.zip][link]], then relocate it as follows.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package langtool
+       :ensure t
+       :config
+       (setq langtool-language-tool-jar "/home/wand/.emacs.d/var/LanguageTool-4.5/languagetool-commandline.jar"))
+   #+END_SRC
+
+   Now we can run =langtool-check= on a grammatically incorrect text
+   which colors errors in red, when we click on them we get the reason
+   why; then we may invoke =langtool-correct-buffer= to quickly use
+   the suggestions to fix each correction, and finally invoke
+   =language-check-done= to stop any remaining red coloring.
+
+   Let's verify if our installation is working by using a piece of
+   incorrect text from Language Tool website:
+
+   #+BEGIN_EXAMPLE
+     LanguageTool offers spell and grammar checking. Just paste your text here
+     and click the 'Check Text' button. Click the colored phrases for details
+     on potential errors. or use this text too see an few of of the problems
+     that LanguageTool can detecd. What do you thinks of grammar checkers?
+     Please not that they are not perfect. Style issues get a blue marker:
+     It's 5 P.M. in the afternoon. The weather was nice on Thursday, 27 June 2017
+     --uh oh, that's the wrong date ;-)
+   #+END_EXAMPLE
+
+   #+BEGIN_SRC emacs-lisp
+     ;; ;; Quickly check, correct, then clean up /region/ with M-^
+
+     ;; (add-hook 'langtool-error-exists-hook
+     ;;   (lambda ()
+     ;;     (langtool-correct-buffer)
+     ;;     (langtool-check-done)
+     ;;   ))
+
+     ;; (global-set-key "\M-^" 'langtool-check)
+   #+END_SRC
+** Synonyms
+
+   Synosaurus is a thesaurus frontend for Emacs with pluggable
+   backends. It has basically three commands:
+
+   | Key       | Commands                      | Description          |
+   |-----------+-------------------------------+----------------------|
+   | C-c C-s l | synosaurus-lookup             | query you for a word |
+   | C-c C-s r | synosaurus-choose-and-replace |                      |
+   | C-c C-s i | synosaurus-choose-and-insert  |                      |
+
+   #+BEGIN_SRC emacs-lisp
+
+     (use-package synosaurus
+       :ensure t
+       :init (synosaurus-mode)
+       :config
+       (setq synosaurus-choose-method 'popup)
+       :bind
+       ("M-#" . synosaurus-choose-and-replace))
+   #+END_SRC
+
+   The thesaurus is powered by the Wordnet =wn= tool, which can be
+   invoked without an internet connection.
+
+   #+BEGIN_SRC shell
+     yaourt -S wordnet-common
+   #+END_SRC
+
+   Let's use Wordnet as a dictionary via the [[https://github.com/gromnitsky/wordnut][wordnut]] package.
+   #+BEGIN_SRC emacs-lisp
+     (use-package wordnut
+       :ensure t
+       :bind
+       ("M-!" . wordnut-lookup-current-word))
+   #+END_SRC
+
+   Some keys you can use inside the =*WordNut*= buffer.
+
+   | Key          | Description                                           |
+   |--------------+-------------------------------------------------------|
+   | Enter        | Lookup a word under the cursor                        |
+   | o            | A tooltip w/ a sense for the current lexical category |
+   | /            | new search                                            |
+   | l, r         | move backward/forward in history                      |
+   | h            | view history                                          |
+   | q            | hide buffer                                           |
+   | M-up, M-down | move between sections                                 |
+   | Space        | Page Down                                             |
+   | b, Backspace | Page Up                                               |
+
+** Translate
+
+   To assist in language learning, it may be nice to have Emacs
+   interface to Google translate e.g. invoke
+   =google-translate-at-point=.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package google-translate
+       :ensure t
+       :config
+       (require 'google-translate-smooth-ui)
+       (global-set-key (kbd "C-c g t") 'google-translate-smooth-translate))
+
+     ;; temporary fix for error args-out-of-range
+     ;; https://github.com/atykhonov/google-translate/issues/98
+     (defun google-translate-json-suggestion (json)
+       "Retrieve from JSON (which returns by the
+     `google-translate-request' function) suggestion. This function
+     does matter when translating misspelled word. So instead of
+     translation it is possible to get suggestion."
+       (let ((info (aref json 7)))
+	 (if (and info (> (length info) 0))
+	     (aref info 1)
+	   nil)))
+
+   #+END_SRC
+
+** Typing
+
+   Practice touch typing using =speed-type=.
+   #+BEGIN_SRC emacs-lisp
+     (use-package speed-type
+       :ensure t)
+   #+END_SRC
+
+   Running =M-x speed-type-region= on a region of text, or =M-x
+   speed-type-buffer= on a whole buffer, or just =M-x speed-type-text=
+   will produce the selected region, buffer, or random text for
+   practice.
+
+   A better alternative is to use [[https://www.emacswiki.org/emacs/TypingOfEmacs][Typing of Emacs]] which is far more
+   interactive.
+   #+BEGIN_SRC emacs-lisp
+     (use-package typing
+       :ensure t)
+   #+END_SRC
+
+   There are a few external websites that can help you with that too,
+   [[https://typing.io/][Typing.io]] is the most recommended for Programmers. Check it out!
 * Snippets
 
 #+begin_src emacs-lisp 
@@ -2235,6 +2422,10 @@ There an exhaustive documentation about Reveal.js in the github
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
+  ;; by default C-x k prompts to select which buffer should be selected.
+  (global-set-key (kbd "C-x k") (lambda ()
+				  (interactive)
+				  (kill-buffer (current-buffer))))
 #+end_src
 
 * Emacs as my own Operating System
@@ -2377,7 +2568,7 @@ There an exhaustive documentation about Reveal.js in the github
      (use-package system-packages
        :ensure t
        :config
-       (setq system-packages-use-sudo nil))
+       (setq system-packages-use-sudo t))
    #+END_SRC
 
 ** Notification Daemon
