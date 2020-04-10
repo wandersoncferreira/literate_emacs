@@ -1,5 +1,6 @@
 #+title: Emacs literate configuration
 #+author: Wanderson Ferreira
+#+EMAIL: wanderson.ferreira@protonmail.com
 #+date: 2020:04:02
 
 Literate Emacs configuration style. This is part of my journey for
@@ -16,9 +17,8 @@ only user target of this file is myself.
 
 * Table of Contents                                                     :TOC:
 - [[#dependencies][Dependencies]]
-  - [[#xscreensaver][Xscreensaver]]
-  - [[#dunst][Dunst]]
-  - [[#qutebrowser][Qutebrowser]]
+  - [[#extra][Extra]]
+  - [[#browsers][Browsers]]
 - [[#packages][Packages]]
 - [[#operating-system][Operating System]]
   - [[#async][Async]]
@@ -57,15 +57,10 @@ only user target of this file is myself.
   - [[#winner][Winner]]
 - [[#dired][Dired]]
 - [[#tramp][TRAMP]]
-- [[#docker][Docker]]
-- [[#rss-feed][RSS Feed]]
-- [[#slack][Slack]]
-- [[#spotify][Spotify]]
 - [[#version-control][Version Control]]
   - [[#magit][Magit]]
   - [[#time-machine][Time machine]]
   - [[#miscellaneous][Miscellaneous]]
-- [[#unified-modeling-language][Unified Modeling Language]]
 - [[#search][Search]]
   - [[#wgrep][Wgrep]]
   - [[#ripgrep][Ripgrep]]
@@ -78,6 +73,8 @@ only user target of this file is myself.
   - [[#sql][SQL]]
   - [[#latex][Latex]]
   - [[#linters][Linters]]
+  - [[#unified-modeling-language][Unified Modeling Language]]
+  - [[#parenthesis][Parenthesis]]
 - [[#additional-major-modes][Additional Major Modes]]
   - [[#rest-client][Rest client]]
   - [[#markdown][Markdown]]
@@ -85,7 +82,6 @@ only user target of this file is myself.
   - [[#yaml][Yaml]]
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
-- [[#parenthesis][Parenthesis]]
 - [[#org-mode][Org mode]]
   - [[#defaults-1][Defaults]]
   - [[#table-of-contents][Table of Contents]]
@@ -100,10 +96,17 @@ only user target of this file is myself.
   - [[#translate][Translate]]
   - [[#typing][Typing]]
 - [[#snippets][Snippets]]
+- [[#docker][Docker]]
+- [[#spotify][Spotify]]
+- [[#rss-feed][RSS Feed]]
+- [[#slack][Slack]]
 - [[#pomodoro][Pomodoro]]
 - [[#advice][Advice]]
   - [[#pop-to-mark][Pop to mark]]
 - [[#general-custom-functions][General custom functions]]
+  - [[#http-based][HTTP-based]]
+  - [[#editing][Editing]]
+  - [[#buffer][Buffer]]
 - [[#keys][Keys]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
   - [[#system-package][System package]]
@@ -117,46 +120,53 @@ only user target of this file is myself.
 
   List of external packages that I rely on in my daily basis
 
-** Xscreensaver
-** Dunst
-** Qutebrowser
+** Extra
+*** dunst
+*** scrot
+*** xscreensaver
+** Browsers
+*** Qutebrowser
 
-   A keyboard-driven, vim-like browser based on PyQt5 [[https://www.qutebrowser.org/][web browser]] with
-   a minimal GUI.
+    A keyboard-driven, vim-like browser based on PyQt5 [[https://www.qutebrowser.org/][web browser]] with
+    a minimal GUI.
 
-   I met this project back at the university in 2012 and is hard to
-   remember but I think it was the first time that I talked to other
-   programmers online with attempts to report bugs and errors for the
-   maintainers of this browser. Very nice project.
+    I met this project back at the university in 2012 and is hard to
+    remember but I think it was the first time that I talked to other
+    programmers online with attempts to report bugs and errors for the
+    maintainers of this browser. Very nice project.
 
-   The [[https://raw.githubusercontent.com/qutebrowser/qutebrowser/master/doc/img/cheatsheet-big.png][cheat sheet]] is very important.
+    The [[https://raw.githubusercontent.com/qutebrowser/qutebrowser/master/doc/img/cheatsheet-big.png][cheat sheet]] is very important.
 
-   The following file is not my complete =config.py= file for
-   qutebrowser, only the diff from defaults. If you want to create a
-   default config file, you should use =:config-write-py --default=.
+    The following file is not my complete =config.py= file for
+    qutebrowser, only the diff from defaults. If you want to create a
+    default config file, you should use =:config-write-py --default=.
 
-   #+BEGIN_SRC conf
-     # Always restore open sites when qutebrowser is reopened.
-     # Type: Bool
-     c.auto_save.session = False
+    #+BEGIN_SRC conf
+      # Always restore open sites when qutebrowser is reopened.
+      # Type: Bool
+      c.auto_save.session = False
 
-     # Show javascript alerts
-     # Type: Bool
-     c.content.javascript.alert = False
+      # Show javascript alerts
+      # Type: Bool
+      c.content.javascript.alert = False
 
-     # Allow websites to record audio/video
-     c.content.media_capture = 'ask'
+      # Allow websites to record audio/video
+      c.content.media_capture = 'ask'
 
-     # Allow websites to lock your mouse
-     c.content.mouse_lock = True
+      # Allow websites to lock your mouse
+      c.content.mouse_lock = True
 
-     # Allow websites to show notifications
-     c.content.notifications = False
+      # Allow websites to show notifications
+      c.content.notifications = False
 
-     ## Open a new window for every tab.
-     ## Type: Bool
-     c.tabs.tabs_are_windows = True
-   #+END_SRC
+      ## Open a new window for every tab.
+      ## Type: Bool
+      c.tabs.tabs_are_windows = True
+    #+END_SRC
+
+*** Google Chrome
+    You know, that time when the internet tells you: "you can't see
+    this page without a google-based product today"
 
 * Packages
 
@@ -483,6 +493,35 @@ details.
       (setq ediff-diff-options "-w")
       (setq ediff-split-window-function 'split-window-horizontally)
       (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+    #+END_SRC
+
+    Don’t use tabs to indent and fix some indentation settings
+    #+BEGIN_SRC emacs-lisp
+      (setq-default indent-tabs-mode nil
+                    tab-width 4
+                    fill-column 100)
+    #+END_SRC
+
+    Word wrapping
+    #+BEGIN_SRC emacs-lisp
+      (setq-default word-wrap t
+                    truncate-lines t
+                    truncate-partial-width-windows nil
+                    sentence-end-double-space nil
+                    delete-trailing-lines nil
+                    require-final-newline t
+                    tabify-regexp "^\t* [ \t]+")
+    #+END_SRC
+
+    Favor hard-wrapping in text modes
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/auto-fill ()
+        "My autofill setup for text buffers."
+        (auto-fill-mode t)
+        (diminish 'auto-fill-mode))
+
+      (add-hook 'text-mode-hook #'bk/auto-fill)
 
     #+END_SRC
 
@@ -1065,10 +1104,18 @@ the *winner-boring-buffers*.
 
 * Dired
 
-    #+begin_src emacs-lisp
-      (require 'dired-x)
+  Dired is very smart and usually finds the correct intent for some
+  situations, and all of this is able through the DWIM variable. For
+  example, if two buffers are open in the "dired" mode in different
+  folders, if you git M to rename a file, it will move the file from
+  folder A to B.
 
-      (setq dired-dwim-target t)
+  #+BEGIN_SRC emacs-lisp
+    (setq dired-dwim-target t)
+  #+END_SRC
+
+  #+begin_src emacs-lisp
+      (require 'dired-x)
 
       (defun bk/dired-xdg-open ()
         "Open the file at point with xdg-open."
@@ -1080,9 +1127,9 @@ the *winner-boring-buffers*.
 
       (eval-after-load 'dired
         '(define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open))
-    #+end_src
+  #+end_src
 
-    #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
       (defun bk/dired-directories-first ()
 	"Sort dired listings with directories first."
 	(save-excursion
@@ -1092,7 +1139,27 @@ the *winner-boring-buffers*.
 	  (set-buffer-modified-p nil)))
 
       (advice-add 'dired-readin :after #'bk/dired-directories-first)
-    #+END_SRC
+  #+END_SRC
+
+  A very nice feature is to be able to edit Dired buffers as regular
+  Emacs buffers. You can make several activities bearable using it,
+  for more details follow this [[https://www.masteringemacs.org/article/wdired-editable-dired-buffers][guide]].
+
+  You can mark in Dired buffer based on a search using =% m=. By using
+  the letter =t= we can toggle the marked files. There is also the
+  command =k= that hide all the mark file from the current view.
+
+  You can always go back by pressing the better =g=
+
+  #+caption: commands from dired discovered in the process of narrowing
+  | chord | description                         |
+  |-------+-------------------------------------|
+  | % m   | mark files based on search          |
+  | t     | toggle mark                         |
+  | k     | hide marked files                   |
+  | g     | rebuild the original tree           |
+  | i     | list the content of a sub-directory |
+  | C-x u | dired undo                          |
 
 * TRAMP
 
@@ -1100,224 +1167,6 @@ the *winner-boring-buffers*.
   than remote.
   #+BEGIN_SRC emacs-lisp
     (setq tramp-backup-directory-alist backup-directory-alist)
-  #+END_SRC
-
-* Docker
-
-#+begin_src emacs-lisp 
-  (use-package docker
-    :ensure t
-    :bind
-    ("C-c d" . docker))
-
-  (use-package docker-tramp
-    :ensure t)
-
-  (use-package dockerfile-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-    (add-to-list 'auto-mode-alist '("DockerfileDev\\'" . dockerfile-mode)))
-
-  (use-package docker-compose-mode
-    :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("docker-compose[^/]*\\.yml\\'" . docker-compose-mode)))
-
-  (defun bk/dockerfile-add-build-args ()
-    "Add env variables to your docker build."
-    (interactive)
-    (let* ((vars (read-from-minibuffer "sequence of <envName>=<envValue>: "))
-	   (split-vars (split-string vars " ")))
-      (setq dockerfile-build-args nil)
-      (dolist (v split-vars)
-	(add-to-list 'dockerfile-build-args v))
-      (setq docker-build-history-args vars)))
-
-
-  (defun bk/docker-compose-custom-envs ()
-    "Add usual env variables to Emacs environment."
-    (interactive)
-    (let* ((idu (shell-command-to-string "id -u"))
-	   (idg (shell-command-to-string "id -g"))
-	   (uid (string-join (vector (string-trim idu) ":" (string-trim idg)))))
-      (setenv "WEBSERVER_PORT" "3000")
-      (setenv "CURRENT_UID" uid)
-      (message "setenv WEBSERVER_PORT=3000 CURRENT_UID=$(id -u):$(id -g) done!")))
-
-  (defun bk/docker-cleanup-buffers ()
-    "Delete all the docker buffers created."
-    (interactive)
-    (kill-matching-buffers "docker" nil t))
-
-#+end_src
-
-* RSS Feed
-
-I like to read about programming, but Emacs and Clojure are by far the
-most interesting communities I know so far, therefore, my feeds have
-many links from these subjects.
-
-#+begin_src emacs-lisp 
-  (use-package elfeed
-    :ensure t
-    :commands (elfeed elfeed-update)
-    :config
-    (setq-default elfeed-search-filter "@24-months-ago +unread")
-    (setq elfeed-feeds
-	  '(("http://lambda-the-ultimate.org/rss.xml" functional)
-	    ("https://byorgey.wordpress.com/feed/" functional)
-	    ("http://gigasquidsoftware.com/atom.xml" clojure)
-	    ("http://swannodette.github.com/atom.xml" clojure)
-	    ("https://rigsomelight.com/feed.xml" clojure)
-	    ("https://lambdaisland.com/feeds/blog.atom" clojure)
-	    ("https://nullprogram.com/feed/" programming)
-	    ("http://feeds.feedburner.com/cognicast" clojure)
-	    ("http://feeds2.feedburner.com/StuartSierra" clojure)
-	    ("http://feeds.feedburner.com/Juxt" clojure)
-	    ("http://blog.cognitect.com/blog?format=rss" clojure)
-	    ("https://existentialtype.wordpress.com/feed/" functional)
-	    ("http://insideclojure.org/feed.xml" clojure)
-	    ("https://yogthos.net/feed.xml" clojure)
-	    ("http://endlessparentheses.com/atom.xml" emacs)
-	    ("http://www.blackhats.es/wordpress/?feed=rss2" emacs)
-	    ("http://www.howardism.org/index.xml" emacs)
-	    ("http://www.masteringemacs.org/feed/" emacs)
-	    ("http://tonsky.me/blog/atom.xml" clojure)
-	    ("http://www.clojure.net/rss.xml" clojure)
-	    ("https://www.youtube.com/feeds/videos.xml?user=techguruuk" emacs)
-	    ("http://emacsrocks.com/atom.xml" emacs)
-	    ("http://emacs-fu.blogspot.com/feeds/posts/default" emacs)
-	    ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs))))
-
-#+end_src
-
-By default, s run a live filter and you can type something like "Xah"
-to dynamically narrow the list of stories to those containing that
-string. The only problem is that you need an extra whitespace before
-the word, " Xah", let's fix that.
-
-#+BEGIN_SRC emacs-lisp
-  (defun bk/elfeed-search-live-filter-space ()
-    "Insert space when running elfeed filter"
-    (interactive)
-    (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
-      (elfeed-search-live-filter)))
-
-  (eval-after-load 'elfeed
-    '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
-#+END_SRC
-
-* Slack
-
-Slack from Emacs? :O Why not? I am having a terrible time configuring
-all my workspaces lately. Therefore, it sounds like a perfect
-opportunity to leverage the best tool for the job once again.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package slack
-    :ensure t
-    :init
-    (setq slack-buffer-emojify t
-	  slack-prefer-current-team t
-	  slack-buffer-function #'switch-to-buffer
-	  slack-completing-read-function #'ido-completing-read
-	  slack-display-team-name nil)
-    :config
-    (slack-register-team
-     :name "captalysdev"
-     :default t
-     :token (auth-source-pick-first-password
-	     :host "slack.com"
-	     :user "captalysdev")
-     :subscribed-channels '(onboarding geral dev)
-     :full-and-display-names t)
-
-    (slack-register-team
-     :name "clojurians"
-     :token (auth-source-pick-first-password
-	     :host "slack.com"
-	     :user "clojurians")
-     :subscribed-channels '(beginners reitit))
-
-    (slack-register-team
-     :name "captalys-oficial"
-     :token (auth-source-pick-first-password
-	     :host "slack.com"
-	     :user "captalys-oficial")
-     :subscribed-channels '(devops)
-     :full-and-display-names t))
-
-#+END_SRC
-
-Bring up the mentions menu with `@', and insert a space afterwards.
-#+BEGIN_SRC emacs-lisp
-  (define-key slack-mode-map "@"
-    (defun endless/slack-message-embed-mention ()
-      (interactive)
-      (call-interactively #'slack-message-embed-mention)
-      (insert " ")))
-#+END_SRC
-
-
-CRUD on messages
-#+BEGIN_SRC emacs-lisp
-  (define-key slack-mode-map (kbd "C-c C-d") #'slack-message-delete)
-  (define-key slack-mode-map (kbd "C-c C-e") #'slack-message-edit)
-  (define-key slack-mode-map (kbd "C-c C-k") #'slack-channel-leave)
-#+END_SRC
-
-Circe is a client for IRC in Emacs. It tries to have sane defaults,
-and integrates well with the rest of the editor.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package circe :ensure t)
-#+END_SRC
-
-Emojify is an Emacs extension to display emojis.
-#+BEGIN_SRC emacs-lisp
-
-  (use-package emojify :ensure t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (use-package alert
-    :commands (alert)
-    :init
-    (setq alert-default-style 'libnotify))
-#+END_SRC
-
-
-How to use Slack on emacs? Some terminology from the website:
-
-| Function                   | Description                                                                        |
-|----------------------------+------------------------------------------------------------------------------------|
-| im                         | an IM (instant message) is a direct message between you and exactly one other user |
-| channel                    | A channel is a slack channel which you are a member of                             |
-| group                      | Any chat (direct message or channel) which isn't an IM is a group                  |
-| slack-register-team        | set team configuration and create team                                             |
-| slack-change-current-team  | change slack-current-team var                                                      |
-| slack-start                | do authorize and initialze                                                         |
-| slack-ws-close             | turn off websocket connection                                                      |
-| slack-group-select         | select group from list                                                             |
-| slack-im-select            | select direct message from list                                                    |
-| slack-channel-select       | select channel from list                                                           |
-| slack-group-list-update    | update group list                                                                  |
-| slack-channel-list-update  | update channel list                                                                |
-| slack-message-embed-mentio | use to mention to user                                                             |
-| slack-file-upload          | uploads a file                                                                     |
-
-* Spotify
-
-  #+BEGIN_SRC emacs-lisp
-    (use-package helm-spotify-plus
-      :ensure t
-      :config
-      (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
-      (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
-      (global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
-      (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
-      (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
   #+END_SRC
 
 * Version Control
@@ -1344,52 +1193,6 @@ How to use Slack on emacs? Some terminology from the website:
      (use-package gitignore-templates :ensure t)
 
    #+END_SRC
-
-* Unified Modeling Language
-
-The UML is a general-purpose, developmental, modeling language in the
-field of software engineering that is intended to provide a standard
-way to visualize the design of a system.
-
-   1. any activities (jobs)
-   2. individual components of the system
-   3. how the system will run
-   4. how entities interact with others
-   5. external user interfaces
-
-The UML diagrams represent two different views of a system model
-
-   - *Static* (or structural) view: emphasizes the static structure of
-     the system using objects, attributes, operations and
-     relationships. It includes class diagrams and composite structure
-     diagrams.
-   - *Dynamic* (or behavioral) view: emphasizes the dynamic behavior
-     of the system by showing collaborations among objects and changes
-     to the internal states of objects. This view includes sequence
-     diagrams, activity diagrams and state machine diagrams.
-
-Let's see a very interesting cheatsheet now:
-
-  [[./images/uml-1.png]]
-
-  [[./images/uml-2.png]]
-
-  [[./images/uml-3.png]]
-
-
-The internal setup in order to use it will happen though =PlantUML=
-which has an specific syntax but is very easy to pick it up, follow
-examples at the official documentation at [[https://plantuml.com/][webpage]].
-
-#+begin_src emacs-lisp 
-  (use-package plantuml-mode
-    :ensure t
-    :mode ("\\.plantuml\\'" "\\.puml\\'")
-    :init
-    (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
-    :config
-    (require 'ob-plantuml))
-#+end_src
 
 * Search
 
@@ -1842,6 +1645,83 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      (flycheck-plantuml-setup))
  #+end_src
 
+** Unified Modeling Language
+
+ The UML is a general-purpose, developmental, modeling language in the
+ field of software engineering that is intended to provide a standard
+ way to visualize the design of a system.
+
+    1. any activities (jobs)
+    2. individual components of the system
+    3. how the system will run
+    4. how entities interact with others
+    5. external user interfaces
+
+ The UML diagrams represent two different views of a system model
+
+    - *Static* (or structural) view: emphasizes the static structure of
+      the system using objects, attributes, operations and
+      relationships. It includes class diagrams and composite structure
+      diagrams.
+    - *Dynamic* (or behavioral) view: emphasizes the dynamic behavior
+      of the system by showing collaborations among objects and changes
+      to the internal states of objects. This view includes sequence
+      diagrams, activity diagrams and state machine diagrams.
+
+ Let's see a very interesting cheatsheet now:
+
+   [[./images/uml-1.png]]
+
+   [[./images/uml-2.png]]
+
+   [[./images/uml-3.png]]
+
+
+ The internal setup in order to use it will happen though =PlantUML=
+ which has an specific syntax but is very easy to pick it up, follow
+ examples at the official documentation at [[https://plantuml.com/][webpage]].
+
+ #+begin_src emacs-lisp
+   (use-package plantuml-mode
+     :ensure t
+     :mode ("\\.plantuml\\'" "\\.puml\\'")
+     :init
+     (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
+     :config
+     (require 'ob-plantuml))
+ #+end_src
+
+** Parenthesis
+
+ #+begin_src emacs-lisp
+   (use-package smartparens
+     :ensure t
+     :delight smartparens-strict-mode
+     :init
+     (setq sp-highlight-pair-overlay nil)
+     :config
+     (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+     (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+
+     (with-eval-after-load "smartparens"
+       ;; remove some pairs
+       (sp-pair "'" nil :actions :rem)
+       (sp-pair "`" nil :actions :rem)
+
+       ;; include new wrap of pairs
+       (sp-pair "(" ")" :wrap "M-(")
+       (sp-pair "[" "]" :wrap "M-[")
+
+       (sp-use-smartparens-bindings)		;enable default smartparens bindings
+
+       (sp-local-tag 'markdown-mode "c" "```clojure" "```")
+       (sp-local-tag 'markdown-mode "e" "```elisp" "```")
+       (sp-local-tag 'markdown-mode "b" "```bash" "```")
+       (sp-local-tag 'markdown-mode "p" "```python" "```")
+
+       (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
+ #+end_src
+
 * Additional Major Modes
 
 ** Rest client
@@ -1944,37 +1824,6 @@ on-demand and stored in memory.
     (pdf-view-display-size 'fit-page)
     (pdf-view-resize-factor 1.1)
     (pdf-view-use-unicode-ligther nil))
-#+end_src
-
-* Parenthesis
-
-#+begin_src emacs-lisp 
-  (use-package smartparens
-    :ensure t
-    :delight smartparens-strict-mode
-    :init
-    (setq sp-highlight-pair-overlay nil)
-    :config
-    (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
-    (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
-
-    (with-eval-after-load "smartparens"
-      ;; remove some pairs
-      (sp-pair "'" nil :actions :rem)
-      (sp-pair "`" nil :actions :rem)
-
-      ;; include new wrap of pairs
-      (sp-pair "(" ")" :wrap "M-(")
-      (sp-pair "[" "]" :wrap "M-[")
-
-      (sp-use-smartparens-bindings)		;enable default smartparens bindings
-
-      (sp-local-tag 'markdown-mode "c" "```clojure" "```")
-      (sp-local-tag 'markdown-mode "e" "```elisp" "```")
-      (sp-local-tag 'markdown-mode "b" "```bash" "```")
-      (sp-local-tag 'markdown-mode "p" "```python" "```")
-
-      (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
 #+end_src
 
 * Org mode
@@ -2156,6 +2005,27 @@ There an exhaustive documentation about Reveal.js in the github
        (add-hook 'text-mode-hook 'flyspell-mode))
    #+end_src
 
+   There is a nice package to help correcting previous words that
+   improve upon the =flyspell-auto-correct-previous-word= function
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package flyspell-correct
+       :ensure t
+       :commands (flyspell-correct-word-generic
+		  flyspell-correct-previous-word-generic)
+       :config
+       (require 'flyspell-correct-ido)
+       (setq flyspell-correct-interface #'flyspell-correct-ido)
+       :bind (:map flyspell-mode-map
+		   ("C-;" . flyspell-correct-wrapper)))
+   #+END_SRC
+
+   By default the *flyspell-correct-wrapper* is the most convenient
+   way to use the package because it will jump to the first misspelled
+   word before the point and prompts for correction and gets you
+   back. Calling it with C-u gives ability to correct *multiple
+   misspelled words* in one run. With C-u C-u changes direction and
+   C-u C-u C-u changes direction and enables multiple corrections.
 ** Using a Grammar & Style Checker
 
    Let's install [[https://github.com/mhayashi1120/Emacs-langtool][a grammar and style checker]]. We get the offline tool
@@ -2300,20 +2170,268 @@ There an exhaustive documentation about Reveal.js in the github
    [[https://typing.io/][Typing.io]] is the most recommended for Programmers. Check it out!
 * Snippets
 
-#+begin_src emacs-lisp 
-  (use-package yasnippet
+  Yasnippet is a template system for Emacs. It allows you to type an
+  abbreviation and automatically expand it into function templates.
+
+   #+begin_src emacs-lisp
+     (use-package yasnippet
+       :ensure t
+       :delight yas-minor-mode
+       :config
+       (yas-global-mode +1)
+       (define-key yas-minor-mode-map (kbd "<tab>") nil)
+       (define-key yas-minor-mode-map (kbd "TAB") nil)
+       (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand))
+   #+end_src
+
+   But since some specific version, yasnippet does not bundles
+   snippets directly, you have to get them from third-party packages.
+
+   #+begin_src emacs-lisp
+       ;;; a snippet collection maintained by AndreaCrotti.
+     (use-package yasnippet-snippets :ensure t)
+   #+end_src
+
+
+   I want to rely more on snippets on my day-to-day, therefore I need
+   way to visualize if there is an existent snippet for a particular
+   situation. You can do that with `M-x yas/describe-table'.
+
+
+   I will place that in my cheatsheet too and a nice shortcut: C-c s.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-c s")
+		     (lambda ()
+		       (interactive)
+		       (yas/describe-tables)
+		       (other-window 1)))
+
+   #+END_SRC
+
+   Jump to end of snippet definition
+
+   #+BEGIN_SRC emacs-lisp
+     (define-key yas-keymap (kbd "<return>") 'yas-exit-all-snippets)
+   #+END_SRC
+
+* Docker
+
+#+begin_src emacs-lisp
+  (use-package docker
     :ensure t
-    :delight yas-minor-mode
+    :bind
+    ("C-c d" . docker))
+
+  (use-package docker-tramp
+    :ensure t)
+
+  (use-package dockerfile-mode
+    :ensure t
     :config
-    (yas-global-mode +1)
-    (define-key yas-minor-mode-map (kbd "<tab>") nil)
-    (define-key yas-minor-mode-map (kbd "TAB") nil)
-    (define-key yas-minor-mode-map (kbd "C-c y") #'yas-expand))
+    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+    (add-to-list 'auto-mode-alist '("DockerfileDev\\'" . dockerfile-mode)))
+
+  (use-package docker-compose-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("docker-compose[^/]*\\.yml\\'" . docker-compose-mode)))
+
+  (defun bk/dockerfile-add-build-args ()
+    "Add env variables to your docker build."
+    (interactive)
+    (let* ((vars (read-from-minibuffer "sequence of <envName>=<envValue>: "))
+	   (split-vars (split-string vars " ")))
+      (setq dockerfile-build-args nil)
+      (dolist (v split-vars)
+	(add-to-list 'dockerfile-build-args v))
+      (setq docker-build-history-args vars)))
+
+
+  (defun bk/docker-compose-custom-envs ()
+    "Add usual env variables to Emacs environment."
+    (interactive)
+    (let* ((idu (shell-command-to-string "id -u"))
+	   (idg (shell-command-to-string "id -g"))
+	   (uid (string-join (vector (string-trim idu) ":" (string-trim idg)))))
+      (setenv "WEBSERVER_PORT" "3000")
+      (setenv "CURRENT_UID" uid)
+      (message "setenv WEBSERVER_PORT=3000 CURRENT_UID=$(id -u):$(id -g) done!")))
+
+  (defun bk/docker-cleanup-buffers ()
+    "Delete all the docker buffers created."
+    (interactive)
+    (kill-matching-buffers "docker" nil t))
+
 #+end_src
 
-#+begin_src emacs-lisp 
-  (use-package yasnippet-snippets :ensure t)
+* Spotify
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package helm-spotify-plus
+      :ensure t
+      :config
+      (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
+      (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
+      (global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
+      (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
+      (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
+  #+END_SRC
+
+* RSS Feed
+
+I like to read about programming, but Emacs and Clojure are by far the
+most interesting communities I know so far, therefore, my feeds have
+many links from these subjects.
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :ensure t
+    :commands (elfeed elfeed-update)
+    :config
+    (setq-default elfeed-search-filter "@24-months-ago +unread")
+    (setq elfeed-feeds
+	  '(("http://lambda-the-ultimate.org/rss.xml" functional)
+	    ("https://byorgey.wordpress.com/feed/" functional)
+	    ("http://gigasquidsoftware.com/atom.xml" clojure)
+	    ("http://swannodette.github.com/atom.xml" clojure)
+	    ("https://rigsomelight.com/feed.xml" clojure)
+	    ("https://lambdaisland.com/feeds/blog.atom" clojure)
+	    ("https://nullprogram.com/feed/" programming)
+	    ("http://feeds.feedburner.com/cognicast" clojure)
+	    ("http://feeds2.feedburner.com/StuartSierra" clojure)
+	    ("http://feeds.feedburner.com/Juxt" clojure)
+	    ("http://blog.cognitect.com/blog?format=rss" clojure)
+	    ("https://existentialtype.wordpress.com/feed/" functional)
+	    ("http://insideclojure.org/feed.xml" clojure)
+	    ("https://yogthos.net/feed.xml" clojure)
+	    ("http://endlessparentheses.com/atom.xml" emacs)
+	    ("http://www.blackhats.es/wordpress/?feed=rss2" emacs)
+	    ("http://www.howardism.org/index.xml" emacs)
+	    ("http://www.masteringemacs.org/feed/" emacs)
+	    ("http://tonsky.me/blog/atom.xml" clojure)
+	    ("http://www.clojure.net/rss.xml" clojure)
+	    ("https://www.youtube.com/feeds/videos.xml?user=techguruuk" emacs)
+	    ("http://emacsrocks.com/atom.xml" emacs)
+	    ("http://emacs-fu.blogspot.com/feeds/posts/default" emacs)
+	    ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs))))
+
 #+end_src
+
+By default, s run a live filter and you can type something like "Xah"
+to dynamically narrow the list of stories to those containing that
+string. The only problem is that you need an extra whitespace before
+the word, " Xah", let's fix that.
+
+#+BEGIN_SRC emacs-lisp
+  (defun bk/elfeed-search-live-filter-space ()
+    "Insert space when running elfeed filter"
+    (interactive)
+    (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
+      (elfeed-search-live-filter)))
+
+  (eval-after-load 'elfeed
+    '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
+#+END_SRC
+
+* Slack
+
+Slack from Emacs? :O Why not? I am having a terrible time configuring
+all my workspaces lately. Therefore, it sounds like a perfect
+opportunity to leverage the best tool for the job once again.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package slack
+    :ensure t
+    :init
+    (setq slack-buffer-emojify t
+	  slack-prefer-current-team t
+	  slack-buffer-function #'switch-to-buffer
+	  slack-completing-read-function #'ido-completing-read
+	  slack-display-team-name nil)
+    :config
+    (slack-register-team
+     :name "captalysdev"
+     :default t
+     :token (auth-source-pick-first-password
+	     :host "slack.com"
+	     :user "captalysdev")
+     :subscribed-channels '(onboarding geral dev)
+     :full-and-display-names t)
+
+    (slack-register-team
+     :name "clojurians"
+     :token (auth-source-pick-first-password
+	     :host "slack.com"
+	     :user "clojurians")
+     :subscribed-channels '(beginners reitit))
+
+    (slack-register-team
+     :name "captalys-oficial"
+     :token (auth-source-pick-first-password
+	     :host "slack.com"
+	     :user "captalys-oficial")
+     :subscribed-channels '(devops)
+     :full-and-display-names t))
+
+#+END_SRC
+
+Bring up the mentions menu with `@', and insert a space afterwards.
+#+BEGIN_SRC emacs-lisp
+  (define-key slack-mode-map "@"
+    (defun endless/slack-message-embed-mention ()
+      (interactive)
+      (call-interactively #'slack-message-embed-mention)
+      (insert " ")))
+#+END_SRC
+
+
+CRUD on messages
+#+BEGIN_SRC emacs-lisp
+  (define-key slack-mode-map (kbd "C-c C-d") #'slack-message-delete)
+  (define-key slack-mode-map (kbd "C-c C-e") #'slack-message-edit)
+  (define-key slack-mode-map (kbd "C-c C-k") #'slack-channel-leave)
+#+END_SRC
+
+Circe is a client for IRC in Emacs. It tries to have sane defaults,
+and integrates well with the rest of the editor.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package circe :ensure t)
+#+END_SRC
+
+Emojify is an Emacs extension to display emojis.
+#+BEGIN_SRC emacs-lisp
+
+  (use-package emojify :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package alert
+    :commands (alert)
+    :init
+    (setq alert-default-style 'libnotify))
+#+END_SRC
+
+
+How to use Slack on emacs? Some terminology from the website:
+
+| Function                   | Description                                                                        |
+|----------------------------+------------------------------------------------------------------------------------|
+| im                         | an IM (instant message) is a direct message between you and exactly one other user |
+| channel                    | A channel is a slack channel which you are a member of                             |
+| group                      | Any chat (direct message or channel) which isn't an IM is a group                  |
+| slack-register-team        | set team configuration and create team                                             |
+| slack-change-current-team  | change slack-current-team var                                                      |
+| slack-start                | do authorize and initialze                                                         |
+| slack-ws-close             | turn off websocket connection                                                      |
+| slack-group-select         | select group from list                                                             |
+| slack-im-select            | select direct message from list                                                    |
+| slack-channel-select       | select channel from list                                                           |
+| slack-group-list-update    | update group list                                                                  |
+| slack-channel-list-update  | update channel list                                                                |
+| slack-message-embed-mentio | use to mention to user                                                             |
+| slack-file-upload          | uploads a file                                                                     |
 
 * Pomodoro
 
@@ -2344,89 +2462,95 @@ There an exhaustive documentation about Reveal.js in the github
    #+END_SRC
 
 * General custom functions
+** HTTP-based
+*** Find my current IP
 
-#+begin_src emacs-lisp 
-  (defvar url-http-end-of-headers)
-  (defun bk/ip ()
-    "Find my current public IP address."
-    (interactive)
-    (let* ((endpoint "https://api.ipify.org")
-	   (myip (with-current-buffer (url-retrieve-synchronously endpoint)
-		   (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
-      (kill-new myip)
-      (message "IP: %s" myip)))
-#+end_src
+   #+begin_src emacs-lisp
+     (defvar url-http-end-of-headers)
+     (defun bk/ip ()
+       "Find my current public IP address."
+       (interactive)
+       (let* ((endpoint "https://api.ipify.org")
+   	   (myip (with-current-buffer (url-retrieve-synchronously endpoint)
+   		   (buffer-substring (+ 1 url-http-end-of-headers) (point-max)))))
+         (kill-new myip)
+         (message "IP: %s" myip)))
+   #+end_src
 
+** Editing
+*** what? sudo!
 
-#+BEGIN_SRC emacs-lisp 
-  (defun bk/sudo-edit (&optional arg)
-    "Function to edit file with super-user with optional ARG."
-    (interactive "P")
-    (if (or arg (not buffer-file-name))
-        (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
-      (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/sudo-edit (&optional arg)
+       "Function to edit file with super-user with optional ARG."
+       (interactive "P")
+       (if (or arg (not buffer-file-name))
+           (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
+         (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+   #+END_SRC
 
+** Buffer
+*** Kill buffer and the file associated
 
-#+BEGIN_SRC emacs-lisp
-  (defun bk/kill-buffer-and-file (buffer-name)
-    "Removes file connected to current buffer and kills buffer."
-    (interactive "bKill buffer and its file:")
-    (let* ((buffer (get-buffer buffer-name))
-	   (filename (buffer-file-name buffer)))
-      (if (not (and filename (file-exists-p filename)))
-	  (error "Buffer '%s' is not visiting a file!" buffer-name)
-	(delete-file filename)
-	(kill-buffer buffer))))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/kill-buffer-and-file (buffer-name)
+       "Removes file connected to current buffer and kills buffer."
+       (interactive "bKill buffer and its file:")
+       (let* ((buffer (get-buffer buffer-name))
+   	   (filename (buffer-file-name buffer)))
+         (if (not (and filename (file-exists-p filename)))
+   	  (error "Buffer '%s' is not visiting a file!" buffer-name)
+   	(delete-file filename)
+   	(kill-buffer buffer))))
+   #+END_SRC
 
 * Keys
 
-#+begin_src emacs-lisp 
-  (use-package which-key
-    :ensure t
-    :delight which-key-mode
-    :init
-    (setq which-key-use-C-h-commands t
-	  which-key-separator " - "
-	  which-key-show-prefix 'echo
-	  which-key-popup-type 'side-window)
-    :config
-    (which-key-mode))
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package which-key
+       :ensure t
+       :delight which-key-mode
+       :init
+       (setq which-key-use-C-h-commands t
+   	  which-key-separator " - "
+   	  which-key-show-prefix 'echo
+   	  which-key-popup-type 'side-window)
+       :config
+       (which-key-mode))
+   #+end_src
 
-#+begin_src emacs-lisp
-  (global-set-key "\C-x3" (lambda ()
-			    (interactive)
-			    (split-window-horizontally)
-			    (other-window 1)))
+   #+begin_src emacs-lisp
+     (global-set-key "\C-x3" (lambda ()
+   			    (interactive)
+   			    (split-window-horizontally)
+   			    (other-window 1)))
 
-  (global-set-key "\C-x2" (lambda ()
-			    (interactive)
-			    (split-window-vertically)
-			    (other-window 1)))
+     (global-set-key "\C-x2" (lambda ()
+   			    (interactive)
+   			    (split-window-vertically)
+   			    (other-window 1)))
 
-  (global-set-key (kbd "C-x C-m") 'smex)
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "M-i") 'change-inner)
-  (global-set-key (kbd "M-o") 'change-outer)
-  (global-set-key (kbd "C-c e") 'eshell)
-  (global-set-key (kbd "C-c g s") 'magit-status)
-  (global-set-key (kbd "C-c C-k") 'eval-buffer)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (global-set-key (kbd "C-c t") 'org-capture)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-=") 'er/expand-region)
-  (global-set-key (kbd "C-x p") 'pop-to-mark-command)
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+     (global-set-key (kbd "C-x C-m") 'smex)
+     (global-set-key (kbd "M-x") 'smex)
+     (global-set-key (kbd "M-i") 'change-inner)
+     (global-set-key (kbd "M-o") 'change-outer)
+     (global-set-key (kbd "C-c e") 'eshell)
+     (global-set-key (kbd "C-c g s") 'magit-status)
+     (global-set-key (kbd "C-c C-k") 'eval-buffer)
+     (global-set-key (kbd "C-x C-b") 'ibuffer)
+     (global-set-key (kbd "C-c t") 'org-capture)
+     (global-set-key (kbd "C-c a") 'org-agenda)
+     (global-set-key (kbd "C-=") 'er/expand-region)
+     (global-set-key (kbd "C-x p") 'pop-to-mark-command)
+     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-  ;; by default C-x k prompts to select which buffer should be selected.
-  (global-set-key (kbd "C-x k") (lambda ()
-				  (interactive)
-				  (kill-buffer (current-buffer))))
-#+end_src
+     ;; by default C-x k prompts to select which buffer should be selected.
+     (global-set-key (kbd "C-x k") (lambda ()
+   				  (interactive)
+   				  (kill-buffer (current-buffer))))
+   #+end_src
 
 * Emacs as my own Operating System
 
