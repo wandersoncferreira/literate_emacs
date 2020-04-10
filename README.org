@@ -16,10 +16,10 @@ only user target of this file is myself.
 
 
 * Table of Contents                                                     :TOC:
+- [[#packages][Packages]]
 - [[#dependencies][Dependencies]]
   - [[#extra][Extra]]
   - [[#browsers][Browsers]]
-- [[#packages][Packages]]
 - [[#operating-system][Operating System]]
   - [[#async][Async]]
   - [[#path][PATH]]
@@ -44,15 +44,18 @@ only user target of this file is myself.
   - [[#ibuffer][Ibuffer]]
   - [[#minibuffer][Minibuffer]]
   - [[#help][Help]]
+  - [[#calendar][Calendar]]
   - [[#webjump][Webjump]]
   - [[#authentication-source][Authentication Source]]
 - [[#editing-text][Editing Text]]
+  - [[#highlights][Highlights]]
   - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][Multiple Cursors]]
   - [[#custom-functions][Custom functions]]
 - [[#completions][Completions]]
   - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
   - [[#company-mode][Company mode]]
+  - [[#hippie-expand][Hippie Expand]]
 - [[#window][Window]]
   - [[#winner][Winner]]
 - [[#dired][Dired]]
@@ -65,6 +68,7 @@ only user target of this file is myself.
   - [[#wgrep][Wgrep]]
   - [[#ripgrep][Ripgrep]]
   - [[#isearch][Isearch]]
+  - [[#occur][Occur]]
 - [[#shell][Shell]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][Whitespaces]]
@@ -80,6 +84,7 @@ only user target of this file is myself.
   - [[#markdown][Markdown]]
   - [[#json][Json]]
   - [[#yaml][Yaml]]
+  - [[#makefile][Makefile]]
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#org-mode][Org mode]]
@@ -116,6 +121,82 @@ only user target of this file is myself.
   - [[#important-commands][Important commands]]
 - [[#references][References]]
 
+* Packages
+
+  Emacs facility to download and install "packages" that implement
+  additional features. You can find information about a specific
+  package by using =C-h P= that prompts for the name and shows more
+  details.
+
+  There is a very detail package in Emacs help system that you can
+  find on [[info:emacs#Packages][info:emacs#Packages]].
+
+  I always start a new configuration setup with a naive mindset that I
+  will not install thousands of external packages, however they are so
+  good and make our life so much easier that is hard to avoid them
+  altogether.
+
+  Let's initialize the package system.
+  #+begin_src emacs-lisp
+     (require 'package)
+
+     (unless (bound-and-true-p package--initialized)
+       (package-initialize))
+  #+end_src
+
+  Despite the fact that GNU Elpa, the standard repository, of Emacs
+  packages maintained by the core team already have many different
+  packages, I like to use another external repository called [[https://melpa.org/#/][Melpa]] which
+  is currently maintained by the community and curated by Purcell's and
+  his team.
+
+  #+begin_src emacs-lisp
+     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  #+end_src
+
+  We need to refresh the archives to make this change to take place.
+
+  #+begin_src emacs-lisp
+     (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
+       (package-refresh-contents))
+  #+end_src
+
+  Also, by default Emacs also automatically loads all installed packages
+  in subsequent Emacs session. I want to disable it.
+
+  #+begin_src emacs-lisp
+    (setq package-enable-at-startup nil)
+  #+end_src
+
+  When you have more than a dozen packages, it makes the process of
+  managing them very difficult without any additional help. And by my
+  experience the only real issue is due to performance because you
+  will inevitably have many external packages loaded in situations
+  where you don't need it. Fortunately, Jon Wiegley made our lives
+  easier by creating =use-package=, please look for =C-h P
+  use-package= to more details.
+
+  #+begin_src emacs-lisp
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package)
+       (package-install 'delight))
+
+     (require 'use-package)
+  #+end_src
+
+  Some old packages simply are not in any repository, they are only
+  elisp files distributed over the web. I will place these files
+  inside a folder called =lisps=.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq site-lisps-dir (expand-file-name "lisps" user-emacs-directory))
+
+    (dolist (project (directory-files site-lisps-dir t "\\w+"))
+      (when (file-directory-p project)
+        (add-to-list 'load-path project)))
+  #+END_SRC
+
 * Dependencies
 
   List of external packages that I rely on in my daily basis
@@ -123,7 +204,42 @@ only user target of this file is myself.
 ** Extra
 *** dunst
 *** scrot
-*** xscreensaver
+*** screensavers
+
+    I use the external package called =xscreensaver= which is amazing.
+    You can lock the screen by pressing =s-l= or calling =M-x
+    bk/lock-screen=.
+
+    Emacs zone is also an happy surprise for me. It seems like this is
+    a default mode to 'zones' Emacs out by choosing one of its random
+    modes to obfuscate the current buffer, which can then be used as a
+    screensaver.
+
+    I will add some configuration for this.
+    #+BEGIN_SRC emacs-lisp
+
+      (use-package zone
+        :ensure nil
+        :config
+        (defvar zone--window-config nil)
+        (defadvice zone (before zone-ad-clean-ui)
+          "Maximize window before `zone' starts."
+          (setq zone--window-config (current-window-configuration))
+          (delete-other-windows)
+          (when (and (eq window-system 'x) (executable-find "xtrlock"))
+            (start-process "xtrlock" nil "xtrlock")))
+        (defadvice zone (after zone-ad-restore-ui)
+          "Restore window configuration."
+          (when zone--window-config
+            (set-window-configuration zone--window-config)
+            (setq zone--window-config nil)))
+        (ad-activate 'zone))
+    #+END_SRC
+
+    I also installed =xtrlock= so when I activate =zone= I also lock
+    my screen. In order to unlock you just need to start typing the
+    correct password and press =RET=.
+
 ** Browsers
 *** Qutebrowser
 
@@ -165,72 +281,9 @@ only user target of this file is myself.
     #+END_SRC
 
 *** Google Chrome
+
     You know, that time when the internet tells you: "you can't see
     this page without a google-based product today"
-
-* Packages
-
-Emacs facility to download and install "packages" that implement
-additional features. You can find information about a specific package
-by using =C-h P= that prompts for the name and shows more details.
-
-There is a very detail package in Emacs help system that you can find
-on [[info:emacs#Packages][info:emacs#Packages]]. 
-
-I always start a new configuration setup with a naive mindset that I
-will not install thousands of external packages, however they are so
-good and make our life so much easier that is hard to avoid them
-altogether.
-
-Let's initialize the package system.
-#+begin_src emacs-lisp
-  (require 'package)
-
-  (unless (bound-and-true-p package--initialized)
-    (package-initialize))
-#+end_src
-
-Despite the fact that GNU Elpa, the standard repository, of Emacs
-packages maintained by the core team already have many different
-packages, I like to use another external repository called [[https://melpa.org/#/][Melpa]] which
-is currently maintained by the community and curated by Purcell's and
-his team.
-
-#+begin_src emacs-lisp
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-#+end_src
-
-We need to refresh the archives to make this change to take place.
-
-#+begin_src emacs-lisp
-  (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
-    (package-refresh-contents))
-#+end_src
-
-Also, by default Emacs also automatically loads all installed packages
-in subsequent Emacs session. I want to disable it.
-
-#+begin_src emacs-lisp
-  (setq package-enable-at-startup nil)
-#+end_src
-
-When you have more than a dozen packages, it makes the process of
-managing them very difficult without any additional help. And by my
-experience the only real issue is due to performance because you will
-inevitably have many external packages loaded in situations where you
-don't need it. Fortunately, Jon Wiegley made our lives easier by
-creating =use-package=, please look for =C-h P use-package= to more
-details.
-
-#+begin_src emacs-lisp
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package)
-    (package-install 'delight))
-
-  (require 'use-package)
-#+end_src
-
 * Operating System
 
 ** Async
@@ -368,6 +421,13 @@ details.
 	(scroll-bar-mode -1))
     #+end_src
 
+    Emacs convention is to show help and other inline documentation in
+    the message area. Show help there instead of OS tooltip.
+    #+BEGIN_SRC emacs-lisp
+      (when (display-graphic-p)
+	(tooltip-mode -1))
+    #+END_SRC
+
     Let's remove some crunchy messages at startup time.
     #+begin_src emacs-lisp
       (setq inhibit-splash-screen t
@@ -438,11 +498,10 @@ details.
 
     Control the fringe around the frame.
     #+BEGIN_SRC emacs-lisp
-
       (use-package fringe
-	:ensure nil
-	:config
-	(fringe-mode '(8 . 0)))
+        :ensure nil
+        :config
+        (fringe-mode '(7 . 1)))
     #+END_SRC
 
 * Defaults
@@ -500,7 +559,7 @@ details.
     #+BEGIN_SRC emacs-lisp
       (setq-default indent-tabs-mode nil
                     tab-width 4
-                    fill-column 100)
+                    fill-column 70)
     #+END_SRC
 
     Word wrapping
@@ -813,6 +872,18 @@ Clean all the registers you saved.
      (add-hook 'minibuffer-exit-hook #'garbage-collect-restore)
    #+END_SRC
 ** Help
+** Calendar
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package calendar
+       :ensure nil
+       :hook (calendar-today-visible . calendar-mark-today)
+       :config
+       (setq calendar-latitude -23.5475
+             calendar-longitude -46.63611
+             calendar-location-name "Sao_Paulo, Brazil")
+       (setq calendar-holiday-marker t))
+   #+END_SRC
 
 ** Webjump
 
@@ -877,6 +948,7 @@ Adding urban dictionary to webjump.
      (use-package avy
        :ensure t
        :config
+       (avy-setup-default)
        (global-set-key (kbd "C-c ;") 'avy-goto-char))
    #+end_src
 
@@ -892,7 +964,20 @@ Adding urban dictionary to webjump.
        :ensure nil
        :delight subword-mode)
    #+end_src
+** Highlights
 
+   Visual feedback on some operations like yank, kill, undo. An
+   example is that if you paste the next key. This is just a small
+   tweak, but gives a nice bit of visual feedback.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package volatile-highlights
+       :ensure t
+       :diminish volatile-highlights-mode
+       :defer t
+       :config
+       (volatile-highlights-mode t))
+   #+END_SRC
 ** UTF-8
 
    No one knows why this is not the default already.
@@ -954,8 +1039,11 @@ Adding urban dictionary to webjump.
 		   ido-use-faces t
 		   ido-case-fold nil
 		   ido-auto-merge-work-directories-length -1
+		   ;; speed up ido by using less candidates
 		   ido-max-prospects 10
+		   ;; don't try and guess if the string under point is a file
 		   ido-use-filename-at-point nil
+		   ;; match across entire string
 		   ido-enable-flex-matching t
 		   ido-create-new-buffer 'always)
        :config
@@ -983,7 +1071,8 @@ Adding urban dictionary to webjump.
      (add-to-list 'ido-ignore-directories "target")
    #+END_SRC
 
-
+   A very interesting guide to Ido is from [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Mastering Emacs]]. I read it
+   very often.
 
 ** Company mode
 
@@ -1041,6 +1130,33 @@ Adding urban dictionary to webjump.
      (eval-after-load 'company
        '(ora-activate-number))
    #+end_src
+
+** Hippie Expand
+
+   [[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] is a more feature complete completion engine than the
+   default dabbrev engine. The main feature I use over =dabbrev= is
+   that is supports a wide range of backends for finding completions -
+   =dabbrev= only looks at currently open buffers.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq hippie-expand-try-functions-list
+	   '(try-expand-dabbrev
+	     try-expand-dabbrev-all-buffers
+	     try-expand-dabbrev-from-kill
+	     try-complete-file-name-partially
+	     try-complete-file-name
+	     try-expand-all-abbrevs
+	     try-expand-list
+	     try-expand-line
+	     try-complete-lisp-symbol-partially
+	     try-complete-lisp-symbol))
+   #+END_SRC
+
+   Then we override =dabbrev-expand='s keybinding to use
+   =hippie-expand= instead.
+   #+BEGIN_SRC emacs-lisp
+     (define-key (current-global-map) [remap dabbrev-expand] 'hippie-expand)
+   #+END_SRC
 
 * Window
 
@@ -1172,12 +1288,46 @@ the *winner-boring-buffers*.
 * Version Control
 ** Magit
 
+   A git porcelain inside Emacs. Magit is an interface to the version
+   control system Git, implemented as an Emacs package. Magit aspires
+   to be a complete Git porcelain, look for more info at [[https://github.com/magit/magit][here]].
+
     #+begin_src emacs-lisp
       (use-package magit
-        :ensure t
-        :config
-        (add-to-list 'magit-no-confirm 'stage-all-changes))
+	:ensure t
+	:init
+	(setq magit-completing-read-function 'magit-ido-completing-read
+	      ;; highlight individual word and letter changes when hunk diff displays
+	      magit-diff-refine-hunk t
+	      ;; don't tell me when magit reverts buffers
+	      magit-revert-buffers 'silent
+	      ;; always show the verbose diff in commit windows
+	      magit-commit-arguments '("--verbose")
+	      ;; timeout when magit takes a while to call out to git
+	      magit-process-popup-time 10)
+	:config
+	(add-to-list 'magit-no-confirm 'stage-all-changes))
     #+end_src
+
+*** Gitconfig
+
+    [[https://github.com/magit/git-modes][gitconfig]] is a major mode for editing =gitconfig= files.
+    #+BEGIN_SRC emacs-lisp
+      (use-package gitconfig-mode
+	:ensure t
+	:config
+	(require 'gitconfig-mode))
+    #+END_SRC
+
+*** Gitignore
+
+    [[https://github.com/magit/git-modes][git-modes]] has a major mode for editing =gitignore= files.
+    #+BEGIN_SRC emacs-lisp
+      (use-package gitignore-mode
+	:ensure t
+	:config
+	(require 'gitignore-mode))
+    #+END_SRC
 
 ** Time machine
 
@@ -1247,6 +1397,30 @@ the *winner-boring-buffers*.
     | M-s h r                       | highlight regexp                           |
     | M-s h u                       | undo the highlight                         |
     | C-s M-r                       | toggle regexp search                       |
+
+** Occur
+
+   Let's use an =occur= snippet from [[https://oremacs.com/2015/01/26/occur-dwim/][(or emacs]]. It will offer as the
+   default candidate:
+   - the current region, if it's active
+   - the current symbol, otherwise
+
+   #+BEGIN_SRC emacs-lisp
+     (defun occur-dwim ()
+       "Call `occur' with a sane default."
+       (interactive)
+       (push (if (region-active-p)
+		 (buffer-substring-no-properties
+		  (region-beginning)
+		  (region-end))
+	       (let ((sym (thing-at-point 'symbol)))
+		 (when (stringp sym)
+		   (regexp-quote sym))))
+	     regexp-history)
+       (call-interactively 'occur))
+
+     (global-set-key (kbd "M-s o") 'occur-dwim)
+   #+END_SRC
 
 * Shell
 
@@ -1779,6 +1953,14 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        (add-hook 'yaml-mode-hook 'subword-mode))
    #+END_SRC
 
+** Makefile
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package make-mode
+       :ensure t
+       :mode (("Makefile" . makefile-gmake-mode)))
+   #+END_SRC
+
 * Notes
 
   #+BEGIN_SRC emacs-lisp
@@ -1883,7 +2065,7 @@ on-demand and stored in memory.
 
     Toggle editing org-mode source blocks.
     #+BEGIN_SRC emacs-lisp
-      (define-key org-src-mode-map (kbd "s-e") #'org-edit-src-exit)
+      (global-set-key (kbd "s-e") #'org-edit-special)
     #+END_SRC
 ** Table of Contents
 
@@ -2661,7 +2843,7 @@ How to use Slack on emacs? Some terminology from the website:
        :ensure t
        :after (exwm)
        :config
-       (exwm-input-set-key (kbd "s-e") #'exwm-edit--compose))
+       (exwm-input-set-key (kbd "C-s-e") #'exwm-edit--compose))
    #+END_SRC
 
 
