@@ -16,6 +16,9 @@ only user target of this file is myself.
 
 * Table of Contents                                                     :TOC:
 - [[#dependencies][Dependencies]]
+  - [[#xscreensaver][Xscreensaver]]
+  - [[#dunst][Dunst]]
+  - [[#qutebrowser][Qutebrowser]]
 - [[#packages][Packages]]
 - [[#operating-system][Operating System]]
   - [[#async][Async]]
@@ -23,7 +26,13 @@ only user target of this file is myself.
   - [[#security][Security]]
   - [[#garbage-collection][Garbage Collection]]
   - [[#byte-compile][Byte-compile]]
+  - [[#manage-external-services][Manage external services]]
 - [[#aesthetics][Aesthetics]]
+  - [[#cleaning][Cleaning]]
+  - [[#themes][Themes]]
+  - [[#time][Time]]
+  - [[#font][Font]]
+  - [[#fringe][Fringe]]
 - [[#defaults][Defaults]]
   - [[#recentf][Recentf]]
   - [[#uniquify][Uniquify]]
@@ -55,7 +64,6 @@ only user target of this file is myself.
 - [[#version-control][Version Control]]
   - [[#magit][Magit]]
   - [[#time-machine][Time machine]]
-  - [[#aesthetics-1][Aesthetics]]
   - [[#miscellaneous][Miscellaneous]]
 - [[#unified-modeling-language][Unified Modeling Language]]
 - [[#search][Search]]
@@ -88,6 +96,8 @@ only user target of this file is myself.
 - [[#spelling][Spelling]]
 - [[#snippets][Snippets]]
 - [[#pomodoro][Pomodoro]]
+- [[#advice][Advice]]
+  - [[#pop-to-mark][Pop to mark]]
 - [[#general-custom-functions][General custom functions]]
 - [[#keys][Keys]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
@@ -99,6 +109,50 @@ only user target of this file is myself.
 - [[#references][References]]
 
 * Dependencies
+
+  List of external packages that I rely on in my daily basis
+
+** Xscreensaver
+** Dunst
+** Qutebrowser
+
+   A keyboard-driven, vim-like browser based on PyQt5 [[https://www.qutebrowser.org/][web browser]] with
+   a minimal GUI.
+
+   I met this project back at the university in 2012 and is hard to
+   remember but I think it was the first time that I talked to other
+   programmers online with attempts to report bugs and errors for the
+   maintainers of this browser. Very nice project.
+
+   The [[https://raw.githubusercontent.com/qutebrowser/qutebrowser/master/doc/img/cheatsheet-big.png][cheat sheet]] is very important.
+
+   The following file is not my complete =config.py= file for
+   qutebrowser, only the diff from defaults. If you want to create a
+   default config file, you should use =:config-write-py --default=.
+
+   #+BEGIN_SRC conf
+     # Always restore open sites when qutebrowser is reopened.
+     # Type: Bool
+     c.auto_save.session = False
+
+     # Show javascript alerts
+     # Type: Bool
+     c.content.javascript.alert = False
+
+     # Allow websites to record audio/video
+     c.content.media_capture = 'ask'
+
+     # Allow websites to lock your mouse
+     c.content.mouse_lock = True
+
+     # Allow websites to show notifications
+     c.content.notifications = False
+
+     ## Open a new window for every tab.
+     ## Type: Bool
+     c.tabs.tabs_are_windows = True
+   #+END_SRC
+
 * Packages
 
 Emacs facility to download and install "packages" that implement
@@ -226,6 +280,11 @@ details.
 	     gc-cons-percentage 0.1))
    #+END_SRC
 
+   Emacs can inform us when the garbage collection is happening.
+   #+BEGIN_SRC emacs-lisp
+     (setq garbage-collection-messages t)
+   #+END_SRC
+
 ** Byte-compile
 
    Byte-compiling the init file is surprisingly effective and helps
@@ -258,7 +317,32 @@ details.
      (add-hook 'after-save-hook #'byte-compile-config-files 100)
    #+END_SRC
 
+** Manage external services
+
+   Very interesting package that help us to have some instances of
+   external processes running and keep track of it all. I often need
+   to enable the VPN of my company to work remotely, this suits
+   nicely.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package prodigy
+       :ensure t
+       :config
+       (prodigy-define-service
+	 :name "Captalys VPN"
+	 :command "captalys-vpn"
+	 :tags '(captalys)
+	 :stop-signal 'sigkill
+	 :kill-process-buffer-on-stop t)
+
+       (prodigy-define-tag
+	 :name 'captalys
+	 :ready-message "Initialization Sequence Completed"))
+   #+END_SRC
+
 * Aesthetics
+
+** Cleaning
 
     Since I never use the mouse with GNU Emacs, I prefer not to use
     invasive graphical elements.
@@ -267,6 +351,12 @@ details.
 	(menu-bar-mode -1)
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1))
+    #+end_src
+
+    Let's remove some crunchy messages at startup time.
+    #+begin_src emacs-lisp
+      (setq inhibit-splash-screen t
+	    inhibit-startup-echo-area-message t)
     #+end_src
 
     Enabling some builtin modes that are very helpful e.g. highlight
@@ -278,15 +368,6 @@ details.
       (show-paren-mode t)
       (global-prettify-symbols-mode t)
       (blink-cursor-mode 0)
-
-      (use-package time
-        :ensure nil
-        :init
-        (setq display-time-default-load-average nil
-    	  display-time-format "%Hh%M"
-    	  display-time-day-and-date t)
-        :config
-        (display-time-mode t))
     #+end_src
 
     #+begin_src emacs-lisp
@@ -296,6 +377,8 @@ details.
         :config
         (add-hook 'text-mode-hook #'auto-fill-mode))
     #+end_src
+
+** Themes
 
     The color theme is always a complicated matter. I've been trying
     several ones, most recently I had settle with Protesilaos
@@ -309,6 +392,21 @@ details.
         (load-theme 'dakrone t))
     #+END_SRC
 
+** Time
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package time
+       :ensure nil
+       :init
+       (setq display-time-default-load-average nil
+	     display-time-format "%Hh%M "
+	     display-time-day-and-date t)
+       :config
+       (display-time-mode t))
+   #+END_SRC
+
+** Font
+
     I like the default font, but why not change it towards a more
     programming-friendlier one: Source Code Pro.
 
@@ -321,11 +419,7 @@ details.
       (bk/font-family-size "Source Code Pro Medium" 12)
     #+end_src
 
-    Let's remove some crunchy messages at startup time.
-    #+begin_src emacs-lisp
-      (setq inhibit-splash-screen t
-	    inhibit-startup-echo-area-message t)
-    #+end_src
+** Fringe
 
     Control the fringe around the frame.
     #+BEGIN_SRC emacs-lisp
@@ -351,6 +445,11 @@ details.
       (setq echo-keystrokes 0.2)
     #+END_SRC
 
+    Allow pasting selection outside of Emacs
+    #+BEGIN_SRC emacs-lisp
+      (setq x-select-enable-clipboard t)
+    #+END_SRC
+
     Say you copied a link from your web browser, then switched to Emacs to
     paste it somewhere. Before you do that, you notice something you want
     to kill. Doing that will place the last kill to the clipboard, thus
@@ -374,6 +473,14 @@ details.
     	proced-descend t)
     #+end_src
 
+    #+BEGIN_SRC emacs-lisp
+      ;; A saner ediff
+      (setq ediff-diff-options "-w")
+      (setq ediff-split-window-function 'split-window-horizontally)
+      (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+    #+END_SRC
+
     Enable some built in modes to add critical functionality to
     Emacs. More explanation about them will follow in future.
 
@@ -382,6 +489,9 @@ details.
       (pending-delete-mode t)
       (column-number-mode 1)
       (global-auto-revert-mode)
+
+      ;; real emacs knights don't use shift to mark things
+      (setq shift-select-mode nil)
     #+end_src
 
 ** Recentf
@@ -677,19 +787,30 @@ Adding urban dictionary to webjump.
 
 ** Authentication Source
 
-Auth Source is a generic interface for common backends such as your
-operating sysetm's keychain and your local ~/.authinfo file. Auth
-Source solves the problem of mapping passwords and usernames to hosts.
+   Auth Source is a generic interface for common backends such as your
+   operating sysetm's keychain and your local ~/.authinfo file. Auth
+   Source solves the problem of mapping passwords and usernames to hosts.
 
-Debugging auth issues
-#+BEGIN_SRC emacs-lisp
-  (setq auth-source-debug t)
-#+END_SRC
+   Debugging auth issues
+   #+BEGIN_SRC emacs-lisp
+     (setq auth-source-debug t)
+   #+END_SRC
 
-We need to tell auth-source where to look for secrets.
-#+BEGIN_SRC emacs-lisp
-  (setq auth-sources '((:source "~/.emacs.d/secrets/.authinfo")))
-#+END_SRC
+   We need to tell auth-source where to look for secrets.
+   #+BEGIN_SRC emacs-lisp
+     (setq auth-sources '((:source "~/.emacs.d/secrets/.authinfo")))
+   #+END_SRC
+
+   GPG
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package pinentry :ensure t)
+     (use-package epa
+       :ensure nil
+       :config
+       (setq epa-pinentry-mode 'loopback)
+       (pinentry-start))
+   #+END_SRC
 
 * Editing Text
 
@@ -718,7 +839,10 @@ We need to tell auth-source where to look for secrets.
    #+begin_src emacs-lisp
      (use-package eldoc
        :ensure nil
-       :delight eldoc-mode)
+       :delight eldoc-mode
+       :commands (eldoc-mode)
+       :config
+       (add-hook 'after-init-hook 'global-eldoc-mode))
 
      (use-package subword
        :ensure nil
@@ -783,15 +907,19 @@ We need to tell auth-source where to look for secrets.
      (use-package ido
        :ensure nil
        :init (setq ido-use-virtual-buffers t
-		ido-use-faces t
-		ido-enable-flex-matching t
-		ido-create-new-buffer 'always)
+		   ido-use-faces t
+		   ido-case-fold nil
+		   ido-auto-merge-work-directories-length -1
+		   ido-max-prospects 10
+		   ido-use-filename-at-point nil
+		   ido-enable-flex-matching t
+		   ido-create-new-buffer 'always)
        :config
        (ido-mode t)
        (ido-everywhere t)
        :bind (:map ido-common-completion-map
-		("M-e" . ido-edit-input)
-		("M-r" . ido-toggle-regexp)))
+		   ("M-e" . ido-edit-input)
+		   ("M-r" . ido-toggle-regexp)))
    #+end_src
 
    More functionality
@@ -802,7 +930,16 @@ We need to tell auth-source where to look for secrets.
          file at the head of the list with =C-k=
 
 
-   We can find a nice description of ido at the help page on [[help:ido][C-h P ido]].
+   Nice description of ido at the help page on [[help:ido][C-h P ido]].
+
+   Always rescan buffer for imenu
+   #+BEGIN_SRC emacs-lisp
+     (set-default 'imenu-auto-rescan t)
+
+     (add-to-list 'ido-ignore-directories "target")
+   #+END_SRC
+
+
 
 ** Company mode
 
@@ -826,24 +963,6 @@ We need to tell auth-source where to look for secrets.
    	  company-idle-delay 0.5)
        :config
        (global-company-mode t))
-   #+end_src
-
-   If you are familiar with other IDE you should have noticed they
-   provide some documentation for the completion candidates. Fortunately,
-   there is a great package to provide it for company.
-
-   #+begin_src emacs-lisp
-     (use-package pos-tip
-       :ensure t)
-
-     (use-package company-quickhelp
-	 :ensure t
-	 :after company
-	 :init
-	 (setq company-quickhelp-delay nil)
-	 :config
-	 (company-quickhelp-mode)
-	 (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin))
    #+end_src
 
    Also, we numbered all the candidates and the following code will
@@ -899,6 +1018,13 @@ We need to tell auth-source where to look for secrets.
         (ace-window-display-mode -1)
         (global-set-key (kbd "C-x o") 'ace-window))
     #+end_src
+
+    Don't popup certain buffers
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'display-buffer-alist
+		   (cons "\\*Async Shell Command\\*.*"
+			 (cons #'display-buffer-no-window nil)))
+    #+END_SRC
 
 ** Winner
 
@@ -1204,25 +1330,6 @@ How to use Slack on emacs? Some terminology from the website:
     #+begin_src emacs-lisp
       (use-package git-timemachine :ensure t)
     #+end_src
-
-** Aesthetics
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package diff-hl
-       :ensure t
-       :init
-       (setq diff-hl-side 'left)
-       :config
-       (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-       (diff-hl-flydiff-mode +1)
-       (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-       (global-diff-hl-mode +1))
-
-     (custom-set-faces
-      '(diff-hl-change ((t (:background "#3a81c3"))))
-      '(diff-hl-insert ((t (:background "#7ccd7c"))))
-      '(diff-hl-delete ((t (:background "#ee6363")))))
-   #+END_SRC
 
 ** Miscellaneous
 
@@ -1664,7 +1771,6 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
                #'TeX-revert-document-buffer))
  #+END_SRC
 
-
  #+BEGIN_SRC emacs-lisp
    (use-package reftex
      :ensure t
@@ -2031,6 +2137,25 @@ There an exhaustive documentation about Reveal.js in the github
     ("<f10>" . tomatinho))
 #+end_src
 
+* Advice
+
+** Pop to mark
+   When popping the mark, continue popping until the cursor actually
+   moves. Also, if the last command was a copy - skip past all the
+   expand-region craft.
+   #+BEGIN_SRC emacs-lisp
+     (defadvice pop-to-mark-command (around ensure-new-position activate)
+       (let ((p (point)))
+	 (when (eq last-command 'save-region-or-current-line)
+	   ad-do-it
+	   ad-do-it
+	   ad-do-it)
+	 (dotimes (i 10)
+	   (when (= p (point)) ad-do-it))))
+
+     (setq set-mark-command-repeat-pop t)
+   #+END_SRC
+
 * General custom functions
 
 #+begin_src emacs-lisp 
@@ -2074,6 +2199,11 @@ There an exhaustive documentation about Reveal.js in the github
   (use-package which-key
     :ensure t
     :delight which-key-mode
+    :init
+    (setq which-key-use-C-h-commands t
+	  which-key-separator " - "
+	  which-key-show-prefix 'echo
+	  which-key-popup-type 'side-window)
     :config
     (which-key-mode))
 #+end_src
