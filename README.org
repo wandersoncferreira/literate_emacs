@@ -39,7 +39,6 @@ many code as he wants from here (or elsewhere).
   - [[#path][PATH]]
   - [[#security][Security]]
   - [[#garbage-collection][Garbage Collection]]
-  - [[#byte-compile][Byte-compile]]
   - [[#manage-external-services][Manage external services]]
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][Cleaning]]
@@ -145,10 +144,9 @@ many code as he wants from here (or elsewhere).
 - [[#keys][Keys]]
   - [[#hint][Hint]]
   - [[#global-definitions][Global definitions]]
-  - [[#measure][Measure]]
   - [[#cast][Cast]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
-  - [[#xrandr][Xrandr]]
+  - [[#multiple-screens][Multiple Screens]]
   - [[#system-package][System package]]
   - [[#notification-daemon][Notification Daemon]]
   - [[#window-behaviour][Window behaviour]]
@@ -387,38 +385,6 @@ many code as he wants from here (or elsewhere).
    Emacs can inform us when the garbage collection is happening.
    #+BEGIN_SRC emacs-lisp
      (setq garbage-collection-messages t)
-   #+END_SRC
-
-** Byte-compile
-
-   Byte-compiling the init file is surprisingly effective and helps
-   speed up startup quite a bit.
-   #+BEGIN_SRC emacs-lisp
-     (defun farl-init/compile-user-emacs-directory ()
-       "Recompile all files in `user-emacs-directory'."
-       (byte-recompile-directory user-emacs-directory 0))
-
-     (unless (file-exists-p (locate-user-emacs-file "init.elc"))
-       (add-hook 'after-init-hook #'farl-init/compile-user-emacs-directory))
-   #+END_SRC
-
-   If there's a difference in time between a file and its
-   byte-compiled counterpart, prefer the newer one.
-   #+BEGIN_SRC emacs-lisp
-     (setq load-prefer-newer t)
-   #+END_SRC
-
-   This is meant to happen when I save my Emacs configuration, so that
-   all bytecode is up to date. It adds some time to each save, but it
-   is worth it for never having to recompile my Emacs configuration
-   manually again.
-   #+BEGIN_SRC emacs-lisp
-     (defun byte-compile-config-files ()
-       "Byte-compile Emacs configuration files."
-       (when (string-match-p "literate-emacs.org" (buffer-file-name))
-	 (byte-recompile-directory user-emacs-directory 0)))
-
-     (add-hook 'after-save-hook #'byte-compile-config-files 100)
    #+END_SRC
 
 ** Manage external services
@@ -2837,18 +2803,6 @@ How to use Slack on emacs? Some terminology from the website:
    				  (kill-buffer (current-buffer))))
    #+end_src
 
-** Measure
-
-   Keyfreq is a package to measure how frequent we press the keys and
-   chords combinations inside Emacs. Useful to let it run for a while
-   and look for improvements in your daily habits.
-   #+BEGIN_SRC emacs-lisp
-     (use-package keyfreq
-       :ensure t
-       :config
-       (keyfreq-mode)
-       (keyfreq-autosave-mode))
-   #+END_SRC
 
 ** Cast
 
@@ -2875,12 +2829,6 @@ How to use Slack on emacs? Some terminology from the website:
     (defun bk/qutebrowse ()
       (interactive)
       (start-process-shell-command "browser" nil "qutebrowser"))
-
-    (defun bk/double-monitor ()
-      (start-process-shell-command
-       "double-monitor"
-       nil
-       "xrandr --output eDP1 --primary --mode 1600x900 --pos 0x0 --rotate normal --output HDMI1 --mode 1680x1050 --pos 1600x0 --rotate normal"))
   #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -2979,155 +2927,34 @@ How to use Slack on emacs? Some terminology from the website:
      (setq exwm-manage-force-tiling t)
    #+END_SRC
 
-** Xrandr
+** Multiple Screens
+
+   Stolen from [[https://www.reddit.com/r/emacs/comments/cyuqbp/exwm_multimonitor_setup/][reddit]] answer, however the original function is heavily
+   customized to the authors setup, therefore I modified the
+   appropriate bits.
+
+   After some time working with the code I decided to try to make a
+   package out of it. However, there are several moving peaces yet,
+   however, is already useful for me.
+
+   Work in Progress nevertheless...
 
    #+BEGIN_SRC emacs-lisp
-     (require 'exwm-randr)
+     (require 'exwm-monitors)
 
-     (defvar my/last-screen-info nil
-       "Most recent screen info (from my/get-screen-info).")
+     (exwm-monitors-define-screen-info
+      :name "eDP1"
+      :nickname :x1-carbon
+      :width 1600
+      :height 900)
 
-     (defun my/get-screen-info ()
-       "Return a list of attributes about connected screens.
-     Attributes are an alist with keys: name, id, width, height;
-     obtained from xrandr, where id is a unique monitor identifier
-     from the EDID hex."
-       (let* ((default-directory "/") ;; avoid TRAMP remote hosts
-              (lines (split-string
-                     (shell-command-to-string
-                      ;; fetch lines of "name id wxh"
-                      ;; brittle(?): assumes single preferred mode.
-                      (concat "xrandr --verbose | "
-                              "awk '"
-                              "/( connected|00ffffffffffff)/ "
-                              "{ f=1; print $1 } "
-                              "f{ if(/HSync/) { f=0; print $1 } }"
-                              "' "
-                              "| xargs -n 3"))
-                     "\n" t)))
-         ;; turn each line into alist
-         (mapcar (lambda (line)
-                   (let* ((items (split-string line))
-                          (dimensions (mapcar 'string-to-number
-                                              (split-string (caddr items) "x"))))
-                     (list (cons 'name (car items))
-                           (cons 'id (cadr items))
-                           (cons 'width (car dimensions))
-                           (cons 'height (cadr dimensions)))))
-                 lines)))
+     (exwm-monitors-define-spec
+      :name "home"
+      :pred (list :only '(:x1-carbon "HDMI1"))
+      :action (list '(:x1-carbon :auto)
+                    '("HDMI1" :right)))
 
-     (defun my/exwm-xrandr (&optional screen-info)
-       "Configure screens in my preferred layouts, using xrandr.
-
-     Use SCREEN-INFO for screen/geometry.  if SCREEN-INFO is not
-     provided, obtain it from (my/get-screen-info)."
-       (interactive)
-       (unless screen-info (setq screen-info (my/get-screen-info)))
-       (shell-command-to-string
-        (let ((screen-count (length screen-info))
-              (single-screen-ids (list "00ffffffffffff0006af362000000000")))
-          (cond
-           ;; single screen: just auto it
-           ((= screen-count 1)
-            (format "xrandr --output %s --auto" (alist-get 'name (car screen-info))))
-           ;; have external, but want to limit to single screen
-           ((and (= screen-count 2)
-                 (member (alist-get 'id (cadr screen-info)) single-screen-ids))
-            (format "xrandr --output %s --off --output %s --auto"
-                    (alist-get 'name (car screen-info))
-                    (alist-get 'name (cadr screen-info))))
-           ;; otherwise with one external: vertically centered
-           ((and (= screen-count 2)
-                 (string-equal "eDP-1" (alist-get 'name (car screen-info))))
-            (let ((primary (car screen-info))
-                  (secondary (cadr screen-info))
-                  (center_x (/ (apply
-                                #'max
-                                (mapcar (lambda (d) (alist-get 'width d))
-                                        screen-info))
-                               2)))
-              (format "xrandr --output %s --auto --pos %sx%s --output %s --auto --pos 0x%s"
-                      (alist-get 'name primary)
-                      (- center_x (/ (alist-get 'width primary) 2))
-                      (alist-get 'height secondary)
-                      (alist-get 'name secondary)
-                      (- center_x (/ (alist-get 'width secondary) 2)))))
-           ;; otherwise 2 screens: horizontal
-           ((= screen-count 2)
-            (format "xrandr --output %s --auto --output %s --auto --right-of %s"
-                    (alist-get 'name (car screen-info))
-                    (alist-get 'name (cadr screen-info))
-                    (alist-get 'name (car screen-info))))
-           ;; work
-           ((and (= screen-count 3)
-                 (string-equal (alist-get 'id (cadr screen-info))
-                               "00ffffffffffff001e6d095b16ef0100"))
-            (concat "xrandr "
-                    "--output eDP-1 --off "
-                    "--output HDMI-2 --mode 3840x2160 --rotate left --primary "
-                    "--output DP-1 --mode 3840x2160 --pos 2160x820"))
-           ;; assumed laptop with two external: laptop off, others side-by-side
-           ((= screen-count 3)
-            (format "xrandr --output %s --off --output %s --auto --output %s --auto --right-of %s"
-                    (alist-get 'name (car screen-info))
-                    (alist-get 'name (cadr screen-info))
-                    (alist-get 'name (caddr screen-info))
-                    (alist-get 'name (cadr screen-info)))))))
-       (setq my/last-screen-info screen-info))
-
-     (defun monitor-x-center (monitor-attributes)
-       "The center of the monitor in x, from MONITOR-ATTRIBUTES."
-       (+ (nth 0 (alist-get 'geometry monitor-attributes))
-          (/ (nth 2 (alist-get 'geometry monitor-attributes)) 2)))
-
-     (defun monitor-y-center (monitor-attributes)
-       "The center of the monitor in y, from MONITOR-ATTRIBUTES."
-       (+ (nth 1 (alist-get 'geometry monitor-attributes))
-          (/ (nth 3 (alist-get 'geometry monitor-attributes)) 2)))
-
-     (defun my/exwm-set-workspace-plist ()
-       "Set exwm-randr-workspace-output-plist for the current displays.
-     Lists two sets of workspaces enumerated from zero across the displays."
-       (let ((display-names
-              (mapcar (lambda (d) (alist-get 'name d))
-                      (sort (display-monitor-attributes-list) ;; sort bottom-top left-right
-                            (lambda (left right)
-                              (let ((right (- (monitor-x-center left)
-                                              (monitor-x-center right)))
-                                    (below (- (monitor-y-center left)
-                                              (monitor-y-center right))))
-                                (or (> below 0) (and (= 0 below) (< right 0)))))))))
-         (message "Setting up for display(s) %s" display-names)
-         (setq display-names (apply 'append
-                                    (make-list (/ exwm-workspace-number
-                                                  (length display-names))
-                                               display-names)))
-         (setq exwm-randr-workspace-output-plist
-               (apply 'append
-                      (mapcar* 'list
-                               (number-sequence 0 (1- (length display-names)))
-                               display-names)))))
-
-     (defun my/exwm-screen-change (&optional force)
-       "React to screen change - configure displays.
-
-     If the configured screens from my/last-screen-info haven't
-     changed, then do nothing, unless prefix arg FORCE is set."
-       (interactive "P")
-       (let* ((default-directory "/")
-              (screen-info (my/get-screen-info)))
-         (when (or force (not (equal screen-info my/last-screen-info)))
-           (if force
-               (message "Forced screen reconfigure requested")
-             (message "Screens changed - reconfiguring"))
-           (my/exwm-xrandr screen-info)
-           (my/exwm-set-workspace-plist)
-           ;;(faceheight-fix-all)
-           )))
-
-     (my/exwm-screen-change) ;; do an initial setup
-     (add-hook 'exwm-randr-screen-change-hook #'my/exwm-screen-change)
-     (exwm-randr-enable)
+     (exwm-monitors-initial-setup)
    #+END_SRC
 
 ** System package
@@ -3273,27 +3100,27 @@ How to use Slack on emacs? Some terminology from the website:
      (defun exwm-bk/nm-applet ()
        (interactive)
        (start-process-shell-command "applt" nil
-				    "nm-applet"))
+                    "nm-applet"))
 
      (defun exwm-bk/bluetooth ()
        (interactive)
        (start-process-shell-command "bl-applt" nil
-				    "blueman-applet"))
+                    "blueman-applet"))
 
      (defun exwm-bk/xscreensaver ()
        (interactive)
        (start-process-shell-command "xs" nil
-				    "xscreensaver -no-splash"))
+                    "xscreensaver -no-splash"))
 
      (defun exwm-bk/key-rate ()
        (interactive)
        (start-process-shell-command "key-rate" nil
-				    "xset r rate 300 50"))
+                    "xset r rate 300 50"))
 
      (defun exwm-bk/nocaps ()
        (interactive)
        (start-process-shell-command "nocaps" nil
-				    "setxkbmap -option ctrl:nocaps"))
+                    "setxkbmap -option ctrl:nocaps"))
 
      (use-package exwm-systemtray
        :ensure nil
@@ -3305,7 +3132,8 @@ How to use Slack on emacs? Some terminology from the website:
        (add-hook 'exwm-init-hook 'exwm-bk/bluetooth t)
        (add-hook 'exwm-init-hook 'exwm-bk/xscreensaver)
        (add-hook 'exwm-init-hook 'exwm-bk/key-rate)
-       (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
+       (add-hook 'exwm-init-hook 'exwm-bk/nocaps)
+       )
    #+END_SRC
 
 ** Important commands
