@@ -148,6 +148,7 @@ many code as he wants from here (or elsewhere).
   - [[#measure][Measure]]
   - [[#cast][Cast]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
+  - [[#xrandr][Xrandr]]
   - [[#system-package][System package]]
   - [[#notification-daemon][Notification Daemon]]
   - [[#window-behaviour][Window behaviour]]
@@ -2880,20 +2881,6 @@ How to use Slack on emacs? Some terminology from the website:
        "double-monitor"
        nil
        "xrandr --output eDP1 --primary --mode 1600x900 --pos 0x0 --rotate normal --output HDMI1 --mode 1680x1050 --pos 1600x0 --rotate normal"))
-
-    (defun bk/single-monitor ()
-      (start-process-shell-command
-       "x1-carbon"
-       nil
-       "xrandr --output eDP1 --primary --mode 1600x900 --pos 0x0 --rotate normal"))
-
-    (defun bk/setup-monitor ()
-      (interactive)
-      (let* ((cmd "xrandr | grep ' connected ' | awk '{ print$1 }'")
-	     (monitors (split-string (shell-command-to-string cmd) "\n")))
-	(if (= (length monitors) 2)
-	    (bk/single-monitor)
-	  (bk/double-monitor))))
   #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -2901,9 +2888,9 @@ How to use Slack on emacs? Some terminology from the website:
     :ensure t
     :init
     (setq exwm-workspace-number 4
-	  use-dialog-box nil
-	  exwm-workspace-show-all-buffers nil
-	  exwm-layout-show-all-buffers t)
+      use-dialog-box nil
+      exwm-workspace-show-all-buffers nil
+      exwm-layout-show-all-buffers t)
     :config
     (display-battery-mode t)
     (fringe-mode 1)
@@ -2920,17 +2907,17 @@ How to use Slack on emacs? Some terminology from the website:
        ([?\C-w] . [\C-x])))
 
     (setq exwm-input-global-keys
-	  `(([?\s-r] . exwm-reset)
-	    ([?\s-d] . dmenu)
-	    ([?\s-p] . bk/keepmenu)
-	    ([?\s-w] . exwm-workspace-switch)
-	    ([?\C-c l] . bk/lock-screen)
-	    ,@(mapcar (lambda (i)
-			  `(,(kbd (format "s-%d" i)) .
-			    (lambda ()
-			      (interactive)
-			      (exwm-workspace-switch-create ,i))))
-			(number-sequence 0 9))))
+      `(([?\s-r] . exwm-reset)
+        ([?\s-d] . dmenu)
+        ([?\s-p] . bk/keepmenu)
+        ([?\s-w] . exwm-workspace-switch)
+        ([?\C-c l] . bk/lock-screen)
+        ,@(mapcar (lambda (i)
+              `(,(kbd (format "s-%d" i)) .
+                (lambda ()
+                  (interactive)
+                  (exwm-workspace-switch-create ,i))))
+            (number-sequence 0 9))))
     (exwm-enable)
 
     (require 'exwm-config)
@@ -2940,10 +2927,11 @@ How to use Slack on emacs? Some terminology from the website:
     (push ?\C-g exwm-input-prefix-keys)
     (exwm-input-set-key (kbd "C-g") #'keyboard-quit)
 
-    (require 'exwm-randr)
-    (setq exwm-randr-workspace-output-plist '(0 "HDMI1" 1 "eDP1"))
-    (add-hook 'exwm-randr-screen-change-hook #'bk/setup-monitor)
-    (exwm-randr-enable))
+    ;; (require 'exwm-randr)
+    ;; (setq exwm-randr-workspace-output-plist '(0 "HDMI1" 1 "eDP1"))
+    ;; (add-hook 'exwm-randr-screen-change-hook #'bk/setup-monitor)
+    ;; (exwm-randr-enable)
+    )
 #+END_SRC
 
    Now that I am using Emacs as my window manager I can use the meta keys
@@ -2989,6 +2977,157 @@ How to use Slack on emacs? Some terminology from the website:
    Disabling floating window
    #+BEGIN_SRC emacs-lisp
      (setq exwm-manage-force-tiling t)
+   #+END_SRC
+
+** Xrandr
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'exwm-randr)
+
+     (defvar my/last-screen-info nil
+       "Most recent screen info (from my/get-screen-info).")
+
+     (defun my/get-screen-info ()
+       "Return a list of attributes about connected screens.
+     Attributes are an alist with keys: name, id, width, height;
+     obtained from xrandr, where id is a unique monitor identifier
+     from the EDID hex."
+       (let* ((default-directory "/") ;; avoid TRAMP remote hosts
+              (lines (split-string
+                     (shell-command-to-string
+                      ;; fetch lines of "name id wxh"
+                      ;; brittle(?): assumes single preferred mode.
+                      (concat "xrandr --verbose | "
+                              "awk '"
+                              "/( connected|00ffffffffffff)/ "
+                              "{ f=1; print $1 } "
+                              "f{ if(/HSync/) { f=0; print $1 } }"
+                              "' "
+                              "| xargs -n 3"))
+                     "\n" t)))
+         ;; turn each line into alist
+         (mapcar (lambda (line)
+                   (let* ((items (split-string line))
+                          (dimensions (mapcar 'string-to-number
+                                              (split-string (caddr items) "x"))))
+                     (list (cons 'name (car items))
+                           (cons 'id (cadr items))
+                           (cons 'width (car dimensions))
+                           (cons 'height (cadr dimensions)))))
+                 lines)))
+
+     (defun my/exwm-xrandr (&optional screen-info)
+       "Configure screens in my preferred layouts, using xrandr.
+
+     Use SCREEN-INFO for screen/geometry.  if SCREEN-INFO is not
+     provided, obtain it from (my/get-screen-info)."
+       (interactive)
+       (unless screen-info (setq screen-info (my/get-screen-info)))
+       (shell-command-to-string
+        (let ((screen-count (length screen-info))
+              (single-screen-ids (list "00ffffffffffff0006af362000000000")))
+          (cond
+           ;; single screen: just auto it
+           ((= screen-count 1)
+            (format "xrandr --output %s --auto" (alist-get 'name (car screen-info))))
+           ;; have external, but want to limit to single screen
+           ((and (= screen-count 2)
+                 (member (alist-get 'id (cadr screen-info)) single-screen-ids))
+            (format "xrandr --output %s --off --output %s --auto"
+                    (alist-get 'name (car screen-info))
+                    (alist-get 'name (cadr screen-info))))
+           ;; otherwise with one external: vertically centered
+           ((and (= screen-count 2)
+                 (string-equal "eDP-1" (alist-get 'name (car screen-info))))
+            (let ((primary (car screen-info))
+                  (secondary (cadr screen-info))
+                  (center_x (/ (apply
+                                #'max
+                                (mapcar (lambda (d) (alist-get 'width d))
+                                        screen-info))
+                               2)))
+              (format "xrandr --output %s --auto --pos %sx%s --output %s --auto --pos 0x%s"
+                      (alist-get 'name primary)
+                      (- center_x (/ (alist-get 'width primary) 2))
+                      (alist-get 'height secondary)
+                      (alist-get 'name secondary)
+                      (- center_x (/ (alist-get 'width secondary) 2)))))
+           ;; otherwise 2 screens: horizontal
+           ((= screen-count 2)
+            (format "xrandr --output %s --auto --output %s --auto --right-of %s"
+                    (alist-get 'name (car screen-info))
+                    (alist-get 'name (cadr screen-info))
+                    (alist-get 'name (car screen-info))))
+           ;; work
+           ((and (= screen-count 3)
+                 (string-equal (alist-get 'id (cadr screen-info))
+                               "00ffffffffffff001e6d095b16ef0100"))
+            (concat "xrandr "
+                    "--output eDP-1 --off "
+                    "--output HDMI-2 --mode 3840x2160 --rotate left --primary "
+                    "--output DP-1 --mode 3840x2160 --pos 2160x820"))
+           ;; assumed laptop with two external: laptop off, others side-by-side
+           ((= screen-count 3)
+            (format "xrandr --output %s --off --output %s --auto --output %s --auto --right-of %s"
+                    (alist-get 'name (car screen-info))
+                    (alist-get 'name (cadr screen-info))
+                    (alist-get 'name (caddr screen-info))
+                    (alist-get 'name (cadr screen-info)))))))
+       (setq my/last-screen-info screen-info))
+
+     (defun monitor-x-center (monitor-attributes)
+       "The center of the monitor in x, from MONITOR-ATTRIBUTES."
+       (+ (nth 0 (alist-get 'geometry monitor-attributes))
+          (/ (nth 2 (alist-get 'geometry monitor-attributes)) 2)))
+
+     (defun monitor-y-center (monitor-attributes)
+       "The center of the monitor in y, from MONITOR-ATTRIBUTES."
+       (+ (nth 1 (alist-get 'geometry monitor-attributes))
+          (/ (nth 3 (alist-get 'geometry monitor-attributes)) 2)))
+
+     (defun my/exwm-set-workspace-plist ()
+       "Set exwm-randr-workspace-output-plist for the current displays.
+     Lists two sets of workspaces enumerated from zero across the displays."
+       (let ((display-names
+              (mapcar (lambda (d) (alist-get 'name d))
+                      (sort (display-monitor-attributes-list) ;; sort bottom-top left-right
+                            (lambda (left right)
+                              (let ((right (- (monitor-x-center left)
+                                              (monitor-x-center right)))
+                                    (below (- (monitor-y-center left)
+                                              (monitor-y-center right))))
+                                (or (> below 0) (and (= 0 below) (< right 0)))))))))
+         (message "Setting up for display(s) %s" display-names)
+         (setq display-names (apply 'append
+                                    (make-list (/ exwm-workspace-number
+                                                  (length display-names))
+                                               display-names)))
+         (setq exwm-randr-workspace-output-plist
+               (apply 'append
+                      (mapcar* 'list
+                               (number-sequence 0 (1- (length display-names)))
+                               display-names)))))
+
+     (defun my/exwm-screen-change (&optional force)
+       "React to screen change - configure displays.
+
+     If the configured screens from my/last-screen-info haven't
+     changed, then do nothing, unless prefix arg FORCE is set."
+       (interactive "P")
+       (let* ((default-directory "/")
+              (screen-info (my/get-screen-info)))
+         (when (or force (not (equal screen-info my/last-screen-info)))
+           (if force
+               (message "Forced screen reconfigure requested")
+             (message "Screens changed - reconfiguring"))
+           (my/exwm-xrandr screen-info)
+           (my/exwm-set-workspace-plist)
+           ;;(faceheight-fix-all)
+           )))
+
+     (my/exwm-screen-change) ;; do an initial setup
+     (add-hook 'exwm-randr-screen-change-hook #'my/exwm-screen-change)
+     (exwm-randr-enable)
    #+END_SRC
 
 ** System package
