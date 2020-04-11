@@ -6,20 +6,34 @@
 Literate Emacs configuration style. This is part of my journey for
 /Teach myself programming in 10 years/. I'm using this configuration
 on a system running [[https://wiki.archlinux.org/][Arch Linux]] and Emacs 26.3, that's why this
-configuration will be using the latest features and /not check/ for the
-system it's running on.
+configuration will be using the latest features and /not check/ for
+the system it's running on.
 
 *IMPORTANT* The default configuration will setup Emacs Window
 Manager (EXWM), use with caution, I will make some defensive
 configuration if you wish to toggle this feature, for now, the
 only user target of this file is myself.
 
+Every emacs user should write his own configuration file and steal as
+many code as he wants from here (or elsewhere).
 
-* Table of Contents                                                     :TOC:
+#+BEGIN_SRC emacs-lisp
+  (unless (equal user-login-name "wand")
+    (warn "Please don't load Wand init file, it probably won't work for you.")
+    (with-current-buffer " *load*"
+      (goto-char (point-max))))
+#+END_SRC
+
+* Summary                                                               :TOC:
 - [[#packages][Packages]]
 - [[#dependencies][Dependencies]]
   - [[#extra][Extra]]
+    - [[#dunst][dunst]]
+    - [[#scrot][scrot]]
+    - [[#screensavers][screensavers]]
   - [[#browsers][Browsers]]
+    - [[#qutebrowser][Qutebrowser]]
+    - [[#google-chrome][Google Chrome]]
 - [[#operating-system][Operating System]]
   - [[#async][Async]]
   - [[#path][PATH]]
@@ -48,6 +62,14 @@ only user target of this file is myself.
   - [[#webjump][Webjump]]
   - [[#authentication-source][Authentication Source]]
 - [[#editing-text][Editing Text]]
+  - [[#defaults-1][Defaults]]
+    - [[#eldoc][Eldoc]]
+    - [[#subword][Subword]]
+  - [[#extra-features][Extra Features]]
+    - [[#smart-shift][Smart shift]]
+    - [[#change-inner][Change inner]]
+    - [[#expand-region][Expand region]]
+    - [[#jump-to-char][Jump to char]]
   - [[#highlights][Highlights]]
   - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][Multiple Cursors]]
@@ -62,6 +84,8 @@ only user target of this file is myself.
 - [[#tramp][TRAMP]]
 - [[#version-control][Version Control]]
   - [[#magit][Magit]]
+    - [[#gitconfig][Gitconfig]]
+    - [[#gitignore][Gitignore]]
   - [[#time-machine][Time machine]]
   - [[#miscellaneous][Miscellaneous]]
 - [[#search][Search]]
@@ -88,11 +112,14 @@ only user target of this file is myself.
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#org-mode][Org mode]]
-  - [[#defaults-1][Defaults]]
+  - [[#defaults-2][Defaults]]
+    - [[#manipulating-sections][Manipulating Sections]]
+    - [[#seamless-navigation-between-source-blocks][Seamless Navigation Between Source Blocks]]
   - [[#table-of-contents][Table of Contents]]
   - [[#capture][Capture]]
   - [[#structure-templates][Structure Templates]]
   - [[#revealjs][Reveal.js]]
+    - [[#more-details-from-how-to-build-one-presentation-using-the-package][More details from how to build one presentation using the package]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
   - [[#correct-your-spelling-errors-on-the-fly][Correct your spelling errors on the fly]]
@@ -110,9 +137,16 @@ only user target of this file is myself.
   - [[#pop-to-mark][Pop to mark]]
 - [[#general-custom-functions][General custom functions]]
   - [[#http-based][HTTP-based]]
+    - [[#find-my-current-ip][Find my current IP]]
   - [[#editing][Editing]]
+    - [[#what-sudo][what? sudo!]]
   - [[#buffer][Buffer]]
+    - [[#kill-buffer-and-the-file-associated][Kill buffer and the file associated]]
 - [[#keys][Keys]]
+  - [[#hint][Hint]]
+  - [[#global-definitions][Global definitions]]
+  - [[#measure][Measure]]
+  - [[#cast][Cast]]
 - [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
   - [[#system-package][System package]]
   - [[#notification-daemon][Notification Daemon]]
@@ -184,6 +218,19 @@ only user target of this file is myself.
 
      (require 'use-package)
   #+end_src
+
+  We can add new keywords to =use-package=, stolen from [[https://github.com/xuchunyang/emacs.d/blob/master/init.el][here.]]
+  #+BEGIN_SRC emacs-lisp
+    (defmacro bk-use-package-keywords-add (keyword)
+      "Add new keyword as placeholder"
+      `(progn
+         (add-to-list 'use-package-keywords ,keyword 'append)
+         (defun ,(intern (format "use-package-normalize/%s" keyword)) (&rest _))
+         (defun ,(intern (format "use-package-handler/%s" keyword)) (&rest _))))
+
+    (bk-use-package-keywords-add :about)
+    (bk-use-package-keywords-add :homepage)
+  #+END_SRC
 
   Some old packages simply are not in any repository, they are only
   elisp files distributed over the web. I will place these files
@@ -336,18 +383,6 @@ only user target of this file is myself.
      (setq inhibit-compacting-font-caches t)
    #+end_src
 
-   #+BEGIN_SRC emacs-lisp
-     (defun garbage-collect-defer ()
-       "Defer garbage collection."
-       (setq gc-cons-threshold most-positive-fixnum
-	     gc-cons-percentage 0.6))
-
-     (defun garbage-collect-restore ()
-       "Return garbage collection to normal parameters."
-       (setq gc-cons-threshold 16777216
-	     gc-cons-percentage 0.1))
-   #+END_SRC
-
    Emacs can inform us when the garbage collection is happening.
    #+BEGIN_SRC emacs-lisp
      (setq garbage-collection-messages t)
@@ -397,15 +432,26 @@ only user target of this file is myself.
        :ensure t
        :config
        (prodigy-define-service
-	 :name "Captalys VPN"
-	 :command "captalys-vpn"
-	 :tags '(captalys)
-	 :stop-signal 'sigkill
-	 :kill-process-buffer-on-stop t)
+         :name "Captalys VPN"
+         :command "captalys-vpn"
+         :tags '(captalys)
+         :stop-signal 'sigkill
+         :kill-process-buffer-on-stop t)
+
+       (prodigy-define-service
+         :name "Blog"
+         :command "lein ring server"
+         :cwd "~/bartuka-blog"
+         :stop-signal 'sigkill
+         :tags '(blog)
+         :kill-process-buffer-on-stop t)
 
        (prodigy-define-tag
-	 :name 'captalys
-	 :ready-message "Initialization Sequence Completed"))
+         :name 'captalys
+         :ready-message "Initialization Sequence Completed")
+       (prodigy-define-tag
+         :name 'blog
+         :ready-message "Started server on port 3000"))
    #+END_SRC
 
 * Aesthetics
@@ -416,22 +462,22 @@ only user target of this file is myself.
     invasive graphical elements.
     #+begin_src emacs-lisp
       (when window-system
-	(menu-bar-mode -1)
-	(tool-bar-mode -1)
-	(scroll-bar-mode -1))
+        (menu-bar-mode -1)
+        (tool-bar-mode -1)
+        (scroll-bar-mode -1))
     #+end_src
 
     Emacs convention is to show help and other inline documentation in
     the message area. Show help there instead of OS tooltip.
     #+BEGIN_SRC emacs-lisp
       (when (display-graphic-p)
-	(tooltip-mode -1))
+        (tooltip-mode -1))
     #+END_SRC
 
     Let's remove some crunchy messages at startup time.
     #+begin_src emacs-lisp
       (setq inhibit-splash-screen t
-	    inhibit-startup-echo-area-message t)
+            inhibit-startup-echo-area-message t)
     #+end_src
 
     Enabling some builtin modes that are very helpful e.g. highlight
@@ -502,6 +548,21 @@ only user target of this file is myself.
         :ensure nil
         :config
         (fringe-mode '(7 . 1)))
+    #+END_SRC
+
+    Preview line numbers when prompting for line number.
+    #+BEGIN_SRC emacs-lisp
+      (define-advice goto-line (:before (&rest _) preview-line-number)
+        "Preview line number when prompting for goto-line."
+        (interactive
+         (lambda (spec)
+           (if (and (boundp 'display-line-numbers)
+                    (not display-line-numbers))
+               (unwind-protect
+                   (progn (display-line-numbers-mode)
+                          (advice-eval-interactive-spec spec))
+                 (display-line-numbers-mode -1))
+             (advice-eval-interactive-spec spec)))))
     #+END_SRC
 
 * Defaults
@@ -578,7 +639,7 @@ only user target of this file is myself.
       (defun bk/auto-fill ()
         "My autofill setup for text buffers."
         (auto-fill-mode t)
-        (diminish 'auto-fill-mode))
+        (delight 'auto-fill-mode))
 
       (add-hook 'text-mode-hook #'bk/auto-fill)
 
@@ -866,11 +927,6 @@ Clean all the registers you saved.
      (setq max-mini-window-height 1)
    #+end_src
 
-   When using the minibuffer, never do garbage collection.
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'minibuffer-setup-hook #'garbage-collect-defer)
-     (add-hook 'minibuffer-exit-hook #'garbage-collect-restore)
-   #+END_SRC
 ** Help
 ** Calendar
 
@@ -929,29 +985,16 @@ Adding urban dictionary to webjump.
 
 * Editing Text
 
-   #+begin_src emacs-lisp
-     (use-package smart-shift
-       :ensure t
-       :config
-       (global-smart-shift-mode t))
-   #+end_src
+** Defaults
 
-   #+begin_src emacs-lisp
-     (use-package change-inner :ensure t)
-   #+end_src
+   See also =bidi-paragraph-direction=; setting that non-nil might
+   speed up redisplay.
+   #+BEGIN_SRC emacs-lisp
+     (setq bidi-paragraph-direction 'left-to-right)
+   #+END_SRC
 
-   #+begin_src emacs-lisp
-     (use-package expand-region :ensure t)
-   #+end_src
 
-   #+begin_src emacs-lisp
-     (use-package avy
-       :ensure t
-       :config
-       (avy-setup-default)
-       (global-set-key (kbd "C-c ;") 'avy-goto-char))
-   #+end_src
-
+*** Eldoc
    #+begin_src emacs-lisp
      (use-package eldoc
        :ensure nil
@@ -959,11 +1002,57 @@ Adding urban dictionary to webjump.
        :commands (eldoc-mode)
        :config
        (add-hook 'after-init-hook 'global-eldoc-mode))
-
-     (use-package subword
-       :ensure nil
-       :delight subword-mode)
    #+end_src
+
+*** Subword
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package subword
+        :ensure nil
+        :delight subword-mode)
+    #+END_SRC
+
+** Extra Features
+
+*** Smart shift
+   #+begin_src emacs-lisp
+     (use-package smart-shift
+       :homepage https://github.com/hbin/smart-shift
+       :about Shift the line/region to the left/right by the current major mode indentation
+       :ensure t
+       :config
+       (global-smart-shift-mode t))
+   #+end_src
+
+*** Change inner
+
+   #+begin_src emacs-lisp
+     (use-package change-inner
+       :homepage https://github.com/magnars/change-inner.el
+       :about vim's `ci' command, building on expand-region
+       :ensure t)
+   #+end_src
+
+*** Expand region
+   #+begin_src emacs-lisp
+     (use-package expand-region
+       :homepage https://github.com/magnars/expand-region.el
+       :about Extension to increase selected region by semantic units
+       :ensure t)
+   #+end_src
+
+*** Jump to char
+
+   #+begin_src emacs-lisp
+     (use-package avy
+       :homepage https://github.com/abo-abo/avy
+       :about Jump to things in Emacs tree-style
+       :ensure t
+       :config
+       (avy-setup-default)
+       (global-set-key (kbd "C-c ;") 'avy-goto-char))
+   #+end_src
+
 ** Highlights
 
    Visual feedback on some operations like yank, kill, undo. An
@@ -973,7 +1062,7 @@ Adding urban dictionary to webjump.
    #+BEGIN_SRC emacs-lisp
      (use-package volatile-highlights
        :ensure t
-       :diminish volatile-highlights-mode
+       :delight volatile-highlights-mode
        :defer t
        :config
        (volatile-highlights-mode t))
@@ -1482,7 +1571,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 #+BEGIN_SRC emacs-lisp
   (use-package ws-butler
     :ensure t
-    :diminish ws-butler-mode
+    :delight ws-butler-mode
     :config
     (ws-butler-global-mode +1))
 #+END_SRC
@@ -1504,7 +1593,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
  #+begin_src emacs-lisp
    (use-package clojure-mode
      :ensure t
-     :diminish (clojure-mode "λ")
+     :delight (clojure-mode "λ")
      :init
      (setq clojure-align-forms-automatically t)
      :config
@@ -1933,6 +2022,13 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 	      (setq markdown-command "pandoc -f markdown"))))
      #+END_SRC
 
+     Edit markdown code block like Org.
+     #+BEGIN_SRC emacs-lisp
+       (use-package edit-indirect
+         :ensure t
+         :defer t)
+     #+END_SRC
+
 ** Json
 
  #+begin_src emacs-lisp
@@ -2066,12 +2162,15 @@ on-demand and stored in memory.
     Toggle editing org-mode source blocks.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "s-e") #'org-edit-special)
+      (define-key org-src-mode-map (kbd "s-e") #'org-edit-src-exit)
     #+END_SRC
 ** Table of Contents
 
    #+begin_src emacs-lisp
      (use-package toc-org
        :ensure t
+       :init
+       (setq toc-org-max-depth 3)
        :config
        (add-hook 'org-mode-hook 'toc-org-mode))
    #+end_src
@@ -2688,6 +2787,7 @@ How to use Slack on emacs? Some terminology from the website:
 
 * Keys
 
+** Hint
    #+begin_src emacs-lisp
      (use-package which-key
        :ensure t
@@ -2700,6 +2800,8 @@ How to use Slack on emacs? Some terminology from the website:
        :config
        (which-key-mode))
    #+end_src
+
+** Global definitions
 
    #+begin_src emacs-lisp
      (global-set-key "\C-x3" (lambda ()
@@ -2733,6 +2835,29 @@ How to use Slack on emacs? Some terminology from the website:
    				  (interactive)
    				  (kill-buffer (current-buffer))))
    #+end_src
+
+** Measure
+
+   Keyfreq is a package to measure how frequent we press the keys and
+   chords combinations inside Emacs. Useful to let it run for a while
+   and look for improvements in your daily habits.
+   #+BEGIN_SRC emacs-lisp
+     (use-package keyfreq
+       :ensure t
+       :config
+       (keyfreq-mode)
+       (keyfreq-autosave-mode))
+   #+END_SRC
+
+** Cast
+
+   Show current command and its key in the mode line
+   #+BEGIN_SRC emacs-lisp
+     (use-package keycast
+       :homepage https://github.com/tarsius/keycast
+       :ensure t
+       :defer t)
+   #+END_SRC
 
 * Emacs as my own Operating System
 
