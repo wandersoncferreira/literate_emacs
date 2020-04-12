@@ -55,6 +55,7 @@ many code as he wants from here (or elsewhere).
   - [[#calendar][Calendar]]
   - [[#webjump][Webjump]]
   - [[#authentication-source][Authentication Source]]
+- [[#help-1][Help]]
 - [[#editing-text][Editing Text]]
   - [[#defaults-1][Defaults]]
     - [[#eldoc][Eldoc]]
@@ -68,6 +69,9 @@ many code as he wants from here (or elsewhere).
   - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][Multiple Cursors]]
   - [[#custom-functions][Custom functions]]
+    - [[#smart-move-to-beginning-of-visible-line-or-not][Smart move to beginning of visible line (or not)]]
+    - [[#unfill-paragraph][Unfill paragraph]]
+    - [[#duplicate-line-or-region][Duplicate line or region]]
 - [[#completions][Completions]]
   - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
   - [[#company-mode][Company mode]]
@@ -129,6 +133,7 @@ many code as he wants from here (or elsewhere).
 - [[#pomodoro][Pomodoro]]
 - [[#advice][Advice]]
   - [[#pop-to-mark][Pop to mark]]
+  - [[#yank-indent][Yank indent]]
 - [[#general-custom-functions][General custom functions]]
   - [[#http-based][HTTP-based]]
     - [[#find-my-current-ip][Find my current IP]]
@@ -475,6 +480,15 @@ many code as he wants from here (or elsewhere).
         (load-theme 'dakrone t))
     #+END_SRC
 
+    Find out what face something at point have.
+    #+BEGIN_SRC emacs-lisp
+      (defun what-face (pos)
+        (interactive "d")
+        (let ((face (or (get-char-property (point) 'read-face-name)
+                        (get-char-property (point) 'face))))
+          (if face (message "Face: %s" face) (message "No face at %d" pos))))
+    #+END_SRC
+
 ** Time
 
    #+BEGIN_SRC emacs-lisp
@@ -619,6 +633,13 @@ many code as he wants from here (or elsewhere).
       ;; real emacs knights don't use shift to mark things
       (setq shift-select-mode nil)
     #+end_src
+
+    The =*scratch*= buffer is simply to valuable to lose.
+    #+BEGIN_SRC emacs-lisp
+      (use-package unkillable-scratch
+        :ensure t
+        :hook (after-init #'unkillable-scratch))
+    #+END_SRC
 
 ** Recentf
 
@@ -945,6 +966,18 @@ Adding urban dictionary to webjump.
        (pinentry-start))
    #+END_SRC
 
+* Help
+
+  Is good to know how to ask for help in Emacs
+  #+BEGIN_SRC emacs-lisp
+    (use-package helpful
+      :ensure t
+      :bind
+      (("C-h f" . helpful-callable)
+       ("C-h v" . helpful-variable)
+       ("C-h k" . helpful-key)
+       ("C-h ," . helpful-at-point)))
+  #+END_SRC
 * Editing Text
 
 ** Defaults
@@ -1029,6 +1062,20 @@ Adding urban dictionary to webjump.
        :config
        (volatile-highlights-mode t))
    #+END_SRC
+
+   Very often is useful to highlight some symbols.
+   #+BEGIN_SRC emacs-lisp
+     (use-package highlight-symbol
+       :ensure t
+       :hook
+       ((highlight-symbol-mode . highlight-symbol-nav-mode)
+        (prog-mode . highlight-symbol-mode))
+       :custom
+       (highlight-symbol-highlight-single-occurrence nil)
+       (highlight-symbol-idle-delay 0.25)
+       (highlight-symbol-on-navigation-p t))
+   #+END_SRC
+
 ** UTF-8
 
    No one knows why this is not the default already.
@@ -1052,25 +1099,85 @@ Adding urban dictionary to webjump.
 
 ** Custom functions
 
-#+begin_src emacs-lisp 
-  ;; `C-a' first takes you to the first non-whitespace char as
-  ;; `back-to-indentation' on a line, and if pressed again takes you to
-  ;; the actual beginning of the line.
-  (defun smarter-move-beginning-of-line (arg)
-    "Move depending on ARG to beginning of visible line or not.
-    From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/."
-    (interactive "^p")
-    (setq arg (or arg 1))
-    (when (/= arg 1)
-      (let ((line-move-visual nil))
-	(forward-line (1- arg))))
-    (let ((orig-point (point)))
-      (back-to-indentation)
-      (when (= orig-point (point))
-	(move-beginning-of-line 1))))
+   Several helper functions to ease the day-to-day work of editing
+   text.
 
-  (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
-#+end_src
+*** Smart move to beginning of visible line (or not)
+
+    Very nice default.
+
+    #+begin_src emacs-lisp
+      ;; `C-a' first takes you to the first non-whitespace char as
+      ;; `back-to-indentation' on a line, and if pressed again takes you to
+      ;; the actual beginning of the line.
+      (defun smarter-move-beginning-of-line (arg)
+        "Move depending on ARG to beginning of visible line or not.
+        From https://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/."
+        (interactive "^p")
+        (setq arg (or arg 1))
+        (when (/= arg 1)
+          (let ((line-move-visual nil))
+    	(forward-line (1- arg))))
+        (let ((orig-point (point)))
+          (back-to-indentation)
+          (when (= orig-point (point))
+    	(move-beginning-of-line 1))))
+
+      (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
+    #+end_src
+
+*** Unfill paragraph
+
+    I used it sometimes when yanking text written in Emacs to paste in
+    other external apps such as gmail and I don't want the "break
+    line" to be at 70th column there.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun unfill-paragraph ()
+        "Takes a multi-line paragraph and makes it into a single line of text."
+        (interactive)
+        (let ((fill-column (point-max)))
+          (fill-paragraph nil)))
+    #+END_SRC
+
+*** Duplicate line or region
+
+    #+BEGIN_SRC emacs-lisp
+      (defun duplicate-current-line-or-region (arg)
+        "Duplicates the current line or region ARG times.
+      If there's no region, the current line will be duplicated."
+        (interactive "p")
+        (save-excursion
+          (if (region-active-p)
+              (duplicate-region arg)
+            (duplicate-current-line arg))))
+
+      (defun duplicate-region (num &optional start end)
+        "Duplicates the region bounded by START and END NUM times.
+      If no START and END is provided, the current region-beginning
+      region-end is used."
+        (interactive "p")
+        (let* ((start (or start (region-beginning)))
+               (end (or end (region-end)))
+               (region (buffer-substring start end)))
+          (goto-char start)
+          (dotimes (i num)
+            (insert region))))
+
+      (defun duplicate-current-line (num)
+        "Duplicate the current line NUM times."
+        (interactive "p")
+        (when (eq (point-at-eol) (point-max))
+          (goto-char (point-max))
+          (newline)
+          (forward-char -1))
+        (duplicate-region num (point-at-bol) (1+ (point-at-eol))))
+    #+END_SRC
+
+    Let's bind the top level function to a sensible key.
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-c 2") 'duplicate-current-line-or-region)
+    #+END_SRC
 
 * Completions
 ** Minibuffer (ido mode)
@@ -1328,6 +1435,38 @@ the *winner-boring-buffers*.
   | i     | list the content of a sub-directory |
   | C-x u | dired undo                          |
 
+
+  M-up is nicer in dired if it moves to the third line - straight to
+  the "..", which M-down is nicer if it moves to the last file and
+  finally C-a moving back to start of files.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun dired-back-to-top ()
+      (interactive)
+      (beginning-of-buffer)
+      (next-line 2)
+      (dired-back-to-start-of-files))
+
+    (defun dired-back-to-bottom ()
+      (interactive)
+      (end-of-buffer)
+      (next-line -1)
+      (dired-back-to-start-of-files))
+
+    (defun dired-back-to-start-of-files ()
+      (interactive)
+      (backward-char (- (current-column) 2)))
+  #+END_SRC
+
+  Let's bind the functions defined above so it can take effect in
+  dired.
+  #+BEGIN_SRC emacs-lisp
+    (eval-after-load 'dired
+      '(progn
+         (define-key dired-mode-map (kbd "M-p") 'dired-back-to-top)
+         (define-key dired-mode-map (kbd "M-n") 'dired-back-to-bottom)
+         (define-key dired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)))
+  #+END_SRC
 * TRAMP
 
   If TRAMP makes backup files, they should be better be kept locally
@@ -1337,6 +1476,20 @@ the *winner-boring-buffers*.
   #+END_SRC
 
 * Version Control
+
+  Sane config for =ediff= which is basically removing noisy
+  highlights, avoiding crazy multi-frames setup, ignoring some
+  whitespaces and windows should be side-by-side.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ediff
+      :init
+      (setq ediff-highlight-all-diffs nil)
+      (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+      (setq ediff-diff-options "-w")
+      (setq ediff-split-window-function 'split-window-horizontally))
+  #+END_SRC
+
 ** Magit
 
    A git porcelain inside Emacs. Magit is an interface to the version
@@ -2702,6 +2855,43 @@ How to use Slack on emacs? Some terminology from the website:
 	   (when (= p (point)) ad-do-it))))
 
      (setq set-mark-command-repeat-pop t)
+   #+END_SRC
+
+** Yank indent
+
+   This was stolen from [[https://github.com/milkypostman/dotemacs/blob/master/init.el][here.]] The idea is to indent yanked regions in
+   specific modes that you can define.
+
+   #+BEGIN_SRC emacs-lisp
+     (defvar yank-indent-modes '(prog-mode
+                                 js2-mode)
+       " Modes in which to indent regions that are yanked (or yank-popped)")
+
+     (defvar yank-advised-indent-threshold 1000
+       " Threshhold (# chars) over which indentation does not automatically occur.")
+
+     (defun yank-advise-indent-function (beg eng)
+       "Do indentation, as long as the region isn't too large."
+       (if (<= (- end beg) yank-advised-indent-threshold)
+           (indent-region beg end nil)))
+
+     (defadvice yank (after yank-indent activate)
+       "If current mode is one of `yank-indent-modes', indent yanked text."
+       (if (and (not (ad-get-arg 0))
+                (member major-mode yank-indent-modes))
+           (let ((transient-mark-mode nil))
+             (yank-advise-indent-function (region-beginning) (region-end)))))
+
+     (defadvice yank-pop (after yank-pop-indent activate)
+       "If the current mode is one of `yank-indent-modes', indent yanked text."
+       (if (and (not (ad-get-arg 0))
+                (member major-mode yank-indent-modes))
+           (let ((transient-mark-mode nil))
+             (yank-advise-indent-function (region-beginning) (region-end)))))
+
+     (defun yank-unindented ()
+       (interactive)
+       (yank 1))
    #+END_SRC
 
 * General custom functions
