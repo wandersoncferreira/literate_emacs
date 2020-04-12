@@ -2811,6 +2811,82 @@ How to use Slack on emacs? Some terminology from the website:
 
 * Emacs as my own Operating System
 
+  Emacs as my full operating system is just too great. I have a small
+  problem recently with this setup, I use an  60% Anne Pro 2 keyboard and
+  its well known to be very but very buggy. The experience of the
+  keyboard itself is incredible, but the firmware behind it is just
+  unbearable, for some reason after hitting some keys my Emacs was
+  halting. oO yes, complete halt for no reason whatsoever, seems like
+  XKB and this firmware is not getting along nicely.
+
+  I found an alternative to fix this issue by using EXWM alongside
+  with LXDE. There are two files:
+
+  =~/.config/lxsession/LXDE/autostart=
+  #+BEGIN_SRC conf
+    @pcmanfm --desktop --profile LXDE
+    @xscreensaver -no-splash
+  #+END_SRC
+
+  =~/.config/lxsession/LXDE/desktop.conf=
+  #+BEGIN_SRC conf
+    [Session]
+    window_manager=emacs
+    disable_autostart=no
+    polkit/command=lxpolkit
+    clipboard/command=lxclipboard
+    xsettings_manager/command=build-in
+    proxy_manager/command=build-in
+    keyring/command=ssh-agent
+    quit_manager/command=lxsession-logout
+    lock_manager/command=lxlock
+    terminal_manager/command=lxterminal
+    quit_manager/image=/usr/share/lxde/images/logout-banner.png
+    quit_manager/layout=top
+
+    [GTK]
+    iXft/Antialias=1
+    iXft/Hinting=1
+    sXft/HintStyle=hintslight
+    sXft/RGBA=rgb
+    sNet/ThemeName=Clearlooks
+    sNet/IconThemeName=nuoveXT2
+    iNet/EnableEventSounds=1
+    iNet/EnableInputFeedbackSounds=1
+    sGtk/ColorScheme=
+    sGtk/FontName=Sans 10
+    iGtk/ToolbarStyle=3
+    iGtk/ToolbarIconSize=3
+    iGtk/ButtonImages=1
+    iGtk/MenuImages=1
+    iGtk/CursorThemeSize=18
+    sGtk/CursorThemeName=DMZ-White
+
+    [Mouse]
+    AccFactor=20
+    AccThreshold=10
+    LeftHanded=0
+
+    [Keyboard]
+    Delay=500
+    Interval=30
+    Beep=1
+
+    [State]
+    guess_default=true
+
+    [Dbus]
+    lxde=true
+
+    [Environment]
+    menu_prefix=lxde-
+  #+END_SRC
+
+  And don't forget to change the content of =~/.xinitrc= to =exec
+  startlxde=.
+
+  Ok, now let's start with EXWM configuration.
+
   #+BEGIN_SRC emacs-lisp
     (defun bk/keepmenu ()
       "Call password manager."
@@ -2868,13 +2944,7 @@ How to use Slack on emacs? Some terminology from the website:
 
     ;; universal Get-me-outta-here
     (push ?\C-g exwm-input-prefix-keys)
-    (exwm-input-set-key (kbd "C-g") #'keyboard-quit)
-
-    ;; (require 'exwm-randr)
-    ;; (setq exwm-randr-workspace-output-plist '(0 "HDMI1" 1 "eDP1"))
-    ;; (add-hook 'exwm-randr-screen-change-hook #'bk/setup-monitor)
-    ;; (exwm-randr-enable)
-    )
+    (exwm-input-set-key (kbd "C-g") #'keyboard-quit))
 #+END_SRC
 
    Now that I am using Emacs as my window manager I can use the meta keys
@@ -3115,7 +3185,7 @@ How to use Slack on emacs? Some terminology from the website:
      (defun exwm-bk/nocaps ()
        (interactive)
        (start-process-shell-command "nocaps" nil
-                    "setxkbmap -option ctrl:nocaps"))
+                                    "setxkbmap -layout us -variant alt-intl -option ctrl:nocaps"))
 
      (use-package exwm-systemtray
        :ensure nil
