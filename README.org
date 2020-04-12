@@ -72,6 +72,7 @@ many code as he wants from here (or elsewhere).
     - [[#smart-move-to-beginning-of-visible-line-or-not][Smart move to beginning of visible line (or not)]]
     - [[#unfill-paragraph][Unfill paragraph]]
     - [[#duplicate-line-or-region][Duplicate line or region]]
+  - [[#hide-block-of-code][Hide block of code]]
 - [[#completions][Completions]]
   - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
   - [[#company-mode][Company mode]]
@@ -85,6 +86,7 @@ many code as he wants from here (or elsewhere).
     - [[#gitconfig][Gitconfig]]
     - [[#gitignore][Gitignore]]
   - [[#time-machine][Time machine]]
+  - [[#visual-identification][Visual identification]]
   - [[#miscellaneous][Miscellaneous]]
 - [[#search][Search]]
   - [[#wgrep][Wgrep]]
@@ -471,14 +473,8 @@ many code as he wants from here (or elsewhere).
     The color theme is always a complicated matter. I've been trying
     several ones, most recently I had settle with Protesilaos
     =modus-{operandi,vivendi}= packages, but now I want to try =dakrone=
-    for a while.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package dakrone-theme
-        :ensure t
-        :config
-        (load-theme 'dakrone t))
-    #+END_SRC
+    for a while. =deprecated= already. I will be using the default
+    white one.
 
     Find out what face something at point have.
     #+BEGIN_SRC emacs-lisp
@@ -487,6 +483,11 @@ many code as he wants from here (or elsewhere).
         (let ((face (or (get-char-property (point) 'read-face-name)
                         (get-char-property (point) 'face))))
           (if face (message "Face: %s" face) (message "No face at %d" pos))))
+    #+END_SRC
+
+    Change the highlight color for selection text.
+    #+BEGIN_SRC emacs-lisp
+      (set-face-attribute 'region nil :background "#666")
     #+END_SRC
 
 ** Time
@@ -513,17 +514,15 @@ many code as he wants from here (or elsewhere).
         (set-frame-font
          (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
 
-      (bk/font-family-size "Source Code Pro Medium" 12)
+      ;; the default for a while again...
+      ;; (bk/font-family-size "Source Code Pro Medium" 12)
     #+end_src
 
 ** Fringe
 
     Control the fringe around the frame.
     #+BEGIN_SRC emacs-lisp
-      (use-package fringe
-        :ensure nil
-        :config
-        (fringe-mode '(7 . 1)))
+      (fringe-mode '(10 . 1))
     #+END_SRC
 
     Preview line numbers when prompting for line number.
@@ -633,13 +632,6 @@ many code as he wants from here (or elsewhere).
       ;; real emacs knights don't use shift to mark things
       (setq shift-select-mode nil)
     #+end_src
-
-    The =*scratch*= buffer is simply to valuable to lose.
-    #+BEGIN_SRC emacs-lisp
-      (use-package unkillable-scratch
-        :ensure t
-        :hook (after-init #'unkillable-scratch))
-    #+END_SRC
 
 ** Recentf
 
@@ -791,21 +783,21 @@ Clean all the registers you saved.
   (defun ido-menu--read (index-alist &optional prompt)
     "Show imenu INDEX-ALIST on ido interface as PROMPT."
     (let* ((symatpt (thing-at-point 'symbol))
-	   (names (mapcar 'car index-alist))
-	   (name (ido-completing-read (or prompt "imenu ") names
-				      nil t nil nil nil))
-	   (choice (assoc name index-alist)))
+       (names (mapcar 'car index-alist))
+       (name (ido-completing-read (or prompt "imenu ") names
+                      nil t nil nil nil))
+       (choice (assoc name index-alist)))
       (if (imenu--subalist-p choice)
-	  (ido-menu--read (cdr choice) prompt nil)
-	choice)))
+      (ido-menu--read (cdr choice) prompt nil)
+    choice)))
 
   (defun bk/ido-menu ()
     "Public interface to my custom imenu through ido."
     (interactive)
     (let ((index-alist (cdr (imenu--make-index-alist))))
       (if (equal index-alist '(nil))
-	  (message "No imenu tags in buffer")
-	(imenu (ido-menu--read index-alist nil)))))
+      (message "No imenu tags in buffer")
+    (imenu (ido-menu--read index-alist nil)))))
 
   (global-set-key (kbd "C-.") 'bk/ido-menu)
 
@@ -994,9 +986,12 @@ Adding urban dictionary to webjump.
      (use-package eldoc
        :ensure nil
        :delight eldoc-mode
-       :commands (eldoc-mode)
+       :init
+       (setq eldoc-idle-delay 0.1
+             eldoc-echo-area-use-multiline-p nil)
+       (eldoc-mode 1)
        :config
-       (add-hook 'after-init-hook 'global-eldoc-mode))
+       (add-hook 'prog-mode-hook 'turn-on-eldoc-mode))
    #+end_src
 
 *** Subword
@@ -1178,6 +1173,15 @@ Adding urban dictionary to webjump.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "C-c 2") 'duplicate-current-line-or-region)
     #+END_SRC
+
+** Hide block of code
+
+   Enable hide definitions functions
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'prog-mode-hook 'hs-minor-mode)
+     (global-set-key (kbd "C-c h") 'hs-toggle-hiding)
+
+   #+END_SRC
 
 * Completions
 ** Minibuffer (ido mode)
@@ -1539,6 +1543,26 @@ the *winner-boring-buffers*.
       (use-package git-timemachine :ensure t)
     #+end_src
 
+** Visual identification
+
+   Show differences between local and remote repo.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package diff-hl
+       :ensure t
+       :init
+       (setq diff-hl-side 'left)
+       :config
+       (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+       (diff-hl-flydiff-mode)
+       (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+       (global-diff-hl-mode)
+       
+       (custom-set-faces
+        '(diff-hl-change ((t (:background "#3a81c3"))))
+        '(diff-hl-insert ((t (:background "#7ccd7c"))))
+        '(diff-hl-delete ((t (:background "#ee6363"))))))
+   #+END_SRC
 ** Miscellaneous
 
    #+BEGIN_SRC emacs-lisp
@@ -2398,7 +2422,8 @@ There an exhaustive documentation about Reveal.js in the github
        :delight flyspell-mode
        :config
        (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-       (add-hook 'text-mode-hook 'flyspell-mode))
+       (add-hook 'text-mode-hook 'flyspell-mode)
+       (define-key flyspell-mode-map (kbd "C-.") nil))
    #+end_src
 
    There is a nice package to help correcting previous words that
@@ -3199,15 +3224,23 @@ How to use Slack on emacs? Some terminology from the website:
 
      (exwm-monitors-define-screen-info
       :name "eDP1"
-      :nickname :x1-carbon
       :width 1600
       :height 900)
 
      (exwm-monitors-define-spec
       :name "home"
-      :pred (list :only '(:x1-carbon "HDMI1"))
-      :action (list '(:x1-carbon :auto)
+      :pred (list :only '("eDP1" "HDMI1"))
+      :action (list '("eDP1" :off)
                     '("HDMI1" :right)))
+
+     (defun bk/turn-x1-carbon-on ()
+       (interactive)
+       (exwm-monitors-define-spec
+        :name "home"
+        :pred (list :only '("eDP1" "HDMI1"))
+        :action (list '("eDP1" :auto)
+                      '("HDMI1" :right)))
+       (exwm-monitors-initial-setup))
 
      (exwm-monitors-initial-setup)
    #+END_SRC
@@ -3229,7 +3262,7 @@ How to use Slack on emacs? Some terminology from the website:
    things changing around me. For now, I will use [[https://dunst-project.org/][Dunst]].
 
    #+BEGIN_SRC emacs-lisp
-     (call-process-shell-command "nohup dunst >/dev/null &" nil 0)
+     ;; (call-process-shell-command "nohup dunst >/dev/null &" nil 0)
    #+END_SRC
 
    There is a function to send an alert to the daemon.
@@ -3328,7 +3361,7 @@ How to use Slack on emacs? Some terminology from the website:
      (defun bk/fix-caps-and-key-rate ()
        "Capslock is another ctrl and key rate need to be higher"
        (interactive)
-       (start-process-shell-command "caps" nil "setxkbmap -option ctrl:nocaps")
+       (start-process-shell-command "caps" nil "setxkbmap -layout us -variant alt-intl -option ctrl:nocaps")
        (start-process-shell-command "krate" nil "xset r rate 300 50")
        (message "Ctrl and key rate fixed!"))
 
@@ -3387,8 +3420,7 @@ How to use Slack on emacs? Some terminology from the website:
        (add-hook 'exwm-init-hook 'exwm-bk/bluetooth t)
        (add-hook 'exwm-init-hook 'exwm-bk/xscreensaver)
        (add-hook 'exwm-init-hook 'exwm-bk/key-rate)
-       (add-hook 'exwm-init-hook 'exwm-bk/nocaps)
-       )
+       (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
    #+END_SRC
 
 ** Important commands

@@ -11,24 +11,35 @@
 (require 'dash)
 (require 'exwm-randr)
 
-(defvar exwm-monitors--last-screen-info nil
-  "Most recent screen info.")
-
 (defvar exwm-monitors--screen-infos nil
   "List of attributes about your screen.
-
 The list is a property list with the following properties:
 
 `name'
-  Name of your screen.")
+  Name of your screen.
+`width'
+  Desired width for your screen e.g. 1600, 1024, 1900...
+`height'
+  Desired height for your screen e.g. 900, 1024, 1900...")
+
+(defvar exwm-monitors--last-screen-info nil
+  "Hold the value of the most recent screen info.")
 
 (defvar exwm-monitors--screen-specs nil
   "List of attributes about your specs.
-
 The list is a property list with the following properties:
 
 `name'
-  Name of your screen.")
+  Name of your screen.
+`pred'
+  List of list with the conditionals that will be tested
+to decide which action to make e.g. (list :only '('eDP1', 'HDMI1'))
+`actions'
+  List of list with the actions to take,
+e.g. (list '('eDP1' :auto) '('HDMI1' :right))")
+
+(defvar exwm-monitors--last-screen-spec nil
+  "Hold the value of the most recent screen specs.")
 
 (defun exwm-monitors-define-screen-info (&rest args)
   "Define a new screen info from ARGS."
@@ -68,7 +79,6 @@ The list is a property list with the following properties:
                       (if cfg
                           (plist-put cfg :connected t)
                         (list :name (car items)
-                              :nickname (car items)
                               :connected t
                               :width (car dimensions)
                               :height (cadr dimensions)))))
@@ -103,7 +113,7 @@ The list is a property list with the following properties:
          (operator (car predicate)))
     (cond
      ((equalp operator :only)
-      (equalp (mapcar (lambda (s) (plist-get s :nickname)) infos)
+      (equalp (mapcar (lambda (s) (plist-get s :name)) infos)
               (cadr predicate))))))
 
 (defun exwm-monitors-xrandr (screen-info)
@@ -115,15 +125,12 @@ The list is a property list with the following properties:
                              screen-specs)))
     (if (not valid-spec)
         (exwm-monitors-xrandr-default)
-
       (shell-command
        (format "xrandr %s"
                (string-join
                 (mapcar (lambda (action)
-                          (let* ((choose-info (lambda (info) (string= (plist-get info :nickname) (car action))))
+                          (let* ((choose-info (lambda (info) (string= (plist-get info :name) (car action))))
                                  (info (-first choose-info screen-info)))
-                            (message "INFO")
-                            (prin1 info)
                             ;; it needs to be a better loop with recursion.. because
                             ;; if this is the first guy to be assigned and has a right-of property, need to check if there is anyone esle...
                             ;; learn how to position the windows correctly to do proper computation
@@ -139,7 +146,8 @@ The list is a property list with the following properties:
                                                                     (plist-get info :height)))
                              (t (format "--output %s --off " (plist-get info :name))))))
                         (plist-get valid-spec :action))))))
-    (setq exwm-monitors--last-screen-info screen-info)))
+    (setq exwm-monitors--last-screen-info screen-info)
+    (setq exwm-monitors--last-screen-spec screen-specs)))
 
 (defun exwm-monitors-x-center (monitor-attributes)
   "The center of the monitor in x, from MONITOR-ATTRIBUTES."
@@ -180,15 +188,19 @@ Lists two sets of workspaces enumerated from zero across the displays."
 If the configured screens from my/last-screen-info haven't
 changed, then do nothing, unless prefix arg FORCE is set."
   (interactive "P")
-  (let* ((default-directory "/"))
-    (when (not (equal exwm-monitors--screen-infos
-                      exwm-monitors--last-screen-info))
+  (let* ((default-directory "/")
+         (screen-infos (exwm-monitors-default-screen-info)))
+    (when (not (and (equal screen-infos
+                           exwm-monitors--last-screen-info)
+                    (equal exwm-monitors--screen-specs
+                           exwm-monitors--last-screen-spec)))
       (message "Screens changed - reconfiguring")
-      (exwm-monitors-xrandr exwm-monitors--screen-infos)
+      (exwm-monitors-xrandr screen-infos)
       (exwm-monitors-set-workspace-plist))))
 
 (defun exwm-monitors-initial-setup ()
   "Call this function to handle screen layout at startup time."
+  (interactive)
   (exwm-monitors-handle-screen-changes))
 
 (add-hook 'exwm-randr-screen-change-hook #'exwm-monitors-handle-screen-changes)
