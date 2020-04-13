@@ -37,7 +37,7 @@ many code as he wants from here (or elsewhere).
   - [[#manage-external-services][Manage external services]]
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][Cleaning]]
-  - [[#themes][Themes]]
+  - [[#theme-and-faces][Theme and Faces]]
   - [[#time][Time]]
   - [[#font][Font]]
   - [[#fringe][Fringe]]
@@ -58,6 +58,7 @@ many code as he wants from here (or elsewhere).
 - [[#help-1][Help]]
 - [[#editing-text][Editing Text]]
   - [[#defaults-1][Defaults]]
+    - [[#very-large-files][Very large files]]
     - [[#eldoc][Eldoc]]
     - [[#subword][Subword]]
   - [[#extra-features][Extra Features]]
@@ -80,6 +81,11 @@ many code as he wants from here (or elsewhere).
 - [[#window][Window]]
   - [[#winner][Winner]]
 - [[#dired][Dired]]
+  - [[#guidelines][Guidelines]]
+    - [[#mark-files-in-dired][Mark files in Dired]]
+    - [[#replace-text-in-multiple-files][Replace text in multiple files]]
+  - [[#ranger][Ranger]]
+  - [[#functions][Functions]]
 - [[#tramp][TRAMP]]
 - [[#version-control][Version Control]]
   - [[#magit][Magit]]
@@ -132,6 +138,7 @@ many code as he wants from here (or elsewhere).
 - [[#spotify][Spotify]]
 - [[#rss-feed][RSS Feed]]
 - [[#slack][Slack]]
+- [[#telegram][Telegram]]
 - [[#pomodoro][Pomodoro]]
 - [[#advice][Advice]]
   - [[#pop-to-mark][Pop to mark]]
@@ -141,6 +148,7 @@ many code as he wants from here (or elsewhere).
     - [[#find-my-current-ip][Find my current IP]]
   - [[#editing][Editing]]
     - [[#what-sudo][what? sudo!]]
+    - [[#eval-and-replace][eval and replace]]
   - [[#buffer][Buffer]]
     - [[#kill-buffer-and-the-file-associated][Kill buffer and the file associated]]
 - [[#keys][Keys]]
@@ -356,6 +364,10 @@ many code as he wants from here (or elsewhere).
 
      (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
      (setq exec-path (append exec-path '("/usr/local/bin")))
+
+     (setenv "LD_LIBRARY_PATH" (concat (getenv "LD_LIBRARY_PATH") ":/usr/local/lib"))
+     (setq exec-path (append exec-path '("/usr/local/lib")))
+
    #+end_src
 
    I've been using qutebrowser as my main browser for more than one year
@@ -468,7 +480,7 @@ many code as he wants from here (or elsewhere).
         (add-hook 'text-mode-hook #'auto-fill-mode))
     #+end_src
 
-** Themes
+** Theme and Faces
 
     The color theme is always a complicated matter. I've been trying
     several ones, most recently I had settle with Protesilaos
@@ -490,6 +502,10 @@ many code as he wants from here (or elsewhere).
       (set-face-attribute 'region nil :background "#666")
     #+END_SRC
 
+    Make cursor the width of the character it is under.
+    #+BEGIN_SRC emacs-lisp
+      (setq x-stretch-cursor t)
+    #+END_SRC
 ** Time
 
    #+BEGIN_SRC emacs-lisp
@@ -542,96 +558,105 @@ many code as he wants from here (or elsewhere).
 
 * Defaults
 
-    Does not clutter my =init.el= file with customized variables.
-    #+begin_src emacs-lisp
-      (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-      (when (file-exists-p custom-file)
-        (load custom-file))
-    #+end_src
+  I ran into this little tidbit while reading Sacha Chu'a posts from
+  Emacs. You can find the whole discussion [[https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746][here]] but the idea is that
+  =next-line= defun triggers =line-move-partial= which leads to
+  excessive processing. By setting the variable below, the speed of
+  using =next-line= gets very cut down.
+  #+BEGIN_SRC emacs-lisp
+    (setq auto-window-vscroll nil)
+  #+END_SRC
 
-    Show current key-sequence in minibuffer, like vim does. Any feedback
-    after typing is better UX than no feedback at all.
-    #+BEGIN_SRC emacs-lisp
-      (setq echo-keystrokes 0.2)
-    #+END_SRC
+  Do not clutter my =init.el= file with customized variables.
+  #+begin_src emacs-lisp
+    (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+    (when (file-exists-p custom-file)
+      (load custom-file))
+  #+end_src
 
-    Allow pasting selection outside of Emacs
-    #+BEGIN_SRC emacs-lisp
-      (setq x-select-enable-clipboard t)
-    #+END_SRC
+  Show current key-sequence in minibuffer, like vim does. Any feedback
+  after typing is better UX than no feedback at all.
+  #+BEGIN_SRC emacs-lisp
+    (setq echo-keystrokes 0.2)
+  #+END_SRC
 
-    Say you copied a link from your web browser, then switched to Emacs to
-    paste it somewhere. Before you do that, you notice something you want
-    to kill. Doing that will place the last kill to the clipboard, thus
-    overriding the thing you copied earlier. We can have a kill ring
-    solution:
-    #+BEGIN_SRC emacs-lisp
-      (setq save-interprogram-paste-before-kill t)
-    #+END_SRC
+  Allow pasting selection outside of Emacs
+  #+BEGIN_SRC emacs-lisp
+    (setq x-select-enable-clipboard t)
+  #+END_SRC
 
-    #+begin_src emacs-lisp
-      (setq tab-always-indent 'complete)
-      (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-      (setq custom-safe-themes t)
+  Say you copied a link from your web browser, then switched to Emacs to
+  paste it somewhere. Before you do that, you notice something you want
+  to kill. Doing that will place the last kill to the clipboard, thus
+  overriding the thing you copied earlier. We can have a kill ring
+  solution:
+  #+BEGIN_SRC emacs-lisp
+    (setq save-interprogram-paste-before-kill t)
+  #+END_SRC
 
-      (defalias 'cquit 'cider-quit)
-      (defalias 'yes-or-no-p 'y-or-n-p)
+  #+begin_src emacs-lisp
+    (setq tab-always-indent 'complete)
+    (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+    (setq custom-safe-themes t)
 
-      ;; built in htop
-      (setq proced-auto-update-flag t
-    	proced-auto-update-interval 1
-    	proced-descend t)
-    #+end_src
+    (defalias 'cquit 'cider-quit)
+    (defalias 'yes-or-no-p 'y-or-n-p)
 
-    #+BEGIN_SRC emacs-lisp
-      ;; A saner ediff
-      (setq ediff-diff-options "-w")
-      (setq ediff-split-window-function 'split-window-horizontally)
-      (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    ;; built in htop
+    (setq proced-auto-update-flag t
+  	proced-auto-update-interval 1
+  	proced-descend t)
+  #+end_src
 
-    #+END_SRC
+  #+BEGIN_SRC emacs-lisp
+    ;; A saner ediff
+    (setq ediff-diff-options "-w")
+    (setq ediff-split-window-function 'split-window-horizontally)
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-    Don’t use tabs to indent and fix some indentation settings
-    #+BEGIN_SRC emacs-lisp
-      (setq-default indent-tabs-mode nil
-                    tab-width 4
-                    fill-column 70)
-    #+END_SRC
+  #+END_SRC
 
-    Word wrapping
-    #+BEGIN_SRC emacs-lisp
-      (setq-default word-wrap t
-                    truncate-lines t
-                    truncate-partial-width-windows nil
-                    sentence-end-double-space nil
-                    delete-trailing-lines nil
-                    require-final-newline t
-                    tabify-regexp "^\t* [ \t]+")
-    #+END_SRC
+  Don’t use tabs to indent and fix some indentation settings
+  #+BEGIN_SRC emacs-lisp
+    (setq-default indent-tabs-mode nil
+                  tab-width 4
+                  fill-column 70)
+  #+END_SRC
 
-    Favor hard-wrapping in text modes
-    #+BEGIN_SRC emacs-lisp
-      (defun bk/auto-fill ()
-        "My autofill setup for text buffers."
-        (auto-fill-mode t)
-        (delight 'auto-fill-mode))
+  Word wrapping
+  #+BEGIN_SRC emacs-lisp
+    (setq-default word-wrap t
+                  truncate-lines t
+                  truncate-partial-width-windows nil
+                  sentence-end-double-space nil
+                  delete-trailing-lines nil
+                  require-final-newline t
+                  tabify-regexp "^\t* [ \t]+")
+  #+END_SRC
 
-      (add-hook 'text-mode-hook #'bk/auto-fill)
+  Favor hard-wrapping in text modes
+  #+BEGIN_SRC emacs-lisp
+    (defun bk/auto-fill ()
+      "My autofill setup for text buffers."
+      (auto-fill-mode t)
+      (delight 'auto-fill-mode))
 
-    #+END_SRC
+    (add-hook 'text-mode-hook #'bk/auto-fill)
 
-    Enable some built in modes to add critical functionality to
-    Emacs. More explanation about them will follow in future.
+  #+END_SRC
 
-    #+begin_src emacs-lisp
-      (delete-selection-mode t)
-      (pending-delete-mode t)
-      (column-number-mode 1)
-      (global-auto-revert-mode)
+  Enable some built in modes to add critical functionality to
+  Emacs. More explanation about them will follow in future.
 
-      ;; real emacs knights don't use shift to mark things
-      (setq shift-select-mode nil)
-    #+end_src
+  #+begin_src emacs-lisp
+    (delete-selection-mode t)
+    (pending-delete-mode t)
+    (column-number-mode 1)
+    (global-auto-revert-mode)
+
+    ;; real emacs knights don't use shift to mark things
+    (setq shift-select-mode nil)
+  #+end_src
 
 ** Recentf
 
@@ -980,6 +1005,19 @@ Adding urban dictionary to webjump.
      (setq bidi-paragraph-direction 'left-to-right)
    #+END_SRC
 
+*** Very large files
+
+    Since I am using EXWM, I might open very large files, there is a
+    package to help Emacs handle this kind of files.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package vlf
+        :ensure t
+        :defer t)
+    #+END_SRC
+
+    I found a good paper about =log files= in Emacs where they mention
+    =vlf= package. This [[https://writequit.org/articles/working-with-logs-in-emacs.html][paper]] is very worth reading nevertheless.
 
 *** Eldoc
    #+begin_src emacs-lisp
@@ -1087,11 +1125,29 @@ Adding urban dictionary to webjump.
 
 ** Multiple Cursors
 
-#+begin_src emacs-lisp 
-  (use-package multiple-cursors :ensure t)
+   [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] is a very nice package that lets you create
+   several cursors that all do the same thing as you type.
 
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package multiple-cursors
+       :ensure t
+       :bind
+       (("C->" . mc/mark-next-like-this)
+        ("C-<" . mc/mark-previous-like-this)
+        ("C-S-<mouse-1>" . mc/add-cursor-on-click)
+        ("C-c m c" . mc/edit-lines)))
+   #+end_src
 
+   To use =mc/edit-lines= you need to highlight the lines on which you
+   wish to have cursors and use =C-c m c=. Now you can edit away and
+   press enter when you are done to exit multiple cursors.
+
+   There is this amazing [[http://emacsrocks.com/e13.html][video]] from magnars showing off multiple
+   cursors features.
+
+   However, occasionally the best way to get the cursors where you
+   want them is with the mouse. With the following code, =C-S-<left
+   mouse click>= adds a new cursor.
 ** Custom functions
 
    Several helper functions to ease the day-to-day work of editing
@@ -1392,85 +1448,126 @@ the *winner-boring-buffers*.
     (setq dired-dwim-target t)
   #+END_SRC
 
-  #+begin_src emacs-lisp
-      (require 'dired-x)
-
-      (defun bk/dired-xdg-open ()
-        "Open the file at point with xdg-open."
-        (interactive)
-        (let ((file (dired-get-filename nil t)))
-          (message "Opening %s..." file)
-          (call-process "xdg-open" nil 0 nil file)
-          (message "Opening %s done" file)))
-
-      (eval-after-load 'dired
-        '(define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open))
-  #+end_src
-
+  Add the following to have file sizes given in "human-readable"
+  format.
   #+BEGIN_SRC emacs-lisp
-      (defun bk/dired-directories-first ()
-	"Sort dired listings with directories first."
-	(save-excursion
-	  (let (buffer-read-only)
-	    (forward-line 2)
-	    (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
-	  (set-buffer-modified-p nil)))
-
-      (advice-add 'dired-readin :after #'bk/dired-directories-first)
+    (setq dired-listing-switches "-alh")
   #+END_SRC
 
-  A very nice feature is to be able to edit Dired buffers as regular
-  Emacs buffers. You can make several activities bearable using it,
-  for more details follow this [[https://www.masteringemacs.org/article/wdired-editable-dired-buffers][guide]].
+** Guidelines
 
-  You can mark in Dired buffer based on a search using =% m=. By using
-  the letter =t= we can toggle the marked files. There is also the
-  command =k= that hide all the mark file from the current view.
+   Group of guidelines to help me remember dired functionalities
 
-  You can always go back by pressing the better =g=
+*** Mark files in Dired
 
-  #+caption: commands from dired discovered in the process of narrowing
-  | chord | description                         |
-  |-------+-------------------------------------|
-  | % m   | mark files based on search          |
-  | t     | toggle mark                         |
-  | k     | hide marked files                   |
-  | g     | rebuild the original tree           |
-  | i     | list the content of a sub-directory |
-  | C-x u | dired undo                          |
+    A very nice feature is to be able to edit Dired buffers as regular
+    Emacs buffers. You can make several activities bearable using it,
+    for more details follow this [[https://www.masteringemacs.org/article/wdired-editable-dired-buffers][guide]].
 
+    You can mark in Dired buffer based on a search using =% m=. By using
+    the letter =t= we can toggle the marked files. There is also the
+    command =k= that hide all the mark file from the current view.
 
-  M-up is nicer in dired if it moves to the third line - straight to
-  the "..", which M-down is nicer if it moves to the last file and
-  finally C-a moving back to start of files.
+    You can always go back by pressing the better =g=
 
-  #+BEGIN_SRC emacs-lisp
-    (defun dired-back-to-top ()
-      (interactive)
-      (beginning-of-buffer)
-      (next-line 2)
-      (dired-back-to-start-of-files))
+    #+caption: commands from dired discovered in the process of narrowing
+    | chord | description                         |
+    |-------+-------------------------------------|
+    | % m   | mark files based on search          |
+    | t     | toggle mark                         |
+    | k     | hide marked files                   |
+    | g     | rebuild the original tree           |
+    | i     | list the content of a sub-directory |
+    | C-x u | dired undo                          |
 
-    (defun dired-back-to-bottom ()
-      (interactive)
-      (end-of-buffer)
-      (next-line -1)
-      (dired-back-to-start-of-files))
+*** Replace text in multiple files
 
-    (defun dired-back-to-start-of-files ()
-      (interactive)
-      (backward-char (- (current-column) 2)))
-  #+END_SRC
+    Start dired and mark files as described in [[Mark files in Dired]],
+    then use =Q= to run =query-replace= on all marked files.
 
-  Let's bind the functions defined above so it can take effect in
-  dired.
-  #+BEGIN_SRC emacs-lisp
-    (eval-after-load 'dired
-      '(progn
-         (define-key dired-mode-map (kbd "M-p") 'dired-back-to-top)
-         (define-key dired-mode-map (kbd "M-n") 'dired-back-to-bottom)
-         (define-key dired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)))
-  #+END_SRC
+** Ranger
+
+   The package [[https://github.com/Fuco1/dired-hacks#dired-ranger][dired-ranger]] provides a useful extension to dired,
+   allowing you to copy and paste files much like you can do in
+   traditional GUI file explorers.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package dired-ranger
+       :ensure t
+       :bind (:map dired-mode-map
+                   ("W" . dired-ranger-copy)
+                   ("X" . dired-ranger-move)
+                   ("Y" . dired-ranger-paste)))
+   #+END_SRC
+
+   Now in a dired buffer, you can mark multiple files and them hit =W=
+   to copy them. You could then optionally go to another directory and
+   mark more files and git =C-u W= to add those to the same entry in
+   the copy ring as the previous files.
+
+** Functions
+
+   Some custom functions for Dired.
+
+   #+begin_src emacs-lisp
+       (require 'dired-x)
+
+       (defun bk/dired-xdg-open ()
+         "Open the file at point with xdg-open."
+         (interactive)
+         (let ((file (dired-get-filename nil t)))
+           (message "Opening %s..." file)
+           (call-process "xdg-open" nil 0 nil file)
+           (message "Opening %s done" file)))
+
+       (eval-after-load 'dired
+         '(define-key dired-mode-map (kbd "O") 'bk/dired-xdg-open))
+   #+end_src
+
+   #+BEGIN_SRC emacs-lisp
+       (defun bk/dired-directories-first ()
+     "Sort dired listings with directories first."
+     (save-excursion
+       (let (buffer-read-only)
+         (forward-line 2)
+         (sort-regexp-fields t "^.*$" "[ ]*." (point) (point-max)))
+       (set-buffer-modified-p nil)))
+
+       (advice-add 'dired-readin :after #'bk/dired-directories-first)
+   #+END_SRC
+
+   M-up is nicer in dired if it moves to the third line - straight to
+   the "..", which M-down is nicer if it moves to the last file and
+   finally C-a moving back to start of files.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun dired-back-to-top ()
+       (interactive)
+       (beginning-of-buffer)
+       (next-line 2)
+       (dired-back-to-start-of-files))
+
+     (defun dired-back-to-bottom ()
+       (interactive)
+       (end-of-buffer)
+       (next-line -1)
+       (dired-back-to-start-of-files))
+
+     (defun dired-back-to-start-of-files ()
+       (interactive)
+       (backward-char (- (current-column) 2)))
+   #+END_SRC
+
+   Let's bind the functions defined above so it can take effect in
+   dired.
+   #+BEGIN_SRC emacs-lisp
+     (eval-after-load 'dired
+       '(progn
+          (define-key dired-mode-map (kbd "M-p") 'dired-back-to-top)
+          (define-key dired-mode-map (kbd "M-n") 'dired-back-to-bottom)
+          (define-key dired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)))
+   #+END_SRC
+
 * TRAMP
 
   If TRAMP makes backup files, they should be better be kept locally
@@ -2823,8 +2920,9 @@ and integrates well with the rest of the editor.
 
 Emojify is an Emacs extension to display emojis.
 #+BEGIN_SRC emacs-lisp
-
-  (use-package emojify :ensure t)
+  (use-package emojify
+    :ensure t
+    :commands (emojify-mode))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -2853,6 +2951,22 @@ How to use Slack on emacs? Some terminology from the website:
 | slack-channel-list-update  | update channel list                                                                |
 | slack-message-embed-mentio | use to mention to user                                                             |
 | slack-file-upload          | uploads a file                                                                     |
+
+* Telegram
+
+  One more chat service that we need to stay in touch with friends and
+  community.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package telega
+      :ensure t
+      :hook ((telega-root-mode . emojify-mode)
+             (telega-chat-mode . emojify-mode))
+      :init
+      (setq telega-animation-play-inline nil)
+      :config
+      (telega-notifications-mode 1))
+  #+END_SRC
 
 * Pomodoro
 
@@ -2946,6 +3060,19 @@ How to use Slack on emacs? Some terminology from the website:
            (find-file (concat "/sudo:root@localhost:" (read-file-name "File: ")))
          (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
    #+END_SRC
+*** eval and replace
+
+    #+BEGIN_SRC emacs-lisp
+      (defun eval-and-replace ()
+        "Replace the preceding sexp with its value."
+        (interactive)
+        (backward-kill-sexp)
+        (condition-case nil
+            (prin1 (eval (read (current-kill 0)))
+                   (current-buffer))
+          (error (message "invalid expression")
+                 (insert (current-kill 0)))))
+    #+END_SRC
 
 ** Buffer
 *** Kill buffer and the file associated
@@ -3003,9 +3130,6 @@ How to use Slack on emacs? Some terminology from the website:
      (global-set-key (kbd "C-c a") 'org-agenda)
      (global-set-key (kbd "C-=") 'er/expand-region)
      (global-set-key (kbd "C-x p") 'pop-to-mark-command)
-     (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-     (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-     (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
      ;; by default C-x k prompts to select which buffer should be selected.
      (global-set-key (kbd "C-x k") (lambda ()
@@ -3145,7 +3269,7 @@ How to use Slack on emacs? Some terminology from the website:
         ([?\s-d] . dmenu)
         ([?\s-p] . bk/keepmenu)
         ([?\s-w] . exwm-workspace-switch)
-        ([?\C-c l] . bk/lock-screen)
+        ([?\C-c \l] . bk/lock-screen)
         ,@(mapcar (lambda (i)
               `(,(kbd (format "s-%d" i)) .
                 (lambda ()
@@ -3262,7 +3386,7 @@ How to use Slack on emacs? Some terminology from the website:
    things changing around me. For now, I will use [[https://dunst-project.org/][Dunst]].
 
    #+BEGIN_SRC emacs-lisp
-     ;; (call-process-shell-command "nohup dunst >/dev/null &" nil 0)
+     (call-process-shell-command "nohup dunst >/dev/null &" nil 0)
    #+END_SRC
 
    There is a function to send an alert to the daemon.
@@ -3270,8 +3394,8 @@ How to use Slack on emacs? Some terminology from the website:
      (defun dunst-alert (header string &rest objects)
        "Send an alert to the Dunst daemon."
        (let ((string (funcall #'format string objects))
-	     (command (format "notify-send -a \"%s\" \"%s\"" header string)))
-	 (call-process-shell-command command nil 0)))
+             (command (format "notify-send -a \"%s\" \"%s\"" header string)))
+         (call-process-shell-command command nil 0)))
    #+END_SRC
 
 ** Window behaviour
@@ -3440,3 +3564,4 @@ How to use Slack on emacs? Some terminology from the website:
    7. https://ambrevar.xyz/emacs/
    8. [[https://github.com/wasamasa/dotemacs/blob/master/init.org][Literate emacs ]] - by wasamasa
    9. [[https://github.com/farlado/dotemacs][Far from sane literate Emacs]] - by farlado
+   10. [[http://pragmaticemacs.com/all-posts/][Pragmatic Emacs]] - Amazing blog with lots of Emacs customizations

@@ -1,4 +1,5 @@
-;;; init.el --- My configs -*- lexical-binding: t -*-
+;;; init.el --- My configs
+;; -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
