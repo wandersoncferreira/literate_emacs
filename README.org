@@ -21,6 +21,9 @@ many code as he wants from here (or elsewhere).
 
 * Summary                                                               :TOC:
 - [[#packages][Packages]]
+  - [[#initialization][initialization]]
+  - [[#use-package][use-package]]
+  - [[#custom-packages][custom packages]]
 - [[#dependencies][Dependencies]]
   - [[#extra][Extra]]
     - [[#dunst][dunst]]
@@ -42,6 +45,7 @@ many code as he wants from here (or elsewhere).
   - [[#font][Font]]
   - [[#fringe][Fringe]]
 - [[#defaults][Defaults]]
+  - [[#clean-stale-buffers][Clean stale buffers]]
   - [[#recentf][Recentf]]
   - [[#uniquify][Uniquify]]
   - [[#extended-command][Extended Command]]
@@ -58,20 +62,23 @@ many code as he wants from here (or elsewhere).
 - [[#help-1][Help]]
 - [[#editing-text][Editing Text]]
   - [[#defaults-1][Defaults]]
-    - [[#very-large-files][Very large files]]
-    - [[#eldoc][Eldoc]]
-    - [[#subword][Subword]]
+    - [[#key-bindings][key bindings]]
+    - [[#very-large-files][very large files]]
+    - [[#eldoc][eldoc]]
+    - [[#subword][subword]]
   - [[#extra-features][Extra Features]]
-    - [[#smart-shift][Smart shift]]
-    - [[#change-inner][Change inner]]
-    - [[#expand-region][Expand region]]
-    - [[#jump-to-char][Jump to char]]
+    - [[#smart-shift][smart shift]]
+    - [[#change-inner][change inner]]
+    - [[#expand-region][expand region]]
+    - [[#jump-to-char][jump to char]]
+    - [[#move-through-edit-points][move through edit points]]
   - [[#highlights][Highlights]]
   - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][Multiple Cursors]]
   - [[#custom-functions][Custom functions]]
     - [[#smart-move-to-beginning-of-visible-line-or-not][Smart move to beginning of visible line (or not)]]
     - [[#unfill-paragraph][Unfill paragraph]]
+    - [[#unfill-region][Unfill region]]
     - [[#duplicate-line-or-region][Duplicate line or region]]
   - [[#hide-block-of-code][Hide block of code]]
 - [[#completions][Completions]]
@@ -79,6 +86,9 @@ many code as he wants from here (or elsewhere).
   - [[#company-mode][Company mode]]
   - [[#hippie-expand][Hippie Expand]]
 - [[#window][Window]]
+  - [[#side-windows][Side windows]]
+    - [[#eshell-at-the-bottom][Eshell at the bottom]]
+    - [[#dired-as-a-side-bar][Dired as a side bar]]
   - [[#winner][Winner]]
 - [[#dired][Dired]]
   - [[#guidelines][Guidelines]]
@@ -99,6 +109,7 @@ many code as he wants from here (or elsewhere).
   - [[#ripgrep][Ripgrep]]
   - [[#isearch][Isearch]]
   - [[#occur][Occur]]
+  - [[#google-this][Google this]]
 - [[#shell][Shell]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][Whitespaces]]
@@ -123,6 +134,9 @@ many code as he wants from here (or elsewhere).
     - [[#seamless-navigation-between-source-blocks][Seamless Navigation Between Source Blocks]]
   - [[#table-of-contents][Table of Contents]]
   - [[#capture][Capture]]
+  - [[#babel][Babel]]
+  - [[#agenda][Agenda]]
+    - [[#gmail-agenda][Gmail Agenda]]
   - [[#structure-templates][Structure Templates]]
   - [[#revealjs][Reveal.js]]
     - [[#more-details-from-how-to-build-one-presentation-using-the-package][More details from how to build one presentation using the package]]
@@ -137,30 +151,36 @@ many code as he wants from here (or elsewhere).
 - [[#docker][Docker]]
 - [[#spotify][Spotify]]
 - [[#rss-feed][RSS Feed]]
+  - [[#youtube][Youtube]]
+- [[#emms][EMMS]]
 - [[#slack][Slack]]
 - [[#telegram][Telegram]]
 - [[#pomodoro][Pomodoro]]
+- [[#financial][Financial]]
+  - [[#ledger-explanation][Ledger explanation]]
+    - [[#plaintext-accounting-with-the-ledger-ecosystem][Plaintext accounting with the Ledger Ecosystem]]
 - [[#advice][Advice]]
   - [[#pop-to-mark][Pop to mark]]
   - [[#yank-indent][Yank indent]]
-- [[#general-custom-functions][General custom functions]]
+- [[#custom-functions-1][Custom Functions]]
   - [[#http-based][HTTP-based]]
     - [[#find-my-current-ip][Find my current IP]]
   - [[#editing][Editing]]
     - [[#what-sudo][what? sudo!]]
     - [[#eval-and-replace][eval and replace]]
+    - [[#insert-todays-dae][insert today's dae]]
   - [[#buffer][Buffer]]
     - [[#kill-buffer-and-the-file-associated][Kill buffer and the file associated]]
 - [[#keys][Keys]]
   - [[#hint][Hint]]
   - [[#global-definitions][Global definitions]]
   - [[#cast][Cast]]
-- [[#emacs-as-my-own-operating-system][Emacs as my own Operating System]]
+- [[#exwm][EXWM]]
   - [[#multiple-screens][Multiple Screens]]
   - [[#system-package][System package]]
   - [[#notification-daemon][Notification Daemon]]
   - [[#window-behaviour][Window behaviour]]
-  - [[#key-bindings][Key Bindings]]
+  - [[#key-bindings-1][Key Bindings]]
   - [[#important-commands][Important commands]]
 - [[#references][References]]
 
@@ -178,6 +198,8 @@ many code as he wants from here (or elsewhere).
   will not install thousands of external packages, however they are so
   good and make our life so much easier that is hard to avoid them
   altogether.
+
+** initialization
 
   Let's initialize the package system.
   #+begin_src emacs-lisp
@@ -211,6 +233,8 @@ many code as he wants from here (or elsewhere).
     (setq package-enable-at-startup nil)
   #+end_src
 
+** use-package
+
   When you have more than a dozen packages, it makes the process of
   managing them very difficult without any additional help. And by my
   experience the only real issue is due to performance because you
@@ -240,6 +264,8 @@ many code as he wants from here (or elsewhere).
     (bk-use-package-keywords-add :about)
     (bk-use-package-keywords-add :homepage)
   #+END_SRC
+
+** custom packages
 
   Some old packages simply are not in any repository, they are only
   elisp files distributed over the web. I will place these files
@@ -397,8 +423,10 @@ many code as he wants from here (or elsewhere).
    #+end_src
 
    Emacs can inform us when the garbage collection is happening.
+   I do not want to see this anymore... it was useful to understand
+   the behavior for configuration.
    #+BEGIN_SRC emacs-lisp
-     (setq garbage-collection-messages t)
+     (setq garbage-collection-messages nil)
    #+END_SRC
 
 ** Manage external services
@@ -534,6 +562,78 @@ many code as he wants from here (or elsewhere).
       ;; (bk/font-family-size "Source Code Pro Medium" 12)
     #+end_src
 
+
+    Fira is a mono-spaced font with programming ligatures [[https://github.com/tonsky/FiraCode][Fira Code]].
+    The idea behind is that programmers use a lot of symbols, often
+    encoded with several characters. Therefore, we have to spend some
+    time encoding these characters in our mind in order to translate
+    their real meaning.
+
+    #+BEGIN_SRC emacs-lisp
+      (defun fira-code-mode--make-alist (list)
+        "Generate prettify-symbols alist from LIST."
+        (let ((idx -1))
+          (mapcar
+           (lambda (s)
+             (setq idx (1+ idx))
+             (let* ((code (+ #Xe100 idx))
+                (width (string-width s))
+                (prefix ())
+                (suffix '(?\s (Br . Br)))
+                (n 1))
+           (while (< n width)
+             (setq prefix (append prefix '(?\s (Br . Bl))))
+             (setq n (1+ n)))
+           (cons s (append prefix suffix (list (decode-char 'ucs code))))))
+           list)))
+
+      (defconst fira-code-mode--ligatures
+        '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\"
+          "{-" "[]" "::" ":::" ":=" "!!" "!=" "!==" "-}"
+          "--" "---" "-->" "->" "->>" "-<" "-<<" "-~"
+          "#{" "#[" "##" "###" "####" "#(" "#?" "#_" "#_("
+          ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*"
+          "/**" "/=" "/==" "/>" "//" "///" "&&" "||" "||="
+          "|=" "|>" "^=" "$>" "++" "+++" "+>" "=:=" "=="
+          "===" "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-" ">="
+          ">=>" ">>" ">>-" ">>=" ">>>" "<*" "<*>" "<|" "<|>"
+          "<$" "<$>" "<!--" "<-" "<--" "<->" "<+" "<+>" "<="
+          "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
+          "<~~" "</" "</>" "~@" "~-" "~=" "~>" "~~" "~~>" "%%"
+          "x" ":" "+" "+" "*"))
+
+      (defvar fira-code-mode--old-prettify-alist)
+
+      (defun fira-code-mode--enable ()
+        "Enable Fira Code ligatures in current buffer."
+        (setq-local fira-code-mode--old-prettify-alist prettify-symbols-alist)
+        (setq-local prettify-symbols-alist (append (fira-code-mode--make-alist fira-code-mode--ligatures) fira-code-mode--old-prettify-alist))
+        (prettify-symbols-mode t))
+
+      (defun fira-code-mode--disable ()
+        "Disable Fira Code ligatures in current buffer."
+        (setq-local prettify-symbols-alist fira-code-mode--old-prettify-alist)
+        (prettify-symbols-mode -1))
+
+      (define-minor-mode fira-code-mode
+        "Fira Code ligatures minor mode"
+        :lighter " Fira Code"
+        (setq-local prettify-symbols-unprettify-at-point 'right-edge)
+        (if fira-code-mode
+            (fira-code-mode--enable)
+          (fira-code-mode--disable)))
+
+      (defun fira-code-mode--setup ()
+        "Setup Fira Code Symbols"
+        (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol"))
+
+      (provide 'fira-code-mode)
+
+      (fira-code-mode--setup)
+      (fira-code-mode)
+    #+END_SRC
+
+    
 ** Fringe
 
     Control the fringe around the frame.
@@ -657,6 +757,12 @@ many code as he wants from here (or elsewhere).
     ;; real emacs knights don't use shift to mark things
     (setq shift-select-mode nil)
   #+end_src
+
+** Clean stale buffers
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package midnight :ensure t)
+   #+END_SRC
 
 ** Recentf
 
@@ -799,34 +905,18 @@ Clean all the registers you saved.
 
 ** Imenu
 
-#+begin_src emacs-lisp
-    ;;; imenu - produces menus for accessing locations in documents
-  ;; for source-code buffer the locations to index are typically definitions
-  ;; of functions, variables, and so on.
-  (require 'imenu)
+   The objectives of this package is to provide a way to choose buffer
+   indexes in a specific mode. What is a buffer index? Basically we
+   have a function that will find "interesting" positions in your
+   buffer that you might want to jump there, something like function
+   definitions, headlines in outline mode, class definitions, etc.
 
-  (defun ido-menu--read (index-alist &optional prompt)
-    "Show imenu INDEX-ALIST on ido interface as PROMPT."
-    (let* ((symatpt (thing-at-point 'symbol))
-       (names (mapcar 'car index-alist))
-       (name (ido-completing-read (or prompt "imenu ") names
-                      nil t nil nil nil))
-       (choice (assoc name index-alist)))
-      (if (imenu--subalist-p choice)
-      (ido-menu--read (cdr choice) prompt nil)
-    choice)))
-
-  (defun bk/ido-menu ()
-    "Public interface to my custom imenu through ido."
-    (interactive)
-    (let ((index-alist (cdr (imenu--make-index-alist))))
-      (if (equal index-alist '(nil))
-      (message "No imenu tags in buffer")
-    (imenu (ido-menu--read index-alist nil)))))
-
-  (global-set-key (kbd "C-.") 'bk/ido-menu)
-
-#+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package imenu-anywhere
+       :ensure t
+       :bind
+       ("C-." . imenu-anywhere))
+   #+END_SRC
 
 ** Ibuffer
 
@@ -840,50 +930,50 @@ Clean all the registers you saved.
    | ibyffer-auto-mode | Keeps the buffer list up to date                           |
 
    #+begin_src emacs-lisp
-
      (use-package ibuffer
        :ensure nil
        :init
        (setq ibuffer-expert t)
        (setq ibuffer-show-empty-filter-groups nil)
        (setq ibuffer-saved-filter-groups
-	  '(("Main"
-	     ("Directories" (mode . dired-mode))
-	     ("Rest" (mode . restclient-mode))
-	     ("Docker" (or
-			(mode . docker-compose-mode)
-			(mode . dockerfile-mode)))
-	     ("Programming" (or
-			     (mode . clojure-mode)
-			     (mode . emacs-lisp-mode)
-			     (mode . python-mode)))
-	     ("Browser" (or
-			 (name . "qutebrowser:\*")
-			 ))
-	     ("Org" (mode . org-mode))
-	     ("Markdown" (or
-			  (mode . markdown-mode)
-			  (mode . gfm-mode)))
-	     ("Git" (or
-		     (mode . magit-blame-mode)
-		     (mode . magit-cherry-mode)
-		     (mode . magit-diff-mode)
-		     (mode . magit-log-mode)
-		     (mode . magit-process-mode)
-		     (mode . magit-status-mode)))
-	     ("Emacs" (or
-		       (name . "^\\*Help\\*$")
-		       (name . "^\\*Custom.*")
-		       (name . "^\\*Org Agenda\\*$")
-		       (name . "^\\*info\\*$")
-		       (name . "^\\*scratch\\*$")
-		       (name . "^\\*Backtrace\\*$")
-		       (name . "^\\*Messages\\*$"))))))
+             '(("Main"
+                ("Directories" (mode . dired-mode))
+                ("Rest" (mode . restclient-mode))
+                ("Docker" (or
+                           (mode . docker-compose-mode)
+                           (mode . dockerfile-mode)))
+                ("Programming" (or
+                                (mode . clojure-mode)
+                                (mode . emacs-lisp-mode)
+                                (mode . python-mode)))
+                ("Browser" (or
+                            (name . "qutebrowser:\*")
+                            ))
+                ("Slack" (name . "*Slack"))
+                ("Org" (mode . org-mode))
+                ("Markdown" (or
+                             (mode . markdown-mode)
+                             (mode . gfm-mode)))
+                ("Git" (or
+                        (mode . magit-blame-mode)
+                        (mode . magit-cherry-mode)
+                        (mode . magit-diff-mode)
+                        (mode . magit-log-mode)
+                        (mode . magit-process-mode)
+                        (mode . magit-status-mode)))
+                ("Emacs" (or
+                          (name . "^\\*Help\\*$")
+                          (name . "^\\*Custom.*")
+                          (name . "^\\*Org Agenda\\*$")
+                          (name . "^\\*info\\*$")
+                          (name . "^\\*scratch\\*$")
+                          (name . "^\\*Backtrace\\*$")
+                          (name . "^\\*Messages\\*$"))))))
        :config
        (add-hook 'ibuffer-mode-hook
-		 (lambda ()
-		   (ibuffer-auto-mode 1)
-		   (ibuffer-switch-to-saved-filter-groups "Main"))))
+                 (lambda ()
+                   (ibuffer-auto-mode 1)
+                   (ibuffer-switch-to-saved-filter-groups "Main"))))
    #+end_src
 
    Package =ibuffer-vc= let you filter the Ibuffer by projects
@@ -1005,7 +1095,16 @@ Adding urban dictionary to webjump.
      (setq bidi-paragraph-direction 'left-to-right)
    #+END_SRC
 
-*** Very large files
+*** key bindings
+    
+    Default movement keys
+
+**** move and mark by paragraph
+
+     Use =M-{= and =M-}= to move forward or backward by paragraph. Use
+     =M-h= to mark (highlight) the current paragraph.
+
+*** very large files
 
     Since I am using EXWM, I might open very large files, there is a
     package to help Emacs handle this kind of files.
@@ -1019,7 +1118,7 @@ Adding urban dictionary to webjump.
     I found a good paper about =log files= in Emacs where they mention
     =vlf= package. This [[https://writequit.org/articles/working-with-logs-in-emacs.html][paper]] is very worth reading nevertheless.
 
-*** Eldoc
+*** eldoc
    #+begin_src emacs-lisp
      (use-package eldoc
        :ensure nil
@@ -1032,7 +1131,7 @@ Adding urban dictionary to webjump.
        (add-hook 'prog-mode-hook 'turn-on-eldoc-mode))
    #+end_src
 
-*** Subword
+*** subword
 
     #+BEGIN_SRC emacs-lisp
       (use-package subword
@@ -1042,7 +1141,7 @@ Adding urban dictionary to webjump.
 
 ** Extra Features
 
-*** Smart shift
+*** smart shift
    #+begin_src emacs-lisp
      (use-package smart-shift
        :homepage https://github.com/hbin/smart-shift
@@ -1052,7 +1151,7 @@ Adding urban dictionary to webjump.
        (global-smart-shift-mode t))
    #+end_src
 
-*** Change inner
+*** change inner
 
    #+begin_src emacs-lisp
      (use-package change-inner
@@ -1061,7 +1160,7 @@ Adding urban dictionary to webjump.
        :ensure t)
    #+end_src
 
-*** Expand region
+*** expand region
    #+begin_src emacs-lisp
      (use-package expand-region
        :homepage https://github.com/magnars/expand-region.el
@@ -1069,7 +1168,7 @@ Adding urban dictionary to webjump.
        :ensure t)
    #+end_src
 
-*** Jump to char
+*** jump to char
 
    #+begin_src emacs-lisp
      (use-package avy
@@ -1081,6 +1180,25 @@ Adding urban dictionary to webjump.
        (global-set-key (kbd "C-c ;") 'avy-goto-char))
    #+end_src
 
+*** move through edit points
+
+    Emacs leaves a trail of breadcrumbs (the mark ring) through which
+    we can navigate to hop around to places you've been in the buffer.
+    A nice alternative is to move round through points at which you
+    made edits in a buffer.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package goto-chg
+        :ensure t
+        :config
+        (global-set-key (kbd "C-c b ,") 'goto-last-change)
+        (global-set-key (kbd "C-c b .") 'goto-last-change-reverse))
+    #+END_SRC
+
+    Now we can use =C-c b ,= and =C-c b .= to go back and forth
+    through the edit points in your buffer. It takes you through your
+    undo history without undoing anything.
+    
 ** Highlights
 
    Visual feedback on some operations like yank, kill, undo. An
@@ -1100,6 +1218,7 @@ Adding urban dictionary to webjump.
    #+BEGIN_SRC emacs-lisp
      (use-package highlight-symbol
        :ensure t
+       :delight highlight-symbol-mode
        :hook
        ((highlight-symbol-mode . highlight-symbol-nav-mode)
         (prog-mode . highlight-symbol-mode))
@@ -1191,6 +1310,16 @@ Adding urban dictionary to webjump.
           (fill-paragraph nil)))
     #+END_SRC
 
+*** Unfill region
+
+    #+BEGIN_SRC emacs-lisp
+      (defun unfill-region (beg end)
+        "Unfill the region, joining text paragraphs into a single logical line."
+        (interactive "*r")
+        (let ((fill-column (point-max)))
+          (fill-region beg end)))
+    #+END_SRC
+
 *** Duplicate line or region
 
     #+BEGIN_SRC emacs-lisp
@@ -1234,9 +1363,14 @@ Adding urban dictionary to webjump.
 
    Enable hide definitions functions
    #+BEGIN_SRC emacs-lisp
-     (add-hook 'prog-mode-hook 'hs-minor-mode)
-     (global-set-key (kbd "C-c h") 'hs-toggle-hiding)
-
+     (use-package hideshow
+       :ensure nil
+       :defer t
+       :commands (hs-toggle-hiding)
+       :delight hs-minor-mode
+       :config
+       (add-hook 'prog-mode-hook 'hs-minor-mode)
+       (global-set-key (kbd "C-c h") 'hs-toggle-hiding))
    #+END_SRC
 
 * Completions
@@ -1402,6 +1536,60 @@ Adding urban dictionary to webjump.
       (add-to-list 'display-buffer-alist
 		   (cons "\\*Async Shell Command\\*.*"
 			 (cons #'display-buffer-no-window nil)))
+    #+END_SRC
+
+** Side windows
+
+   What are side windows? These windows is a place to put
+   complementary information to the main buffers. You can split or
+   toggle fullscreen for side windows. The builtin function
+   *window-toggle-side-windows* will record the current state of your
+   side windows and toggle it when you call the function again.
+
+*** Eshell at the bottom
+
+    This is very useful if you want to keep some default windows around
+    while you edit in your main programming environment. For example,
+    to keep a eshell and dired buffer around.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package emacs
+        :custom
+        (display-buffer-alist
+         '(("\\*e?shell\\*"
+            (display-buffer-in-side-window)
+            (window-height . 0.30)
+            (side . bottom)
+            (slot . -1))))
+        :bind
+        ("<f8>" . window-toggle-side-windows))
+    #+END_SRC
+
+*** Dired as a side bar
+
+    I like the idea of providing dired buffer as my sidebar. Usually I
+    use =dired-jump= to get into the dired buffer and make my changes
+    this function is inspired by Prot version for teaching purposes.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package emacs
+        :config
+        (defun bk/window-dired-vc-root-left ()
+          "Open root directory of current version-controlled repository
+      or the present working directory with `dired' and bespoke window
+      parametersg."
+          (interactive)
+          (let ((dir (if (eq (vc-root-dir) nil)
+                         (dired-noselect default-directory)
+                       (dired-noselect (vc-root-dir)))))
+            (display-buffer-in-side-window
+             dir `((side . left)
+                   (slot . 0)
+                   (window-width . 0.15)))
+            (with-current-buffer dir
+              (rename-buffer "*Dired-Side*"))))
+        :bind
+        ("C-c d" . bk/window-dired-vc-root-left))
     #+END_SRC
 
 ** Winner
@@ -1747,6 +1935,41 @@ the *winner-boring-buffers*.
      (global-set-key (kbd "M-s o") 'occur-dwim)
    #+END_SRC
 
+** Google this
+
+   Artur Malabarba has a nice package called =google-this= which
+   provides a set of functions for querying google from emacs.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package google-this
+       :ensure t
+       :delight google-this-mode
+       :config
+       (google-this-mode 1))
+   #+END_SRC
+
+   This package provides a set of functions under the prefix =C-c /=.
+   The simplest is =C-c / RET= which prompts you for a search in the
+   minibuffer, with a default search based on the text around the
+   point.
+
+   | Keys           | Function                              |
+   |----------------+---------------------------------------|
+   | C-c / SPC      | google-this-region                    |
+   | C-c / a        | google-this-ray                       |
+   | C-c / c        | google-this-translate-query-or-region |
+   | C-c / e        | google-this-error                     |
+   | C-c / f        | google-this-forecast                  |
+   | C-c / g        | google-this-lucky-search              |
+   | C-c / i        | google-this-lucky-and-insert-url      |
+   | C-c / m        | google-maps                           |
+   | C-c / n        | google-this-noconfirm                 |
+   | C-c / r        | google-this-cpp-reference             |
+   | C-c / s        | google-this-symbol                    |
+   | C-c / t        | google-this                           |
+   | C-c / w        | google-this-word                      |
+   | C-c / <return> | google-this-search                    |
+
 * Shell
 
     #+begin_src emacs-lisp
@@ -1809,7 +2032,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     :ensure t
     :delight ws-butler-mode
     :config
-    (ws-butler-global-mode +1))
+    (add-hook 'prog-mode-hook #'ws-butler-mode))
 #+END_SRC
 ** Clojure
 
@@ -2011,16 +2234,20 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 ** Python
 
    #+BEGIN_SRC emacs-lisp
-     (use-package elpy
-       :ensure t
-       :config
-       (elpy-enable)
+     (defun bk/elpy-setup ()
        (pyvenv-activate "~/miniconda3")
        (delete `elpy-module-django elpy-modules)
        (delete `elpy-module-highlight-indentation elpy-modules))
 
+     (use-package elpy
+       :ensure t
+       :config
+       (add-hook 'python-mode-hook #'elpy-enable)
+       (add-hook 'python-mode-hook #'bk/elpy-setup))
+
      (use-package py-autopep8
        :ensure t
+       :after elpy
        :init
        (setq py-autopep8-options '("--max-line-length=250"))
        :config
@@ -2065,15 +2292,14 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 ** Latex
 
  #+BEGIN_SRC emacs-lisp
-   (use-package tex-site
+   (use-package tex
+     :defer t
      :ensure auctex
      :config
-     (require 'latex)
      (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
            TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
            TeX-source-correlate-start-server t)
 
-     ;; to refresh the buffer after compilation
      (add-hook 'TeX-after-compilation-finished-functions
                #'TeX-revert-document-buffer))
  #+END_SRC
@@ -2111,9 +2337,9 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      :ensure t
      :init
      (setq flycheck-check-syntax-automatically '(mode-enabled save)
-	   flycheck-display-errors-delay .3)
+           flycheck-display-errors-delay .3)
      :config
-     (global-flycheck-mode))
+     (add-hook 'prog-mode-hook 'flycheck-mode))
 
    (use-package flycheck-clj-kondo :ensure t)
  #+end_src
@@ -2450,6 +2676,24 @@ on-demand and stored in memory.
    					   (org-save-all-org-buffers)))
 
    #+end_src
+
+** Babel
+
+   #+BEGIN_SRC emacs-lisp
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((emacs-lisp . t)
+        (ledger . t)
+        (sql . t)
+        (clojure . t)))
+   #+END_SRC
+
+** Agenda
+*** Gmail Agenda
+
+    I am following this post from [[http://pragmaticemacs.com/emacs/how-i-view-my-google-calendar-agenda-in-emacs/][pragmatic emacs]] to setup =gcalcli=
+    to handle your google agenda. Let's see if I can make this
+    through. ==FAILED== I will try something else =)
 
 ** Structure Templates
 
@@ -2809,31 +3053,44 @@ many links from these subjects.
     :config
     (setq-default elfeed-search-filter "@24-months-ago +unread")
     (setq elfeed-feeds
-	  '(("http://lambda-the-ultimate.org/rss.xml" functional)
-	    ("https://byorgey.wordpress.com/feed/" functional)
-	    ("http://gigasquidsoftware.com/atom.xml" clojure)
-	    ("http://swannodette.github.com/atom.xml" clojure)
-	    ("https://rigsomelight.com/feed.xml" clojure)
-	    ("https://lambdaisland.com/feeds/blog.atom" clojure)
-	    ("https://nullprogram.com/feed/" programming)
-	    ("http://feeds.feedburner.com/cognicast" clojure)
-	    ("http://feeds2.feedburner.com/StuartSierra" clojure)
-	    ("http://feeds.feedburner.com/Juxt" clojure)
-	    ("http://blog.cognitect.com/blog?format=rss" clojure)
-	    ("https://existentialtype.wordpress.com/feed/" functional)
-	    ("http://insideclojure.org/feed.xml" clojure)
-	    ("https://yogthos.net/feed.xml" clojure)
-	    ("http://endlessparentheses.com/atom.xml" emacs)
-	    ("http://www.blackhats.es/wordpress/?feed=rss2" emacs)
-	    ("http://www.howardism.org/index.xml" emacs)
-	    ("http://www.masteringemacs.org/feed/" emacs)
-	    ("http://tonsky.me/blog/atom.xml" clojure)
-	    ("http://www.clojure.net/rss.xml" clojure)
-	    ("https://www.youtube.com/feeds/videos.xml?user=techguruuk" emacs)
-	    ("http://emacsrocks.com/atom.xml" emacs)
-	    ("http://emacs-fu.blogspot.com/feeds/posts/default" emacs)
-	    ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs))))
+      '(("http://lambda-the-ultimate.org/rss.xml" functional)
+        ("https://byorgey.wordpress.com/feed/" functional)
+        ("http://gigasquidsoftware.com/atom.xml" clojure)
+        ("http://swannodette.github.com/atom.xml" clojure)
+        ("https://rigsomelight.com/feed.xml" clojure)
+        ("https://lambdaisland.com/feeds/blog.atom" clojure)
+        ("https://nullprogram.com/feed/" programming)
+        ("http://feeds.feedburner.com/cognicast" clojure)
+        ("http://feeds2.feedburner.com/StuartSierra" clojure)
+        ("http://feeds.feedburner.com/Juxt" clojure)
+        ("http://blog.cognitect.com/blog?format=rss" clojure)
+        ("https://existentialtype.wordpress.com/feed/" functional)
+        ("http://insideclojure.org/feed.xml" clojure)
+        ("https://yogthos.net/feed.xml" clojure)
+        ("http://endlessparentheses.com/atom.xml" emacs)
+        ("http://www.blackhats.es/wordpress/?feed=rss2" emacs)
+        ("http://www.howardism.org/index.xml" emacs)
+        ("http://www.masteringemacs.org/feed/" emacs)
+        ("http://tonsky.me/blog/atom.xml" clojure)
+        ("http://www.clojure.net/rss.xml" clojure)
+        ("https://www.youtube.com/feeds/videos.xml?user=techguruuk" emacs)
+        ("http://emacsrocks.com/atom.xml" emacs)
+        ("http://emacs-fu.blogspot.com/feeds/posts/default" emacs)
+        ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs)
+        ;; podcasts
+        ("https://pinecast.com/feed/emacscast" podcast)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)))
+    :bind
+    ("C-x w" . elfeed))
 
+
+  (defun ime-elfeed-pocast-tagger (entry)
+    (when (elfeed-entry-enclosures entry)
+      (elfeed-tag entry 'podcast)))
+
+  (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
 #+end_src
 
 By default, s run a live filter and you can type something like "Xah"
@@ -2852,6 +3109,63 @@ the word, " Xah", let's fix that.
     '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
 #+END_SRC
 
+** Youtube
+   
+   #+BEGIN_SRC emacs-lisp
+     (setq-default elfeed-search-filter "@1-week-ago +unread")
+
+     (defun ambrevar/elfeed-play-with-mpv ()
+       "Play entry link with mpv."
+       (interactive)
+       (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single)))
+             (quality-arg "")
+             (quality-val (completing-read "Max height resolution (0 for unlimited): " '("0" "480" "720") nil nil)))
+         (setq quality-val (string-to-number quality-val))
+         (message "Opening %s with height≤%s with mpv..." (elfeed-entry-link entry) quality-val)
+         (when (< 0 quality-val)
+           (setq quality-arg (format "--ytdl-format=[height<=?%s]" quality-val)))
+         (start-process "elfeed-mpv" nil "mpv" quality-arg (elfeed-entry-link entry))))
+
+     (defun ambrevar/elfeed-open-with-eww ()
+       "Open in eww with `eww-readable'."
+       (interactive)
+       (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single))))
+         (eww  (elfeed-entry-link entry))
+         (add-hook 'eww-after-render-hook 'eww-readable nil t)))
+
+     (defvar ambrevar/elfeed-visit-patterns
+       '(("youtu\\.?be" . ambrevar/elfeed-play-with-mpv)
+         ("phoronix" . ambrevar/elfeed-open-with-eww))
+       "List of (regexps . function) to match against elfeed entry link to know
+     whether how to visit the link.")
+
+     (defun ambrevar/elfeed-visit-maybe-external ()
+       "Visit with external function if entry link matches `ambrevar/elfeed-visit-patterns',
+     visit otherwise."
+       (interactive)
+       (let ((entry (if (eq major-mode 'elfeed-show-mode)
+                        elfeed-show-entry
+                      (elfeed-search-selected :single)))
+             (patterns ambrevar/elfeed-visit-patterns))
+         (while (and patterns (not (string-match (caar patterns) (elfeed-entry-link entry))))
+           (setq patterns (cdr patterns)))
+         (cond
+          (patterns
+           (funcall (cdar patterns)))
+          ((eq major-mode 'elfeed-search-mode)
+           (call-interactively 'elfeed-search-show-entry))
+          (t (elfeed-show-visit)))))
+
+     (eval-after-load 'elfeed
+       '(define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv))
+   #+END_SRC
+
+* EMMS
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package emms
+      :ensure t)
+  #+END_SRC
 * Slack
 
 Slack from Emacs? :O Why not? I am having a terrible time configuring
@@ -2968,6 +3282,22 @@ How to use Slack on emacs? Some terminology from the website:
       (telega-notifications-mode 1))
   #+END_SRC
 
+  Enabling emoji completions in chat buffer
+
+  Emoji completions with =:<Emoji-name>:= syntax, uses nice company
+  mode.
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'telega-chat-mode-hook
+              (lambda ()
+                (set (make-local-variable 'company-backends)
+                     (append '(telega-company-emoji
+                               telega-company-username
+                               telega-company-hashtag)
+                             (when (telega-chat-bot-p telega-chatbuf--chat)
+                               '(telega-company-botcmd))))
+                (company-mode 1)))
+  #+END_SRC
+
 * Pomodoro
 
 #+begin_src emacs-lisp 
@@ -2977,6 +3307,131 @@ How to use Slack on emacs? Some terminology from the website:
     ("<f10>" . tomatinho))
 #+end_src
 
+* Financial
+
+  Ledger mode is a major-mode for editing files in the format used by
+  the =ledger= command-line accounting system. It also provides
+  automated support for some =ledger= workflows, such as reconciling
+  transactions, or running certain reports.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ledger-mode
+      :ensure t
+      :mode ("\\.dat\\'"
+             "\\.ledger\\'")
+      :custom (ledger-clear-whole-transactions t))
+  #+END_SRC
+
+  NOTE: in order to use this mode, =ledger= must be installed in your
+  system.
+
+  Some help functions from [[https://github.com/awalker4/.dotfiles/blob/master/emacs.d/config.org][here]].
+
+  #+BEGIN_SRC emacs-lisp
+    (defun bk/clean-leader-on-save ()
+      (interactive)
+      (if (eq major-mode 'ledger-mode)
+          (let ((curr-line (line-number-at-pos)))
+            (ledger-mode-clean-buffer)
+            (line-move (- curr-line 1)))))
+
+    (defun bk/ledger-increment-date ()
+      (interactive)
+      (bk/ledger-change-date 1))
+
+    (defun bk/ledger-decrement-date ()
+      (interactive)
+      (bk/ledger-change-date -1))
+
+    (defun bk/ledger-change-date (num)
+      (save-excursion
+        (ledger-navigate-beginning-of-xact)
+        (let* ((beg (point))
+               (end (re-search-forward ledger-iso-date-regexp))
+               (xact-date (filter-buffer-substring beg end)))
+          (delete-region beg end)
+          (insert
+           (format-time-string
+            "%Y/%m/%d"
+            (time-add (bk/encoded-date xact-date)
+                      (days-to-time num)))))))
+
+    (defun bk/encoded-date (date)
+      (string-match "\\([0-9][0-9][0-9][0-9]\\)/\\([0-9][0-9]\\)/\\([0-9][0-9]\\)" date)
+      (let* ((fixed-date
+              (concat (match-string 1 date) "-"
+                      (match-string 2 date) "-"
+                      (match-string 3 date)))
+             (d (parse-time-string fixed-date)))
+        (encode-time 0 0 0 (nth 3 d) (nth 4 d) (nth 5 d))))
+
+    (add-hook 'before-save-hook 'bk/clean-leader-on-save)
+    (eval-after-load 'ledger-mode
+      '(progn
+         (define-key ledger-mode-map (kbd "C-M-.") 'bk/ledger-increment-date)
+         (define-key ledger-mode-map (kbd "C-M-,") 'bk/ledger-decrement-date)))
+  #+END_SRC
+
+  Linter for the ledger mode. Very very useful to understand if you
+  filled everything's right.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package flycheck-ledger
+      :ensure t
+      :config
+      (add-hook 'ledger-mode-hook 'flycheck-mode))
+  #+END_SRC
+
+  You can use =C-c C-b= to popup the =calc= mode and perform some math
+  with the number at point to fix it.
+
+  Register to get into the ledger file quickly.
+  #+BEGIN_SRC emacs-lisp
+    (set-register ?l '(file . "~/.ledger"))
+  #+END_SRC
+
+** Ledger explanation
+
+   - Double entry system: All money has a source and destination account
+   - Five accounts
+     - Assets      : what you have
+     - Expenses    : what you expends
+     - Income      : what you earns
+     - Liabilities : what you owe
+     - Equity      : what you worth
+   - Net worth  = Assets - Liabilities
+   - Net income = Income - Expenses
+
+*** Plaintext accounting with the Ledger Ecosystem
+
+    [[https://youtu.be/FJtaM43PgXQ][Youtube]]
+    
+    - **Why accounting?**
+      - To know what you have
+        - across all accounts
+        - had at some point in the past
+        - how much you can spend
+      - legally required for most businesses
+    - **Double-entry accounting**
+      - account: label describing an amount of something
+        - assets      : bank accounts, wallet, investments
+        - income      : paychecks, dividends, interest
+        - expenses    : groceries, taxes, donations
+        - liabilities : mortgage, credit cards, student loans
+        - equity      : for everything else like opening balances
+      - debit
+        - the deduction of value from an account
+      - credit
+        - the addition of value to an account
+      - transaction
+        - a collection of credits and debits with a timestamp to
+          describe when the transaction is effective
+        - all transaction must balance, equals to 0 at the end
+    - **Why ledger?**
+      - intimate knowledge of every transaction
+      - track everything
+      - its just text
+  
 * Advice
 
 ** Pop to mark
@@ -3033,7 +3488,7 @@ How to use Slack on emacs? Some terminology from the website:
        (yank 1))
    #+END_SRC
 
-* General custom functions
+* Custom Functions
 ** HTTP-based
 *** Find my current IP
 
@@ -3072,6 +3527,14 @@ How to use Slack on emacs? Some terminology from the website:
                    (current-buffer))
           (error (message "invalid expression")
                  (insert (current-kill 0)))))
+    #+END_SRC
+*** insert today's dae
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/insert-today-date ()
+        "Insert today date as YYYY-MM-DD."
+        (interactive)
+        (insert (format-time-string "%Y/%m/%d")))
     #+END_SRC
 
 ** Buffer
@@ -3148,7 +3611,7 @@ How to use Slack on emacs? Some terminology from the website:
        :defer t)
    #+END_SRC
 
-* Emacs as my own Operating System
+* EXWM
 
   Emacs as my full operating system is just too great. I have a small
   problem recently with this setup, I use an  60% Anne Pro 2 keyboard and
@@ -3163,8 +3626,7 @@ How to use Slack on emacs? Some terminology from the website:
 
   =~/.config/lxsession/LXDE/autostart=
   #+BEGIN_SRC conf
-    @pcmanfm --desktop --profile LXDE
-    @xscreensaver -no-splash
+    @pcmanfm --desktop-off --profile LXDE
   #+END_SRC
 
   =~/.config/lxsession/LXDE/desktop.conf=
@@ -3246,13 +3708,11 @@ How to use Slack on emacs? Some terminology from the website:
     :ensure t
     :init
     (setq exwm-workspace-number 4
-      use-dialog-box nil
-      exwm-workspace-show-all-buffers nil
-      exwm-layout-show-all-buffers t)
+          exwm-workspace-show-all-buffers nil
+          exwm-layout-show-all-buffers t)
     :config
     (display-battery-mode t)
-    (fringe-mode 1)
-
+  
     (require 'exwm)
     (exwm-input-set-simulation-keys
      '(([?\C-p] . [up])
@@ -3265,17 +3725,19 @@ How to use Slack on emacs? Some terminology from the website:
        ([?\C-w] . [\C-x])))
 
     (setq exwm-input-global-keys
-      `(([?\s-r] . exwm-reset)
-        ([?\s-d] . dmenu)
-        ([?\s-p] . bk/keepmenu)
-        ([?\s-w] . exwm-workspace-switch)
-        ([?\C-c \l] . bk/lock-screen)
-        ,@(mapcar (lambda (i)
-              `(,(kbd (format "s-%d" i)) .
-                (lambda ()
-                  (interactive)
-                  (exwm-workspace-switch-create ,i))))
-            (number-sequence 0 9))))
+          `(([?\s-r] . exwm-reset)
+            ([?\s-w] . exwm-workspace-switch)
+            ,@(mapcar (lambda (i)
+                        `(,(kbd (format "s-%d" i)) .
+                          (lambda ()
+                            (interactive)
+                            (exwm-workspace-switch-create ,i))))
+                      (number-sequence 0 9))))
+
+    (exwm-input-set-key (kbd "s-p") #'bk/keepmenu)
+    (exwm-input-set-key (kbd "s-d") #'dmenu)
+    (exwm-input-set-key (kbd "C-c l") #'bk/lock-screen)
+  
     (exwm-enable)
 
     (require 'exwm-config)
@@ -3410,9 +3872,9 @@ How to use Slack on emacs? Some terminology from the website:
      (defun exwm-rename-buffer ()
        (interactive)
        (exwm-workspace-rename-buffer
-	(concat exwm-class-name ":"
-		(if (<= (length exwm-title) 50) exwm-title
-		  (concat (substring exwm-title 0 49))))))
+        (concat exwm-class-name ":"
+                (if (<= (length exwm-title) 30) exwm-title
+                  (concat (substring exwm-title 0 29))))))
 
      (add-hook 'exwm-update-class-hook 'exwm-rename-buffer)
      (add-hook 'exwm-update-title-hook 'exwm-rename-buffer)
