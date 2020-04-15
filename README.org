@@ -26,9 +26,10 @@ many code as he wants from here (or elsewhere).
   - [[#custom-packages][custom packages]]
 - [[#dependencies][Dependencies]]
   - [[#extra][Extra]]
-    - [[#dunst][dunst]]
     - [[#scrot][scrot]]
     - [[#screensavers][screensavers]]
+    - [[#dunst][dunst]]
+    - [[#mpv][mpv]]
   - [[#browsers][Browsers]]
     - [[#qutebrowser][Qutebrowser]]
     - [[#google-chrome][Google Chrome]]
@@ -284,8 +285,58 @@ many code as he wants from here (or elsewhere).
   List of external packages that I rely on in my daily basis
 
 ** Extra
-*** dunst
 *** scrot
+
+    [[https://en.wikipedia.org/wiki/Scrot][Scrot]] (SCReenshOT) is a screenshot capturing utility that uses the
+    imlib2 library to acquire and save images. By default, the
+    captured file is saved with a date-stamped filename in the current
+    directory, although you can also explicitly specify the name of
+    the captured images when the command is run.
+
+    Generic command to help us out here!
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/scrot-cmd (cmd name folder)
+        "Scrot CMD to be executed and saving to the correct picture NAME in the FOLDER.
+      Folder is a symbol recognizing the folder name."
+        (interactive)
+        (let* ((folder-path (cl-case folder
+                             (:window "/home/wand/Pictures/window")
+                             (:region "/home/wand/Pictures/region")
+                             ))
+               (filename (concat name ".png"))
+              (scrot-cmd (format "scrot %s %s -e 'mv $f %s'" filename cmd folder-path)))
+          (start-process-shell-command "pt" nil scrot-cmd)))
+    #+END_SRC
+
+    Capture the print screen of the current window
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/print-window ()
+        "Print current window."
+        (interactive)
+        (let ((print-name (read-from-minibuffer "Print name: ")))
+          (bk/scrot-cmd "" print-name :window)))
+    #+END_SRC
+    
+    Print screens are way to serious, right? Take that region
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/print-region ()
+        "Print screen interactively."
+        (interactive)
+        (let ((print-name (read-from-minibuffer "Print name: ")))
+          (bk/scrot-cmd "-s" print-name :region)))
+
+      (eval-after-load 'exwm
+        '(exwm-input-set-key (kbd "<print>") #'bk/print-region))
+    #+END_SRC
+
+    I also need to go fast to these folders, no more: 
+    =C-x C-j /home C-s Pictures RET {window,region}= o.O
+
+    #+BEGIN_SRC emacs-lisp
+      (set-register ?w '(file . "~/Pictures/window"))
+      (set-register ?r '(file . "~/Pictures/region"))
+    #+END_SRC
+    
 *** screensavers
 
     I use the external package called =xscreensaver= which is amazing.
@@ -321,7 +372,8 @@ many code as he wants from here (or elsewhere).
     I also installed =xtrlock= so when I activate =zone= I also lock
     my screen. In order to unlock you just need to start typing the
     correct password and press =RET=.
-
+*** dunst
+*** mpv
 ** Browsers
 *** Qutebrowser
 
@@ -3957,16 +4009,6 @@ How to use Slack on emacs? Some terminology from the website:
        :config
        (exwm-input-set-key (kbd "s-q") #'bk/qutebrowser)
        (exwm-input-set-key (kbd "C-c k") #'bk/fix-caps-and-key-rate))
-   #+END_SRC
-
-   Print screens are way to serious business.
-   #+BEGIN_SRC emacs-lisp
-     (defun bk/print-from-region ()
-       "Print screen interactively."
-       (interactive)
-       (start-process-shell-command "pt" nil "scrot -s -e 'mv $f /home/wand/Pictures/'"))
-
-     (exwm-input-set-key (kbd "<print>") #'bk/print-from-region)
    #+END_SRC
 
    System tray
