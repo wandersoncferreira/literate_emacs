@@ -19,6 +19,10 @@ many code as he wants from here (or elsewhere).
       (goto-char (point-max))))
 #+END_SRC
 
+Very nice text about [[https://zachholman.com/2010/08/dotfiles-are-meant-to-be-forked/][Why should you share your dotfiles]]. I will try to
+record all relevant configuration of my current box in the literate
+style here.
+
 * Summary                                                               :TOC:
 - [[#packages][Packages]]
   - [[#initialization][initialization]]
@@ -39,9 +43,12 @@ many code as he wants from here (or elsewhere).
   - [[#security][Security]]
   - [[#garbage-collection][Garbage Collection]]
   - [[#manage-external-services][Manage external services]]
+  - [[#restart-emacs][Restart Emacs]]
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][Cleaning]]
   - [[#theme-and-faces][Theme and Faces]]
+    - [[#download-themes][Download themes]]
+    - [[#default-theme][Default theme]]
   - [[#time][Time]]
   - [[#font][Font]]
   - [[#fringe][Fringe]]
@@ -92,6 +99,11 @@ many code as he wants from here (or elsewhere).
     - [[#eshell-at-the-bottom][Eshell at the bottom]]
     - [[#dired-as-a-side-bar][Dired as a side bar]]
   - [[#winner][Winner]]
+- [[#alerts][Alerts]]
+  - [[#alert][Alert]]
+  - [[#user-configuration][User configuration]]
+    - [[#slack-notifications][Slack notifications]]
+    - [[#telegram-notifications][Telegram notifications]]
 - [[#dired][Dired]]
   - [[#guidelines][Guidelines]]
     - [[#mark-files-in-dired][Mark files in Dired]]
@@ -151,12 +163,15 @@ many code as he wants from here (or elsewhere).
   - [[#typing][Typing]]
 - [[#snippets][Snippets]]
 - [[#docker][Docker]]
-- [[#spotify][Spotify]]
-- [[#rss-feed][RSS Feed]]
-  - [[#youtube][Youtube]]
-  - [[#score][Score]]
-- [[#slack][Slack]]
-- [[#telegram][Telegram]]
+- [[#social-networks][Social Networks]]
+  - [[#rss-feed][RSS Feed]]
+    - [[#start-and-unstarr][Start and unstarr]]
+    - [[#youtube][Youtube]]
+    - [[#score][Score]]
+  - [[#slack][Slack]]
+  - [[#telegram][Telegram]]
+  - [[#spotify][Spotify]]
+  - [[#twitter][Twitter]]
 - [[#pomodoro][Pomodoro]]
 - [[#financial][Financial]]
   - [[#ledger-explanation][Ledger explanation]]
@@ -304,8 +319,8 @@ many code as he wants from here (or elsewhere).
                              (:window "/home/wand/Pictures/window")
                              (:region "/home/wand/Pictures/region")
                              ))
-               (filename (concat name ".png"))
-              (scrot-cmd (format "scrot %s %s -e 'mv $f %s'" filename cmd folder-path)))
+               (filepath (concat folder-path name ".png"))
+               (scrot-cmd (format "scrot %s %s -e 'xclip -selection c -t image/png < $f'" cmd filepath)))
           (start-process-shell-command "pt" nil scrot-cmd)))
     #+END_SRC
 
@@ -516,6 +531,12 @@ many code as he wants from here (or elsewhere).
          :ready-message "Started server on port 3000"))
    #+END_SRC
 
+** Restart Emacs
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package restart-emacs
+       :ensure t)
+   #+END_SRC
 * Aesthetics
 
 ** Cleaning
@@ -586,6 +607,40 @@ many code as he wants from here (or elsewhere).
     Make cursor the width of the character it is under.
     #+BEGIN_SRC emacs-lisp
       (setq x-stretch-cursor t)
+    #+END_SRC
+
+    Allow only one theme at a time
+    #+BEGIN_SRC emacs-lisp
+      (setq custom-theme-allow-multiple-selections nil)
+    #+END_SRC
+
+*** Download themes
+**** Organic Green
+
+    A light theme with a light-green background.
+    #+BEGIN_SRC emacs-lisp
+      (use-package organic-green-theme
+        :ensure t
+        :defer t)
+    #+END_SRC
+
+**** Jazz
+
+     Warm theme with dark colors
+     #+BEGIN_SRC emacs-lisp
+       (use-package jazz-theme
+         :ensure t
+         :defer t)
+     #+END_SRC
+     
+*** Default theme
+
+    Let's activate the default theme, I might change this very often.
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'after-init-hook
+                (lambda () (interactive)
+                  (setq organic-green-boldless t)
+                  (load-theme 'organic-green t)))
     #+END_SRC
 ** Time
 
@@ -681,12 +736,15 @@ many code as he wants from here (or elsewhere).
         (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol"))
 
       (provide 'fira-code-mode)
-
-      (fira-code-mode--setup)
-      (fira-code-mode)
     #+END_SRC
 
-    
+    #+BEGIN_SRC emacs-lisp
+      (require 'fira-code-mode)
+      (add-hook 'after-init-hook (lambda ()
+                                   (interactive)
+                                   (fira-code-mode t)
+                                   (fira-code-mode--setup)))
+    #+END_SRC
 ** Fringe
 
     Control the fringe around the frame.
@@ -1138,6 +1196,7 @@ Adding urban dictionary to webjump.
        ("C-h k" . helpful-key)
        ("C-h ," . helpful-at-point)))
   #+END_SRC
+
 * Editing Text
 
 ** Defaults
@@ -1593,6 +1652,10 @@ Adding urban dictionary to webjump.
 
 ** Shackle
 
+   https://www.reddit.com/r/emacs/comments/7au3hj/how_do_you_manage_your_emacs_windows_and_stay_sane/
+   https://github.com/Alexander-Miller/dotfiles/blob/master/.config/spacemacs/user-config.org#shackle
+
+
    Gives you the means to put an end to popped up buffers not behaving
    the way you'd like them to. By setting up simple rules you can for
    instance make Emacs always select help buffers for you or make
@@ -1692,6 +1755,79 @@ the *winner-boring-buffers*.
 	   ("C-x 4 U" . winner-redo)))
 #+END_SRC
 
+* Alerts
+** Alert
+  
+  Alert is a growl-workalike for Emacs which uses a common
+  notification interface and multiple, selectable styles, whose use is
+  fully customized by the user.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package alert
+      :config
+      (setq alert-default-style 'libnotify
+            alert-log-messages t))
+
+    (require 'alert)
+  #+END_SRC
+
+** User configuration
+
+   Several packages uses Alert for sending notifications, so you have
+   full control over them by customizing =alert-user-configuration=.
+
+*** Slack notifications
+    This was stolen from [[https://endlessparentheses.com/keep-your-slack-distractions-under-control-with-emacs.html][endless parentheses]] and adapt accordingly.
+
+    Channels that I wish to only log the messages in the *Alert*
+    buffer.
+    #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'alert
+        '(add-to-list 'alert-user-configuration
+                      '(((:title . "\\(beginners\\|datomic\\|clojure\\|clojurescript\\|off-topic\\|datascript\\|core-async\\)")
+                         (:category . "slack"))
+                        log nil)))
+    #+END_SRC
+    
+    However, there are a couple of important channels I would like to
+    be notified about anything, so add a rule for them.
+    #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'alert
+        '(add-to-list 'alert-user-configuration
+                      '(((:title . "\\(reitit\\|sql\\)")
+                         (:category . "slack"))
+                        libnotify nil)))
+    #+END_SRC
+
+    There are a few channel where I only need to pay attention if
+    explicitly mentioned.
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list
+       'alert-user-configuration
+       '(((:message . "@bartuka\\|Wanderson")
+          (:title . "\\(beginners\\)")
+          (:category . "slack"))
+         libnotify nil))
+    #+END_SRC
+
+*** Telegram notifications
+
+    Let's start by telling alert *not* to notify anything.
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'alert-user-configuration
+                   '(((:category . "telega"))
+                     log nil))
+    #+END_SRC
+
+    However, if someone explicitly mention me, tell me pls.
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list
+             'alert-user-configuration
+             '(((:message . "@bartuka\\|Wanderson")
+                (:category . "telega"))
+               libnotify nil))
+    #+END_SRC
+   
 * Dired
 
   Dired is very smart and usually finds the correct intent for some
@@ -3095,345 +3231,478 @@ There an exhaustive documentation about Reveal.js in the github
 
 #+end_src
 
-* Spotify
+* Social Networks
+** RSS Feed
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package helm-spotify-plus
-      :ensure t
-      :config
-      (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
-      (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
-      (global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
-      (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
-      (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
-  #+END_SRC
+   I like to read about programming, but Emacs and Clojure are by far
+   the most interesting communities I know so far, therefore, my feeds
+   have many links from these subjects.
 
-* RSS Feed
-
-  I like to read about programming, but Emacs and Clojure are by far
-  the most interesting communities I know so far, therefore, my feeds
-  have many links from these subjects.
-
-  #+begin_src emacs-lisp
-    (use-package elfeed
-      :ensure t
-      :commands (elfeed elfeed-update)
-      :config
-      (setq-default elfeed-search-filter "@24-months-ago +unread")
-      :bind
-      ("C-x w" . elfeed))
+   #+begin_src emacs-lisp
+     (use-package elfeed
+       :ensure t
+       :commands (elfeed elfeed-update)
+       :config
+       (setq-default elfeed-search-filter "@24-months-ago +unread")
+       :bind
+       ("C-x w" . elfeed))
   
-    (defun ime-elfeed-pocast-tagger (entry)
-      (when (elfeed-entry-enclosures entry)
-        (elfeed-tag entry 'podcast)))
+     (defun ime-elfeed-pocast-tagger (entry)
+       (when (elfeed-entry-enclosures entry)
+         (elfeed-tag entry 'podcast)))
   
-    (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
-  #+end_src
+     (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
+   #+end_src
 
 
-  Add some newsletters.
-  #+BEGIN_SRC emacs-lisp
-    (eval-after-load 'elfeed
-      '(setq elfeed-feeds
-             '(;; blog
-               ("https://irreal.org/blog/?feed=rss2" blog)
-           
-               ;; comics
-               ("https://www.exocomics.com/feed" comic)
-               ("https://www.swordscomic.com/swords/feed/" comic)
-               ("https://xkcd.com/atom.xml" comic)
-
-               ;; blogs:dev
-               ("https://dendibakh.github.io/feed.xml" blog dev)
-               ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
-               ("https://floooh.github.io/feed.xml" blog dev)
-               ("https://www.joelonsoftware.com/feed/" blog dev)
-               ("https://mortoray.com/feed/" blog dev)
-               ("https://nullprogram.com/feed/" blog dev)
-               ("http://tonsky.me/blog/atom.xml" blog dev)
-               ("https://yogthos.net/feed.xml" blog dev)
-               ("http://insideclojure.org/feed.xml" blog dev)
-
-               ;; blog:philosophy
-               ("https://danwang.co/feed/" blog philosophy)
-
-               ;; podcast
-               ("https://pinecast.com/feed/emacscast" podcast)
-
-               ;; youtube
-               ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
-               ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
-               ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
-               ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
-               ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide))))
-  #+END_SRC
-  
-
-  By default, s run a live filter and you can type something like
-  "Xah" to dynamically narrow the list of stories to those containing
-  that string. The only problem is that you need an extra whitespace
-  before the word, " Xah", let's fix that.
-
-  #+BEGIN_SRC emacs-lisp
-    (defun bk/elfeed-search-live-filter-space ()
-      "Insert space when running elfeed filter"
-      (interactive)
-      (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
-        (elfeed-search-live-filter)))
-  
-    (eval-after-load 'elfeed
-      '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
-  #+END_SRC
-
-** Youtube
-   
+   Add some newsletters.
    #+BEGIN_SRC emacs-lisp
-     (setq-default elfeed-search-filter "@1-week-ago +unread")
-
-     (defun ambrevar/elfeed-play-with-mpv ()
-       "Play entry link with mpv."
-       (interactive)
-       (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single)))
-             (quality-arg "")
-             (quality-val (completing-read "Max height resolution (0 for unlimited): " '("0" "480" "720") nil nil)))
-         (setq quality-val (string-to-number quality-val))
-         (message "Opening %s with height≤%s with mpv..." (elfeed-entry-link entry) quality-val)
-         (when (< 0 quality-val)
-           (setq quality-arg (format "--ytdl-format=[height<=?%s]" quality-val)))
-         (start-process "elfeed-mpv" nil "mpv" quality-arg (elfeed-entry-link entry))))
-
-     (defun ambrevar/elfeed-open-with-eww ()
-       "Open in eww with `eww-readable'."
-       (interactive)
-       (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single))))
-         (eww  (elfeed-entry-link entry))
-         (add-hook 'eww-after-render-hook 'eww-readable nil t)))
-
-     (defvar ambrevar/elfeed-visit-patterns
-       '(("youtu\\.?be" . ambrevar/elfeed-play-with-mpv)
-         ("phoronix" . ambrevar/elfeed-open-with-eww))
-       "List of (regexps . function) to match against elfeed entry link to know
-     whether how to visit the link.")
-
-     (defun ambrevar/elfeed-visit-maybe-external ()
-       "Visit with external function if entry link matches `ambrevar/elfeed-visit-patterns',
-     visit otherwise."
-       (interactive)
-       (let ((entry (if (eq major-mode 'elfeed-show-mode)
-                        elfeed-show-entry
-                      (elfeed-search-selected :single)))
-             (patterns ambrevar/elfeed-visit-patterns))
-         (while (and patterns (not (string-match (caar patterns) (elfeed-entry-link entry))))
-           (setq patterns (cdr patterns)))
-         (cond
-          (patterns
-           (funcall (cdar patterns)))
-          ((eq major-mode 'elfeed-search-mode)
-           (call-interactively 'elfeed-search-show-entry))
-          (t (elfeed-show-visit)))))
-
      (eval-after-load 'elfeed
-       '(progn
-          (define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv)
-          (define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external)))
-   #+END_SRC
+       '(setq elfeed-feeds
+              '(;; blog
+                ("https://irreal.org/blog/?feed=rss2" blog)
+           
+                ;; comics
+                ("https://www.exocomics.com/feed" comic)
+                ("https://www.swordscomic.com/swords/feed/" comic)
+                ("https://xkcd.com/atom.xml" comic)
 
-** Score
+                ;; blogs:dev
+                ("https://dendibakh.github.io/feed.xml" blog dev)
+                ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
+                ("https://floooh.github.io/feed.xml" blog dev)
+                ("https://www.joelonsoftware.com/feed/" blog dev)
+                ("https://mortoray.com/feed/" blog dev)
+                ("https://nullprogram.com/feed/" blog dev)
+                ("http://tonsky.me/blog/atom.xml" blog dev)
+                ("https://yogthos.net/feed.xml" blog dev)
+                ("http://insideclojure.org/feed.xml" blog dev)
+
+                ;; blog:philosophy
+                ("https://danwang.co/feed/" blog philosophy)
+
+                ;; podcast
+                ("https://pinecast.com/feed/emacscast" podcast)
+
+                ;; youtube
+                ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
+                ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
+                ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
+                ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
+                ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide))))
+   #+END_SRC
+  
+
+   By default, s run a live filter and you can type something like
+   "Xah" to dynamically narrow the list of stories to those containing
+   that string. The only problem is that you need an extra whitespace
+   before the word, " Xah", let's fix that.
 
    #+BEGIN_SRC emacs-lisp
-     (require 'cl)
-     (require 'elfeed)
-     (require 'elfeed-search)
-     (require 'elfeed-db)
-
-     (defun score-elfeed-entry (entry)
-       (let ((title (elfeed-entry-title entry))
-             (content (elfeed-deref (elfeed-entry-content entry)))
-             (score 0))
-         (loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
-                                    ("clojure" 1)
-                                    ("emacs.*clojure\\|clojure.*emacs" 2))
-               if (string-match pattern title)
-               do (incf score n)
-               if (string-match pattern content)
-               do (incf score n))
-         (message "%s - %s" title score)
-         (setf (elfeed-meta entry :my/score) score)
-         (cond
-          ((= score 1)
-           (elfeed-tag entry 'relevant))
-          ((= score 2)
-           (elfeed-tag entry 'important))
-          ((> score 2)
-           (elfeed-tag entry 'urgent)))
-         entry))
-
-     (defface relevant-elfeed-entry
-       `((t :background ,(color-lighten-name "LightBlue1" 40)))
-       "Maks a relevant Elfeed entry.")
-
-     (defface important-elfeed-entry
-       `((t :background ,(color-lighten-name "orange1" 40)))
-       "Marks a important Elfeed entry.")
-
-     (defface urgent-elfeed-entry
-       `((t :background ,(color-lighten-name "OrangeRed2" 40)))
-       "Marks an urgent Elfeed entry.")
-
-     (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
-
-     (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
-     (push '(important important-elfeed-entry) elfeed-search-face-alist)
-     (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
-
-     (define-key elfeed-search-mode-map (kbd "U")
-       (lambda () (interactive)
-         (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
-
-     (define-key elfeed-search-mode-map (kbd "i")
-       (lambda () (interactive)
-         (elfeed-search-set-filter "@6-months-ago +unread +important")))
-
-     (define-key elfeed-search-mode-map (kbd "v")
-       (lambda () (interactive)
-         (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
-
-     (define-key elfeed-search-mode-map (kbd "c")
-       (lambda () (interactive)
-         (elfeed-search-set-filter "@6-months-ago +unread +unread")))
+     (defun bk/elfeed-search-live-filter-space ()
+       "Insert space when running elfeed filter"
+       (interactive)
+       (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
+         (elfeed-search-live-filter)))
+  
+     (eval-after-load 'elfeed
+       '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
    #+END_SRC
 
-* Slack
+   Toggle automatic update of elfeed newsletters.
 
-Slack from Emacs? :O Why not? I am having a terrible time configuring
-all my workspaces lately. Therefore, it sounds like a perfect
-opportunity to leverage the best tool for the job once again.
+   #+BEGIN_SRC emacs-lisp
+     (defvar bk--update-elfeed-timer nil)
 
-#+BEGIN_SRC emacs-lisp
-  (use-package slack
-    :ensure t
-    :init
-    (setq slack-buffer-emojify t
-	  slack-prefer-current-team t
-	  slack-buffer-function #'switch-to-buffer
-	  slack-completing-read-function #'ido-completing-read
-	  slack-display-team-name nil)
-    :config
-    (slack-register-team
-     :name "captalysdev"
-     :default t
-     :token (auth-source-pick-first-password
-	     :host "slack.com"
-	     :user "captalysdev")
-     :subscribed-channels '(onboarding geral dev)
-     :full-and-display-names t)
+     (defun bk/toggle-update-elfeed ()
+       "Toggle automatic elfeed update from 25/25 min."
+       (interactive)
+       (let ((repeat-rate (* 60 25)))
+         (if bk--update-elfeed-timer
+             (progn
+               (cancel-timer bk--update-elfeed-timer)
+               (setq bk--update-elfeed-timer nil)
+               (message "Elfeed automatic update disabled..."))
+           (setq bk--update-elfeed-timer
+                 (run-at-time 60 repeat-rate 'elfeed-update))
+           (message "Elfeed automatic update enabled..."))))
+   #+END_SRC
 
-    (slack-register-team
-     :name "clojurians"
-     :token (auth-source-pick-first-password
-	     :host "slack.com"
-	     :user "clojurians")
-     :subscribed-channels '(beginners reitit))
+   Enable visual-line-mode in elfeed buffers.
+   #+BEGIN_SRC emacs-lisp
+     (eval-after-load 'elfeed
+       (add-hook 'elfeed-show-mode-hook 'visual-line-mode))
 
-    (slack-register-team
-     :name "captalys-oficial"
-     :token (auth-source-pick-first-password
-	     :host "slack.com"
-	     :user "captalys-oficial")
-     :subscribed-channels '(devops)
-     :full-and-display-names t))
+   #+END_SRC
 
-#+END_SRC
+*** Start and unstarr
 
-Bring up the mentions menu with `@', and insert a space afterwards.
-#+BEGIN_SRC emacs-lisp
-  (define-key slack-mode-map "@"
-    (defun endless/slack-message-embed-mention ()
-      (interactive)
-      (call-interactively #'slack-message-embed-mention)
-      (insert " ")))
-#+END_SRC
+    This was got from [[http://pragmaticemacs.com/emacs/star-and-unstar-articles-in-elfeed/][pragmatic emacs]].
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/elfeed-star ()
+        "Apply starred to all selected entries."
+        (interactive)
+        (let* ((entries (elfeed-search-selected))
+               (tag (intern "starred")))
+          (cl-loop for entry in entries do (elfeed-tag entry tag))
+          (mapc #'elfeed-search-update-entry entries)
+          (unless (use-region-p) (forward-line))))
+
+      (defun bk/elfeed-unstar ()
+        "Remove starred tag from all selected entries."
+        (interactive)
+        (let* ((entries (elfeed-search-selected))
+               (tag (intern "starred")))
+          (cl-loop for entry in entries do (elfeed-untag entry tag))
+          (mapc #'elfeed-search-update-entry entries)
+          (unless (use-region-p) (forward-line))))
+
+      (defface elfeed-search-starred-title-face
+        '((t :foreground "#f77"))
+        "Marks a starred Elfeed entry.")
+
+      (eval-after-load 'elfeed-search
+        '(push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist))
+    #+END_SRC
+
+    I bind these to the keys "*" to add a star and "8" to remove the
+    star.
+
+    #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'elfeed-search
+        '(progn
+           (define-key elfeed-search-mode-map (kbd "*") 'bk/elfeed-star)
+           (define-key elfeed-search-mode-map (kbd "8") 'bk/elfeed-unstar)))
+    #+END_SRC
+   
+
+    Now you can look for the starred feeds by pressing "S".
+    #+BEGIN_SRC emacs-lisp
+      (eval-after-load 'elfeed
+        ' (defalias 'elfeed-toggle-start
+            (elfeed-expose #'elfeed-search-toggle-all 'star)))
+
+      (eval-after-load 'elfeed-search
+        '(define-key elfeed-search-mode-map (kbd "S") 'elfeed-toggle-start))
+    #+END_SRC
+*** Youtube
+   
+    #+BEGIN_SRC emacs-lisp
+      (setq-default elfeed-search-filter "@1-week-ago +unread")
+
+      (defun ambrevar/elfeed-play-with-mpv ()
+        "Play entry link with mpv."
+        (interactive)
+        (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single)))
+              (quality-arg "")
+              (quality-val (completing-read "Max height resolution (0 for unlimited): " '("0" "480" "720") nil nil)))
+          (setq quality-val (string-to-number quality-val))
+          (message "Opening %s with height≤%s with mpv..." (elfeed-entry-link entry) quality-val)
+          (when (< 0 quality-val)
+            (setq quality-arg (format "--ytdl-format=[height<=?%s]" quality-val)))
+          (start-process "elfeed-mpv" nil "mpv" quality-arg (elfeed-entry-link entry))))
+
+      (defun ambrevar/elfeed-open-with-eww ()
+        "Open in eww with `eww-readable'."
+        (interactive)
+        (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single))))
+          (eww  (elfeed-entry-link entry))
+          (add-hook 'eww-after-render-hook 'eww-readable nil t)))
+
+      (defvar ambrevar/elfeed-visit-patterns
+        '(("youtu\\.?be" . ambrevar/elfeed-play-with-mpv)
+          ("phoronix" . ambrevar/elfeed-open-with-eww))
+        "List of (regexps . function) to match against elfeed entry link to know
+      whether how to visit the link.")
+
+      (defun ambrevar/elfeed-visit-maybe-external ()
+        "Visit with external function if entry link matches `ambrevar/elfeed-visit-patterns',
+      visit otherwise."
+        (interactive)
+        (let ((entry (if (eq major-mode 'elfeed-show-mode)
+                         elfeed-show-entry
+                       (elfeed-search-selected :single)))
+              (patterns ambrevar/elfeed-visit-patterns))
+          (while (and patterns (not (string-match (caar patterns) (elfeed-entry-link entry))))
+            (setq patterns (cdr patterns)))
+          (cond
+           (patterns
+            (funcall (cdar patterns)))
+           ((eq major-mode 'elfeed-search-mode)
+            (call-interactively 'elfeed-search-show-entry))
+           (t (elfeed-show-visit)))))
+
+      (eval-after-load 'elfeed
+        '(progn
+           (define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv)
+           (define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external)))
+    #+END_SRC
+
+*** Score
+
+    #+BEGIN_SRC emacs-lisp
+      (require 'cl)
+      (require 'elfeed)
+      (require 'elfeed-search)
+      (require 'elfeed-db)
+
+      (defun score-elfeed-entry (entry)
+        (let ((title (elfeed-entry-title entry))
+              (content (elfeed-deref (elfeed-entry-content entry)))
+              (score 0))
+          (loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
+                                     ("clojure" 1)
+                                     ("emacs.*clojure\\|clojure.*emacs" 2))
+                if (string-match pattern title)
+                do (incf score n)
+                if (string-match pattern content)
+                do (incf score n))
+          (message "%s - %s" title score)
+          (setf (elfeed-meta entry :my/score) score)
+          (cond
+           ((= score 1)
+            (elfeed-tag entry 'relevant))
+           ((= score 2)
+            (elfeed-tag entry 'important))
+           ((> score 2)
+            (elfeed-tag entry 'urgent)))
+          entry))
+
+      (defface relevant-elfeed-entry
+        `((t :background ,(color-lighten-name "LightBlue1" 40)))
+        "Maks a relevant Elfeed entry.")
+
+      (defface important-elfeed-entry
+        `((t :background ,(color-lighten-name "orange1" 40)))
+        "Marks a important Elfeed entry.")
+
+      (defface urgent-elfeed-entry
+        `((t :background ,(color-lighten-name "OrangeRed2" 40)))
+        "Marks an urgent Elfeed entry.")
+
+      (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
+
+      (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
+      (push '(important important-elfeed-entry) elfeed-search-face-alist)
+      (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
+
+      (define-key elfeed-search-mode-map (kbd "U")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
+
+      (define-key elfeed-search-mode-map (kbd "i")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +important")))
+
+      (define-key elfeed-search-mode-map (kbd "v")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
+
+      (define-key elfeed-search-mode-map (kbd "c")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +unread")))
+    #+END_SRC
+
+** Slack
+
+   Slack from Emacs? :O Why not? I am having a terrible time
+   configuring all my workspaces lately. Therefore, it sounds like a
+   perfect opportunity to leverage the best tool for the job once
+   again.
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package slack
+     :ensure t
+     :init
+     (setq slack-buffer-emojify t
+           slack-prefer-current-team t
+           slack-buffer-function #'switch-to-buffer
+           slack-completing-read-function #'ido-completing-read
+           slack-display-team-name nil)
+     :config
+     (slack-register-team
+      :name "captalysdev"
+      :default t
+      :modeline-enabled t
+      :visible-threads t
+      :token (auth-source-pick-first-password
+              :host "slack.com"
+              :user "captalysdev")
+      :subscribed-channels '(onboarding
+                             geral dev
+                             atlas garantias-e-cobranca)
+      :full-and-display-names t)
+
+     (slack-register-team
+      :name "clojurians"
+      :token (auth-source-pick-first-password
+              :host "slack.com"
+              :user "clojurians")
+      :subscribed-channels '(beginners reitit sql))
+
+     (slack-register-team
+      :name "captalys-oficial"
+      :token (auth-source-pick-first-password
+              :host "slack.com"
+              :user "captalys-oficial")
+      :full-and-display-names t)
+     :config
+     ;; go to any channel with `C-x j`
+     (define-key ctl-x-map "j" #'slack-select-rooms)
+     (define-key slack-mode-map (kbd "C-;") ":+1:"))
+ #+END_SRC
+
+ Bring up the mentions menu with `@', and insert a space afterwards.
+ #+BEGIN_SRC emacs-lisp
+   (eval-after-load 'slack
+     '(define-key slack-mode-map "@"
+        (defun endless/slack-message-embed-mention ()
+          (interactive)
+          (call-interactively #'slack-message-embed-mention)
+          (insert " "))))
+ #+END_SRC
 
 
-CRUD on messages
-#+BEGIN_SRC emacs-lisp
-  (define-key slack-mode-map (kbd "C-c C-d") #'slack-message-delete)
-  (define-key slack-mode-map (kbd "C-c C-e") #'slack-message-edit)
-  (define-key slack-mode-map (kbd "C-c C-k") #'slack-channel-leave)
-#+END_SRC
+ CRUD on messages
+ #+BEGIN_SRC emacs-lisp
+   (eval-after-load 'slack
+     '(progn
+        (define-key slack-mode-map (kbd "C-c C-d") #'slack-message-delete)
+        (define-key slack-mode-map (kbd "C-c C-e") #'slack-message-edit)
+        (define-key slack-mode-map (kbd "C-c C-k") #'slack-channel-leave)))
+ #+END_SRC
 
-Circe is a client for IRC in Emacs. It tries to have sane defaults,
-and integrates well with the rest of the editor.
+ Circe is a client for IRC in Emacs. It tries to have sane defaults,
+ and integrates well with the rest of the editor.
 
-#+BEGIN_SRC emacs-lisp
-  (use-package circe :ensure t)
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+   (use-package circe 
+     :ensure t
+     :config
+     (require 'lui))
+ #+END_SRC
 
-Emojify is an Emacs extension to display emojis.
-#+BEGIN_SRC emacs-lisp
-  (use-package emojify
-    :ensure t
-    :commands (emojify-mode))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (use-package alert
-    :commands (alert)
-    :init
-    (setq alert-default-style 'libnotify))
-#+END_SRC
+ Emojify is an Emacs extension to display emojis.
+ #+BEGIN_SRC emacs-lisp
+   (use-package emojify
+     :ensure t
+     :delight emojify-mode
+     :config
+     (setq emojify-display-style 'image
+           emojify-emoji-styles '(unicode)
+           emojify-point-entered-behaviour 'echo)
+     (global-emojify-mode 1))
+ #+END_SRC
 
 
-How to use Slack on emacs? Some terminology from the website:
+ How to use Slack on emacs? Some terminology from the website:
 
-| Function                   | Description                                                                        |
-|----------------------------+------------------------------------------------------------------------------------|
-| im                         | an IM (instant message) is a direct message between you and exactly one other user |
-| channel                    | A channel is a slack channel which you are a member of                             |
-| group                      | Any chat (direct message or channel) which isn't an IM is a group                  |
-| slack-register-team        | set team configuration and create team                                             |
-| slack-change-current-team  | change slack-current-team var                                                      |
-| slack-start                | do authorize and initialze                                                         |
-| slack-ws-close             | turn off websocket connection                                                      |
-| slack-group-select         | select group from list                                                             |
-| slack-im-select            | select direct message from list                                                    |
-| slack-channel-select       | select channel from list                                                           |
-| slack-group-list-update    | update group list                                                                  |
-| slack-channel-list-update  | update channel list                                                                |
-| slack-message-embed-mentio | use to mention to user                                                             |
-| slack-file-upload          | uploads a file                                                                     |
+ | Function                   | Description                                                                        |
+ |----------------------------+------------------------------------------------------------------------------------|
+ | im                         | an IM (instant message) is a direct message between you and exactly one other user |
+ | channel                    | A channel is a slack channel which you are a member of                             |
+ | group                      | Any chat (direct message or channel) which isn't an IM is a group                  |
+ | slack-register-team        | set team configuration and create team                                             |
+ | slack-change-current-team  | change slack-current-team var                                                      |
+ | slack-start                | do authorize and initialze                                                         |
+ | slack-ws-close             | turn off websocket connection                                                      |
+ | slack-group-select         | select group from list                                                             |
+ | slack-im-select            | select direct message from list                                                    |
+ | slack-channel-select       | select channel from list                                                           |
+ | slack-group-list-update    | update group list                                                                  |
+ | slack-channel-list-update  | update channel list                                                                |
+ | slack-message-embed-mentio | use to mention to user                                                             |
+ | slack-file-upload          | uploads a file                                                                     |
 
-* Telegram
+** Telegram
 
-  One more chat service that we need to stay in touch with friends and
-  community.
+   One more chat service that we need to stay in touch with friends and
+   community.
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package telega
-      :ensure t
-      :hook ((telega-root-mode . emojify-mode)
-             (telega-chat-mode . emojify-mode))
-      :init
-      (setq telega-animation-play-inline nil)
-      :config
-      (telega-notifications-mode 1))
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package telega
+       :ensure t
+       :delight (telega-chat-mode "Telegram")
+       :init
+       (setq telega-animation-play-inline nil)
+       :config
+       (telega-notifications-mode 1))
+   #+END_SRC
 
-  Enabling emoji completions in chat buffer
+   Enabling emoji completions in chat buffer
 
-  Emoji completions with =:<Emoji-name>:= syntax, uses nice company
-  mode.
-  #+BEGIN_SRC emacs-lisp
-    (add-hook 'telega-chat-mode-hook
-              (lambda ()
-                (set (make-local-variable 'company-backends)
-                     (append '(telega-company-emoji
-                               telega-company-username
-                               telega-company-hashtag)
-                             (when (telega-chat-bot-p telega-chatbuf--chat)
-                               '(telega-company-botcmd))))
-                (company-mode 1)))
-  #+END_SRC
+   Emoji completions with =:<Emoji-name>:= syntax, uses nice company
+   mode.
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'telega-chat-mode-hook
+               (lambda ()
+                 (set (make-local-variable 'company-backends)
+                      (append '(telega-company-emoji
+                                telega-company-username
+                                telega-company-hashtag)
+                              (when (telega-chat-bot-p telega-chatbuf--chat)
+                                '(telega-company-botcmd))))
+                 (company-mode 1)))
+   #+END_SRC
+
+   Take a look at the mode-line in chat buffers
+   #+BEGIN_SRC emacs-lisp
+     (setq telega-chat-mode-line-format
+           '((:eval
+              (telega-chatbuf-mode-line-unread))
+             (:eval
+              (telega-chatbuf-mode-line-marked))
+             (:eval
+              (telega-chatbuf-mode-line-members nil))
+             (:eval
+              (telega-chatbuf-mode-line-pinned-msg 20))))
+   #+END_SRC
+
+** Spotify
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-spotify-plus
+       :ensure t
+       :config
+       (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
+       (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
+       (global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
+       (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
+       (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
+   #+END_SRC
+
+** Twitter
+   
+   The possible features includes:
+   - viewing various timelines
+   - posting tweets
+   - following and removing users
+   - marking tweets as favorites
+
+   Use Twitter from within Emacs!
+   #+BEGIN_SRC emacs-lisp
+     (use-package twittering-mode
+       :ensure t
+       :config
+       (setq twittering-timer-interval 3600
+             twittering-icon-mode t
+             twittering-use-master-password t))
+   #+END_SRC
+
+   How to use:
+
+   1. Execute =M-x twit= to run twittering-mode.
+   2. Basic key bindings are as follows:
+      1. =V=       : open or switch to another timeline by =timeline-spec=
+      2. =u=       : post a reply to the pointed tweet
+      3. =RET=     : post an organic retweet
+      4. =C-c RET= : post an official/native retweet
+      5. =d=       : send a direct message
+      6. =C-c C-w= : delete the pointed tweet
+      7. =j=       : go to next tweet
+
+  More on usage [[https://github.com/hayamiz/twittering-mode][here]].
 
 * Pomodoro
 
@@ -3698,9 +3967,9 @@ How to use Slack on emacs? Some terminology from the website:
        :delight which-key-mode
        :init
        (setq which-key-use-C-h-commands t
-   	  which-key-separator " - "
-   	  which-key-show-prefix 'echo
-   	  which-key-popup-type 'side-window)
+             which-key-separator " - "
+             which-key-show-prefix 'echo
+             which-key-popup-type 'side-window)
        :config
        (which-key-mode))
    #+end_src
