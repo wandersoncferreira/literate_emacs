@@ -87,6 +87,7 @@ many code as he wants from here (or elsewhere).
   - [[#company-mode][Company mode]]
   - [[#hippie-expand][Hippie Expand]]
 - [[#window][Window]]
+  - [[#shackle][Shackle]]
   - [[#side-windows][Side windows]]
     - [[#eshell-at-the-bottom][Eshell at the bottom]]
     - [[#dired-as-a-side-bar][Dired as a side bar]]
@@ -153,7 +154,7 @@ many code as he wants from here (or elsewhere).
 - [[#spotify][Spotify]]
 - [[#rss-feed][RSS Feed]]
   - [[#youtube][Youtube]]
-- [[#emms][EMMS]]
+  - [[#score][Score]]
 - [[#slack][Slack]]
 - [[#telegram][Telegram]]
 - [[#pomodoro][Pomodoro]]
@@ -1490,14 +1491,14 @@ Adding urban dictionary to webjump.
        :delight company-mode
        :init
        (setq company-show-numbers t
-   	  company-dabbrev-downcase nil
-   	  company-dabbrev-ignore-case t
-   	  company-tooltip-limit 10
-   	  company-minimum-prefix-length 2
-   	  company-require-match 'never
-   	  company-tooltip-align-annotations t
-   	  company-transformers '(company-sort-by-occurrence)
-   	  company-idle-delay 0.5)
+             company-dabbrev-downcase nil
+             company-dabbrev-ignore-case t
+             company-tooltip-limit 10
+             company-minimum-prefix-length 2
+             company-require-match 'never
+             company-tooltip-align-annotations t
+             company-transformers '(company-sort-by-occurrence)
+             company-idle-delay 0.5)
        :config
        (global-company-mode t))
    #+end_src
@@ -1512,10 +1513,10 @@ Adding urban dictionary to webjump.
        "Choose the candidate based on his number at candidate list."
        (interactive)
        (let* ((k (this-command-keys))
-   	   (re (concat "^" company-prefix k)))
+              (re (concat "^" company-prefix k)))
          (if (cl-find-if (lambda (s) (string-match re s)) company-candidates)
-   	  (self-insert-command)
-   	(company-complete-number (string-to-number k)))))
+             (self-insert-command)
+           (company-complete-number (string-to-number k)))))
 
      (defun ora-activate-number ()
        "Activate the number-based choices in company."
@@ -1523,7 +1524,7 @@ Adding urban dictionary to webjump.
        (let ((map company-active-map))
          (mapc
           (lambda (x)
-   	 (define-key map (format "%d" x) 'ora-company-number))
+            (define-key map (format "%d" x) 'ora-company-number))
           (number-sequence 0 9))
          ;; (define-key map " " (lambda ()
          ;; 			  (interactive)
@@ -1590,6 +1591,21 @@ Adding urban dictionary to webjump.
 			 (cons #'display-buffer-no-window nil)))
     #+END_SRC
 
+** Shackle
+
+   Gives you the means to put an end to popped up buffers not behaving
+   the way you'd like them to. By setting up simple rules you can for
+   instance make Emacs always select help buffers for you or make
+   everything reuse your currently selected window.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package shackle
+       :ensure t
+       :config
+       (setq shackle-rules '(("*Ledger Report*" :same t)))
+       (add-hook 'after-init-hook 'shackle-mode))
+   #+END_SRC
+   
 ** Side windows
 
    What are side windows? These windows is a place to put
@@ -3094,72 +3110,80 @@ There an exhaustive documentation about Reveal.js in the github
 
 * RSS Feed
 
-I like to read about programming, but Emacs and Clojure are by far the
-most interesting communities I know so far, therefore, my feeds have
-many links from these subjects.
+  I like to read about programming, but Emacs and Clojure are by far
+  the most interesting communities I know so far, therefore, my feeds
+  have many links from these subjects.
 
-#+begin_src emacs-lisp
-  (use-package elfeed
-    :ensure t
-    :commands (elfeed elfeed-update)
-    :config
-    (setq-default elfeed-search-filter "@24-months-ago +unread")
-    (setq elfeed-feeds
-      '(("http://lambda-the-ultimate.org/rss.xml" functional)
-        ("https://byorgey.wordpress.com/feed/" functional)
-        ("http://gigasquidsoftware.com/atom.xml" clojure)
-        ("http://swannodette.github.com/atom.xml" clojure)
-        ("https://rigsomelight.com/feed.xml" clojure)
-        ("https://lambdaisland.com/feeds/blog.atom" clojure)
-        ("https://nullprogram.com/feed/" programming)
-        ("http://feeds.feedburner.com/cognicast" clojure)
-        ("http://feeds2.feedburner.com/StuartSierra" clojure)
-        ("http://feeds.feedburner.com/Juxt" clojure)
-        ("http://blog.cognitect.com/blog?format=rss" clojure)
-        ("https://existentialtype.wordpress.com/feed/" functional)
-        ("http://insideclojure.org/feed.xml" clojure)
-        ("https://yogthos.net/feed.xml" clojure)
-        ("http://endlessparentheses.com/atom.xml" emacs)
-        ("http://www.blackhats.es/wordpress/?feed=rss2" emacs)
-        ("http://www.howardism.org/index.xml" emacs)
-        ("http://www.masteringemacs.org/feed/" emacs)
-        ("http://tonsky.me/blog/atom.xml" clojure)
-        ("http://www.clojure.net/rss.xml" clojure)
-        ("https://www.youtube.com/feeds/videos.xml?user=techguruuk" emacs)
-        ("http://emacsrocks.com/atom.xml" emacs)
-        ("http://emacs-fu.blogspot.com/feeds/posts/default" emacs)
-        ("http://yqrashawn.com/feeds/lazyblorg-all.atom_1.0.links-only.xml" emacs)
-        ;; podcasts
-        ("https://pinecast.com/feed/emacscast" podcast)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)))
-    :bind
-    ("C-x w" . elfeed))
+  #+begin_src emacs-lisp
+    (use-package elfeed
+      :ensure t
+      :commands (elfeed elfeed-update)
+      :config
+      (setq-default elfeed-search-filter "@24-months-ago +unread")
+      :bind
+      ("C-x w" . elfeed))
+  
+    (defun ime-elfeed-pocast-tagger (entry)
+      (when (elfeed-entry-enclosures entry)
+        (elfeed-tag entry 'podcast)))
+  
+    (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
+  #+end_src
 
 
-  (defun ime-elfeed-pocast-tagger (entry)
-    (when (elfeed-entry-enclosures entry)
-      (elfeed-tag entry 'podcast)))
+  Add some newsletters.
+  #+BEGIN_SRC emacs-lisp
+    (eval-after-load 'elfeed
+      '(setq elfeed-feeds
+             '(;; blog
+               ("https://irreal.org/blog/?feed=rss2" blog)
+           
+               ;; comics
+               ("https://www.exocomics.com/feed" comic)
+               ("https://www.swordscomic.com/swords/feed/" comic)
+               ("https://xkcd.com/atom.xml" comic)
 
-  (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
-#+end_src
+               ;; blogs:dev
+               ("https://dendibakh.github.io/feed.xml" blog dev)
+               ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
+               ("https://floooh.github.io/feed.xml" blog dev)
+               ("https://www.joelonsoftware.com/feed/" blog dev)
+               ("https://mortoray.com/feed/" blog dev)
+               ("https://nullprogram.com/feed/" blog dev)
+               ("http://tonsky.me/blog/atom.xml" blog dev)
+               ("https://yogthos.net/feed.xml" blog dev)
+               ("http://insideclojure.org/feed.xml" blog dev)
 
-By default, s run a live filter and you can type something like "Xah"
-to dynamically narrow the list of stories to those containing that
-string. The only problem is that you need an extra whitespace before
-the word, " Xah", let's fix that.
+               ;; blog:philosophy
+               ("https://danwang.co/feed/" blog philosophy)
 
-#+BEGIN_SRC emacs-lisp
-  (defun bk/elfeed-search-live-filter-space ()
-    "Insert space when running elfeed filter"
-    (interactive)
-    (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
-      (elfeed-search-live-filter)))
+               ;; podcast
+               ("https://pinecast.com/feed/emacscast" podcast)
 
-  (eval-after-load 'elfeed
-    '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
-#+END_SRC
+               ;; youtube
+               ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
+               ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
+               ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
+               ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
+               ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide))))
+  #+END_SRC
+  
+
+  By default, s run a live filter and you can type something like
+  "Xah" to dynamically narrow the list of stories to those containing
+  that string. The only problem is that you need an extra whitespace
+  before the word, " Xah", let's fix that.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun bk/elfeed-search-live-filter-space ()
+      "Insert space when running elfeed filter"
+      (interactive)
+      (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
+        (elfeed-search-live-filter)))
+  
+    (eval-after-load 'elfeed
+      '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
+  #+END_SRC
 
 ** Youtube
    
@@ -3209,15 +3233,76 @@ the word, " Xah", let's fix that.
           (t (elfeed-show-visit)))))
 
      (eval-after-load 'elfeed
-       '(define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv))
+       '(progn
+          (define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv)
+          (define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external)))
    #+END_SRC
 
-* EMMS
+** Score
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package emms
-      :ensure t)
-  #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (require 'cl)
+     (require 'elfeed)
+     (require 'elfeed-search)
+     (require 'elfeed-db)
+
+     (defun score-elfeed-entry (entry)
+       (let ((title (elfeed-entry-title entry))
+             (content (elfeed-deref (elfeed-entry-content entry)))
+             (score 0))
+         (loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
+                                    ("clojure" 1)
+                                    ("emacs.*clojure\\|clojure.*emacs" 2))
+               if (string-match pattern title)
+               do (incf score n)
+               if (string-match pattern content)
+               do (incf score n))
+         (message "%s - %s" title score)
+         (setf (elfeed-meta entry :my/score) score)
+         (cond
+          ((= score 1)
+           (elfeed-tag entry 'relevant))
+          ((= score 2)
+           (elfeed-tag entry 'important))
+          ((> score 2)
+           (elfeed-tag entry 'urgent)))
+         entry))
+
+     (defface relevant-elfeed-entry
+       `((t :background ,(color-lighten-name "LightBlue1" 40)))
+       "Maks a relevant Elfeed entry.")
+
+     (defface important-elfeed-entry
+       `((t :background ,(color-lighten-name "orange1" 40)))
+       "Marks a important Elfeed entry.")
+
+     (defface urgent-elfeed-entry
+       `((t :background ,(color-lighten-name "OrangeRed2" 40)))
+       "Marks an urgent Elfeed entry.")
+
+     (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
+
+     (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
+     (push '(important important-elfeed-entry) elfeed-search-face-alist)
+     (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
+
+     (define-key elfeed-search-mode-map (kbd "U")
+       (lambda () (interactive)
+         (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
+
+     (define-key elfeed-search-mode-map (kbd "i")
+       (lambda () (interactive)
+         (elfeed-search-set-filter "@6-months-ago +unread +important")))
+
+     (define-key elfeed-search-mode-map (kbd "v")
+       (lambda () (interactive)
+         (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
+
+     (define-key elfeed-search-mode-map (kbd "c")
+       (lambda () (interactive)
+         (elfeed-search-set-filter "@6-months-ago +unread +unread")))
+   #+END_SRC
+
 * Slack
 
 Slack from Emacs? :O Why not? I am having a terrible time configuring
