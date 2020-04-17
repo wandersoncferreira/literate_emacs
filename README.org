@@ -4037,10 +4037,9 @@ There an exhaustive documentation about Reveal.js in the github
       :ensure t
       :config
       (require 'emms-setup)
-      (require 'emms-player-vlc)
+      (require 'emms-player-mpv)
       (emms-standard)
-      (emms-default-players)
-      (setq emms-player-vlc-command-name "/usr/bin/vlc"))
+      (emms-default-players))
   #+END_SRC
 
 ** Mode line cycle
