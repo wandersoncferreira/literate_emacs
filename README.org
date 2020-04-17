@@ -3405,8 +3405,6 @@ There an exhaustive documentation about Reveal.js in the github
     :end:
    
     #+BEGIN_SRC emacs-lisp
-      (setq-default elfeed-search-filter "@1-week-ago +unread")
-
       (defun ambrevar/elfeed-play-with-mpv ()
         "Play entry link with mpv."
         (interactive)
