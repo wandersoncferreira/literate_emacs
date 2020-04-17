@@ -324,8 +324,8 @@ style here.
       Folder is a symbol recognizing the folder name."
         (interactive)
         (let* ((folder-path (cl-case folder
-                             (:window "/home/wand/Pictures/window")
-                             (:region "/home/wand/Pictures/region")
+                             (:window "/home/wand/Pictures/window/")
+                             (:region "/home/wand/Pictures/region/")
                              ))
                (filepath (concat folder-path name ".png"))
                (scrot-cmd (format "scrot %s %s -e 'xclip -selection c -t image/png < $f'" cmd filepath)))
@@ -924,7 +924,7 @@ Clean all the registers you saved.
 
 
 #+begin_src emacs-lisp
-  (set-register ?e '(file . "~/.emacs.d/init.el"))
+  (set-register ?e '(file . "~/.emacs.d/README.org"))
   (set-register ?t '(file . "~/org/todo.org"))
   (set-register ?c '(file . "~/.emacs.d/docs/cheatsheet.org"))
 
@@ -3474,7 +3474,6 @@ There an exhaustive documentation about Reveal.js in the github
                 do (incf score n)
                 if (string-match pattern content)
                 do (incf score n))
-          (message "%s - %s" title score)
           (setf (elfeed-meta entry :my/score) score)
           (cond
            ((= score 1)
@@ -3497,7 +3496,7 @@ There an exhaustive documentation about Reveal.js in the github
         `((t :background ,(color-lighten-name "OrangeRed2" 40)))
         "Marks an urgent Elfeed entry.")
 
-      (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
+      (add-hook 'elfeed-new-entry-hook #'score-elfeed-entry)
 
       (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
       (push '(important important-elfeed-entry) elfeed-search-face-alist)
