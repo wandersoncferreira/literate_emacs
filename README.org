@@ -3411,17 +3411,18 @@ on-demand and stored in memory.
              ("http://insideclojure.org/feed.xml" blog dev)
              ("https://oremacs.com/" emacs)
              ("http://emacsredux.com/atom.xml" emacs)
-        
+
              ;; blog:philosophy
              ("https://danwang.co/feed/" blog philosophy)
              ("https://www.overcomingbias.com/feed" blog philosophy)
              ("https://slatestarcodex.com/feed/" blog philosophy)
-        
+
 
              ;; podcast
              ("https://pinecast.com/feed/emacscast" audio podcast)
              ("https://www.npr.org/rss/podcast.php?id=510289" audio podcast economics)
              ("http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss" audio podcast)
+             ("http://feeds.soundcloud.com/users/soundcloud:users:959992602/sounds.rss" audio podcast)
 
              ;; youtube
              ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
