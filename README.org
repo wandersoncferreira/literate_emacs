@@ -162,6 +162,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#journal][Journal]]
     - [[#what-is-a-personal-journal][What is a personal journal?]]
     - [[#writeroom][Writeroom]]
+  - [[#presentation][Presentation]]
   - [[#agenda][Agenda]]
     - [[#gmail-agenda][Gmail Agenda]]
 - [[#projects][Projects]]
@@ -3073,6 +3074,28 @@ on-demand and stored in memory.
         :init
         (setq writeroom-width 150))
     #+END_SRC
+
+** Presentation
+
+   [[https://github.com/eschulte/epresent][epresent]] is a simple presentation mode for Emacs Org-mode. Epresent
+   leverages exiting Org-mode features like inline image display,
+   inline latex fragments, and in-buffer code fontification to
+   generate very nice looking presentations directly from within
+   Emacs.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package epresent
+       :ensure t)
+   #+END_SRC
+
+   - call =epresent-run= on an org-buffer
+   - press =t= / =1= to view the top level of the presentation
+   - navigate the presentation with =n/f=, =p/b=
+   - scroll with =k= and =l=
+   - use =c= and =C= to navigate between code blocks, =e= to edit
+     them, =x= to make it run, and =s= / =S= to toggle their
+     visibility
+   - quit with =q=
 
 ** Agenda
 *** Gmail Agenda
