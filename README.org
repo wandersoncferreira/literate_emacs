@@ -678,73 +678,13 @@ style here.
     their real meaning.
 
     #+BEGIN_SRC emacs-lisp
-      (defun fira-code-mode--make-alist (list)
-        "Generate prettify-symbols alist from LIST."
-        (let ((idx -1))
-          (mapcar
-           (lambda (s)
-             (setq idx (1+ idx))
-             (let* ((code (+ #Xe100 idx))
-                (width (string-width s))
-                (prefix ())
-                (suffix '(?\s (Br . Br)))
-                (n 1))
-           (while (< n width)
-             (setq prefix (append prefix '(?\s (Br . Bl))))
-             (setq n (1+ n)))
-           (cons s (append prefix suffix (list (decode-char 'ucs code))))))
-           list)))
-
-      (defconst fira-code-mode--ligatures
-        '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\"
-          "{-" "[]" "::" ":::" ":=" "!!" "!=" "!==" "-}"
-          "--" "---" "-->" "->" "->>" "-<" "-<<" "-~"
-          "#{" "#[" "##" "###" "####" "#(" "#?" "#_" "#_("
-          ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*"
-          "/**" "/=" "/==" "/>" "//" "///" "&&" "||" "||="
-          "|=" "|>" "^=" "$>" "++" "+++" "+>" "=:=" "=="
-          "===" "==>" "=>" "=>>" "<=" "=<<" "=/=" ">-" ">="
-          ">=>" ">>" ">>-" ">>=" ">>>" "<*" "<*>" "<|" "<|>"
-          "<$" "<$>" "<!--" "<-" "<--" "<->" "<+" "<+>" "<="
-          "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<" "<~"
-          "<~~" "</" "</>" "~@" "~-" "~=" "~>" "~~" "~~>" "%%"
-          "x" ":" "+" "+" "*"))
-
-      (defvar fira-code-mode--old-prettify-alist)
-
-      (defun fira-code-mode--enable ()
-        "Enable Fira Code ligatures in current buffer."
-        (setq-local fira-code-mode--old-prettify-alist prettify-symbols-alist)
-        (setq-local prettify-symbols-alist (append (fira-code-mode--make-alist fira-code-mode--ligatures) fira-code-mode--old-prettify-alist))
-        (prettify-symbols-mode t))
-
-      (defun fira-code-mode--disable ()
-        "Disable Fira Code ligatures in current buffer."
-        (setq-local prettify-symbols-alist fira-code-mode--old-prettify-alist)
-        (prettify-symbols-mode -1))
-
-      (define-minor-mode fira-code-mode
-        "Fira Code ligatures minor mode"
-        :lighter " Fira Code"
-        (setq-local prettify-symbols-unprettify-at-point 'right-edge)
-        (if fira-code-mode
-            (fira-code-mode--enable)
-          (fira-code-mode--disable)))
-
-      (defun fira-code-mode--setup ()
-        "Setup Fira Code Symbols"
-        (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol"))
-
-      (provide 'fira-code-mode)
+      (use-package fira-code-mode
+        :ensure t
+        :delight (fira-code-mode " Fira")
+        :config
+        (add-hook 'prog-mode-hook 'fira-code-mode))
     #+END_SRC
 
-    #+BEGIN_SRC emacs-lisp
-      (require 'fira-code-mode)
-      (add-hook 'after-init-hook (lambda ()
-                                   (interactive)
-                                   (fira-code-mode t)
-                                   (fira-code-mode--setup)))
-    #+END_SRC
 ** Fringe
 
     Control the fringe around the frame.
@@ -3239,21 +3179,19 @@ There an exhaustive documentation about Reveal.js in the github
    have many links from these subjects.
 
    #+begin_src emacs-lisp
+     (defun ime-elfeed-pocast-tagger (entry)
+       (when (elfeed-entry-enclosures entry)
+         (elfeed-tag entry 'podcast)))
+
      (use-package elfeed
        :ensure t
        :commands (elfeed elfeed-update)
        :config
        (setq-default elfeed-search-filter "@24-months-ago +unread")
+       (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
        :bind
        ("C-x w" . elfeed))
-  
-     (defun ime-elfeed-pocast-tagger (entry)
-       (when (elfeed-entry-enclosures entry)
-         (elfeed-tag entry 'podcast)))
-  
-     (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
    #+end_src
-
 
    Add some newsletters.
    #+BEGIN_SRC emacs-lisp
@@ -3304,9 +3242,9 @@ There an exhaustive documentation about Reveal.js in the github
        (interactive)
        (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
          (elfeed-search-live-filter)))
-  
-     (eval-after-load 'elfeed
-       '(define-key elfeed-search-mode-map (kbd "/") 'bk/elfeed-search-live-filter-space))
+
+     (eval-after-load 'elfeed-search
+       '(define-key elfeed-search-mode-map (kbd "/") #'bk/elfeed-search-live-filter-space))
    #+END_SRC
 
    Toggle automatic update of elfeed newsletters.
@@ -3330,8 +3268,8 @@ There an exhaustive documentation about Reveal.js in the github
 
    Enable visual-line-mode in elfeed buffers.
    #+BEGIN_SRC emacs-lisp
-     (eval-after-load 'elfeed
-       (add-hook 'elfeed-show-mode-hook 'visual-line-mode))
+     (eval-after-load 'elfeed-show
+       '(add-hook 'elfeed-show-mode-hook 'visual-line-mode))
 
    #+END_SRC
 
@@ -3363,7 +3301,8 @@ There an exhaustive documentation about Reveal.js in the github
         "Marks a starred Elfeed entry.")
 
       (eval-after-load 'elfeed-search
-        '(push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist))
+        '(push '(starred elfeed-search-starred-title-face)
+               elfeed-search-face-alist))
     #+END_SRC
 
     I bind these to the keys "*" to add a star and "8" to remove the
@@ -3379,12 +3318,10 @@ There an exhaustive documentation about Reveal.js in the github
 
     Now you can look for the starred feeds by pressing "S".
     #+BEGIN_SRC emacs-lisp
-      (eval-after-load 'elfeed
-        ' (defalias 'elfeed-toggle-start
-            (elfeed-expose #'elfeed-search-toggle-all 'star)))
-
       (eval-after-load 'elfeed-search
-        '(define-key elfeed-search-mode-map (kbd "S") 'elfeed-toggle-start))
+        '(progn
+           (defalias 'elfeed-toggle-star (elfeed-expose #'elfeed-search-toggle-all 'star))
+           (define-key elfeed-search-mode-map (kbd "S") #'elfeed-toggle-star)))
     #+END_SRC
 *** Youtube
    
@@ -3433,10 +3370,11 @@ There an exhaustive documentation about Reveal.js in the github
             (call-interactively 'elfeed-search-show-entry))
            (t (elfeed-show-visit)))))
 
-      (eval-after-load 'elfeed
-        '(progn
-           (define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv)
-           (define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external)))
+      (eval-after-load 'elfeed-search
+        '(define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv))
+
+      (eval-after-load 'elfeed-show
+        '(define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external))
     #+END_SRC
 
 *** Score
@@ -3481,27 +3419,30 @@ There an exhaustive documentation about Reveal.js in the github
         `((t :background ,(color-lighten-name "OrangeRed2" 40)))
         "Marks an urgent Elfeed entry.")
 
-      (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
+      (eval-after-load 'elfeed-search
+        '(progn
 
-      (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
-      (push '(important important-elfeed-entry) elfeed-search-face-alist)
-      (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
+           (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
 
-      (define-key elfeed-search-mode-map (kbd "U")
-        (lambda () (interactive)
-          (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
+           (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
+           (push '(important important-elfeed-entry) elfeed-search-face-alist)
+           (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
 
-      (define-key elfeed-search-mode-map (kbd "i")
-        (lambda () (interactive)
-          (elfeed-search-set-filter "@6-months-ago +unread +important")))
+           (define-key elfeed-search-mode-map (kbd "U")
+             (lambda () (interactive)
+               (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
 
-      (define-key elfeed-search-mode-map (kbd "v")
-        (lambda () (interactive)
-          (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
+           (define-key elfeed-search-mode-map (kbd "i")
+             (lambda () (interactive)
+               (elfeed-search-set-filter "@6-months-ago +unread +important")))
 
-      (define-key elfeed-search-mode-map (kbd "c")
-        (lambda () (interactive)
-          (elfeed-search-set-filter "@6-months-ago +unread +unread")))
+           (define-key elfeed-search-mode-map (kbd "v")
+             (lambda () (interactive)
+               (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
+
+           (define-key elfeed-search-mode-map (kbd "c")
+             (lambda () (interactive)
+               (elfeed-search-set-filter "@6-months-ago +unread +unread")))))
     #+END_SRC
 
 ** Slack
@@ -3577,10 +3518,7 @@ There an exhaustive documentation about Reveal.js in the github
  and integrates well with the rest of the editor.
 
  #+BEGIN_SRC emacs-lisp
-   (use-package circe 
-     :ensure t
-     :config
-     (require 'lui))
+   (use-package circe :ensure t)
  #+END_SRC
 
  Emojify is an Emacs extension to display emojis.
