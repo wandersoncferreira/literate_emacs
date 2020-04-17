@@ -2966,7 +2966,6 @@ on-demand and stored in memory.
    #+BEGIN_SRC emacs-lisp
      (use-package org-journal
        :ensure t
-       :after org
        :init
        (setq org-journal-dir "/home/wand/.journal"
              org-journal-file-format "%Y/%m/%Y%m%d"
