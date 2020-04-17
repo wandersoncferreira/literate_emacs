@@ -396,8 +396,50 @@ style here.
     I also installed =xtrlock= so when I activate =zone= I also lock
     my screen. In order to unlock you just need to start typing the
     correct password and press =RET=.
+
 *** dunst
+
+    [[https://dunst-project.org/][Dunst]] is a lightweight replacement for the notification-daemons
+    provided by most desktop environments. Dunst allows for the use of
+    HTML markup in notifications, some examples are bold, italics,
+    strike-though, and underline.
+
+    The relevant bits of my =.dunstrc=.
+    #+BEGIN_SRC bash
+      [global]
+      font = Source Code Pro Medium
+
+      [urgency_low]
+      # IMPORTANT: colors have to be defined in quotation marks.
+      # Otherwise the "#" and following would be interpreted as a comment.
+      frame_color = "#3B7C87"
+      foreground = "#3B7C87"
+      background = "#191311"
+      timeout = 8
+
+      [urgency_normal]
+      frame_color = "#5B8234"
+      foreground = "#5B8234"
+      background = "#191311"
+      timeout = 10
+
+      [urgency_critical]
+      frame_color = "#B7472A"
+      foreground = "#B7472A"
+      background = "#191311"
+      timeout = 12
+    #+END_SRC
+
 *** mpv
+
+    [[https://mpv.io/][mpv]] is a free (as in freedom) media player for the command line.
+    It supports a wide variety of media file formats, audio, and video
+    codecs, and subtitle types.
+
+    On screen controller, while mpv strives for minimalism and
+    provides no real GUI, it has a small controller on top of the
+    video for basic control.
+
 ** Browsers
 *** Qutebrowser
 
