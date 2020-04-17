@@ -146,6 +146,8 @@ style here.
   - [[#defaults-2][Defaults]]
     - [[#manipulating-sections][Manipulating Sections]]
     - [[#seamless-navigation-between-source-blocks][Seamless Navigation Between Source Blocks]]
+  - [[#literate-programming][Literate Programming]]
+    - [[#what-is-noweb][What is noweb?]]
   - [[#table-of-contents][Table of Contents]]
   - [[#capture][Capture]]
   - [[#babel][Babel]]
@@ -165,7 +167,11 @@ style here.
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
   - [[#rss-feed][RSS Feed]]
-    - [[#start-and-unstarr][Start and unstarr]]
+    - [[#load-config][Load config]]
+    - [[#elfeed-newsletters][Elfeed newsletters]]
+    - [[#filter][Filter]]
+    - [[#automatic-update][Automatic Update]]
+    - [[#star-and-unstar][Star and unstar]]
     - [[#youtube][Youtube]]
     - [[#score][Score]]
   - [[#slack][Slack]]
@@ -192,6 +198,8 @@ style here.
   - [[#hint][Hint]]
   - [[#global-definitions][Global definitions]]
   - [[#cast][Cast]]
+- [[#emms][EMMS]]
+  - [[#mode-line-cycle][Mode line cycle]]
 - [[#exwm][EXWM]]
   - [[#multiple-screens][Multiple Screens]]
   - [[#system-package][System package]]
@@ -2711,7 +2719,6 @@ on-demand and stored in memory.
 #+end_src
 
 * Org mode
-
 ** Defaults
 
    When using =RET= over a link, please go to it.
@@ -2770,6 +2777,25 @@ on-demand and stored in memory.
       (global-set-key (kbd "s-e") #'org-edit-special)
       (define-key org-src-mode-map (kbd "s-e") #'org-edit-src-exit)
     #+END_SRC
+** Literate Programming
+
+   [[https://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] is the art of preparing programs for human
+   readers.
+
+   "Let us change our traditional attitude to the construction of
+   programs: Instead of imagining that our main task is to instruct a
+   /computer/ what to do, let us concentrate rather on explaining to
+   /humans/ what we want the computer to do." - Donald E. Knuth, 1984.
+   
+*** What is noweb?
+
+    [[https://www.cs.tufts.edu/~nr/noweb/][noweb]] is designed to meet the needs of literate programmers while
+    remaining as simple as possible.
+
+    The gist of using =noweb= is that in your source blocks you have
+    labels like =<<imports>>=, that refer to other named code blocks
+    that get substituted in place of the label.
+
 ** Table of Contents
 
    #+begin_src emacs-lisp
@@ -3178,58 +3204,89 @@ There an exhaustive documentation about Reveal.js in the github
    the most interesting communities I know so far, therefore, my feeds
    have many links from these subjects.
 
-   #+begin_src emacs-lisp
-     (defun ime-elfeed-pocast-tagger (entry)
-       (when (elfeed-entry-enclosures entry)
-         (elfeed-tag entry 'podcast)))
-
+   #+BEGIN_SRC emacs-lisp
      (use-package elfeed
        :ensure t
        :commands (elfeed elfeed-update)
-       :config
-       (setq-default elfeed-search-filter "@24-months-ago +unread")
-       (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
        :bind
        ("C-x w" . elfeed))
+   #+END_SRC
+   
+   #+name: elfeed-basic-config
+   #+begin_src emacs-lisp :tangle no
+     (setq-default elfeed-search-filter "@3-week-ago +unread")
    #+end_src
 
-   Add some newsletters.
-   #+BEGIN_SRC emacs-lisp
+*** Load config
+
+    Lazy loading all the parts of my elfeed setup.
+
+   #+BEGIN_SRC emacs-lisp :noweb yes
      (eval-after-load 'elfeed
-       '(setq elfeed-feeds
-              '(;; blog
-                ("https://irreal.org/blog/?feed=rss2" blog)
-           
-                ;; comics
-                ("https://www.exocomics.com/feed" comic)
-                ("https://www.swordscomic.com/swords/feed/" comic)
-                ("https://xkcd.com/atom.xml" comic)
+       '(progn
+          <<elfeed-basic-config>>
+          <<elfeed-newsletters>>
+          <<elfeed-filters>>
+          <<elfeed-automatic-update>>
+          <<elfeed-starred>>
+          <<elfeed-youtube>>
+          <<elfeed-scoring>>))
+   #+END_SRC
 
-                ;; blogs:dev
-                ("https://dendibakh.github.io/feed.xml" blog dev)
-                ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
-                ("https://floooh.github.io/feed.xml" blog dev)
-                ("https://www.joelonsoftware.com/feed/" blog dev)
-                ("https://mortoray.com/feed/" blog dev)
-                ("https://nullprogram.com/feed/" blog dev)
-                ("http://tonsky.me/blog/atom.xml" blog dev)
-                ("https://yogthos.net/feed.xml" blog dev)
-                ("http://insideclojure.org/feed.xml" blog dev)
+*** Elfeed newsletters
+    :properties:
+    :header-args: :noweb-ref elfeed-newsletters :tangle no
+    :end:
 
-                ;; blog:philosophy
-                ("https://danwang.co/feed/" blog philosophy)
+   #+BEGIN_SRC emacs-lisp
+     (setq elfeed-feeds
+           '(;; blog
+             ("https://irreal.org/blog/?feed=rss2" blog)
 
-                ;; podcast
-                ("https://pinecast.com/feed/emacscast" podcast)
+             ;; comics
+             ("https://www.exocomics.com/feed" comic)
+             ("https://xkcd.com/atom.xml" comic)
 
-                ;; youtube
-                ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
-                ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
-                ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
-                ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
-                ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide))))
+             ;; blogs:dev
+             ("https://dendibakh.github.io/feed.xml" blog dev)
+             ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
+             ("https://floooh.github.io/feed.xml" blog dev)
+             ("https://www.joelonsoftware.com/feed/" blog dev)
+             ("https://fabiensanglard.net/rss.xml" blog dev)
+             ("https://nickdesaulniers.github.io/atom.xml" blog dev)
+             ("https://geoff.greer.fm/feed.atom" blog dev)
+             ("https://lemire.me/blog/feed/" dev blog)
+             ("https://danluu.com/atom.xml" dev blog)
+             ("https://mortoray.com/feed/" blog dev)
+             ("https://arp242.net/feed.xml" blog dev)
+             ("https://begriffs.com/atom.xml" blog dev)
+             ("https://nullprogram.com/feed/" blog dev)
+             ("http://tonsky.me/blog/atom.xml" blog dev)
+             ("https://yogthos.net/feed.xml" blog dev)
+             ("http://insideclojure.org/feed.xml" blog dev)
+
+             ;; blog:philosophy
+             ("https://danwang.co/feed/" blog philosophy)
+             ("https://www.overcomingbias.com/feed" blog philosophy)
+             ("https://slatestarcodex.com/feed/" blog philosophy)
+
+             ;; podcast
+             ("https://pinecast.com/feed/emacscast" podcast)
+             ("https://www.npr.org/rss/podcast.php?id=510289" podcast audio economics)
+             ("https://feeds.megaphone.fm/stuffyoushouldknow" audio)
+
+             ;; youtube
+             ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
+             ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
+             ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
+             ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
+             ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)))
    #+END_SRC
   
+*** Filter
+    :properties:
+    :header-args: :noweb-ref elfeed-filters :tangle no
+    :end:
 
    By default, s run a live filter and you can type something like
    "Xah" to dynamically narrow the list of stories to those containing
@@ -3243,9 +3300,29 @@ There an exhaustive documentation about Reveal.js in the github
        (let ((elfeed-search-filter (concat elfeed-search-filter " ")))
          (elfeed-search-live-filter)))
 
-     (eval-after-load 'elfeed-search
-       '(define-key elfeed-search-mode-map (kbd "/") #'bk/elfeed-search-live-filter-space))
+     (define-key elfeed-search-mode-map (kbd "/") #'bk/elfeed-search-live-filter-space)
    #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (define-key elfeed-search-mode-map "h"
+       (lambda ()
+         (interactive)
+         (elfeed-search-set-filter (default-value 'elfeed-search-filter))))
+   #+END_SRC
+
+   Tagging automatic as podcasts
+   #+BEGIN_SRC emacs-lisp
+     (defun ime-elfeed-pocast-tagger (entry)
+       (when (elfeed-entry-enclosures entry)
+         (elfeed-tag entry 'podcast)))
+
+     (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
+   #+END_SRC
+
+*** Automatic Update
+    :properties:
+    :header-args: :noweb-ref elfeed-automatic-update :tangle no
+    :end:
 
    Toggle automatic update of elfeed newsletters.
 
@@ -3262,18 +3339,21 @@ There an exhaustive documentation about Reveal.js in the github
                (setq bk--update-elfeed-timer nil)
                (message "Elfeed automatic update disabled..."))
            (setq bk--update-elfeed-timer
-                 (run-at-time 60 repeat-rate 'elfeed-update))
+                 (run-at-time 5 repeat-rate 'elfeed-update))
            (message "Elfeed automatic update enabled..."))))
+
+     (bk/toggle-update-elfeed)
    #+END_SRC
 
    Enable visual-line-mode in elfeed buffers.
    #+BEGIN_SRC emacs-lisp
-     (eval-after-load 'elfeed-show
-       '(add-hook 'elfeed-show-mode-hook 'visual-line-mode))
-
+     (add-hook 'elfeed-show-mode-hook 'visual-line-mode)
    #+END_SRC
 
-*** Start and unstarr
+*** Star and unstar
+    :properties:
+    :header-args: :noweb-ref elfeed-starred :tangle no
+    :end:
 
     This was got from [[http://pragmaticemacs.com/emacs/star-and-unstar-articles-in-elfeed/][pragmatic emacs]].
 
@@ -3300,30 +3380,29 @@ There an exhaustive documentation about Reveal.js in the github
         '((t :foreground "#f77"))
         "Marks a starred Elfeed entry.")
 
-      (eval-after-load 'elfeed-search
-        '(push '(starred elfeed-search-starred-title-face)
-               elfeed-search-face-alist))
+      (push '(starred elfeed-search-starred-title-face)
+            elfeed-search-face-alist)
     #+END_SRC
 
     I bind these to the keys "*" to add a star and "8" to remove the
     star.
 
     #+BEGIN_SRC emacs-lisp
-      (eval-after-load 'elfeed-search
-        '(progn
-           (define-key elfeed-search-mode-map (kbd "*") 'bk/elfeed-star)
-           (define-key elfeed-search-mode-map (kbd "8") 'bk/elfeed-unstar)))
+      (define-key elfeed-search-mode-map (kbd "*") 'bk/elfeed-star)
+      (define-key elfeed-search-mode-map (kbd "8") 'bk/elfeed-unstar)
     #+END_SRC
    
 
     Now you can look for the starred feeds by pressing "S".
     #+BEGIN_SRC emacs-lisp
-      (eval-after-load 'elfeed-search
-        '(progn
-           (defalias 'elfeed-toggle-star (elfeed-expose #'elfeed-search-toggle-all 'star))
-           (define-key elfeed-search-mode-map (kbd "S") #'elfeed-toggle-star)))
+      (defalias 'elfeed-toggle-star (elfeed-expose #'elfeed-search-toggle-all 'star))
+      (define-key elfeed-search-mode-map (kbd "S") #'elfeed-toggle-star)
     #+END_SRC
+
 *** Youtube
+    :properties:
+    :header-args: :noweb-ref elfeed-youtube :tangle no
+    :end:
    
     #+BEGIN_SRC emacs-lisp
       (setq-default elfeed-search-filter "@1-week-ago +unread")
@@ -3370,14 +3449,15 @@ There an exhaustive documentation about Reveal.js in the github
             (call-interactively 'elfeed-search-show-entry))
            (t (elfeed-show-visit)))))
 
-      (eval-after-load 'elfeed-search
-        '(define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv))
-
-      (eval-after-load 'elfeed-show
-        '(define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external))
+      (define-key elfeed-search-mode-map "v" #'ambrevar/elfeed-play-with-mpv)
+      (define-key elfeed-search-mode-map "c" 'elfeed-search-untag-all-unread)
+      (define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external)
     #+END_SRC
 
 *** Score
+    :properties:
+    :header-args: :noweb-ref elfeed-scoring :tangle no
+    :end:
 
     #+BEGIN_SRC emacs-lisp
       (require 'cl)
@@ -3419,30 +3499,27 @@ There an exhaustive documentation about Reveal.js in the github
         `((t :background ,(color-lighten-name "OrangeRed2" 40)))
         "Marks an urgent Elfeed entry.")
 
-      (eval-after-load 'elfeed-search
-        '(progn
+      (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
 
-           (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
+      (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
+      (push '(important important-elfeed-entry) elfeed-search-face-alist)
+      (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
 
-           (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
-           (push '(important important-elfeed-entry) elfeed-search-face-alist)
-           (push '(urgent urgent-elfeed-entry) elfeed-search-face-alist)
+      (define-key elfeed-search-mode-map (kbd "U")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
 
-           (define-key elfeed-search-mode-map (kbd "U")
-             (lambda () (interactive)
-               (elfeed-search-set-filter "@6-months-ago +unread +urgent")))
+      (define-key elfeed-search-mode-map (kbd "I")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +important")))
 
-           (define-key elfeed-search-mode-map (kbd "i")
-             (lambda () (interactive)
-               (elfeed-search-set-filter "@6-months-ago +unread +important")))
+      (define-key elfeed-search-mode-map (kbd "R")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
 
-           (define-key elfeed-search-mode-map (kbd "v")
-             (lambda () (interactive)
-               (elfeed-search-set-filter "@6-months-ago +unread +relevant")))
-
-           (define-key elfeed-search-mode-map (kbd "c")
-             (lambda () (interactive)
-               (elfeed-search-set-filter "@6-months-ago +unread +unread")))))
+      (define-key elfeed-search-mode-map (kbd "C")
+        (lambda () (interactive)
+          (elfeed-search-set-filter "@6-months-ago +unread")))
     #+END_SRC
 
 ** Slack
@@ -3953,6 +4030,37 @@ There an exhaustive documentation about Reveal.js in the github
        :homepage https://github.com/tarsius/keycast
        :ensure t
        :defer t)
+   #+END_SRC
+
+* EMMS
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package emms
+      :ensure t
+      :config
+      (require 'emms-setup)
+      (require 'emms-player-vlc)
+      (emms-standard)
+      (emms-default-players)
+      (setq emms-player-vlc-command-name "/usr/bin/vlc"))
+  #+END_SRC
+
+** Mode line cycle
+
+   Display the emms mode line as a ticker. I am listening to several
+   podcasts where the whole link of the podcast is displayed at the
+   mode-line. I can't see the time-elapsed listen to stuff, this is
+   bad.
+
+   A package to solve this problem:
+   #+BEGIN_SRC emacs-lisp
+     (use-package emms-mode-line-cycle
+       :ensure t
+       :after emms
+       :config
+       (emms-mode-line 1)
+       (emms-playing-time 1)
+       (emms-mode-line-cycle 1))
    #+END_SRC
 
 * EXWM
