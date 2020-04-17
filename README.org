@@ -93,6 +93,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#unfill-region][Unfill region]]
     - [[#duplicate-line-or-region][Duplicate line or region]]
   - [[#hide-block-of-code][Hide block of code]]
+  - [[#web-paste][Web paste]]
 - [[#completions][Completions]]
   - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
   - [[#company-mode][Company mode]]
@@ -141,6 +142,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#parenthesis][Parenthesis]]
 - [[#additional-major-modes][Additional Major Modes]]
   - [[#rest-client][Rest client]]
+    - [[#create-a-tmp-restclient-buffer][create a tmp restclient buffer]]
   - [[#markdown][Markdown]]
   - [[#json][Json]]
   - [[#yaml][Yaml]]
@@ -159,6 +161,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#revealjs][Reveal.js]]
   - [[#journal][Journal]]
     - [[#what-is-a-personal-journal][What is a personal journal?]]
+    - [[#writeroom][Writeroom]]
   - [[#agenda][Agenda]]
     - [[#gmail-agenda][Gmail Agenda]]
 - [[#projects][Projects]]
@@ -191,14 +194,19 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#pop-to-mark][Pop to mark]]
   - [[#yank-indent][Yank indent]]
 - [[#custom-functions-1][Custom Functions]]
+  - [[#eshell][Eshell]]
+    - [[#kubernetes][kubernetes]]
   - [[#http-based][HTTP-based]]
-    - [[#find-my-current-ip][Find my current IP]]
+    - [[#find-my-current-ip][find my current ip]]
   - [[#editing][Editing]]
     - [[#what-sudo][what? sudo!]]
     - [[#eval-and-replace][eval and replace]]
-    - [[#insert-todays-dae][insert today's dae]]
+    - [[#insert-todays-date][insert today's date]]
+    - [[#kill-all-the-comments][kill all the comments]]
   - [[#buffer][Buffer]]
-    - [[#kill-buffer-and-the-file-associated][Kill buffer and the file associated]]
+    - [[#go-to-scratch-buffer][go to scratch buffer]]
+    - [[#kill-buffer-and-the-file-associated][kill buffer and the file associated]]
+    - [[#rename-current-buffer-and-file-associated][rename current buffer and file associated]]
 - [[#keys][Keys]]
   - [[#hint][Hint]]
   - [[#global-definitions][Global definitions]]
@@ -1507,6 +1515,15 @@ Adding urban dictionary to webjump.
        (global-set-key (kbd "C-c h") 'hs-toggle-hiding))
    #+END_SRC
 
+** Web paste
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package webpaste
+       :ensure t
+       :config
+       (setq webpaste-provider-priority '("ix.io" "dpaste.org")))
+   #+END_SRC
+
 * Completions
 ** Minibuffer (ido mode)
 
@@ -2711,6 +2728,16 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      (add-to-list 'company-backends 'company-restclient))
 
  #+end_src
+*** create a tmp restclient buffer
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/restclient ()
+        "Open the restclient buffer."
+        (interactive)
+        (with-current-buffer (get-buffer-create "*restclient*")
+          (restclient-mode)
+          (pop-to-buffer (current-buffer))))
+    #+END_SRC
 
 ** Markdown
 
@@ -3034,6 +3061,19 @@ on-demand and stored in memory.
       writing about them
     - It's a daily brain dump
    
+*** Writeroom
+
+    A package to help us concentrate in the writing by removing
+    everything from the screen and centralizing the text being
+    written.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package writeroom-mode
+        :ensure t
+        :init
+        (setq writeroom-width 150))
+    #+END_SRC
+
 ** Agenda
 *** Gmail Agenda
 
@@ -4057,8 +4097,35 @@ on-demand and stored in memory.
    #+END_SRC
 
 * Custom Functions
+** Eshell
+*** kubernetes
+
+    #+BEGIN_SRC emacs-lisp
+      (defun eshell/kg (&rest args)
+        "Find status of pods in ARGS."
+        (let* ((env (car args)))
+          (with-current-buffer "*eshell*"
+            (insert "kubectl get pods -n " env)
+            (eshell-send-input))))
+
+      (defun get-pod-name (pod env)
+        "Get POD name from correct ENV."
+        (let ((res (eshell-command-result (concat "kubectl get pods -n " env))))
+          (string-match (concat pod ".*") res 0)
+          (car (split-string (match-string 0 res) " "))))
+
+      (defun eshell/kl (&rest args)
+        "Get logs from PODS and ENVS in ARGS."
+        (let* ((pod (car args))
+               (env (car (cdr args)))
+               (pod-name (get-pod-name pod env)))
+          (with-current-buffer "*eshell*"
+            (insert "kubectl logs -n " env " " pod-name " " pod "-" env " -f")
+            (eshell-send-input))))
+    #+END_SRC
+
 ** HTTP-based
-*** Find my current IP
+*** find my current ip
 
    #+begin_src emacs-lisp
      (defvar url-http-end-of-headers)
@@ -4096,7 +4163,7 @@ on-demand and stored in memory.
           (error (message "invalid expression")
                  (insert (current-kill 0)))))
     #+END_SRC
-*** insert today's dae
+*** insert today's date
 
     #+BEGIN_SRC emacs-lisp
       (defun bk/insert-today-date ()
@@ -4104,9 +4171,36 @@ on-demand and stored in memory.
         (interactive)
         (insert (format-time-string "%Y/%m/%d")))
     #+END_SRC
+*** kill all the comments
 
+    #+BEGIN_SRC emacs-lisp
+      (defun comment-kill-all ()
+        "Function to kill all comments in a buffer."
+        (interactive)
+        (save-excursion
+          (goto-char (point-min))
+          (comment-kill (save-excursion
+                          (goto-char (point-max))
+                          (line-number-at-pos)))))
+    #+END_SRC
+    
 ** Buffer
-*** Kill buffer and the file associated
+*** go to scratch buffer
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/scratch-buffer ()
+        "Function to change buffer to scratch buffer."
+        (interactive)
+        (let ((buf (get-buffer "*scratch*")))
+          (if buf
+              (switch-to-buffer buf)
+            (switch-to-buffer (get-buffer-create "*scratch*"))
+            (lisp-interaction-mode))))
+
+      (global-set-key (kbd "C-c b s") #'bk/scratch-buffer)
+    #+END_SRC
+
+*** kill buffer and the file associated
 
    #+BEGIN_SRC emacs-lisp
      (defun bk/kill-buffer-and-file (buffer-name)
@@ -4119,7 +4213,24 @@ on-demand and stored in memory.
    	(delete-file filename)
    	(kill-buffer buffer))))
    #+END_SRC
+*** rename current buffer and file associated
 
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/rename-current-buffer-file ()
+        "Renames current buffer and file it is visiting."
+        (interactive)
+        (let* ((name (buffer-name))
+               (filename (buffer-file-name))
+               (new-name (read-file-name "New name: " filename)))
+          (if (get-buffer new-name)
+              (error "A buffer named '%s' already exists!" new-name)
+            (rename-file filename new-name 1)
+            (rename-buffer new-name)
+            (set-visited-file-name new-name)
+            (set-buffer-modified-p nil)
+            (message "File '%s' sucessfully renamed to '%s'"
+                     name (file-name-nondirectory new-name)))))
+    #+END_SRC
 * Keys
 
 ** Hint
