@@ -557,6 +557,7 @@ style here.
     #+BEGIN_SRC emacs-lisp
       (use-package gcmh
         :ensure t
+        :delight gcmh-mode
         :init
         (setq gcmh-verbose t)
         :config
