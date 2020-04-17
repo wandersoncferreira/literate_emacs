@@ -42,6 +42,7 @@ style here.
   - [[#path][PATH]]
   - [[#security][Security]]
   - [[#garbage-collection][Garbage Collection]]
+    - [[#collector-magic-hack][Collector Magic Hack]]
   - [[#manage-external-services][Manage external services]]
   - [[#restart-emacs][Restart Emacs]]
 - [[#aesthetics][Aesthetics]]
@@ -143,19 +144,19 @@ style here.
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#org-mode][Org mode]]
-  - [[#defaults-2][Defaults]]
-    - [[#manipulating-sections][Manipulating Sections]]
-    - [[#seamless-navigation-between-source-blocks][Seamless Navigation Between Source Blocks]]
   - [[#literate-programming][Literate Programming]]
     - [[#what-is-noweb][What is noweb?]]
   - [[#table-of-contents][Table of Contents]]
-  - [[#capture][Capture]]
-  - [[#babel][Babel]]
+  - [[#configuration][Configuration]]
+    - [[#defaults-2][Defaults]]
+    - [[#capture][Capture]]
+    - [[#babel][Babel]]
+    - [[#structure-templates][Structure Templates]]
+    - [[#revealjs][Reveal.js]]
+  - [[#journal][Journal]]
+    - [[#what-is-a-personal-journal][What is a personal journal?]]
   - [[#agenda][Agenda]]
     - [[#gmail-agenda][Gmail Agenda]]
-  - [[#structure-templates][Structure Templates]]
-  - [[#revealjs][Reveal.js]]
-    - [[#more-details-from-how-to-build-one-presentation-using-the-package][More details from how to build one presentation using the package]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
   - [[#correct-your-spelling-errors-on-the-fly][Correct your spelling errors on the fly]]
@@ -546,6 +547,21 @@ style here.
    #+BEGIN_SRC emacs-lisp
      (setq garbage-collection-messages nil)
    #+END_SRC
+
+*** Collector Magic Hack
+
+    Enforce a sneaky GC strategy to minimize GC interference with the
+    activity. During normal use a high GC threshold is set, when
+    idling GC is immediately triggered and a low threshold is set.
+    
+    #+BEGIN_SRC emacs-lisp
+      (use-package gcmh
+        :ensure t
+        :init
+        (setq gcmh-verbose t)
+        :config
+        (gcmh-mode 1))
+    #+END_SRC
 
 ** Manage external services
 
@@ -2761,7 +2777,44 @@ on-demand and stored in memory.
 #+end_src
 
 * Org mode
-** Defaults
+
+** Literate Programming
+
+   [[https://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] is the art of preparing programs for human
+   readers.
+
+   "Let us change our traditional attitude to the construction of
+   programs: Instead of imagining that our main task is to instruct a
+   /computer/ what to do, let us concentrate rather on explaining to
+   /humans/ what we want the computer to do." - Donald E. Knuth, 1984.
+   
+*** What is noweb?
+
+    [[https://www.cs.tufts.edu/~nr/noweb/][noweb]] is designed to meet the needs of literate programmers while
+    remaining as simple as possible.
+
+    The gist of using =noweb= is that in your source blocks you have
+    labels like =<<imports>>=, that refer to other named code blocks
+    that get substituted in place of the label.
+** Table of Contents
+
+   #+begin_src emacs-lisp
+     (use-package toc-org
+       :ensure t
+       :init
+       (setq toc-org-max-depth 3)
+       :config
+       (add-hook 'org-mode-hook 'toc-org-mode))
+   #+end_src
+
+   I need to control the window that pops up when I open the Org Src
+   buffer to edit code.
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-window-setup 'current-window)
+   #+END_SRC
+
+** Configuration
+*** Defaults
 
    When using =RET= over a link, please go to it.
 
@@ -2780,7 +2833,7 @@ on-demand and stored in memory.
      (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
    #+end_src
 
-*** Manipulating Sections
+**** Manipulating Sections
 
     Let's enable [[http://notesyoujustmightwanttosave.blogspot.com/2011/12/org-speed-keys.html][Org Speed Keys]]. The main purpose of Speed Keys is to
     speed up the execution of the most common tasks you do in Org
@@ -2812,131 +2865,145 @@ on-demand and stored in memory.
     | L/R   | recursively promote (move leftwards) or demote (more rightwards) |
     | 1,2,3 | to mark a heading with priority                                  |
 
-*** Seamless Navigation Between Source Blocks
+**** Seamless Navigation Between Source Blocks
 
     Toggle editing org-mode source blocks.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "s-e") #'org-edit-special)
       (define-key org-src-mode-map (kbd "s-e") #'org-edit-src-exit)
     #+END_SRC
-** Literate Programming
+*** Capture
 
-   [[https://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] is the art of preparing programs for human
-   readers.
+    #+begin_src emacs-lisp
+      (require 'org-capture)
+      (setq org-directory "/home/wand/org")
+      (setq org-confirm-babel-evaluate nil)
+      (setq org-agenda-files (list "/home/wand/org/todo.org"))
+      (setq org-todo-keywords '((sequence "TODO(t)" "|" "DOING(d)" "|" "DONE(D)" "|" "CANCELLED(C)")
+   			     (sequence "STUDY(s)" "|" "STUDIED(S)")
+   			     (sequence "ACT(a)" "|" "ACTED(A)")))
+      (setq org-capture-templates
+   	 '(("c" "Capture some concise actionable item and exist" entry
+   	    (file+headline "todo.org" "Task list without a defined date")
+   	    "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
+   	   ("t" "Task of importance with a tag, deadline, and further editable space" entry
+   	    (file+headline "todo.org" "Task list with a date")
+   	    "* %^{Scope of task||TODO [#A]|STUDY [#A]|Act on} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")))
 
-   "Let us change our traditional attitude to the construction of
-   programs: Instead of imagining that our main task is to instruct a
-   /computer/ what to do, let us concentrate rather on explaining to
-   /humans/ what we want the computer to do." - Donald E. Knuth, 1984.
+      (setq org-agenda-window-setup 'only-window)
+
+      ;;; after calling the `org-todo', the org mode tries to store some
+      ;;; sort of a "note" using `org-store-log-note' function. I want that
+      ;;; every modification done in my todo file save the file right after.
+      (advice-add 'org-deadline :after (lambda (&rest _rest)
+   				      (org-save-all-org-buffers)))
+      (advice-add 'org-schedule :after (lambda (&rest _rest)
+   				      (org-save-all-org-buffers)))
+      (advice-add 'org-todo :after (lambda (&rest _rest)
+   				  (org-save-all-org-buffers)))
+      (advice-add 'org-store-log-note :after (lambda (&rest _rest)
+   					    (org-save-all-org-buffers)))
+
+    #+end_src
+
+*** Babel
+
+    #+BEGIN_SRC emacs-lisp
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((emacs-lisp . t)
+         (ledger . t)
+         (sql . t)
+         (clojure . t)))
+    #+END_SRC
+*** Structure Templates
+
+    The "Easy Templates" as often is mentioned, is the standard way in
+    Emacs to handle inline code blocks when writing in literate
+    programming style.
+
+    You can find all the different available templates by `C-h v
+    org-structure-template-alist`.
+
+    #+BEGIN_SRC emacs-lisp
+      (add-to-list 'org-structure-template-alist
+		   (list "elisp" (concat "#+BEGIN_SRC emacs-lisp\n"
+					 "?\n"
+					 "#+END_SRC")))
+    #+END_SRC
+*** Reveal.js
+
+    There an exhaustive documentation about Reveal.js in the github
+    [[https://gitlab.com/oer/org-re-reveal][repository]], please follow the link if more is necessary.
+
+    #+begin_src emacs-lisp
+      (use-package org-re-reveal
+        :ensure t
+        :after org
+        :custom
+        (org-reveal-mathjax t)
+        (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
+    #+end_src
+
+** Journal
+
+   Let's use [[https://750words.com/][750words]] to write a personal journal. As part of the
+   process, I want my journal entries to be fully encrypted because
+   privacy is important.
    
-*** What is noweb?
-
-    [[https://www.cs.tufts.edu/~nr/noweb/][noweb]] is designed to meet the needs of literate programmers while
-    remaining as simple as possible.
-
-    The gist of using =noweb= is that in your source blocks you have
-    labels like =<<imports>>=, that refer to other named code blocks
-    that get substituted in place of the label.
-
-** Table of Contents
-
-   #+begin_src emacs-lisp
-     (use-package toc-org
+   - =org-journal-encrypt-journal=, if set to =t= has the effect of
+     transparently encrypting/decrypting the journal files as they are
+     written to disk.
+   - =org-journal-enable-encryption=, if set to =t=, enables
+     integration with =org-crypt=, so it automatically adds a =:crypt=
+     tag to new journal entries. This has the effect of automatically
+     encrypting those entries upon save, replacing them with a blob of
+     gpg-encrypted text which has to be further decrypted with
+     =org-decrypt-entry= in order to read or edit them again... too
+     much for now.
+   
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-journal
        :ensure t
+       :after org
        :init
-       (setq toc-org-max-depth 3)
+       (setq org-journal-dir "/home/wand/.journal"
+             org-journal-file-format "%Y/%m/%Y%m%d"
+             org-journal-date-format "%A, %Y-%m-%d"
+             org-journal-encrypt-journal t
+             org-journal-enable-encryption nil
+             org-journal-enable-agenda-integration t)
+       :bind
+       ("C-c j" . org-journal-new-entry))
+   #+END_SRC
+
+   =wc-mode= allows counting characters and words, both on demand and
+   continuously. It also allows setting up a word/character goal.
+   #+BEGIN_SRC emacs-lisp
+     (use-package wc-mode
+       :ensure t
+       :hook (org-journal-mode . wc-mode)
        :config
-       (add-hook 'org-mode-hook 'toc-org-mode))
-   #+end_src
-
-   I need to control the window that pops up when I open the Org Src
-   buffer to edit code.
-   #+BEGIN_SRC emacs-lisp
-     (setq org-src-window-setup 'current-window)
+       (setq wc-word-goal 750))
    #+END_SRC
 
-** Capture
+*** What is a personal journal?
 
-   #+begin_src emacs-lisp
-     (require 'org-capture)
-     (setq org-directory "/home/wand/org")
-     (setq org-confirm-babel-evaluate nil)
-     (setq org-agenda-files (list "/home/wand/org/todo.org"))
-     (setq org-todo-keywords '((sequence "TODO(t)" "|" "DOING(d)" "|" "DONE(D)" "|" "CANCELLED(C)")
-   			    (sequence "STUDY(s)" "|" "STUDIED(S)")
-   			    (sequence "ACT(a)" "|" "ACTED(A)")))
-     (setq org-capture-templates
-   	'(("c" "Capture some concise actionable item and exist" entry
-   	   (file+headline "todo.org" "Task list without a defined date")
-   	   "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
-   	  ("t" "Task of importance with a tag, deadline, and further editable space" entry
-   	   (file+headline "todo.org" "Task list with a date")
-   	   "* %^{Scope of task||TODO [#A]|STUDY [#A]|Act on} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")))
-
-     (setq org-agenda-window-setup 'only-window)
-
-     ;;; after calling the `org-todo', the org mode tries to store some
-     ;;; sort of a "note" using `org-store-log-note' function. I want that
-     ;;; every modification done in my todo file save the file right after.
-     (advice-add 'org-deadline :after (lambda (&rest _rest)
-   				     (org-save-all-org-buffers)))
-     (advice-add 'org-schedule :after (lambda (&rest _rest)
-   				     (org-save-all-org-buffers)))
-     (advice-add 'org-todo :after (lambda (&rest _rest)
-   				 (org-save-all-org-buffers)))
-     (advice-add 'org-store-log-note :after (lambda (&rest _rest)
-   					   (org-save-all-org-buffers)))
-
-   #+end_src
-
-** Babel
-
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((emacs-lisp . t)
-        (ledger . t)
-        (sql . t)
-        (clojure . t)))
-   #+END_SRC
-
+    - This is between you and you
+    - It's all about writing, and getting into your brain
+    - It's not blogging or status updating
+    - Way to think out loud without having to worry about half-formed
+      ideas, random tangents, private stuff, and all the other things
+      our heads that we often filter out before ever voicing them or
+      writing about them
+    - It's a daily brain dump
+   
 ** Agenda
 *** Gmail Agenda
 
     I am following this post from [[http://pragmaticemacs.com/emacs/how-i-view-my-google-calendar-agenda-in-emacs/][pragmatic emacs]] to setup =gcalcli=
     to handle your google agenda. Let's see if I can make this
     through. ==FAILED== I will try something else =)
-
-** Structure Templates
-
-   The "Easy Templates" as often is mentioned, is the standard way in
-   Emacs to handle inline code blocks when writing in literate
-   programming style.
-
-   You can find all the different available templates by `C-h v
-   org-structure-template-alist`.
-
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'org-structure-template-alist
-		  (list "elisp" (concat "#+BEGIN_SRC emacs-lisp\n"
-					"?\n"
-					"#+END_SRC")))
-   #+END_SRC
-
-** Reveal.js
-
-*** TODO More details from how to build one presentation using the package
-There an exhaustive documentation about Reveal.js in the github
-[[https://gitlab.com/oer/org-re-reveal][repository]], please follow the link if more is necessary.
-
-#+begin_src emacs-lisp
-  (use-package org-re-reveal
-    :ensure t
-    :after org
-    :custom
-    (org-reveal-mathjax t)
-    (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
-#+end_src
 
 * Projects
 
@@ -3306,16 +3373,19 @@ There an exhaustive documentation about Reveal.js in the github
              ("http://tonsky.me/blog/atom.xml" blog dev)
              ("https://yogthos.net/feed.xml" blog dev)
              ("http://insideclojure.org/feed.xml" blog dev)
-
+             ("https://oremacs.com/" emacs)
+             ("http://emacsredux.com/atom.xml" emacs)
+        
              ;; blog:philosophy
              ("https://danwang.co/feed/" blog philosophy)
              ("https://www.overcomingbias.com/feed" blog philosophy)
              ("https://slatestarcodex.com/feed/" blog philosophy)
+        
 
              ;; podcast
-             ("https://pinecast.com/feed/emacscast" podcast)
-             ("https://www.npr.org/rss/podcast.php?id=510289" podcast audio economics)
-             ("https://feeds.megaphone.fm/stuffyoushouldknow" audio)
+             ("https://pinecast.com/feed/emacscast" audio podcast)
+             ("https://www.npr.org/rss/podcast.php?id=510289" audio podcast economics)
+             ("http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss" audio podcast)
 
              ;; youtube
              ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
