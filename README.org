@@ -23,6 +23,8 @@ Very nice text about [[https://zachholman.com/2010/08/dotfiles-are-meant-to-be-f
 record all relevant configuration of my current box in the literate
 style here.
 
+Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs Bankruptcy]]. o/
+
 * Summary                                                               :TOC:
 - [[#packages][Packages]]
   - [[#initialization][initialization]]
@@ -41,6 +43,7 @@ style here.
   - [[#async][Async]]
   - [[#path][PATH]]
   - [[#security][Security]]
+  - [[#system-monitor][System monitor]]
   - [[#garbage-collection][Garbage Collection]]
     - [[#collector-magic-hack][Collector Magic Hack]]
   - [[#manage-external-services][Manage external services]]
@@ -100,6 +103,7 @@ style here.
     - [[#eshell-at-the-bottom][Eshell at the bottom]]
     - [[#dired-as-a-side-bar][Dired as a side bar]]
   - [[#winner][Winner]]
+  - [[#resize][Resize]]
 - [[#alerts][Alerts]]
   - [[#alert][Alert]]
   - [[#user-configuration][User configuration]]
@@ -531,6 +535,17 @@ style here.
           (list start end)))
    #+END_SRC
 
+** System monitor
+
+   A tiny system monitor that can be enabled or disabled at runtime,
+   useful for checking performance with power-hungry processes in
+   ansi-term.
+   #+BEGIN_SRC emacs-lisp
+     (use-package symon
+       :ensure t
+       :defer t)
+   #+END_SRC
+   
 ** Garbage Collection
 
    Garbage collection shouldn't happen during startup, as what will
@@ -1671,9 +1686,22 @@ Adding urban dictionary to webjump.
    #+BEGIN_SRC emacs-lisp
      (use-package shackle
        :ensure t
+       :init
+       (setq shackle-default-alignment 'below
+             shackle-default-size 0.4
+             shackle-rules '(("*Ledger Report*" :same t)
+                             (magit-status-mode :align bottom
+                                                :size 00.5
+                                                :inhibit-window-quit t)
+                             (magit-log-mode    :same t
+                                                :inhibit-window-quit t)
+                             (magit-diff-mode   :select nil
+                                                :align left
+                                                :size 0.5)
+                             (git-commit-mode   :same t)
+                             (magit-commit-mode :ignore t)))
        :config
-       (setq shackle-rules '(("*Ledger Report*" :same t)))
-       (add-hook 'after-init-hook 'shackle-mode))
+       (shackle-mode 1))
    #+END_SRC
    
 ** Side windows
@@ -1762,6 +1790,14 @@ the *winner-boring-buffers*.
 	   ("C-x 4 U" . winner-redo)))
 #+END_SRC
 
+** Resize
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package windresize
+       :ensure t
+       :commands (windresize))
+   #+END_SRC
+   
 * Alerts
 ** Alert
   
@@ -3575,17 +3611,18 @@ on-demand and stored in memory.
       (require 'elfeed-search)
       (require 'elfeed-db)
 
+      (defvar elfeed--custom-regexp-score
+        '(("software\\|programming\\|design\\|systems" 1)
+          ("clojure" 1)
+          ("emacs.*clojure\\|clojure.*emacs" 2)))
+
       (defun score-elfeed-entry (entry)
         (let ((title (elfeed-entry-title entry))
               (content (elfeed-deref (elfeed-entry-content entry)))
               (score 0))
-          (loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
-                                     ("clojure" 1)
-                                     ("emacs.*clojure\\|clojure.*emacs" 2))
-                if (string-match pattern title)
-                do (incf score n)
-                if (string-match pattern content)
-                do (incf score n))
+          (dolist (rex elfeed--custom-regexp-score)
+            (if (string-match (car rex) title) (incf score (cadr rex)))
+            (if (string-match (car rex) content) (incf score (cadr rex))))
           (setf (elfeed-meta entry :my/score) score)
           (cond
            ((= score 1)
@@ -3593,19 +3630,19 @@ on-demand and stored in memory.
            ((= score 2)
             (elfeed-tag entry 'important))
            ((> score 2)
-            (elfeed-tag entry 'urgent)))
-          entry))
+            (elfeed-tag entry 'urgent))))
+        entry)
 
       (defface relevant-elfeed-entry
-        `((t :background ,(color-lighten-name "LightBlue1" 40)))
+        `((t :background ,(color-lighten-name "LightBlue1" 35)))
         "Maks a relevant Elfeed entry.")
 
       (defface important-elfeed-entry
-        `((t :background ,(color-lighten-name "orange1" 40)))
+        `((t :background ,(color-lighten-name "orange1" 35)))
         "Marks a important Elfeed entry.")
 
       (defface urgent-elfeed-entry
-        `((t :background ,(color-lighten-name "OrangeRed2" 40)))
+        `((t :background ,(color-lighten-name "OrangeRed2" 35)))
         "Marks an urgent Elfeed entry.")
 
       (add-hook 'elfeed-new-entry-hook #'score-elfeed-entry)
@@ -4146,6 +4183,8 @@ on-demand and stored in memory.
   #+BEGIN_SRC emacs-lisp
     (use-package emms
       :ensure t
+      :init
+      (setq emms-seek-seconds 10)
       :config
       (require 'emms-setup)
       (require 'emms-player-mpv)
