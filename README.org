@@ -2664,8 +2664,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
    (use-package sqlformat
      :ensure t
      :init
-     (setq sqlformat-command 'pgformatter
-	   sqlformat-args '("-s2" "-g"))
+     (setq sqlformat-command 'pgformatter)
      :config
      (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
  #+end_src
@@ -3846,18 +3845,18 @@ on-demand and stored in memory.
       (require 'elfeed-search)
       (require 'elfeed-db)
 
-      (defvar elfeed--custom-regexp-score
-        '(("software\\|programming\\|design\\|systems" 1)
-          ("clojure" 1)
-          ("emacs.*clojure\\|clojure.*emacs" 2)))
-
       (defun score-elfeed-entry (entry)
         (let ((title (elfeed-entry-title entry))
               (content (elfeed-deref (elfeed-entry-content entry)))
               (score 0))
-          (dolist (rex elfeed--custom-regexp-score)
-            (if (string-match (car rex) title) (incf score (cadr rex)))
-            (if (string-match (car rex) content) (incf score (cadr rex))))
+          (loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
+                                     ("clojure" 1)
+                                     ("emacs.*clojure\\|clojure.*emacs" 2))
+                if (string-match pattern title)
+                do (incf score n)
+                if (string-match pattern content)
+                do (incf score n))
+          (message "%s - %s" title score)
           (setf (elfeed-meta entry :my/score) score)
           (cond
            ((= score 1)
@@ -3865,22 +3864,22 @@ on-demand and stored in memory.
            ((= score 2)
             (elfeed-tag entry 'important))
            ((> score 2)
-            (elfeed-tag entry 'urgent))))
-        entry)
+            (elfeed-tag entry 'urgent)))
+          entry))
 
       (defface relevant-elfeed-entry
-        `((t :background ,(color-lighten-name "LightBlue1" 35)))
+        `((t :background ,(color-lighten-name "LightBlue1" 40)))
         "Maks a relevant Elfeed entry.")
 
       (defface important-elfeed-entry
-        `((t :background ,(color-lighten-name "orange1" 35)))
+        `((t :background ,(color-lighten-name "orange1" 40)))
         "Marks a important Elfeed entry.")
 
       (defface urgent-elfeed-entry
-        `((t :background ,(color-lighten-name "OrangeRed2" 35)))
+        `((t :background ,(color-lighten-name "OrangeRed2" 40)))
         "Marks an urgent Elfeed entry.")
 
-      (add-hook 'elfeed-new-entry-hook #'score-elfeed-entry)
+      (add-hook 'elfeed-new-entry-hook 'score-elfeed-entry)
 
       (push '(relevant relevant-elfeed-entry) elfeed-search-face-alist)
       (push '(important important-elfeed-entry) elfeed-search-face-alist)
