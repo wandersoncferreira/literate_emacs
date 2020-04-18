@@ -55,6 +55,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#default-theme][Default theme]]
   - [[#time][Time]]
   - [[#font][Font]]
+  - [[#mode-line][Mode line]]
+    - [[#menu][menu]]
   - [[#fringe][Fringe]]
 - [[#defaults][Defaults]]
   - [[#clean-stale-buffers][Clean stale buffers]]
@@ -99,7 +101,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#hide-block-of-code][Hide block of code]]
   - [[#web-paste][Web paste]]
 - [[#completions][Completions]]
-  - [[#minibuffer-ido-mode][Minibuffer (ido mode)]]
+  - [[#minibuffer-1][Minibuffer]]
+    - [[#interactive-do][interactive do]]
+    - [[#auto-completion][auto completion]]
   - [[#company-mode][Company mode]]
   - [[#hippie-expand][Hippie Expand]]
 - [[#window][Window]]
@@ -742,6 +746,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
                   (setq organic-green-boldless t)
                   (load-theme 'organic-green t)))
     #+END_SRC
+
 ** Time
 
    #+BEGIN_SRC emacs-lisp
@@ -785,6 +790,22 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (add-hook 'prog-mode-hook 'fira-code-mode))
     #+END_SRC
 
+** Mode line
+
+*** menu
+    
+    This package implements a menu that lists enabled minor-modes, as
+    well as commonly but not currently enabled minor-modes. It can be
+    used to toggle local and global minor-modes, to access
+    mode-specific menus, and to get help about modes.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package minions
+        :ensure t
+        :config
+        (minions-mode 1))
+    #+END_SRC
+   
 ** Fringe
 
     Control the fringe around the frame.
@@ -1055,6 +1076,18 @@ Clean all the registers you saved.
 #+end_src
 
 ** Imenu
+   
+   Change some defaults of =imenu=.
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'imenu)
+
+     (setq imenu-auto-rescan 1
+           imenu-auto-rescan-maxout 600000
+           imenu-max-item-length 600
+           imenu-use-markers t
+           imenu-max-items 200)
+   #+END_SRC
 
    The objectives of this package is to provide a way to choose buffer
    indexes in a specific mode. What is a buffer index? Basically we
@@ -1588,7 +1621,9 @@ Adding urban dictionary to webjump.
    #+END_SRC
 
 * Completions
-** Minibuffer (ido mode)
+** Minibuffer
+
+*** interactive do
 
    Ido - interactive do - help us with switching between buffers, opening
    files and directories with a minimum of keystrokes. As you type in a
@@ -1630,15 +1665,14 @@ Adding urban dictionary to webjump.
 
    Nice description of ido at the help page on [[help:ido][C-h P ido]].
 
-   Always rescan buffer for imenu
-   #+BEGIN_SRC emacs-lisp
-     (set-default 'imenu-auto-rescan t)
-
-     (add-to-list 'ido-ignore-directories "target")
-   #+END_SRC
-
    A very interesting guide to Ido is from [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Mastering Emacs]]. I read it
    very often.
+
+*** auto completion
+    
+    #+BEGIN_SRC emacs-lisp
+      (icomplete-mode 1)
+    #+END_SRC
 
 ** Company mode
 
@@ -1980,6 +2014,13 @@ the *winner-boring-buffers*.
   format.
   #+BEGIN_SRC emacs-lisp
     (setq dired-listing-switches "-alh")
+  #+END_SRC
+
+  Omit certain files.
+  #+BEGIN_SRC emacs-lisp
+    (setq dired-omit-files
+          (rx (or (seq bol (? ".") "#")
+                  (seq bol "." eol))))
   #+END_SRC
 
 ** Guidelines
@@ -4484,6 +4525,7 @@ on-demand and stored in memory.
             (message "File '%s' sucessfully renamed to '%s'"
                      name (file-name-nondirectory new-name)))))
     #+END_SRC
+
 * Keys
 
 ** Hint
