@@ -3601,15 +3601,18 @@ on-demand and stored in memory.
     Lazy loading all the parts of my elfeed setup.
 
    #+BEGIN_SRC emacs-lisp :noweb yes
-     (eval-after-load 'elfeed
-       '(progn
-          <<elfeed-basic-config>>
-          <<elfeed-newsletters>>
-          <<elfeed-filters>>
-          <<elfeed-automatic-update>>
-          <<elfeed-starred>>
-          <<elfeed-youtube>>
-          <<elfeed-scoring>>))
+     (require 'elfeed)
+     (require 'cl)
+     (require 'elfeed-search)
+     (require 'elfeed-db)
+
+     <<elfeed-basic-config>>
+     <<elfeed-newsletters>>
+     <<elfeed-scoring>>
+     <<elfeed-filters>>
+     <<elfeed-automatic-update>>
+     <<elfeed-starred>>
+     <<elfeed-youtube>>
    #+END_SRC
 
 *** Elfeed newsletters
@@ -3662,7 +3665,8 @@ on-demand and stored in memory.
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)))
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCwWhs_6x42TyRM4Wstoq8HA" youtube trevor)))
    #+END_SRC
   
 *** Filter
@@ -3840,11 +3844,6 @@ on-demand and stored in memory.
     :end:
 
     #+BEGIN_SRC emacs-lisp
-      (require 'cl)
-      (require 'elfeed)
-      (require 'elfeed-search)
-      (require 'elfeed-db)
-
       (defun score-elfeed-entry (entry)
         (let ((title (elfeed-entry-title entry))
               (content (elfeed-deref (elfeed-entry-content entry)))
@@ -3901,7 +3900,6 @@ on-demand and stored in memory.
         (lambda () (interactive)
           (elfeed-search-set-filter "@6-months-ago +unread")))
     #+END_SRC
-
 ** Slack
 
    Slack from Emacs? :O Why not? I am having a terrible time
