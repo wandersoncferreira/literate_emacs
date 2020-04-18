@@ -71,7 +71,11 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#calendar][Calendar]]
   - [[#webjump][Webjump]]
   - [[#authentication-source][Authentication Source]]
-- [[#help-1][Help]]
+- [[#hydras][Hydras]]
+- [[#help-and-info][Help and Info]]
+  - [[#customization-to-info-mode][Customization to info-mode]]
+    - [[#define-keys][define keys]]
+    - [[#hydras-1][hydras]]
 - [[#editing-text][Editing Text]]
   - [[#defaults-1][Defaults]]
     - [[#key-bindings][key bindings]]
@@ -119,8 +123,10 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#tramp][TRAMP]]
 - [[#version-control][Version Control]]
   - [[#magit][Magit]]
-    - [[#gitconfig][Gitconfig]]
-    - [[#gitignore][Gitignore]]
+    - [[#magit-setup][magit setup]]
+    - [[#magit-hydra][magit hydra]]
+  - [[#git-config][Git config]]
+  - [[#git-ignore][Git ignore]]
   - [[#time-machine][Time machine]]
   - [[#visual-identification][Visual identification]]
   - [[#miscellaneous][Miscellaneous]]
@@ -1216,18 +1222,62 @@ Adding urban dictionary to webjump.
        (pinentry-start))
    #+END_SRC
 
-* Help
+* Hydras
 
-  Is good to know how to ask for help in Emacs
   #+BEGIN_SRC emacs-lisp
-    (use-package helpful
-      :ensure t
-      :bind
-      (("C-h f" . helpful-callable)
-       ("C-h v" . helpful-variable)
-       ("C-h k" . helpful-key)
-       ("C-h ," . helpful-at-point)))
+    (use-package hydra
+      :ensure t)
   #+END_SRC
+
+* Help and Info
+
+** Customization to info-mode
+
+   #+BEGIN_SRC emacs-lisp :noweb yes
+     (eval-after-load 'Info-mode
+       '(progn
+          <<info-hydras>>
+          <<info-define>>))
+   #+END_SRC
+
+*** define keys
+    :properties:
+    :header-args: :noweb-ref info-define :tangle no
+    :end:
+
+    #+BEGIN_SRC emacs-lisp
+      (define-key Info-mode-map "w" 'forward-word)
+      (define-key Info-mode-map "b" 'backward-word)
+      (define-key Info-mode-map "t" 'hydra-info-to/body)
+      (define-key Info-mode-map "u" 'Info-history-back)
+      (define-key Info-mode-map "H" 'Info-history-back)
+    #+END_SRC
+
+*** hydras
+    :properties:
+    :header-args: :noweb-ref info-hydras :tangle no
+    :end:
+
+    #+BEGIN_SRC emacs-lisp
+      (defun ora-Info-hook ())
+
+      (defun ora-open-info (topic bname)
+        "Open info on TOPIC in BNAME."
+        (if (get-buffer bname)
+            (progn
+              (switch-to-buffer bname)
+              (unless (string-match topic Info-current-file)
+                (Info-goto-node (format "(%s)" topic))))
+          (info topic bname)))
+
+      (defhydra hydra-info-to (:hint nil :color teal)
+          "
+      _o_rg e_l_isp _e_macs _h_yperspec"
+          ("o" (ora-open-info "org" "*org info*"))
+          ("l" (ora-open-info "elisp" "*elisp info*"))
+          ("e" (ora-open-info "emacs" "*emacs info*"))
+          ("h" (ora-open-info "gcl" "*hyperspec*")))
+    #+END_SRC
 
 * Editing Text
 
@@ -1319,6 +1369,11 @@ Adding urban dictionary to webjump.
        :homepage https://github.com/abo-abo/avy
        :about Jump to things in Emacs tree-style
        :ensure t
+       :init
+       (setq avy-all-windows t
+             avy-all-windows-alt nil
+             avy-styles-alist '((avy-goto-char-2 . post)
+                                (avy-goto-line . pre)))
        :config
        (avy-setup-default)
        (global-set-key (kbd "C-c ;") 'avy-goto-char))
@@ -1672,13 +1727,13 @@ Adding urban dictionary to webjump.
         :ensure t
         :init
         (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p)
-    	  aw-background nil
-    	  aw-scope 'frame
-    	  aw-dispatch-alist
-    	  '((?s aw-swap-window "swap window")
-    	    (?2 aw-split-window-vert "split window vertically")
-    	    (?3 aw-split-window-horz "split window horizontally")
-    	    (?? aw-show-dispatch-help)))
+              aw-background nil
+              aw-scope 'frame
+              aw-dispatch-alist
+              '((?s aw-swap-window "swap window")
+                (?2 aw-split-window-vert "split window vertically")
+                (?3 aw-split-window-horz "split window horizontally")
+                (?? aw-show-dispatch-help)))
         :config
         (ace-window-display-mode -1)
         (global-set-key (kbd "C-x o") 'ace-window))
@@ -2054,24 +2109,50 @@ the *winner-boring-buffers*.
    control system Git, implemented as an Emacs package. Magit aspires
    to be a complete Git porcelain, look for more info at [[https://github.com/magit/magit][here]].
 
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :noweb yes
       (use-package magit
-	:ensure t
-	:init
-	(setq magit-completing-read-function 'magit-ido-completing-read
-	      ;; highlight individual word and letter changes when hunk diff displays
-	      magit-diff-refine-hunk t
-	      ;; don't tell me when magit reverts buffers
-	      magit-revert-buffers 'silent
-	      ;; always show the verbose diff in commit windows
-	      magit-commit-arguments '("--verbose")
-	      ;; timeout when magit takes a while to call out to git
-	      magit-process-popup-time 10)
-	:config
-	(add-to-list 'magit-no-confirm 'stage-all-changes))
+        :ensure t
+        :init
+        <<magit-setup>>
+        :config
+        (add-to-list 'magit-no-confirm 'stage-all-changes))
     #+end_src
 
-*** Gitconfig
+*** magit setup
+    :properties:
+    :header-args: :noweb-ref magit-setup :tangle no
+    :end:
+
+    #+BEGIN_SRC emacs-lisp
+      ;; highlight individual word and letter changes when hunk diff displays
+      (setq magit-diff-refine-hunk t)
+
+      ;; don't tell me when magit reverts buffers
+      (setq magit-revert-buffers 'silent)
+
+      ;; always show the verbose diff in commit windows
+      (setq magit-commit-arguments '("--verbose"))
+
+      ;; timeout when magit takes a while to call out to git
+      (setq magit-process-popup-time 10)
+    #+END_SRC
+
+*** magit hydra
+
+    And what about another hydra? Magit deserves everything.
+    #+BEGIN_SRC emacs-lisp
+      (defhydra hydra-magit (:color blue)
+        ("q" nil "quit" :column "Magit")
+        ("b" magit-blame "blame" :column "Do")
+        ("c" magit-clone "clone" :column "Do")
+        ("i" magit-init "init" :column "Do")
+        ("s" magit-status "status" :column "Do")
+        ("t" git-timemachine "time-travel" :column "TimeMachine"))
+
+      (global-set-key (kbd "C-c g") 'hydra-magit/body)
+    #+END_SRC
+
+** Git config
 
     [[https://github.com/magit/git-modes][gitconfig]] is a major mode for editing =gitconfig= files.
     #+BEGIN_SRC emacs-lisp
@@ -2081,7 +2162,7 @@ the *winner-boring-buffers*.
 	(require 'gitconfig-mode))
     #+END_SRC
 
-*** Gitignore
+** Git ignore
 
     [[https://github.com/magit/git-modes][git-modes]] has a major mode for editing =gitignore= files.
     #+BEGIN_SRC emacs-lisp
@@ -2640,52 +2721,52 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 
 ** Linters
 
- =Flycheck= is a modern on-the-fly syntax checking extension for GNU
- Emacs, intended as replacement for the older Flymake.
+   =Flycheck= is a modern on-the-fly syntax checking extension for GNU
+   Emacs, intended as replacement for the older Flymake.
 
- #+begin_src emacs-lisp
-   (use-package flycheck
-     :ensure t
-     :init
-     (setq flycheck-check-syntax-automatically '(mode-enabled save)
-           flycheck-display-errors-delay .3)
-     :config
-     (add-hook 'prog-mode-hook 'flycheck-mode))
+   #+begin_src emacs-lisp
+     (use-package flycheck
+       :ensure t
+       :init
+       (setq flycheck-check-syntax-automatically '(mode-enabled save)
+             flycheck-display-errors-delay .3)
+       :config
+       (add-hook 'prog-mode-hook 'flycheck-mode))
+  
+     (use-package flycheck-clj-kondo :ensure t)
+   #+end_src
 
-   (use-package flycheck-clj-kondo :ensure t)
- #+end_src
+   A very important command you should remember is =C-c ! v= or (=M-x
+   flycheck-verify-setup=) that can help you verify for your current
+   mode if everything is fine with your linter and it's backend.
 
- A very important command you should remember is =C-c ! v= or (=M-x
- flycheck-verify-setup=) that can help you verify for your current mode
- if everything is fine with your linter and it's backend.
+   The following package implements a minor-mode for displaying errors
+   from Flycheck right below their reporting location, using overlays.
 
- The following package implements a minor-mode for displaying errors
- from Flycheck right below their reporting location, using overlays.
-
- #+begin_src emacs-lisp
-   (use-package flycheck-inline
-     :ensure t
-     :after flycheck
-     :config
-     (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
- #+end_src
-
- Integrate [[Unified Modeling Language]] with flycheck to automatically
- check the syntax of your plantuml files on the fly.
-
- #+begin_src emacs-lisp
-   (use-package flycheck-plantuml
-     :ensure t
-     :after flycheck
-     :config
-     (flycheck-plantuml-setup))
- #+end_src
+   #+begin_src emacs-lisp
+     (use-package flycheck-inline
+       :ensure t
+       :after flycheck
+       :config
+       (add-hook 'flycheck-mode-hook #'flycheck-inline-mode))
+   #+end_src
+  
+   Integrate [[Unified Modeling Language]] with flycheck to automatically
+   check the syntax of your plantuml files on the fly.
+  
+   #+begin_src emacs-lisp
+     (use-package flycheck-plantuml
+       :ensure t
+       :after flycheck
+       :config
+       (flycheck-plantuml-setup))
+   #+end_src
 
 ** Unified Modeling Language
 
- The UML is a general-purpose, developmental, modeling language in the
- field of software engineering that is intended to provide a standard
- way to visualize the design of a system.
+   The UML is a general-purpose, developmental, modeling language in
+   the field of software engineering that is intended to provide a
+   standard way to visualize the design of a system.
 
     1. any activities (jobs)
     2. individual components of the system
@@ -2693,7 +2774,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     4. how entities interact with others
     5. external user interfaces
 
- The UML diagrams represent two different views of a system model
+    The UML diagrams represent two different views of a system model
 
     - *Static* (or structural) view: emphasizes the static structure of
       the system using objects, attributes, operations and
@@ -2704,7 +2785,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       to the internal states of objects. This view includes sequence
       diagrams, activity diagrams and state machine diagrams.
 
- Let's see a very interesting cheatsheet now:
+    Let's see a very interesting cheatsheet now:
 
    [[./images/uml-1.png]]
 
@@ -2713,19 +2794,19 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
    [[./images/uml-3.png]]
 
 
- The internal setup in order to use it will happen though =PlantUML=
- which has an specific syntax but is very easy to pick it up, follow
- examples at the official documentation at [[https://plantuml.com/][webpage]].
+   The internal setup in order to use it will happen though =PlantUML=
+   which has an specific syntax but is very easy to pick it up, follow
+   examples at the official documentation at [[https://plantuml.com/][webpage]].
 
- #+begin_src emacs-lisp
-   (use-package plantuml-mode
-     :ensure t
-     :mode ("\\.plantuml\\'" "\\.puml\\'")
-     :init
-     (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
-     :config
-     (require 'ob-plantuml))
- #+end_src
+   #+begin_src emacs-lisp
+     (use-package plantuml-mode
+       :ensure t
+       :mode ("\\.plantuml\\'" "\\.puml\\'")
+       :init
+       (setq org-plantuml-jar-path "/home/wand/plantuml.jar")
+       :config
+       (require 'ob-plantuml))
+   #+end_src
 
 ** Parenthesis
 
@@ -3150,6 +3231,51 @@ on-demand and stored in memory.
     to handle your google agenda. Let's see if I can make this
     through. ==FAILED== I will try something else =)
 
+    Let's see if is possible to sync Google Calendar with Org mode.
+    The Org-gcal library enable you to fetch, post, edit and sync
+    events from your calendar.
+
+    There is a bit of setup outside Emacs to make it work, you can
+    follow the step-by-step guide on [[https://github.com/myuhe/org-gcal.el][Org Gcal Readme]] page.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-gcal
+        :ensure t
+        :config
+        (setq org-gcal-client-id (auth-source-pick-first-password
+                                  :host "gcal.com"
+                                  :user "client-id")
+              org-gcal-client-secret (auth-source-pick-first-password
+                                      :host "gcal.com"
+                                      :user "client-secret")
+              org-gcal-file-alist '(("wanderson.ferreira@captalys.com.br" . "~/gcal-captalys.org"))
+              org-gcal-notify-p nil))
+    #+END_SRC
+
+
+    There are a couple of commands to remember:
+    #+caption: cheatsheet for Org Calendar
+    | command                  | description                                                                       |
+    |--------------------------+-----------------------------------------------------------------------------------|
+    | org-gcal-sync            | sync between org and gcal, before syncing, execute `org-gcal-fetch'               |
+    | org-gcal-fetch           | fetch google calendar events and populate org-gcal-file-alist                     |
+    | org-gcal-post-at-point   | post/edit org block at point to google calendar                                   |
+    | org-gcal-delete-at-point | delete gcal event at point                                                        |
+    | org-gcal-refresh-token   | refresh the oauth token, it expires in 3600s you should refresh in regular basis. |
+    
+
+    I got these two hooks from Zemansky to sync things
+    semi-automatically.
+
+    #+BEGIN_SRC emacs-lisp
+      (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+    #+END_SRC
+    
+    The other way around, integrating Org bullets to Gmail seems to
+    work but with very basic functionalities. I wish I could create a
+    full appointment entry with invitations, location, and correct
+    duration. For now, I will keep using Google's UI to do that.
+
 * Projects
 
 #+begin_src emacs-lisp 
@@ -3540,6 +3666,41 @@ on-demand and stored in memory.
              ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
              ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)))
    #+END_SRC
+
+   #+RESULTS:
+   | https://irreal.org/blog/?feed=rss2                                           | blog    |               |           |
+   | https://www.exocomics.com/feed                                               | comic   |               |           |
+   | https://xkcd.com/atom.xml                                                    | comic   |               |           |
+   | https://dendibakh.github.io/feed.xml                                         | blog    | dev           |           |
+   | https://eli.thegreenplace.net/feeds/all.atom.xml                             | blog    | dev           |           |
+   | https://floooh.github.io/feed.xml                                            | blog    | dev           |           |
+   | https://www.joelonsoftware.com/feed/                                         | blog    | dev           |           |
+   | https://fabiensanglard.net/rss.xml                                           | blog    | dev           |           |
+   | https://nickdesaulniers.github.io/atom.xml                                   | blog    | dev           |           |
+   | https://geoff.greer.fm/feed.atom                                             | blog    | dev           |           |
+   | https://lemire.me/blog/feed/                                                 | dev     | blog          |           |
+   | https://danluu.com/atom.xml                                                  | dev     | blog          |           |
+   | https://mortoray.com/feed/                                                   | blog    | dev           |           |
+   | https://arp242.net/feed.xml                                                  | blog    | dev           |           |
+   | https://begriffs.com/atom.xml                                                | blog    | dev           |           |
+   | https://nullprogram.com/feed/                                                | blog    | dev           |           |
+   | http://tonsky.me/blog/atom.xml                                               | blog    | dev           |           |
+   | https://yogthos.net/feed.xml                                                 | blog    | dev           |           |
+   | http://insideclojure.org/feed.xml                                            | blog    | dev           |           |
+   | https://oremacs.com/                                                         | emacs   |               |           |
+   | http://emacsredux.com/atom.xml                                               | emacs   |               |           |
+   | https://danwang.co/feed/                                                     | blog    | philosophy    |           |
+   | https://www.overcomingbias.com/feed                                          | blog    | philosophy    |           |
+   | https://slatestarcodex.com/feed/                                             | blog    | philosophy    |           |
+   | https://pinecast.com/feed/emacscast                                          | audio   | podcast       |           |
+   | https://www.npr.org/rss/podcast.php?id=510289                                | audio   | podcast       | economics |
+   | http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss      | audio   | podcast       |           |
+   | http://feeds.soundcloud.com/users/soundcloud:users:959992602/sounds.rss      | audio   | podcast       |           |
+   | https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g | youtube | protesilaos   |           |
+   | https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ | youtube | akita         |           |
+   | https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA | youtube | computerphile |           |
+   | https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw | youtube | screenplay    |           |
+   | https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw | youtube | cyanide       |           |
   
 *** Filter
     :properties:
@@ -4334,7 +4495,6 @@ on-demand and stored in memory.
      (global-set-key (kbd "M-i") 'change-inner)
      (global-set-key (kbd "M-o") 'change-outer)
      (global-set-key (kbd "C-c e") 'eshell)
-     (global-set-key (kbd "C-c g s") 'magit-status)
      (global-set-key (kbd "C-c C-k") 'eval-buffer)
      (global-set-key (kbd "C-x C-b") 'ibuffer)
      (global-set-key (kbd "C-c t") 'org-capture)
