@@ -172,6 +172,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#presentation][Presentation]]
   - [[#agenda][Agenda]]
     - [[#gmail-agenda][Gmail Agenda]]
+  - [[#tips-and-tricks][Tips and tricks]]
+    - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
   - [[#correct-your-spelling-errors-on-the-fly][Correct your spelling errors on the fly]]
@@ -1224,6 +1226,10 @@ Adding urban dictionary to webjump.
 
 * Hydras
 
+  This package has a very nice name once you know what it does! This
+  is a package that can be used to tie related commands into a family
+  of short bindings with a common prefix - a [[https://github.com/abo-abo/hydra][Hydra]].
+
   #+BEGIN_SRC emacs-lisp
     (use-package hydra
       :ensure t)
@@ -1733,9 +1739,10 @@ Adding urban dictionary to webjump.
               '((?s aw-swap-window "swap window")
                 (?2 aw-split-window-vert "split window vertically")
                 (?3 aw-split-window-horz "split window horizontally")
+                (?x aw-delete-window "delete window")
                 (?? aw-show-dispatch-help)))
         :config
-        (ace-window-display-mode -1)
+        (ace-window-display-mode 1)
         (global-set-key (kbd "C-x o") 'ace-window))
     #+end_src
 
@@ -1745,6 +1752,15 @@ Adding urban dictionary to webjump.
 		   (cons "\\*Async Shell Command\\*.*"
 			 (cons #'display-buffer-no-window nil)))
     #+END_SRC
+
+    #+caption: ace-window dispatch operations
+    | key | Function             |
+    |-----+----------------------|
+    | s   | aw-swap-window       |
+    | 2   | aw-split-window-vert |
+    | 3   | aw-split-window-horz |
+    | x   | aw-delete-window     |
+    | ??  | aw-dispatch-help     |
 
 ** Shackle
 
@@ -3275,6 +3291,16 @@ on-demand and stored in memory.
     full appointment entry with invitations, location, and correct
     duration. For now, I will keep using Google's UI to do that.
 
+** Tips and tricks
+*** Compute difference between two dates.
+    From M-x tpis (@iLemming) in Org-mode
+    - use =C-c != to enter timestamps
+    - use =S-<arrows>= to move between days
+    - use =M-<arrows>= to move between months
+    - Place =-= between them (to make it a range)
+    - =C-c C-y= to =org-evaluate-time-range=
+    - with a prefix argument inserts it into the buffer.
+
 * Projects
 
 #+begin_src emacs-lisp 
@@ -3652,8 +3678,6 @@ on-demand and stored in memory.
 
         ;; blog:philosophy
         ("https://danwang.co/feed/" blog philosophy)
-        ("https://www.overcomingbias.com/feed" blog philosophy)
-        ("https://slatestarcodex.com/feed/" blog philosophy)
 
         ;; podcast
         ("https://pinecast.com/feed/emacscast" audio podcast)
@@ -4099,12 +4123,50 @@ on-demand and stored in memory.
 
 * Pomodoro
 
-#+begin_src emacs-lisp 
-  (use-package tomatinho
-    :ensure t
-    :bind
-    ("<f10>" . tomatinho))
-#+end_src
+  For many people, time is an enemy. We race against the clock to
+  finish assignments and meet deadlines. The Pomodoro technique
+  teaches you to work with time, instead of struggling against it.
+
+  1. *Choose a task* you would like to get done
+  2. *Set the pomodoro* for 25 minutes
+  3. *Work on the task* until the Pomodoro rings
+  4. When the Pomodoro rings, *put a checkmark* on a paper
+  5. *Take a short break* (5 minutes in my setup)
+  6. Every 4 pomodoros, *take a longer break* (15 minutes in my setup)
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package pomodoro
+      :ensure t
+      :bind ("C-c 0" . hydra-pomodoro/body)
+      :init
+      (setq pomodoro-play-sounds t)
+
+      (setq pomodoro-work-start-message "Let's get back to work"
+            pomodoro-work-cycle "w"
+            pomodoro-work-time 25)
+
+      (setq pomodoro-break-start-message "BREAK TIME <>"
+            pomodoro-break-cycle "b"
+            pomodoro-break-time 5)
+
+      (setq pomodoro-long-break-start-message "Time for a longer break!"
+            pomodoro-long-break-time 15
+            pomodoro-nth-for-longer-break 4)
+
+      (setq pomodoro-extra-time 2)
+
+      :config
+      (add-to-list 'mode-line-format
+                   '(pomodoro-mode-line-string pomodoro-mode-line-string))
+      (defhydra hydra-pomodoro (:color blue)
+        "pomodoro"
+        ("0" pomodoro-start "start")
+        ("s" pomodoro-start "start")
+        ("x" pomodoro-stop "stop")
+        ("p" pomodoro-pause "pause")
+        ("r" pomodoro-resume "resume")
+        ("q" nil "cancel")))
+  #+END_SRC
 
 * Financial
 
