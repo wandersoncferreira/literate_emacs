@@ -126,6 +126,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#miscellaneous][Miscellaneous]]
 - [[#search][Search]]
   - [[#wgrep][Wgrep]]
+  - [[#grep-fullscreen][grep fullscreen]]
   - [[#ripgrep][Ripgrep]]
   - [[#isearch][Isearch]]
   - [[#occur][Occur]]
@@ -1716,6 +1717,9 @@ Adding urban dictionary to webjump.
                              (magit-diff-mode   :select nil
                                                 :align left
                                                 :size 0.5)
+                             (compilation-mode  :select nil
+                                                :align below
+                                                :size 0.25)
                              (git-commit-mode   :same t)
                              (magit-commit-mode :ignore t)))
        :config
@@ -2129,6 +2133,48 @@ the *winner-boring-buffers*.
    #+BEGIN_SRC emacs-lisp
      (use-package wgrep
        :ensure t)
+   #+END_SRC
+
+** grep fullscreen
+   
+   This function help me day by day, every single version of my setup had
+   this beauty in it.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/rgrep-fullscreen (regexp &optional files dir confirm)
+       "Open grep in full screen, saving windows and searching for REGEXP.
+     in FILES and DIR without CONFIRM."
+       (interactive
+        (progn
+          (grep-compute-defaults)
+          (let* ((regexp (grep-read-regexp))
+                 (files (grep-read-files regexp))
+                 (dir (ido-read-directory-name "Base directory: "
+                                               nil default-directory t))
+                 (confirm (equal current-prefix-arg '(4))))
+            (list regexp files dir confirm))))
+       (window-configuration-to-register ?$)
+       (rgrep regexp files dir confirm)
+       (switch-to-buffer "*grep*")
+       (delete-other-windows)
+       (goto-char (point-min)))
+
+     (defun rgrep-quit-window ()
+       "Simply jump to the register where all your windows are."
+       (interactive)
+       (kill-buffer)
+       (jump-to-register ?$))
+
+     (defun rgrep-goto-file-and-close-rgrep ()
+       "Go to file and close rgrep window."
+       (interactive)
+       (compile-goto-error)
+       (kill-buffer "*grep*")
+       (delete-other-windows)
+       (message "Type C-x r j $ to return to pre-rgrep windows."))
+
+
+     (global-set-key (kbd "C-c p g") 'bk/rgrep-fullscreen)
    #+END_SRC
 
 ** Ripgrep
