@@ -3442,7 +3442,7 @@ on-demand and stored in memory.
        :ensure t
        :config
        (require 'google-translate-smooth-ui)
-       (global-set-key (kbd "C-c g t") 'google-translate-smooth-translate))
+       (global-set-key (kbd "s-g t") #'google-translate-smooth-translate))
 
      ;; temporary fix for error args-out-of-range
      ;; https://github.com/atykhonov/google-translate/issues/98
@@ -3452,9 +3452,9 @@ on-demand and stored in memory.
      does matter when translating misspelled word. So instead of
      translation it is possible to get suggestion."
        (let ((info (aref json 7)))
-	 (if (and info (> (length info) 0))
-	     (aref info 1)
-	   nil)))
+         (if (and info (> (length info) 0))
+             (aref info 1)
+           nil)))
 
    #+END_SRC
 
@@ -3619,88 +3619,52 @@ on-demand and stored in memory.
     :end:
 
    #+BEGIN_SRC emacs-lisp
-     (setq elfeed-feeds
-           '(;; blog
-             ("https://irreal.org/blog/?feed=rss2" blog)
+     (setq-default
+      elfeed-feeds
+      '(;; blog
+        ("https://irreal.org/blog/?feed=rss2" blog)
 
-             ;; comics
-             ("https://www.exocomics.com/feed" comic)
-             ("https://xkcd.com/atom.xml" comic)
+        ;; comics
+        ("https://www.exocomics.com/feed" comic)
+        ("https://xkcd.com/atom.xml" comic)
 
-             ;; blogs:dev
-             ("https://dendibakh.github.io/feed.xml" blog dev)
-             ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
-             ("https://floooh.github.io/feed.xml" blog dev)
-             ("https://www.joelonsoftware.com/feed/" blog dev)
-             ("https://fabiensanglard.net/rss.xml" blog dev)
-             ("https://nickdesaulniers.github.io/atom.xml" blog dev)
-             ("https://geoff.greer.fm/feed.atom" blog dev)
-             ("https://lemire.me/blog/feed/" dev blog)
-             ("https://danluu.com/atom.xml" dev blog)
-             ("https://mortoray.com/feed/" blog dev)
-             ("https://arp242.net/feed.xml" blog dev)
-             ("https://begriffs.com/atom.xml" blog dev)
-             ("https://nullprogram.com/feed/" blog dev)
-             ("http://tonsky.me/blog/atom.xml" blog dev)
-             ("https://yogthos.net/feed.xml" blog dev)
-             ("http://insideclojure.org/feed.xml" blog dev)
-             ("https://oremacs.com/" emacs)
-             ("http://emacsredux.com/atom.xml" emacs)
+        ;; blogs:dev
+        ("https://dendibakh.github.io/feed.xml" blog dev)
+        ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
+        ("https://floooh.github.io/feed.xml" blog dev)
+        ("https://www.joelonsoftware.com/feed/" blog dev)
+        ("https://fabiensanglard.net/rss.xml" blog dev)
+        ("https://nickdesaulniers.github.io/atom.xml" blog dev)
+        ("https://geoff.greer.fm/feed.atom" blog dev)
+        ("https://lemire.me/blog/feed/" dev blog)
+        ("https://danluu.com/atom.xml" dev blog)
+        ("https://mortoray.com/feed/" blog dev)
+        ("https://arp242.net/feed.xml" blog dev)
+        ("https://begriffs.com/atom.xml" blog dev)
+        ("https://nullprogram.com/feed/" blog dev)
+        ("http://tonsky.me/blog/atom.xml" blog dev)
+        ("https://yogthos.net/feed.xml" blog dev)
+        ("http://insideclojure.org/feed.xml" blog dev)
+        ("https://oremacs.com/" emacs)
+        ("http://emacsredux.com/atom.xml" emacs)
 
-             ;; blog:philosophy
-             ("https://danwang.co/feed/" blog philosophy)
-             ("https://www.overcomingbias.com/feed" blog philosophy)
-             ("https://slatestarcodex.com/feed/" blog philosophy)
+        ;; blog:philosophy
+        ("https://danwang.co/feed/" blog philosophy)
+        ("https://www.overcomingbias.com/feed" blog philosophy)
+        ("https://slatestarcodex.com/feed/" blog philosophy)
 
+        ;; podcast
+        ("https://pinecast.com/feed/emacscast" audio podcast)
+        ("https://www.npr.org/rss/podcast.php?id=510289" audio podcast economics)
+        ("http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss" audio podcast)
 
-             ;; podcast
-             ("https://pinecast.com/feed/emacscast" audio podcast)
-             ("https://www.npr.org/rss/podcast.php?id=510289" audio podcast economics)
-             ("http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss" audio podcast)
-             ("http://feeds.soundcloud.com/users/soundcloud:users:959992602/sounds.rss" audio podcast)
-
-             ;; youtube
-             ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
-             ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
-             ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
-             ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
-             ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)))
+        ;; youtube
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)))
    #+END_SRC
-
-   #+RESULTS:
-   | https://irreal.org/blog/?feed=rss2                                           | blog    |               |           |
-   | https://www.exocomics.com/feed                                               | comic   |               |           |
-   | https://xkcd.com/atom.xml                                                    | comic   |               |           |
-   | https://dendibakh.github.io/feed.xml                                         | blog    | dev           |           |
-   | https://eli.thegreenplace.net/feeds/all.atom.xml                             | blog    | dev           |           |
-   | https://floooh.github.io/feed.xml                                            | blog    | dev           |           |
-   | https://www.joelonsoftware.com/feed/                                         | blog    | dev           |           |
-   | https://fabiensanglard.net/rss.xml                                           | blog    | dev           |           |
-   | https://nickdesaulniers.github.io/atom.xml                                   | blog    | dev           |           |
-   | https://geoff.greer.fm/feed.atom                                             | blog    | dev           |           |
-   | https://lemire.me/blog/feed/                                                 | dev     | blog          |           |
-   | https://danluu.com/atom.xml                                                  | dev     | blog          |           |
-   | https://mortoray.com/feed/                                                   | blog    | dev           |           |
-   | https://arp242.net/feed.xml                                                  | blog    | dev           |           |
-   | https://begriffs.com/atom.xml                                                | blog    | dev           |           |
-   | https://nullprogram.com/feed/                                                | blog    | dev           |           |
-   | http://tonsky.me/blog/atom.xml                                               | blog    | dev           |           |
-   | https://yogthos.net/feed.xml                                                 | blog    | dev           |           |
-   | http://insideclojure.org/feed.xml                                            | blog    | dev           |           |
-   | https://oremacs.com/                                                         | emacs   |               |           |
-   | http://emacsredux.com/atom.xml                                               | emacs   |               |           |
-   | https://danwang.co/feed/                                                     | blog    | philosophy    |           |
-   | https://www.overcomingbias.com/feed                                          | blog    | philosophy    |           |
-   | https://slatestarcodex.com/feed/                                             | blog    | philosophy    |           |
-   | https://pinecast.com/feed/emacscast                                          | audio   | podcast       |           |
-   | https://www.npr.org/rss/podcast.php?id=510289                                | audio   | podcast       | economics |
-   | http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss      | audio   | podcast       |           |
-   | http://feeds.soundcloud.com/users/soundcloud:users:959992602/sounds.rss      | audio   | podcast       |           |
-   | https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g | youtube | protesilaos   |           |
-   | https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ | youtube | akita         |           |
-   | https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA | youtube | computerphile |           |
-   | https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw | youtube | screenplay    |           |
-   | https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw | youtube | cyanide       |           |
   
 *** Filter
     :properties:
