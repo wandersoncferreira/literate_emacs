@@ -51,8 +51,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][Cleaning]]
   - [[#theme-and-faces][Theme and Faces]]
-    - [[#download-themes][Download themes]]
-    - [[#default-theme][Default theme]]
+    - [[#buffer-based-theming][buffer based theming]]
+    - [[#download-themes][download themes]]
+    - [[#default-theme][default theme]]
   - [[#time][Time]]
   - [[#font][Font]]
   - [[#mode-line][Mode line]]
@@ -200,6 +201,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#telegram][Telegram]]
   - [[#spotify][Spotify]]
   - [[#twitter][Twitter]]
+- [[#weather][Weather]]
 - [[#pomodoro][Pomodoro]]
 - [[#financial][Financial]]
   - [[#ledger-explanation][Ledger explanation]]
@@ -641,6 +643,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
      (use-package restart-emacs
        :ensure t)
    #+END_SRC
+
 * Aesthetics
 
 ** Cleaning
@@ -718,7 +721,16 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
       (setq custom-theme-allow-multiple-selections nil)
     #+END_SRC
 
-*** Download themes
+*** buffer based theming
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package load-theme-buffer-local
+        :ensure nil
+        :about I am using a custom version located at /lisps folder of this setup.
+        :commands (load-theme-buffer-local))
+    #+END_SRC
+
+*** download themes
 **** Organic Green
 
     A light theme with a light-green background.
@@ -737,7 +749,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
          :defer t)
      #+END_SRC
      
-*** Default theme
+*** default theme
 
     Let's activate the default theme, I might change this very often.
     #+BEGIN_SRC emacs-lisp
@@ -4162,6 +4174,33 @@ on-demand and stored in memory.
       7. =j=       : go to next tweet
 
   More on usage [[https://github.com/hayamiz/twittering-mode][here]].
+
+* Weather
+
+  Weather forecast stolen from [[http://pragmaticemacs.com/emacs/weather-in-emacs/][pragmatic emacs]].
+  #+BEGIN_SRC emacs-lisp
+    (use-package wttrin
+      :ensure t
+      :init
+      (setq wttrin-default-cities '("São Paulo"
+                                    "London"))
+      :config
+      (require 'wttrin))
+  #+END_SRC
+
+  By default =wttrin= prompts you to choose the city from your list
+  when it starts. This function starts with the first city on your
+  list. I also have a problem with color-theme because I use a too
+  light one.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun bk/weather ()
+      "Open the weather in your first city in `wttrin-default-cities'."
+      (interactive)
+      (wttrin-query (car wttrin-default-cities))
+      (load-theme-buffer-local 'deeper-blue
+                               (get-buffer "*wttr.in - São Paulo*")))
+  #+END_SRC
 
 * Pomodoro
 
