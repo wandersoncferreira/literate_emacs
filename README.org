@@ -246,6 +246,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#notification-daemon][Notification Daemon]]
   - [[#window-behaviour][Window behaviour]]
   - [[#key-bindings-1][Key Bindings]]
+    - [[#logging-out-with-lxde][Logging out with LXDE]]
   - [[#important-commands][Important commands]]
 - [[#references][References]]
 
@@ -732,6 +733,16 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
       (setq custom-theme-allow-multiple-selections nil)
     #+END_SRC
 
+    Set the custom theme path
+    #+BEGIN_SRC emacs-lisp
+      (setq custom-theme-directory (concat user-emacs-directory "themes"))
+
+      (dolist
+          (path (directory-files custom-theme-directory t "\\w+"))
+        (when (file-directory-p path)
+          (add-to-list 'custom-theme-load-path path)))
+    #+END_SRC
+
 *** buffer based theming
 
     #+BEGIN_SRC emacs-lisp
@@ -745,11 +756,10 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 **** Organic Green
 
     A light theme with a light-green background.
-    #+BEGIN_SRC emacs-lisp
-      (use-package organic-green-theme
-        :ensure t
-        :defer t)
-    #+END_SRC
+
+    I enjoyed so much this theme, that I started contributing to the
+    source code. Right now, I am modernizing the structure and color
+    pallets to be more organized and comprehensive.
 
 **** Jazz
 
@@ -765,8 +775,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     Let's activate the default theme, I might change this very often.
     #+BEGIN_SRC emacs-lisp
       (add-hook 'after-init-hook
-                (lambda () (interactive)
-                  (setq organic-green-boldless t)
+                (lambda ()
+                  (interactive)
                   (load-theme 'organic-green t)))
     #+END_SRC
 
@@ -885,13 +895,28 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   to kill. Doing that will place the last kill to the clipboard, thus
   overriding the thing you copied earlier. We can have a kill ring
   solution:
+
   #+BEGIN_SRC emacs-lisp
     (setq save-interprogram-paste-before-kill t)
   #+END_SRC
 
+  This enables file backups to N versions of saves, as opposed to only
+  backing up the very first save. I don't re-launch emacs that often
+  so this is necessary to get useful backups.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+          vc-make-backup-files t
+          version-control t
+          kept-old-versions 0
+          kept-new-versions 10
+          delete-old-versions t
+          backup-by-copying t)
+  #+END_SRC
+
   #+begin_src emacs-lisp
+
     (setq tab-always-indent 'complete)
-    (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
     (setq custom-safe-themes t)
 
     (defalias 'cquit 'cider-quit)
@@ -899,8 +924,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
     ;; built in htop
     (setq proced-auto-update-flag t
-  	proced-auto-update-interval 1
-  	proced-descend t)
+          proced-auto-update-interval 1
+          proced-descend t)
   #+end_src
 
   #+BEGIN_SRC emacs-lisp
@@ -952,6 +977,16 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     ;; real emacs knights don't use shift to mark things
     (setq shift-select-mode nil)
   #+end_src
+
+  set warning of opening large files to 100MB
+  #+BEGIN_SRC emacs-lisp
+  (setq-default large-file-warning-threshold 100000000)
+  #+END_SRC
+
+  do not add double space after periods [[http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/][Real sentence in Emacs : emacs]]
+  #+BEGIN_SRC emacs-lisp
+  (setq-default sentence-end-double-space nil)
+  #+END_SRC
 
 ** Clean stale buffers
 
@@ -1417,12 +1452,43 @@ Adding urban dictionary to webjump.
    #+end_src
 
 *** expand region
-   #+begin_src emacs-lisp
-     (use-package expand-region
-       :homepage https://github.com/magnars/expand-region.el
-       :about Extension to increase selected region by semantic units
-       :ensure t)
-   #+end_src
+
+    Expand or reduce region selection semantically. Supports all
+    languages that I work with inside Emacs.
+    
+    #+begin_src emacs-lisp
+      (use-package expand-region
+        :homepage https://github.com/magnars/expand-region.el
+        :about Extension to increase selected region by semantic units
+        :ensure t
+        :requires hydra
+        :bind (("C-=" . er/expand-region)
+               ("C-c =" . bk/expand-region/body))
+        :config
+  
+        (defhydra bk/expand-region (:color pink :hint nil)
+          "
+       ^Expand/Discard^                ^Mark^
+      ─^──────────────^────────────────^────^─────────────────
+       _e_ or _+_: expand region         _(_:      inside pairs
+       _r_ or _-_: reduce region         _)_:      around pairs
+       _g_:      exit hydrant          _q_ or _'_: inside quotes
+       _G_:      discard region, exit  _Q_ or _\"_: around quotes
+       ^ ^    ^ ^                        _p_:      paragraph"
+          ("e" er/expand-region)
+          ("+" er/expand-region)
+          ("r" er/contract-region)
+          ("-" er/contract-region)
+          ("p" er/mark-paragraph)
+          ("(" er/mark-inside-pairs)
+          (")" er/mark-outside-pairs)
+          ("q" er/mark-inside-quotes)
+          ("'" er/mark-inside-quotes)
+          ("Q" er/mark-outside-quotes)
+          ("\"" er/mark-outside-quotes)
+          ("g" ignore :exit t)
+          ("G" #'(lambda () (interactive) (deactivate-mark)) :exit t)))
+    #+end_src
 
 *** jump to char
 
@@ -1514,8 +1580,39 @@ Adding urban dictionary to webjump.
        :bind
        (("C->" . mc/mark-next-like-this)
         ("C-<" . mc/mark-previous-like-this)
-        ("C-S-<mouse-1>" . mc/add-cursor-on-click)
-        ("C-c m c" . mc/edit-lines)))
+        ("S-<mouse-1>" . mc/add-cursor-on-click)
+        ("C-c m" . bk/hydra-multiple-cursors/body))
+       :requires hydra
+       :config
+
+       (defhydra bk/hydra-multiple-cursors (:hint nil :color pink)
+         "
+      ^Select^                 ^Discard^                     ^Edit^               ^Navigate^
+     ─^──────^─────────────────^───────^─────────────────────^────^───────────────^────────^─────────
+      _M-s_: split lines       _M-SPC_:  discard current      _&_: align           _(_: cycle backward
+      _s_:   select regexp     _b_:      discard blank lines  _#_: insert numbers  _)_: cycle forward
+      _n_:   select next       _d_:      remove duplicated    ^ ^                  ^ ^
+      _p_:   select previous   _q_ or _g_: exit hydrant       ^ ^                  ^ ^
+      _C_:   select next line  _G_:      exit mc mode"
+         ("M-s" mc/edit-ends-of-lines)
+         ("s" mc/mark-all-in-region-regexp)
+         ("n" mc/mark-next-like-this-word)
+         ("p" mc/mark-previous-like-this-word)
+         ("&" mc/vertical-align-with-space)
+         ("(" mc/cycle-backward)
+         (")" mc/cycle-forward)
+         ("M-SPC" mc/remove-current-cursor)
+         ("b" mc/remove-cursors-on-blank-lines)
+         ("d" mc/remove-duplicated-cursors)
+         ("C" mc/mark-next-lines)
+         ("#" mc/insert-numbers)
+         ("q" mc/remove-duplicated-cursors :exit t)
+         ("g" mc/remove-duplicated-cursors :exit t)
+         ("G" mc/keyboard-quit :exit t)))
+
+     (use-package mc-extras
+       :ensure t
+       :after multiple-cursors)
    #+end_src
 
    To use =mc/edit-lines= you need to highlight the lines on which you
@@ -3119,6 +3216,15 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 
 * Additional Major Modes
 
+  I started to craft a emacs theme, and to do that I had to enable
+  =rainbow-mode= to help me identifying RGB colors. Very useful in
+  this circumstances.
+  #+BEGIN_SRC emacs-lisp
+    (use-package rainbow-mode
+      :ensure t
+      :commands (rainbow-mode))
+  #+END_SRC
+
 ** Rest client
 
  #+begin_src emacs-lisp
@@ -3567,18 +3673,20 @@ on-demand and stored in memory.
 
 * Projects
 
-#+begin_src emacs-lisp 
-  (use-package projectile
-    :ensure t
-    :delight '(:eval (concat " " (projectile-project-name)))
-    :init
-    (setq projectile-completion-system 'ido)
-    :config
-    (projectile-mode t)
-    :bind-keymap
-    ("C-c p" . projectile-command-map))
 
-#+end_src
+
+  #+begin_src emacs-lisp 
+    (use-package projectile
+      :ensure t
+      :delight '(:eval (concat " " (projectile-project-name)))
+      :init
+      (setq projectile-completion-system 'ido)
+      :config
+      (projectile-mode t)
+      :bind-keymap
+      ("C-c p" . projectile-command-map))
+
+  #+end_src
 
 * Spelling
 
@@ -3886,6 +3994,26 @@ on-demand and stored in memory.
    #+begin_src emacs-lisp :tangle no
      (setq-default elfeed-search-filter "@3-week-ago +unread")
    #+end_src
+   
+   Using the =minions= mode I am able to correctly see which modes are
+   enabled at a specific buffer. I found several global modes enabled
+   at =elfeed-search= which might be consuming resources.
+
+   #+name: elfeed-mode-disabled
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/elfeed-disable-mode-setup ()
+       (interactive)
+       (abbrev-mode -1)
+       (company-mode -1)
+       (smart-shift-mode -1)
+       (yas-minor-mode -1)
+       (dired-async-mode -1)
+       (diff-hl-flydiff-mode -1)
+       (global-auto-revert-mode -1))
+
+     (add-hook 'elfeed-show-mode-hook #'bk/elfeed-disable-mode-setup)
+     (add-hook 'elfeed-search-update-hook #'bk/elfeed-disable-mode-setup)
+   #+END_SRC
 
 *** Load config
 
@@ -3898,6 +4026,7 @@ on-demand and stored in memory.
      (require 'elfeed-db)
 
      <<elfeed-basic-config>>
+     <<elfeed-mode-disabled>>
      <<elfeed-newsletters>>
      <<elfeed-scoring>>
      <<elfeed-filters>>
@@ -4798,14 +4927,14 @@ on-demand and stored in memory.
 
    #+begin_src emacs-lisp
      (global-set-key "\C-x3" (lambda ()
-   			    (interactive)
-   			    (split-window-horizontally)
-   			    (other-window 1)))
+                (interactive)
+                (split-window-horizontally)
+                (other-window 1)))
 
      (global-set-key "\C-x2" (lambda ()
-   			    (interactive)
-   			    (split-window-vertically)
-   			    (other-window 1)))
+                (interactive)
+                (split-window-vertically)
+                (other-window 1)))
 
      (global-set-key (kbd "C-x C-m") 'smex)
      (global-set-key (kbd "M-x") 'smex)
@@ -4816,13 +4945,12 @@ on-demand and stored in memory.
      (global-set-key (kbd "C-x C-b") 'ibuffer)
      (global-set-key (kbd "C-c t") 'org-capture)
      (global-set-key (kbd "C-c a") 'org-agenda)
-     (global-set-key (kbd "C-=") 'er/expand-region)
      (global-set-key (kbd "C-x p") 'pop-to-mark-command)
 
      ;; by default C-x k prompts to select which buffer should be selected.
      (global-set-key (kbd "C-x k") (lambda ()
-   				  (interactive)
-   				  (kill-buffer (current-buffer))))
+                  (interactive)
+                  (kill-buffer (current-buffer))))
    #+end_src
 
 
@@ -5255,6 +5383,15 @@ on-demand and stored in memory.
        (add-hook 'exwm-init-hook 'exwm-bk/key-rate)
        (add-hook 'exwm-init-hook 'exwm-bk/nocaps))
    #+END_SRC
+
+*** Logging out with LXDE
+    #+BEGIN_SRC emacs-lisp
+      (defun exwm-logout ()
+        (interactive)
+        (recentf-save-list)
+        (save-some-buffers)
+        (start-process-shell-command "logout" nil "lxsession-logout"))
+    #+END_SRC
 
 ** Important commands
 
