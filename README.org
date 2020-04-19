@@ -145,13 +145,23 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#shell][Shell]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][Whitespaces]]
-  - [[#clojure][Clojure]]
-  - [[#python][Python]]
-  - [[#sql][SQL]]
-  - [[#latex][Latex]]
+  - [[#parenthesis][Parenthesis]]
+  - [[#folding][Folding]]
+    - [[#folding-based-on-indentation-and-syntax][folding based on indentation and syntax]]
+    - [[#fold-regions-based-on-selection][fold regions based on selection]]
+  - [[#go-to-definition][Go to definition]]
+    - [[#dumb-jump][dumb jump]]
+  - [[#documentation][Documentation]]
+  - [[#programming-languages][Programming Languages]]
+    - [[#clojure][Clojure]]
+    - [[#python][Python]]
+    - [[#sql][SQL]]
+    - [[#latex][Latex]]
   - [[#linters][Linters]]
   - [[#unified-modeling-language][Unified Modeling Language]]
-  - [[#parenthesis][Parenthesis]]
+  - [[#how-do-i-do-it][How do I do it?]]
+  - [[#custom-functions-1][Custom Functions]]
+    - [[#align-blocks][align blocks]]
 - [[#additional-major-modes][Additional Major Modes]]
   - [[#rest-client][Rest client]]
     - [[#create-a-tmp-restclient-buffer][create a tmp restclient buffer]]
@@ -186,6 +196,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#synonyms][Synonyms]]
   - [[#translate][Translate]]
   - [[#typing][Typing]]
+  - [[#custom-functions-2][Custom functions]]
 - [[#snippets][Snippets]]
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
@@ -209,7 +220,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#advice][Advice]]
   - [[#pop-to-mark][Pop to mark]]
   - [[#yank-indent][Yank indent]]
-- [[#custom-functions-1][Custom Functions]]
+- [[#custom-functions-3][Custom Functions]]
   - [[#eshell][Eshell]]
     - [[#kubernetes][kubernetes]]
   - [[#http-based][HTTP-based]]
@@ -2463,16 +2474,24 @@ the *winner-boring-buffers*.
 
 * General Programming 
 
-Sometimes I place some TODO and FIXME words in the middle of my code
-so I can come back to it latter and work on the subjects. The
-following snippet will highlight these words to help me identify them.
+  Sometimes I place some TODO and FIXME words in the middle of my code
+  so I can come back to it latter and work on the subjects. The
+  following snippet will highlight these words to help me identify
+  them.
 
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'prog-mode-hook (defun bk--add-watchwords ()
-			      (font-lock-add-keywords
-			       nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
-				      1 font-lock-warning-face t)))))
-#+END_SRC
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'prog-mode-hook (defun bk--add-watchwords ()
+                                (font-lock-add-keywords
+                                 nil `(("\\<\\(FIX\\(ME\\))?\\|TODO\\)"
+                                        1 font-lock-warning-face t)))))
+  #+END_SRC
+
+  There is a package to help cycle quotes when in strings.
+  #+BEGIN_SRC emacs-lisp
+    (use-package cycle-quotes
+      :ensure t
+      :commands (cycle-quotes))
+  #+END_SRC
 
 ** Whitespaces
 
@@ -2495,298 +2514,441 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     :config
     (add-hook 'prog-mode-hook #'ws-butler-mode))
 #+END_SRC
-** Clojure
 
- Unfortunately, Emacs does not have a builtin major mode for Clojure,
- however we have a great community that support any programming
- language available in the world as a major mode of emacs rsrs.
-
- The intent of a major mode is basically provide font-lock,
- indentation, navigation and refactoring for the target programming
- language.
-
- At the =clojure-mode= website recommends us to use the MELBA Stable
- bundle because the MELPA version is following a development branch of
- the library. As this mode is very important for me right now, I would
- like to stick to the more stable branch.
+** Parenthesis
 
  #+begin_src emacs-lisp
-   (use-package clojure-mode
+   (use-package smartparens
      :ensure t
-     :delight (clojure-mode "λ")
+     :delight smartparens-strict-mode
      :init
-     (setq clojure-align-forms-automatically t)
+     (setq sp-highlight-pair-overlay nil)
      :config
-     (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
-     (add-hook 'clojure-mode-hook 'eldoc-mode)
-     (add-hook 'clojure-mode-hook 'subword-mode))
+     (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+     (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+
+     (with-eval-after-load "smartparens"
+       ;; remove some pairs
+       (sp-pair "'" nil :actions :rem)
+       (sp-pair "`" nil :actions :rem)
+
+       ;; include new wrap of pairs
+       (sp-pair "(" ")" :wrap "M-(")
+       (sp-pair "[" "]" :wrap "M-[")
+
+       (sp-use-smartparens-bindings)		;enable default smartparens bindings
+
+       (sp-local-tag 'markdown-mode "c" "```clojure" "```")
+       (sp-local-tag 'markdown-mode "e" "```elisp" "```")
+       (sp-local-tag 'markdown-mode "b" "```bash" "```")
+       (sp-local-tag 'markdown-mode "p" "```python" "```")
+
+       (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
  #+end_src
+** Folding
 
- The previous setting =clojure-align-forms-automatically= makes the
- following example a default behavior and you don't need to manually
- align the values. **NOTE**: this is an experiment, 90% of the time
- this happened to me, that was the default behavior I wanted. Let's see
- how much the other 10% will annoy me now.
+*** folding based on indentation and syntax
 
- #+BEGIN_SRC clojure
-   (def my-map
-     {:a-key 1
-      :other-key 2})
+    [[https://github.com/gregsexton/origami.el][Origami]] is a text folding minor mode for Emacs.
+    #+BEGIN_SRC emacs-lisp
+      (use-package origami
+        :ensure t
+        :commands (origami-toggle-node))
+    #+END_SRC
 
-   ;; after C-c SPC
-   (def my-map
-     {:a-key     1
-      :other-key 2})
- #+END_SRC
+    There is a vast set of commands to enable the manipulation of
+    folds.
 
+    #+caption: what can it do?
+    | function                        | desctiption                             |
+    |---------------------------------+-----------------------------------------|
+    | origami-toggle-node             | toggle open or closed a fold node       |
+    | origami-show-only-node          | close everything but the folds at point |
+    | origami-recursively-toggle-node | acts like org-mode header collapsing    |
+    | origami-undo                    | undo the last undone folding operation  |
+    | origami-redo                    | redo the last undone folding operation  |
 
- There are several incredible examples of refactoring in the
- [[https://github.com/clojure-emacs/clojure-mode][clojure-mode]] website.
+    Let's build a hydra for it too.
+    #+BEGIN_SRC emacs-lisp
+      (defhydra bk/hydra-origami (:color red)
+        "
+        _o_pen node    _n_ext fold       toggle _f_orward
+        _c_lose node   _p_revious fold   toggle _a_ll
+        "
+        ("o" origami-open-node)
+        ("c" origami-close-node)
+        ("n" origami-next-fold)
+        ("p" origami-previous-fold)
+        ("f" origami-forward-toggle-node)
+        ("a" origami-toggle-all-nodes)
+        ("t" origami-toggle-node))
 
-    1. TODO: Study refactoring support in clojure-mode.
+      (global-set-key (kbd "C-x @") 'bk/hydra-origami/body)
+    #+END_SRC
 
+*** fold regions based on selection
 
- Provides additional refactoring support, but as we see from the
- =clojure-mode= github page, all these extra functionalities are
- migrating to the clojure mode package.
+    Syntax based folding is great and all but sometimes I need to fold
+    some random piece of text and [[https://github.com/mrkkrp/vimish-fold][Vimish]] fold is great for that.
 
- #+begin_src emacs-lisp
-   (use-package clj-refactor
-     :ensure t
-     :delight clj-refactor-mode
-     :after (clojure-mode)
-     :init
-     (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
-					   ("set" . "clojure.set")
-					   ("walk" . "clojure.walk")
-					   ("zip" . "clojure.zip")
-					   ("time" . "clj-time.core")
-					   ("log" . "clojure.tools.logging")
-					   ("json" . "cheshire.core")
-					   ("client" . "org.httpkit.client")
-					   ("http" . "clj-http.core")
-					   ("a" . "clojure.core.async")
-					   ("jdbc" . "next.jdbc")
-					   ("s" . "clojure.spec.alpha")
-					   ("gen" . "clojure.spec.gen.alpha")))
-     :config
-     (add-hook 'clojure-mode-hook (lambda ()
-				    (clj-refactor-mode t)
-				    (cljr-add-keybindings-with-prefix "C-c C-m"))))
- #+end_src
+    #+BEGIN_SRC emacs-lisp
+      (use-package vimish-fold
+        :ensure t
+        :commands (vimish-fold-toggle
+                   vimish-fold))
+    #+END_SRC
 
+    Let's make a hydra for vimish fold.
+    #+BEGIN_SRC emacs-lisp
+      (defhydra bk/hydra-vimish-fold (:color red :hint nil)
+        "
+       _f_: fold  _u_: unfold  _r_: refold  _t_: toggle  _d_: delete    _n_: next      _q_: quit
+                _U_: Unfold  _R_: Refold  _T_: Toggle  _D_: Delete    _p_: previous
+        "
+        ("f" vimish-fold)
+        ("u" vimish-fold-unfold)
+        ("r" vimish-fold-refold)
+        ("t" vimish-fold-toggle)
+        ("d" vimish-fold-delete)
+        ("U" vimish-fold-unfold-all)
+        ("R" vimish-fold-refold-all)
+        ("T" vimish-fold-toggle-all)
+        ("D" vimish-fold-delete-all)
+        ("n" vimish-fold-next-fold)
+        ("p" vimish-fold-previous-fold)
+        ("q" nil :color blue))
+    #+END_SRC
 
- We also improved the font-locking for built-in methods and macros of
- clojure.
+    Bind the hydra to a key.
+    #+BEGIN_SRC emacs-lisp
+      (global-set-key (kbd "C-c @") 'bk/hydra-vimish-fold/body)
+    #+END_SRC
+** Go to definition
 
- #+begin_src emacs-lisp
-   (use-package clojure-mode-extra-font-locking
-     :ensure t
-     :after (clojure-mode))
- #+end_src
+   
+*** dumb jump
 
- Now comes the real deal for Clojure development, CIDER extends Emacs
- with support for interactive programming in Clojure. It basically
- connects the buffer to a nREPL and communicate back-and-forth to
- provide functionalities such as code completion, documentation,
- navigation, debugging, running tests, and many more.
+    [[https://github.com/jacktasia/dumb-jump][Dump jump]] is a simple package that uses the =grep= or =ag= to jump
+    to the source of the symbol at point. This is the fallback when
+    language specific navigation is not possible.
 
-    1. TODO:  Study cider mode
+    #+BEGIN_SRC emacs-lisp
+      (use-package dumb-jump
+        :ensure t
+        :bind (("C-c ." . dumb-jump-go))
+        :config
+        (dumb-jump-mode 1))
+    #+END_SRC
+** Documentation
 
+   [[https://zealdocs.org/][Zeal]] is a nice little app that stores documents offline for
+   reference inspired by Dash which only works on Mac. Let's bring
+   that to Emacs.
 
- #+begin_src emacs-lisp
-   (use-package cider
-     :ensure t
-     :after (clojure-mode)
-     :config
-     (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
-     (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-     (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
- #+end_src
-
- When cider is not connected, I usually use some commands that makes no
- sense in =clojure-mode= and receive a non-sense error message that I
- never understand what is happening or even worse it just hands without
- no feedback.
-
- I will borrow the idea from Alex Baranosky and create a dummy function
- to provide some useful feedback message to my future self.
-
- #+begin_src emacs-lisp
-   (defun bk/nrepl-warn-when-not-connected ()
-     (interactive)
-     (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
- #+end_src
-
- And bind this to the most common keys that requires cider activated.
-
- #+begin_src emacs-lisp
-   (define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
-   (define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
-   (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
- #+end_src
-
-
- Often I need to fire a repl and investigate some properties better, I
- have a =temp= project setup in my machine a simple =lein new temp=
- where I have some libraries already in the =project.clj= dependency
- available. The following function helps me get there quickly and
- require some frequent namespaces.
-
- #+begin_src emacs-lisp
-   (defun bk/repl ()
-     "Start an interactive repl in a temp project"
-     (interactive)
-     (cider-jack-in '(:project-dir "/home/wand/temp"))
-     (add-hook 'cider-connected-hook
-	       (lambda ()
-		 (cider-repl-set-ns "user")
-		 (cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
-		 (cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
-		 (cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
-		 (cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
-		 (cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
- #+end_src
-
-   Let's make a nice usage of =babashka= scripting for clojure and
-   print a random doc-string message in the initial of my Emacs
-   session.
-   #+begin_src emacs-lisp
-     (let ((clj-docstring (shell-command-to-string "docstring.clj")))
-       (when clj-docstring
-	 (setq initial-scratch-message clj-docstring)))
-   #+end_src
-
-   The =docstring.clj= content is pretty small and it required [[https://github.com/borkdude/babashka][babashka]]
-   to be installed, the content:
-
-   #+BEGIN_SRC clojure
-     #!/usr/bin/env bb
-
-     (require '[clojure.repl])
-
-     (defmacro random-doc []
-       (let [sym (-> (ns-publics 'clojure.core) keys rand-nth)]
-	 (if (:doc (meta (resolve sym)))
-	   `(clojure.repl/doc ~sym)
-	   `(random-doc))))
-
-     (random-doc)
-   #+END_SRC
-
-   I added the new file to my PATH variable. That's all.
-
-   #+begin_src emacs-lisp
-     (defun bk/clj-random-docstring ()
-       "Random doc-string into new buffer."
-       (interactive)
-       (let ((docstring (shell-command-to-string "docstring.clj"))
-	     (buffer-name "*Clojure Random Docs*"))
-	 (when (get-buffer buffer-name)
-	   (kill-buffer buffer-name))
-	 (get-buffer-create buffer-name)
-	 (with-current-buffer buffer-name (insert docstring))
-	 (switch-to-buffer-other-window buffer-name)
-	 (special-mode)))
-   #+end_src
-
-
- Clojure rocks!
-** Python
-
+   You need to install Zeal in your machine, =yaourt -S zeal=.
+   
    #+BEGIN_SRC emacs-lisp
-     (defun bk/elpy-setup ()
-       (pyvenv-activate "~/miniconda3")
-       (delete `elpy-module-django elpy-modules)
-       (delete `elpy-module-highlight-indentation elpy-modules))
 
-     (use-package elpy
+     (use-package zeal-at-point
        :ensure t
+       :bind (("C-c I" . zeal-at-point))
        :config
-       (add-hook 'python-mode-hook #'elpy-enable)
-       (add-hook 'python-mode-hook #'bk/elpy-setup))
-
-     (use-package py-autopep8
-       :ensure t
-       :after elpy
-       :init
-       (setq py-autopep8-options '("--max-line-length=250"))
-       :config
-       (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+       (add-hook 'clojure-mode-hook
+                 (lambda ()
+                   (setq zeal-at-point-docset "clojure"))))
    #+END_SRC
-** SQL
+** Programming Languages
+*** Clojure
 
- #+begin_src emacs-lisp
-   (use-package sqlup-mode
-     :ensure t
-     :config
-     (add-hook 'sql-mode-hook 'sqlup-mode)
-     (add-hook 'sql-interactive-hook 'sqlup-mode)
-     (add-to-list 'sqlup-blacklist "name"))
- #+end_src
+  Unfortunately, Emacs does not have a builtin major mode for Clojure,
+  however we have a great community that support any programming
+  language available in the world as a major mode of emacs rsrs.
 
- This Emacs library provides commands and a minor mode for easily
- reformating SQL using external programs such as pgformatter which can
- be installed in Arch Linux using =yaourt -S pgformatter-git=
+  The intent of a major mode is basically provide font-lock,
+  indentation, navigation and refactoring for the target programming
+  language.
 
- #+begin_src emacs-lisp
-   (use-package sqlformat
-     :ensure t
-     :init
-     (setq sqlformat-command 'pgformatter)
-     :config
-     (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
- #+end_src
+  At the =clojure-mode= website recommends us to use the MELBA Stable
+  bundle because the MELPA version is following a development branch of
+  the library. As this mode is very important for me right now, I would
+  like to stick to the more stable branch.
 
- Indentation is also important
+  #+begin_src emacs-lisp
+    (use-package clojure-mode
+      :ensure t
+      :delight (clojure-mode "λ")
+      :init
+      (setq clojure-align-forms-automatically t)
+      :config
+      (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+      (add-hook 'clojure-mode-hook 'eldoc-mode)
+      (add-hook 'clojure-mode-hook 'subword-mode))
+  #+end_src
 
- #+begin_src emacs-lisp
-   (use-package sql-indent
-     :ensure t
-     :delight sql-mode "Σ "
-     :after (:any sql sql-interactive-mode)
-     :config
-     (add-hook 'sql-mode-hook 'sqlind-minor-mode))
- #+end_src
+  The previous setting =clojure-align-forms-automatically= makes the
+  following example a default behavior and you don't need to manually
+  align the values. **NOTE**: this is an experiment, 90% of the time
+  this happened to me, that was the default behavior I wanted. Let's see
+  how much the other 10% will annoy me now.
 
-** Latex
+  #+BEGIN_SRC clojure
+    (def my-map
+      {:a-key 1
+       :other-key 2})
 
- #+BEGIN_SRC emacs-lisp
-   (use-package tex
-     :defer t
-     :ensure auctex
-     :config
-     (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-           TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-           TeX-source-correlate-start-server t)
+    ;; after C-c SPC
+    (def my-map
+      {:a-key     1
+       :other-key 2})
+  #+END_SRC
 
-     (add-hook 'TeX-after-compilation-finished-functions
-               #'TeX-revert-document-buffer))
- #+END_SRC
 
- #+BEGIN_SRC emacs-lisp
-   (use-package reftex
-     :ensure t
-     :config
-     (setq reftex-cite-prompt-optional-args t))
+  There are several incredible examples of refactoring in the
+  [[https://github.com/clojure-emacs/clojure-mode][clojure-mode]] website.
 
-   (setq TeX-auto-save t
-         TeX-parse-self t
-         TeX-save-query nil
-         TeX-PDF-mode t)
- #+END_SRC
+     1. TODO: Study refactoring support in clojure-mode.
 
- #+BEGIN_SRC emacs-lisp
-   (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-   (add-hook 'LaTeX-mode-hook 'Latex-math-mode)
-   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
-   (with-eval-after-load 'tex
-     (add-to-list 'safe-local-variable-values
-                  '(TeX-command-extra-options . "-shell-escape")))
- #+END_SRC
+  Provides additional refactoring support, but as we see from the
+  =clojure-mode= github page, all these extra functionalities are
+  migrating to the clojure mode package.
 
+  #+begin_src emacs-lisp
+    (use-package clj-refactor
+      :ensure t
+      :delight clj-refactor-mode
+      :after (clojure-mode)
+      :init
+      (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
+					    ("set" . "clojure.set")
+					    ("walk" . "clojure.walk")
+					    ("zip" . "clojure.zip")
+					    ("time" . "clj-time.core")
+					    ("log" . "clojure.tools.logging")
+					    ("json" . "cheshire.core")
+					    ("client" . "org.httpkit.client")
+					    ("http" . "clj-http.core")
+					    ("a" . "clojure.core.async")
+					    ("jdbc" . "next.jdbc")
+					    ("s" . "clojure.spec.alpha")
+					    ("gen" . "clojure.spec.gen.alpha")))
+      :config
+      (add-hook 'clojure-mode-hook (lambda ()
+				     (clj-refactor-mode t)
+				     (cljr-add-keybindings-with-prefix "C-c C-m"))))
+  #+end_src
+
+
+  We also improved the font-locking for built-in methods and macros of
+  clojure.
+
+  #+begin_src emacs-lisp
+    (use-package clojure-mode-extra-font-locking
+      :ensure t
+      :after (clojure-mode))
+  #+end_src
+
+  Now comes the real deal for Clojure development, CIDER extends Emacs
+  with support for interactive programming in Clojure. It basically
+  connects the buffer to a nREPL and communicate back-and-forth to
+  provide functionalities such as code completion, documentation,
+  navigation, debugging, running tests, and many more.
+
+     1. TODO:  Study cider mode
+
+
+  #+begin_src emacs-lisp
+    (use-package cider
+      :ensure t
+      :after (clojure-mode)
+      :config
+      (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+      (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
+      (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
+  #+end_src
+
+  When cider is not connected, I usually use some commands that makes no
+  sense in =clojure-mode= and receive a non-sense error message that I
+  never understand what is happening or even worse it just hands without
+  no feedback.
+
+  I will borrow the idea from Alex Baranosky and create a dummy function
+  to provide some useful feedback message to my future self.
+
+  #+begin_src emacs-lisp
+    (defun bk/nrepl-warn-when-not-connected ()
+      (interactive)
+      (message "Oops! You're not connected to an nREPL server. Please run M-x cider or M-x cider-jack-in to connect"))
+  #+end_src
+
+  And bind this to the most common keys that requires cider activated.
+
+  #+begin_src emacs-lisp
+    (define-key clojure-mode-map (kbd "C-x C-e") 'bk/nrepl-warn-when-not-connected)
+    (define-key clojure-mode-map (kbd "C-c C-k") 'bk/nrepl-warn-when-not-connected)
+    (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
+  #+end_src
+
+
+  Often I need to fire a repl and investigate some properties better, I
+  have a =temp= project setup in my machine a simple =lein new temp=
+  where I have some libraries already in the =project.clj= dependency
+  available. The following function helps me get there quickly and
+  require some frequent namespaces.
+
+  #+begin_src emacs-lisp
+    (defun bk/repl ()
+      "Start an interactive repl in a temp project"
+      (interactive)
+      (cider-jack-in '(:project-dir "/home/wand/temp"))
+      (add-hook 'cider-connected-hook
+	        (lambda ()
+		  (cider-repl-set-ns "user")
+		  (cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
+		  (cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
+		  (cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
+		  (cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
+		  (cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
+  #+end_src
+
+    Let's make a nice usage of =babashka= scripting for clojure and
+    print a random doc-string message in the initial of my Emacs
+    session.
+    #+begin_src emacs-lisp
+      (let ((clj-docstring (shell-command-to-string "docstring.clj")))
+        (when clj-docstring
+          (setq initial-scratch-message clj-docstring)))
+    #+end_src
+
+    The =docstring.clj= content is pretty small and it required [[https://github.com/borkdude/babashka][babashka]]
+    to be installed, the content:
+
+    #+BEGIN_SRC clojure
+      #!/usr/bin/env bb
+
+      (require '[clojure.repl])
+
+      (defmacro random-doc []
+        (let [sym (-> (ns-publics 'clojure.core) keys rand-nth)]
+          (if (:doc (meta (resolve sym)))
+            `(clojure.repl/doc ~sym)
+            `(random-doc))))
+
+      (random-doc)
+    #+END_SRC
+
+    I added the new file to my PATH variable. That's all.
+
+    #+begin_src emacs-lisp
+      (defun bk/clj-random-docstring ()
+        "Random doc-string into new buffer."
+        (interactive)
+        (let ((docstring (shell-command-to-string "docstring.clj"))
+              (buffer-name "*Clojure Random Docs*"))
+          (when (get-buffer buffer-name)
+            (kill-buffer buffer-name))
+          (get-buffer-create buffer-name)
+          (with-current-buffer buffer-name (insert docstring))
+          (switch-to-buffer-other-window buffer-name)
+          (special-mode)))
+    #+end_src
+
+
+  Clojure rocks!
+*** Python
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/elpy-setup ()
+        (pyvenv-activate "~/miniconda3")
+        (delete `elpy-module-django elpy-modules)
+        (delete `elpy-module-highlight-indentation elpy-modules))
+
+      (use-package elpy
+        :ensure t
+        :config
+        (add-hook 'python-mode-hook #'elpy-enable)
+        (add-hook 'python-mode-hook #'bk/elpy-setup))
+
+      (use-package py-autopep8
+        :ensure t
+        :after elpy
+        :init
+        (setq py-autopep8-options '("--max-line-length=250"))
+        :config
+        (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
+    #+END_SRC
+*** SQL
+
+  #+begin_src emacs-lisp
+    (use-package sqlup-mode
+      :ensure t
+      :config
+      (add-hook 'sql-mode-hook 'sqlup-mode)
+      (add-hook 'sql-interactive-hook 'sqlup-mode)
+      (add-to-list 'sqlup-blacklist "name"))
+  #+end_src
+
+  This Emacs library provides commands and a minor mode for easily
+  reformating SQL using external programs such as pgformatter which can
+  be installed in Arch Linux using =yaourt -S pgformatter-git=
+
+  #+begin_src emacs-lisp
+    (use-package sqlformat
+      :ensure t
+      :init
+      (setq sqlformat-command 'pgformatter)
+      :config
+      (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+  #+end_src
+
+  Indentation is also important
+
+  #+begin_src emacs-lisp
+    (use-package sql-indent
+      :ensure t
+      :delight sql-mode "Σ "
+      :after (:any sql sql-interactive-mode)
+      :config
+      (add-hook 'sql-mode-hook 'sqlind-minor-mode))
+  #+end_src
+
+*** Latex
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package tex
+      :defer t
+      :ensure auctex
+      :config
+      (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+            TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+            TeX-source-correlate-start-server t)
+
+      (add-hook 'TeX-after-compilation-finished-functions
+                #'TeX-revert-document-buffer))
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package reftex
+      :ensure t
+      :config
+      (setq reftex-cite-prompt-optional-args t))
+
+    (setq TeX-auto-save t
+          TeX-parse-self t
+          TeX-save-query nil
+          TeX-PDF-mode t)
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+    (add-hook 'LaTeX-mode-hook 'Latex-math-mode)
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+    (with-eval-after-load 'tex
+      (add-to-list 'safe-local-variable-values
+                   '(TeX-command-extra-options . "-shell-escape")))
+  #+END_SRC
 ** Linters
 
    =Flycheck= is a modern on-the-fly syntax checking extension for GNU
@@ -2876,36 +3038,84 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        (require 'ob-plantuml))
    #+end_src
 
-** Parenthesis
+** How do I do it?
 
- #+begin_src emacs-lisp
-   (use-package smartparens
-     :ensure t
-     :delight smartparens-strict-mode
-     :init
-     (setq sp-highlight-pair-overlay nil)
-     :config
-     (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
-     (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+   Do you find yourself constantly Googling for how to do basic
+   programming tasks? Suppose you want to know how to format a date in
+   bash. Why open your browser and read through blogs when you can
+   just =M-x howdoi RET format date bash RET=.
 
-     (with-eval-after-load "smartparens"
-       ;; remove some pairs
-       (sp-pair "'" nil :actions :rem)
-       (sp-pair "`" nil :actions :rem)
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/howdoi ()
+       "Call `howdoi' and ask for help"
+       (interactive)
+       (let* ((query (read-from-minibuffer "Query: "))
+              (docstring (shell-command-to-string (concat "howdoi " query)))
+              (buffer-name "*How do I do it?*"))
+         (when (get-buffer buffer-name)
+           (kill-buffer buffer-name))
+         (get-buffer-create buffer-name)
+         (with-current-buffer buffer-name (insert docstring))
+         (switch-to-buffer-other-window buffer-name)
+         (special-mode)))
+   #+END_SRC
 
-       ;; include new wrap of pairs
-       (sp-pair "(" ")" :wrap "M-(")
-       (sp-pair "[" "]" :wrap "M-[")
+   Do not forget to install the command line utility. 
+   =yaourt -S howdoi=
 
-       (sp-use-smartparens-bindings)		;enable default smartparens bindings
+** Custom Functions
 
-       (sp-local-tag 'markdown-mode "c" "```clojure" "```")
-       (sp-local-tag 'markdown-mode "e" "```elisp" "```")
-       (sp-local-tag 'markdown-mode "b" "```bash" "```")
-       (sp-local-tag 'markdown-mode "p" "```python" "```")
+*** align blocks   
 
-       (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
- #+end_src
+    Emacs has the built-in command =align-regexp= to align via regular
+    expression. However, it is not very straightforward, especially
+    since I don't know much Emacs regular expressions. Hence, let's
+    use some wrapper functions to ease the life in the moment of
+    danger =)
+
+    #+BEGIN_SRC emacs-lisp
+      (defun bk/align-whitespace (start end)
+        "Align columns by whitespace"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\)\\s-" 1 0 t))
+
+      (defun bk/align-ampersand (start end)
+        "Align columns by ampersand"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\)&" 1 1 t))
+
+      (defun bk/align-quote-space (start end)
+        "Align columns by quote and space"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\).*\\s-\"" 1 0 t))
+
+      (defun bk/align-equals (start end)
+        "Align columns by equals sign"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\)=" 1 0 t))
+
+      (defun bk/align-comma (start end)
+        "Align columns by comma"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\)," 1 1 t))
+
+      (defun bk/align-dot (start end)
+        "Align columns by dot"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\)\\\." 1 1 t))
+
+      (defun bk/align-colon (start end)
+        "Align columns by equals sign"
+        (interactive "r")
+        (align-regexp start end
+                      "\\(\\s-*\\):" 1 0 t))
+    #+END_SRC
 
 * Additional Major Modes
 
@@ -3559,6 +3769,7 @@ on-demand and stored in memory.
 
    There are a few external websites that can help you with that too,
    [[https://typing.io/][Typing.io]] is the most recommended for Programmers. Check it out!
+** Custom functions
 * Snippets
 
   Yasnippet is a template system for Emacs. It allows you to type an
@@ -3727,8 +3938,9 @@ on-demand and stored in memory.
         ("http://tonsky.me/blog/atom.xml" blog dev)
         ("https://yogthos.net/feed.xml" blog dev)
         ("http://insideclojure.org/feed.xml" blog dev)
-        ("https://oremacs.com/" emacs)
-        ("http://emacsredux.com/atom.xml" emacs)
+        ("https://oremacs.com/" emacs dev)
+        ("https://betweentwoparens.com/rss.xml" clojure dev)
+        ("http://emacsredux.com/atom.xml" emacs dev)
 
         ;; blog:philosophy
         ("https://danwang.co/feed/" blog philosophy)
