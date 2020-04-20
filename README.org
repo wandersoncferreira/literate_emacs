@@ -49,16 +49,16 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#manage-external-services][manage external services]]
   - [[#restart-emacs][restart Emacs]]
 - [[#aesthetics][Aesthetics]]
-  - [[#cleaning][Cleaning]]
-  - [[#theme-and-faces][Theme and Faces]]
+  - [[#cleaning][cleaning]]
+  - [[#theme-and-faces][theme and faces]]
     - [[#buffer-based-theming][buffer based theming]]
     - [[#download-themes][download themes]]
     - [[#default-theme][default theme]]
-  - [[#time][Time]]
-  - [[#font][Font]]
-  - [[#mode-line][Mode line]]
+  - [[#time][time]]
+  - [[#font][font]]
+  - [[#mode-line][mode line]]
     - [[#menu][menu]]
-  - [[#fringe][Fringe]]
+  - [[#fringe][fringe]]
 - [[#defaults][Defaults]]
   - [[#ediff][ediff]]
   - [[#word-wrapping][word wrapping]]
@@ -79,73 +79,73 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#authentication-source][authentication source]]
 - [[#hydras][Hydras]]
 - [[#help-and-info][Help and Info]]
-  - [[#customization-to-info-mode][Customization to info-mode]]
+  - [[#customization-to-info-mode][customization to info-mode]]
     - [[#define-keys][define keys]]
     - [[#hydras-1][hydras]]
 - [[#editing-text][Editing Text]]
-  - [[#defaults-1][Defaults]]
+  - [[#defaults-1][defaults]]
     - [[#key-bindings][key bindings]]
     - [[#very-large-files][very large files]]
     - [[#eldoc][eldoc]]
     - [[#subword][subword]]
-  - [[#extra-features][Extra Features]]
+  - [[#extra-features][extra features]]
     - [[#smart-shift][smart shift]]
     - [[#change-inner][change inner]]
     - [[#expand-region][expand region]]
     - [[#jump-to-char][jump to char]]
     - [[#move-through-edit-points][move through edit points]]
-  - [[#highlights][Highlights]]
+  - [[#highlights][highlights]]
   - [[#utf-8][UTF-8]]
-  - [[#multiple-cursors][Multiple Cursors]]
-  - [[#custom-functions][Custom functions]]
+  - [[#multiple-cursors][multiple cursors]]
+  - [[#custom-functions][custom functions]]
     - [[#smart-move-to-beginning-of-visible-line-or-not][Smart move to beginning of visible line (or not)]]
     - [[#unfill-paragraph][Unfill paragraph]]
     - [[#unfill-region][Unfill region]]
     - [[#duplicate-line-or-region][Duplicate line or region]]
-  - [[#hide-block-of-code][Hide block of code]]
-  - [[#web-paste][Web paste]]
+  - [[#hide-block-of-code][hide block of code]]
+  - [[#web-paste][web paste]]
 - [[#completions][Completions]]
-  - [[#minibuffer-1][Minibuffer]]
+  - [[#minibuffer-1][minibuffer]]
     - [[#interactive-do][interactive do]]
     - [[#auto-completion][auto completion]]
-  - [[#company-mode][Company mode]]
-  - [[#hippie-expand][Hippie Expand]]
+  - [[#company-mode][company mode]]
+  - [[#hippie-expand][hippie expand]]
 - [[#window][Window]]
-  - [[#shackle][Shackle]]
-  - [[#side-windows][Side windows]]
+  - [[#shackle][shackle]]
+  - [[#side-windows][side windows]]
     - [[#eshell-at-the-bottom][Eshell at the bottom]]
     - [[#dired-as-a-side-bar][Dired as a side bar]]
-  - [[#winner][Winner]]
-  - [[#resize][Resize]]
+  - [[#winner][winner]]
+  - [[#resize][resize]]
 - [[#alerts][Alerts]]
-  - [[#alert][Alert]]
-  - [[#user-configuration][User configuration]]
+  - [[#alert][alert]]
+  - [[#user-configuration][user configuration]]
     - [[#slack-notifications][Slack notifications]]
     - [[#telegram-notifications][Telegram notifications]]
-  - [[#custom-functions-1][Custom functions]]
+  - [[#custom-functions-1][custom functions]]
 - [[#dired][Dired]]
-  - [[#guidelines][Guidelines]]
+  - [[#guidelines][guidelines]]
     - [[#mark-files-in-dired][Mark files in Dired]]
     - [[#replace-text-in-multiple-files][Replace text in multiple files]]
-  - [[#ranger][Ranger]]
-  - [[#functions][Functions]]
+  - [[#ranger][ranger]]
+  - [[#functions][functions]]
 - [[#tramp][TRAMP]]
 - [[#version-control][Version Control]]
-  - [[#magit][Magit]]
+  - [[#magit][magit]]
     - [[#magit-setup][magit setup]]
     - [[#magit-hydra][magit hydra]]
-  - [[#git-config][Git config]]
-  - [[#git-ignore][Git ignore]]
-  - [[#time-machine][Time machine]]
-  - [[#visual-identification][Visual identification]]
-  - [[#miscellaneous][Miscellaneous]]
+  - [[#git-config][git config]]
+  - [[#git-ignore][git ignore]]
+  - [[#time-machine][time machine]]
+  - [[#visual-identification][visual identification]]
+  - [[#miscellaneous][miscellaneous]]
 - [[#search][Search]]
-  - [[#wgrep][Wgrep]]
+  - [[#wgrep][wgrep]]
   - [[#grep-fullscreen][grep fullscreen]]
-  - [[#ripgrep][Ripgrep]]
-  - [[#isearch][Isearch]]
-  - [[#occur][Occur]]
-  - [[#google-this][Google this]]
+  - [[#ripgrep][ripgrep]]
+  - [[#isearch][isearch]]
+  - [[#occur][occur]]
+  - [[#google-this][google this]]
 - [[#shell][Shell]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][whitespaces]]
@@ -226,7 +226,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#pop-to-mark][pop to mark]]
   - [[#yank-indent][yank indent]]
 - [[#custom-functions-4][Custom Functions]]
-  - [[#sshell][sshell]]
+  - [[#shell-1][shell]]
     - [[#kubernetes][kubernetes]]
   - [[#http-based][http-based]]
     - [[#find-my-current-ip][find my current ip]]
@@ -245,9 +245,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#hint][hint]]
   - [[#global-definitions][global definitions]]
   - [[#cast][cast]]
-- [[#emms][EMMS]]
+- [[#emms][Emms]]
   - [[#mode-line-cycle][mode line cycle]]
-- [[#exwm][EXWM]]
+- [[#exwm][Exwm]]
   - [[#multiple-screens][multiple screens]]
   - [[#system-package][system package]]
   - [[#notification-daemon][notification daemon]]
@@ -684,7 +684,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   Look and fill of several aspects of Emacs: mode-line, fonts,
   specific faces, fringe, and more.
 
-** Cleaning
+** cleaning
 
     Since I never use the mouse with GNU Emacs, I prefer not to use
     invasive graphical elements.
@@ -727,7 +727,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (add-hook 'text-mode-hook #'auto-fill-mode))
     #+end_src
 
-** Theme and Faces
+** theme and faces
 
     The color theme is always a complicated matter. I've been trying
     several ones, most recently I had settle with Protesilaos
@@ -807,7 +807,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
                   (load-theme 'organic-green t)))
     #+END_SRC
 
-** Time
+** time
 
    #+BEGIN_SRC emacs-lisp
      (use-package time
@@ -820,7 +820,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
        (display-time-mode t))
    #+END_SRC
 
-** Font
+** font
 
     I like the default font, but why not change it towards a more
     programming-friendlier one: Source Code Pro.
@@ -831,26 +831,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (set-frame-font
          (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
 
-      ;; the default for a while again...
-      ;; (bk/font-family-size "Source Code Pro Medium" 12)
+      (bk/font-family-size "Source Code Pro Medium" 12)
     #+end_src
-
-
-    Fira is a mono-spaced font with programming ligatures [[https://github.com/tonsky/FiraCode][Fira Code]].
-    The idea behind is that programmers use a lot of symbols, often
-    encoded with several characters. Therefore, we have to spend some
-    time encoding these characters in our mind in order to translate
-    their real meaning.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package fira-code-mode
-        :ensure t
-        :delight (fira-code-mode " Fira")
-        :config
-        (add-hook 'prog-mode-hook 'fira-code-mode))
-    #+END_SRC
-
-** Mode line
+** mode line
 
 *** menu
     
@@ -866,7 +849,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (minions-mode 1))
     #+END_SRC
    
-** Fringe
+** fringe
 
     Control the fringe around the frame.
     #+BEGIN_SRC emacs-lisp
@@ -1365,7 +1348,7 @@ Adding urban dictionary to webjump.
 
 * Help and Info
 
-** Customization to info-mode
+** customization to info-mode
 
    #+BEGIN_SRC emacs-lisp :noweb yes
      (eval-after-load 'Info-mode
@@ -1415,7 +1398,7 @@ Adding urban dictionary to webjump.
 
 * Editing Text
 
-** Defaults
+** defaults
 
    See also =bidi-paragraph-direction=; setting that non-nil might
    speed up redisplay.
@@ -1467,7 +1450,7 @@ Adding urban dictionary to webjump.
         :delight subword-mode)
     #+END_SRC
 
-** Extra Features
+** extra features
 
 *** smart shift
    #+begin_src emacs-lisp
@@ -1563,7 +1546,7 @@ Adding urban dictionary to webjump.
     through the edit points in your buffer. It takes you through your
     undo history without undoing anything.
     
-** Highlights
+** highlights
 
    Visual feedback on some operations like yank, kill, undo. An
    example is that if you paste the next key. This is just a small
@@ -1606,7 +1589,7 @@ Adding urban dictionary to webjump.
      (set-selection-coding-system 'utf-8)
    #+END_SRC
 
-** Multiple Cursors
+** multiple cursors
 
    [[https://github.com/magnars/multiple-cursors.el][Multiple cursors]] is a very nice package that lets you create
    several cursors that all do the same thing as you type.
@@ -1662,7 +1645,7 @@ Adding urban dictionary to webjump.
    However, occasionally the best way to get the cursors where you
    want them is with the mouse. With the following code, =C-S-<left
    mouse click>= adds a new cursor.
-** Custom functions
+** custom functions
 
    Several helper functions to ease the day-to-day work of editing
    text.
@@ -1754,7 +1737,7 @@ Adding urban dictionary to webjump.
       (global-set-key (kbd "C-c 2") 'duplicate-current-line-or-region)
     #+END_SRC
 
-** Hide block of code
+** hide block of code
 
    Enable hide definitions functions
    #+BEGIN_SRC emacs-lisp
@@ -1768,7 +1751,7 @@ Adding urban dictionary to webjump.
        (global-set-key (kbd "C-c h") 'hs-toggle-hiding))
    #+END_SRC
 
-** Web paste
+** web paste
 
    #+BEGIN_SRC emacs-lisp
      (use-package webpaste
@@ -1778,7 +1761,7 @@ Adding urban dictionary to webjump.
    #+END_SRC
 
 * Completions
-** Minibuffer
+** minibuffer
 
 *** interactive do
 
@@ -1831,7 +1814,7 @@ Adding urban dictionary to webjump.
       (icomplete-mode 1)
     #+END_SRC
 
-** Company mode
+** company mode
 
    Company is a text completion framework for Emacs. The name stands for
    "complete anything". It uses pluggable back-ends and front-ends to
@@ -1888,7 +1871,7 @@ Adding urban dictionary to webjump.
        '(ora-activate-number))
    #+end_src
 
-** Hippie Expand
+** hippie expand
 
    [[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] is a more feature complete completion engine than the
    default dabbrev engine. The main feature I use over =dabbrev= is
@@ -1953,7 +1936,7 @@ Adding urban dictionary to webjump.
     | x   | aw-delete-window     |
     | ??  | aw-dispatch-help     |
 
-** Shackle
+** shackle
 
    https://www.reddit.com/r/emacs/comments/7au3hj/how_do_you_manage_your_emacs_windows_and_stay_sane/
    https://github.com/Alexander-Miller/dotfiles/blob/master/.config/spacemacs/user-config.org#shackle
@@ -1988,7 +1971,7 @@ Adding urban dictionary to webjump.
        (shackle-mode 1))
    #+END_SRC
    
-** Side windows
+** side windows
 
    What are side windows? These windows is a place to put
    complementary information to the main buffers. You can split or
@@ -2042,7 +2025,7 @@ Adding urban dictionary to webjump.
         ("C-c d" . bk/window-dired-vc-root-left))
     #+END_SRC
 
-** Winner
+** winner
 
 Winner is a built-in tool that keeps a record of buffer and window
 layout changes. It then allows us to move back and forth in the
@@ -2074,7 +2057,7 @@ the *winner-boring-buffers*.
 	   ("C-x 4 U" . winner-redo)))
 #+END_SRC
 
-** Resize
+** resize
 
    #+BEGIN_SRC emacs-lisp
      (use-package windresize
@@ -2083,7 +2066,7 @@ the *winner-boring-buffers*.
    #+END_SRC
    
 * Alerts
-** Alert
+** alert
   
   Alert is a growl-workalike for Emacs which uses a common
   notification interface and multiple, selectable styles, whose use is
@@ -2098,7 +2081,7 @@ the *winner-boring-buffers*.
     (require 'alert)
   #+END_SRC
 
-** User configuration
+** user configuration
 
    Several packages uses Alert for sending notifications, so you have
    full control over them by customizing =alert-user-configuration=.
@@ -2155,7 +2138,7 @@ the *winner-boring-buffers*.
                libnotify nil))
     #+END_SRC
    
-** Custom functions
+** custom functions
 
    Some packages are too noisy.
    #+BEGIN_SRC emacs-lisp
@@ -2192,7 +2175,7 @@ the *winner-boring-buffers*.
                   (seq bol "." eol))))
   #+END_SRC
 
-** Guidelines
+** guidelines
 
    Group of guidelines to help me remember dired functionalities
 
@@ -2223,7 +2206,7 @@ the *winner-boring-buffers*.
     Start dired and mark files as described in [[Mark files in Dired]],
     then use =Q= to run =query-replace= on all marked files.
 
-** Ranger
+** ranger
 
    The package [[https://github.com/Fuco1/dired-hacks#dired-ranger][dired-ranger]] provides a useful extension to dired,
    allowing you to copy and paste files much like you can do in
@@ -2243,7 +2226,7 @@ the *winner-boring-buffers*.
    mark more files and git =C-u W= to add those to the same entry in
    the copy ring as the previous files.
 
-** Functions
+** functions
 
    Some custom functions for Dired.
 
@@ -2329,7 +2312,7 @@ the *winner-boring-buffers*.
       (setq ediff-split-window-function 'split-window-horizontally))
   #+END_SRC
 
-** Magit
+** magit
 
    A git porcelain inside Emacs. Magit is an interface to the version
    control system Git, implemented as an Emacs package. Magit aspires
@@ -2378,7 +2361,7 @@ the *winner-boring-buffers*.
       (global-set-key (kbd "C-c g") 'hydra-magit/body)
     #+END_SRC
 
-** Git config
+** git config
 
     [[https://github.com/magit/git-modes][gitconfig]] is a major mode for editing =gitconfig= files.
     #+BEGIN_SRC emacs-lisp
@@ -2388,7 +2371,7 @@ the *winner-boring-buffers*.
 	(require 'gitconfig-mode))
     #+END_SRC
 
-** Git ignore
+** git ignore
 
     [[https://github.com/magit/git-modes][git-modes]] has a major mode for editing =gitignore= files.
     #+BEGIN_SRC emacs-lisp
@@ -2398,13 +2381,13 @@ the *winner-boring-buffers*.
 	(require 'gitignore-mode))
     #+END_SRC
 
-** Time machine
+** time machine
 
     #+begin_src emacs-lisp
       (use-package git-timemachine :ensure t)
     #+end_src
 
-** Visual identification
+** visual identification
 
    Show differences between local and remote repo.
 
@@ -2424,7 +2407,7 @@ the *winner-boring-buffers*.
         '(diff-hl-insert ((t (:background "#7ccd7c"))))
         '(diff-hl-delete ((t (:background "#ee6363"))))))
    #+END_SRC
-** Miscellaneous
+** miscellaneous
 
    #+BEGIN_SRC emacs-lisp
      (use-package browse-at-remote :ensure t)
@@ -2435,7 +2418,7 @@ the *winner-boring-buffers*.
 
 * Search
 
-** Wgrep
+** wgrep
 
    #+BEGIN_SRC emacs-lisp
      (use-package wgrep
@@ -2481,7 +2464,7 @@ the *winner-boring-buffers*.
        (message "Type C-x r j $ to return to pre-rgrep windows."))
    #+END_SRC
 
-** Ripgrep
+** ripgrep
 
     #+BEGIN_SRC emacs-lisp
       (use-package rg
@@ -2501,7 +2484,7 @@ the *winner-boring-buffers*.
         ("M-s g" . bk/search-git-root-or-DIR))
     #+END_SRC
 
-** Isearch
+** isearch
 
     You can invoke it using =C-s= and typing your desired search
     string. Also, if you want to use the regexp flavour you can use
@@ -2526,7 +2509,7 @@ the *winner-boring-buffers*.
     | M-s h u                       | undo the highlight                         |
     | C-s M-r                       | toggle regexp search                       |
 
-** Occur
+** occur
 
    Let's use an =occur= snippet from [[https://oremacs.com/2015/01/26/occur-dwim/][(or emacs]]. It will offer as the
    default candidate:
@@ -2550,7 +2533,7 @@ the *winner-boring-buffers*.
      (global-set-key (kbd "M-s o") 'occur-dwim)
    #+END_SRC
 
-** Google this
+** google this
 
    Artur Malabarba has a nice package called =google-this= which
    provides a set of functions for querying google from emacs.
@@ -4825,7 +4808,7 @@ on-demand and stored in memory.
    #+END_SRC
 
 * Custom Functions
-** sshell
+** shell
 *** kubernetes
 
     #+BEGIN_SRC emacs-lisp
@@ -5029,7 +5012,7 @@ on-demand and stored in memory.
        :defer t)
    #+END_SRC
 
-* EMMS
+* Emms
 
   #+BEGIN_SRC emacs-lisp
     (use-package emms
@@ -5061,7 +5044,7 @@ on-demand and stored in memory.
        (emms-mode-line-cycle 1))
    #+END_SRC
 
-* EXWM
+* Exwm
 
   Emacs as my full operating system is just too great. I have a small
   problem recently with this setup, I use an  60% Anne Pro 2 keyboard and
