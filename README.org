@@ -31,23 +31,23 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#use-package][use-package]]
   - [[#custom-packages][custom packages]]
 - [[#dependencies][Dependencies]]
-  - [[#extra][Extra]]
+  - [[#extra][extra]]
     - [[#scrot][scrot]]
     - [[#screensavers][screensavers]]
     - [[#dunst][dunst]]
     - [[#mpv][mpv]]
-  - [[#browsers][Browsers]]
-    - [[#qutebrowser][Qutebrowser]]
-    - [[#google-chrome][Google Chrome]]
+  - [[#browsers][browsers]]
+    - [[#qutebrowser][qutebrowser]]
+    - [[#google-chrome][google chrome]]
 - [[#operating-system][Operating System]]
-  - [[#async][Async]]
-  - [[#path][PATH]]
-  - [[#security][Security]]
-  - [[#system-monitor][System monitor]]
-  - [[#garbage-collection][Garbage Collection]]
+  - [[#async][async]]
+  - [[#path][path]]
+  - [[#security][security]]
+  - [[#system-monitor][system monitor]]
+  - [[#garbage-collection][garbage Collection]]
     - [[#collector-magic-hack][Collector Magic Hack]]
-  - [[#manage-external-services][Manage external services]]
-  - [[#restart-emacs][Restart Emacs]]
+  - [[#manage-external-services][manage external services]]
+  - [[#restart-emacs][restart Emacs]]
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][Cleaning]]
   - [[#theme-and-faces][Theme and Faces]]
@@ -60,20 +60,23 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#menu][menu]]
   - [[#fringe][Fringe]]
 - [[#defaults][Defaults]]
-  - [[#clean-stale-buffers][Clean stale buffers]]
-  - [[#recentf][Recentf]]
-  - [[#uniquify][Uniquify]]
-  - [[#extended-command][Extended Command]]
-  - [[#case-switch][Case switch]]
-  - [[#registers][Registers]]
-  - [[#abbreviation][Abbreviation]]
-  - [[#imenu][Imenu]]
-  - [[#ibuffer][Ibuffer]]
-  - [[#minibuffer][Minibuffer]]
-  - [[#help][Help]]
-  - [[#calendar][Calendar]]
-  - [[#webjump][Webjump]]
-  - [[#authentication-source][Authentication Source]]
+  - [[#ediff][ediff]]
+  - [[#word-wrapping][word wrapping]]
+  - [[#backup][backup]]
+  - [[#clean-stale-buffers][clean stale buffers]]
+  - [[#recentf][recentf]]
+  - [[#uniquify][uniquify]]
+  - [[#extended-command][extended command]]
+  - [[#case-switch][case switch]]
+  - [[#registers][registers]]
+  - [[#abbreviation][abbreviation]]
+  - [[#imenu][imenu]]
+  - [[#ibuffer][ibuffer]]
+  - [[#minibuffer][minibuffer]]
+  - [[#help][help]]
+  - [[#calendar][calendar]]
+  - [[#webjump][webjump]]
+  - [[#authentication-source][authentication source]]
 - [[#hydras][Hydras]]
 - [[#help-and-info][Help and Info]]
   - [[#customization-to-info-mode][Customization to info-mode]]
@@ -353,7 +356,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
   List of external packages that I rely on in my daily basis
 
-** Extra
+** extra
 *** scrot
 
     [[https://en.wikipedia.org/wiki/Scrot][Scrot]] (SCReenshOT) is a screenshot capturing utility that uses the
@@ -485,8 +488,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     provides no real GUI, it has a small controller on top of the
     video for basic control.
 
-** Browsers
-*** Qutebrowser
+** browsers
+*** qutebrowser
 
     A keyboard-driven, vim-like browser based on PyQt5 [[https://www.qutebrowser.org/][web browser]] with
     a minimal GUI.
@@ -525,13 +528,16 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
       c.tabs.tabs_are_windows = True
     #+END_SRC
 
-*** Google Chrome
+*** google chrome
 
     You know, that time when the internet tells you: "you can't see
     this page without a google-based product today"
 * Operating System
+  
+  Functionalities that interface directly with the underlying
+  operating system.
 
-** Async
+** async
 
   Asynchronous bytecode compilation and various other actions makes
   Emacs look SIGNIFICANTLY less often which is a good thing.
@@ -545,7 +551,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
       :custom (async-bytecomp-allowed-packages '(all)))
   #+END_SRC
 
-** PATH
+** path
 
    #+begin_src emacs-lisp
      (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
@@ -566,7 +572,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
    	browse-url-generic-program "qutebrowser")
    #+END_SRC
 
-** Security
+** security
 
    Fix old security Emacs problems
    #+BEGIN_SRC emacs-lisp
@@ -575,7 +581,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
           (list start end)))
    #+END_SRC
 
-** System monitor
+** system monitor
 
    A tiny system monitor that can be enabled or disabled at runtime,
    useful for checking performance with power-hungry processes in
@@ -585,8 +591,15 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
        :ensure t
        :defer t)
    #+END_SRC
+
+   Built in =htop=.
+   #+BEGIN_SRC emacs-lisp
+     (setq proced-auto-update-flag t
+           proced-auto-update-interval 1
+           proced-descend t)
+   #+END_SRC
    
-** Garbage Collection
+** garbage Collection
 
    Garbage collection shouldn't happen during startup, as what will
    slow Emacs down. Do it later.
@@ -620,12 +633,12 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         :ensure t
         :delight gcmh-mode
         :init
-        (setq gcmh-verbose t)
+        (setq gcmh-verbose nil)
         :config
         (gcmh-mode 1))
     #+END_SRC
 
-** Manage external services
+** manage external services
 
    Very interesting package that help us to have some instances of
    external processes running and keep track of it all. I often need
@@ -659,7 +672,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
          :ready-message "Started server on port 3000"))
    #+END_SRC
 
-** Restart Emacs
+** restart Emacs
 
    #+BEGIN_SRC emacs-lisp
      (use-package restart-emacs
@@ -667,6 +680,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
    #+END_SRC
 
 * Aesthetics
+
+  Look and fill of several aspects of Emacs: mode-line, fonts,
+  specific faces, fringe, and more.
 
 ** Cleaning
 
@@ -872,6 +888,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     #+END_SRC
 
 * Defaults
+  
+  Many changes in the default behavior of Emacs, not able to group
+  anywhere else.
 
   I ran into this little tidbit while reading Sacha Chu'a posts from
   Emacs. You can find the whole discussion [[https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746][here]] but the idea is that
@@ -910,22 +929,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     (setq save-interprogram-paste-before-kill t)
   #+END_SRC
 
-  This enables file backups to N versions of saves, as opposed to only
-  backing up the very first save. I don't re-launch emacs that often
-  so this is necessary to get useful backups.
-
-  #+BEGIN_SRC emacs-lisp
-    (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
-          vc-make-backup-files t
-          version-control t
-          kept-old-versions 0
-          kept-new-versions 10
-          delete-old-versions t
-          backup-by-copying t)
-  #+END_SRC
-
   #+begin_src emacs-lisp
-
     (setq tab-always-indent 'complete)
     (setq custom-safe-themes t)
 
@@ -933,18 +937,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     (defalias 'yes-or-no-p 'y-or-n-p)
 
     ;; built in htop
-    (setq proced-auto-update-flag t
-          proced-auto-update-interval 1
-          proced-descend t)
   #+end_src
-
-  #+BEGIN_SRC emacs-lisp
-    ;; A saner ediff
-    (setq ediff-diff-options "-w")
-    (setq ediff-split-window-function 'split-window-horizontally)
-    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
-  #+END_SRC
 
   Don’t use tabs to indent and fix some indentation settings
   #+BEGIN_SRC emacs-lisp
@@ -953,29 +946,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
                   fill-column 70)
   #+END_SRC
 
-  Word wrapping
-  #+BEGIN_SRC emacs-lisp
-    (setq-default word-wrap t
-                  truncate-lines t
-                  truncate-partial-width-windows nil
-                  sentence-end-double-space nil
-                  delete-trailing-lines nil
-                  require-final-newline t
-                  tabify-regexp "^\t* [ \t]+")
-  #+END_SRC
-
-  Favor hard-wrapping in text modes
-  #+BEGIN_SRC emacs-lisp
-    (defun bk/auto-fill ()
-      "My autofill setup for text buffers."
-      (auto-fill-mode t)
-      (delight 'auto-fill-mode))
-
-    (add-hook 'text-mode-hook #'bk/auto-fill)
-
-  #+END_SRC
-
-  Enable some built in modes to add critical functionality to
+   Enable some built in modes to add critical functionality to
   Emacs. More explanation about them will follow in future.
 
   #+begin_src emacs-lisp
@@ -1005,13 +976,61 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
                   disabled-command-function nil)
   #+END_SRC
 
-** Clean stale buffers
+** ediff
+   
+     #+BEGIN_SRC emacs-lisp
+       (setq ediff-diff-options "-w")
+       (setq ediff-split-window-function 'split-window-horizontally)
+       (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  #+END_SRC
+
+** word wrapping
+
+  Word wrapping
+  #+BEGIN_SRC emacs-lisp
+    (setq-default word-wrap t
+                  truncate-lines t
+                  truncate-partial-width-windows nil
+                  sentence-end-double-space nil
+                  delete-trailing-lines nil
+                  require-final-newline t
+                  tabify-regexp "^\t* [ \t]+")
+  #+END_SRC
+
+  Favor hard-wrapping in text modes
+  #+BEGIN_SRC emacs-lisp
+    (defun bk/auto-fill ()
+      "My autofill setup for text buffers."
+      (auto-fill-mode t)
+      (delight 'auto-fill-mode))
+
+    (add-hook 'text-mode-hook #'bk/auto-fill)
+
+  #+END_SRC
+
+** backup 
+
+   This enables file backups to N versions of saves, as opposed to
+   only backing up the very first save. I don't re-launch emacs that
+   often so this is necessary to get useful backups.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+           vc-make-backup-files t
+           version-control t
+           kept-old-versions 0
+           kept-new-versions 10
+           delete-old-versions t
+           backup-by-copying t)
+   #+END_SRC
+
+** clean stale buffers
 
    #+BEGIN_SRC emacs-lisp
      (use-package midnight :ensure t)
    #+END_SRC
 
-** Recentf
+** recentf
 
    This is a built-in mode that keeps track of the files you have
    opened allowing you go back to them faster. It can also integrate
@@ -1029,7 +1048,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
        (recentf-mode t))
    #+END_SRC
 
-** Uniquify
+** uniquify
 
    Uniquify buffer names dependent on file name. Emacs's traditional
    method for making buffer names unique adds <2>, <3>, etc to the end
@@ -1046,7 +1065,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 	     uniquify-strip-common-suffix t
 	     uniquify-ignore-buffers-re "^\\*"))
    #+END_SRC
-** Extended Command
+** extended command
 
 =smex= is an improved version of =extended-command= or =M-x=
 
@@ -1057,7 +1076,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     (smex-initialize))
 #+end_src
 
-** Case switch
+** case switch
 
 #+begin_src emacs-lisp
   (use-package fix-word
@@ -1068,7 +1087,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     (global-set-key (kbd "M-c") #'fix-word-capitalize))
 #+end_src
 
-** Registers
+** registers
 
 Emacs registers are compartments where you can save text, rectangles,
 positions, and other things for later use. Once you save text or a
@@ -1118,7 +1137,7 @@ Clean all the registers you saved.
 
 #+end_src
 
-** Abbreviation
+** abbreviation
 
 #+begin_src emacs-lisp
   (use-package abbrev
@@ -1150,7 +1169,7 @@ Clean all the registers you saved.
   (global-set-key (kbd "C-x a g") 'bk/add-region-global-abbrev)
 #+end_src
 
-** Imenu
+** imenu
    
    Change some defaults of =imenu=.
 
@@ -1177,7 +1196,7 @@ Clean all the registers you saved.
        ("C-." . imenu-anywhere))
    #+END_SRC
 
-** Ibuffer
+** ibuffer
 
    It provides a way of filtering and then grouping the list of
    buffers that you currently have open. About the configuration
@@ -1266,7 +1285,7 @@ Clean all the registers you saved.
 
    #+RESULTS:
 
-** Minibuffer
+** minibuffer
 
    The following setting prevent the minibuffer to grow, therefore it
    will be always 1 line height.
@@ -1276,8 +1295,8 @@ Clean all the registers you saved.
      (setq max-mini-window-height 1)
    #+end_src
 
-** Help
-** Calendar
+** help
+** calendar
 
    #+BEGIN_SRC emacs-lisp
      (use-package calendar
@@ -1290,7 +1309,7 @@ Clean all the registers you saved.
        (setq calendar-holiday-marker t))
    #+END_SRC
 
-** Webjump
+** webjump
 
 Provide a nice keyboard interface to web pages of your choosing.
 
@@ -1305,7 +1324,7 @@ Adding urban dictionary to webjump.
   (global-set-key (kbd "C-c j") 'webjump)
 #+END_SRC
 
-** Authentication Source
+** authentication source
 
    Auth Source is a generic interface for common backends such as your
    operating sysetm's keychain and your local ~/.authinfo file. Auth
