@@ -2430,9 +2430,6 @@ the *winner-boring-buffers*.
        (kill-buffer "*grep*")
        (delete-other-windows)
        (message "Type C-x r j $ to return to pre-rgrep windows."))
-
-
-     (global-set-key (kbd "C-c p g") 'bk/rgrep-fullscreen)
    #+END_SRC
 
 ** Ripgrep
@@ -3673,9 +3670,7 @@ on-demand and stored in memory.
 
 * Projects
 
-
-
-  #+begin_src emacs-lisp 
+  #+begin_src emacs-lisp :noweb yes
     (use-package projectile
       :ensure t
       :delight '(:eval (concat " " (projectile-project-name)))
@@ -3683,10 +3678,33 @@ on-demand and stored in memory.
       (setq projectile-completion-system 'ido)
       :config
       (projectile-mode t)
-      :bind-keymap
-      ("C-c p" . projectile-command-map))
 
+      <<bk-hydra-projectile>>
+
+      :requires hydra
+      :bind
+      ("C-c p" . bk/hydra-projects/body))
   #+end_src
+
+  Let's define a nice hydra that I've been using for a while now.
+  #+name bk-hydra-projectile
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (defhydra bk/hydra-projects (:color blue)
+      ("q" nil "quit" :column "Projectile")
+
+      ("b" projectile-switch-to-buffer "list" :column "Buffers")
+      ("K" projectile-kill-buffers "kill all" :column "Buffers")
+      ("S" projectile-save-project-buffers "save all" :column "Buffers")
+
+      ("d" projectile-find-dir "directory" :column "Find")
+      ("D" projectile-dired "root" :column "Find")
+      ("f" projectile-find-file "file" :column "Find")
+      ("p" projectile-switch-project "project" :column "Find")
+
+      ("r" projectile-replace "replace" :column "Search")
+      ("R" projectile-replace-regexp "regexp replace" :column "Search")
+      ("g" bk/rgrep-fullscreen "grep" :column "Search"))
+  #+END_SRC
 
 * Spelling
 
@@ -4011,8 +4029,8 @@ on-demand and stored in memory.
        (diff-hl-flydiff-mode -1)
        (global-auto-revert-mode -1))
 
-     (add-hook 'elfeed-show-mode-hook #'bk/elfeed-disable-mode-setup)
-     (add-hook 'elfeed-search-update-hook #'bk/elfeed-disable-mode-setup)
+     (add-hook 'elfeed-show-mode-hook 'bk/elfeed-disable-mode-setup)
+     (add-hook 'elfeed-search-update-hook 'bk/elfeed-disable-mode-setup)
    #+END_SRC
 
 *** Load config
@@ -4048,6 +4066,7 @@ on-demand and stored in memory.
     #+BEGIN_SRC emacs-lisp
       (use-package elfeed-org
         :ensure t
+        :after elfeed
         :init
         (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")
               rmh-elfeed-org-tree-id "elfeed")
@@ -4114,7 +4133,7 @@ on-demand and stored in memory.
                  (run-at-time 5 repeat-rate 'elfeed-update))
            (message "Elfeed automatic update enabled..."))))
 
-     (bk/toggle-update-elfeed)
+     (add-hook 'after-init-hook 'bk/toggle-update-elfeed)
    #+END_SRC
 
    Enable visual-line-mode in elfeed buffers.
@@ -4443,12 +4462,7 @@ on-demand and stored in memory.
    #+BEGIN_SRC emacs-lisp
      (use-package helm-spotify-plus
        :ensure t
-       :config
-       (global-set-key (kbd "C-c m s") 'helm-spotify-plus)
-       (global-set-key (kbd "C-c m f") 'helm-spotify-plus-next)
-       (global-set-key (kbd "C-c m b") 'helm-spotify-plus-previous)
-       (global-set-key (kbd "C-c m p") 'helm-spotify-plus-play)
-       (global-set-key (kbd "C-c m g") 'helm-spotify-plus-pause))
+       :defer t)
    #+END_SRC
 
 ** Twitter
@@ -5177,12 +5191,12 @@ on-demand and stored in memory.
         :name "home"
         :pred (list :only '("eDP1" "HDMI1"))
         :action (list '("eDP1" :auto)
+
                       '("HDMI1" :right)))
        (exwm-monitors-initial-setup))
 
      (exwm-monitors-initial-setup)
    #+END_SRC
-
 ** System package
 
    Oh, this is nice! I can control =pacman= from Emacs.
