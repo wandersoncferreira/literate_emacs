@@ -119,6 +119,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#user-configuration][User configuration]]
     - [[#slack-notifications][Slack notifications]]
     - [[#telegram-notifications][Telegram notifications]]
+  - [[#custom-functions-1][Custom functions]]
 - [[#dired][Dired]]
   - [[#guidelines][Guidelines]]
     - [[#mark-files-in-dired][Mark files in Dired]]
@@ -160,7 +161,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#linters][Linters]]
   - [[#unified-modeling-language][Unified Modeling Language]]
   - [[#how-do-i-do-it][How do I do it?]]
-  - [[#custom-functions-1][Custom Functions]]
+  - [[#custom-functions-2][Custom Functions]]
     - [[#align-blocks][align blocks]]
 - [[#additional-major-modes][Additional Major Modes]]
   - [[#rest-client][Rest client]]
@@ -187,6 +188,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#presentation][Presentation]]
   - [[#agenda][Agenda]]
     - [[#gmail-agenda][Gmail Agenda]]
+  - [[#beamer][Beamer]]
   - [[#tips-and-tricks][Tips and tricks]]
     - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
 - [[#projects][Projects]]
@@ -196,7 +198,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#synonyms][Synonyms]]
   - [[#translate][Translate]]
   - [[#typing][Typing]]
-  - [[#custom-functions-2][Custom functions]]
+  - [[#custom-functions-3][Custom functions]]
 - [[#snippets][Snippets]]
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
@@ -220,7 +222,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#advice][Advice]]
   - [[#pop-to-mark][Pop to mark]]
   - [[#yank-indent][Yank indent]]
-- [[#custom-functions-3][Custom Functions]]
+- [[#custom-functions-4][Custom Functions]]
   - [[#eshell][Eshell]]
     - [[#kubernetes][kubernetes]]
   - [[#http-based][HTTP-based]]
@@ -234,6 +236,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#go-to-scratch-buffer][go to scratch buffer]]
     - [[#kill-buffer-and-the-file-associated][kill buffer and the file associated]]
     - [[#rename-current-buffer-and-file-associated][rename current buffer and file associated]]
+  - [[#miscellaneous-1][Miscellaneous]]
+    - [[#generate-password][generate password]]
 - [[#keys][Keys]]
   - [[#hint][Hint]]
   - [[#global-definitions][Global definitions]]
@@ -586,6 +590,12 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
    Garbage collection shouldn't happen during startup, as what will
    slow Emacs down. Do it later.
+
+   Change the default values.
+   #+BEGIN_SRC emacs-lisp
+     (setq-default gc-cons-threshold 100000000
+                   gc-cons-percentage 0.1)
+   #+END_SRC
 
    Ease the font caching during GC.
    #+begin_src emacs-lisp
@@ -986,6 +996,13 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   do not add double space after periods [[http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/][Real sentence in Emacs : emacs]]
   #+BEGIN_SRC emacs-lisp
   (setq-default sentence-end-double-space nil)
+  #+END_SRC
+
+  more defaults
+  #+BEGIN_SRC emacs-lisp
+    (setq-default user-mail-address "iagwanderson@gmail.com"
+                  user-full-name "Wanderson Ferreira"
+                  disabled-command-function nil)
   #+END_SRC
 
 ** Clean stale buffers
@@ -2118,6 +2135,18 @@ the *winner-boring-buffers*.
                libnotify nil))
     #+END_SRC
    
+** Custom functions
+
+   Some packages are too noisy.
+   #+BEGIN_SRC emacs-lisp
+     (defun suppress-messages (func &rest args)
+       "Suppress message output from FUNC."
+       (cl-flet ((silence (&rest args1) (ignore)))
+         (advice-add 'message :around #'silence)
+         (unwind-protect
+             (apply func args)
+           (advice-remove 'message #'silence))))
+   #+END_SRC
 * Dired
 
   Dired is very smart and usually finds the correct intent for some
@@ -3406,6 +3435,7 @@ on-demand and stored in memory.
      (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block)
    #+end_src
 
+
 **** Manipulating Sections
 
     Let's enable [[http://notesyoujustmightwanttosave.blogspot.com/2011/12/org-speed-keys.html][Org Speed Keys]]. The main purpose of Speed Keys is to
@@ -3650,7 +3680,9 @@ on-demand and stored in memory.
     semi-automatically.
 
     #+BEGIN_SRC emacs-lisp
+      (advice-add 'org-gcal-sync :around #'suppress-messages)
       (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+
     #+END_SRC
     
     The other way around, integrating Org bullets to Gmail seems to
@@ -3658,6 +3690,26 @@ on-demand and stored in memory.
     full appointment entry with invitations, location, and correct
     duration. For now, I will keep using Google's UI to do that.
 
+** Beamer
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'ox-beamer)
+     (require 'ox-latex)
+
+     (setq org-export-allow-bind-keywords t)
+     (setq org-latex-listings 'minted)
+
+     (add-to-list 'org-latex-packages-alist '("" "minted"))
+
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((python . t) (C . t) (ruby . t) (js . t)))
+
+     (setq org-latex-pdf-process
+           '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+             "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+   #+END_SRC
 ** Tips and tricks
 *** Compute difference between two dates.
     From M-x tpis (@iLemming) in Org-mode
@@ -4886,6 +4938,19 @@ on-demand and stored in memory.
             (set-buffer-modified-p nil)
             (message "File '%s' sucessfully renamed to '%s'"
                      name (file-name-nondirectory new-name)))))
+    #+END_SRC
+
+** Miscellaneous
+*** generate password
+
+    #+BEGIN_SRC emacs-lisp
+      (defun generate-password ()
+        "Generate a 16-digit password."
+        (interactive)
+        (kill-new
+         (s-trim (shell-command-to-string
+                  " openssl rand -base64 32 | tr -d /=+ | cut -c -16")))
+        (message "Password in kill ring!"))
     #+END_SRC
 
 * Keys
