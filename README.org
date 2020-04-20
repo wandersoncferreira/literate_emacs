@@ -4040,53 +4040,20 @@ on-demand and stored in memory.
     :header-args: :noweb-ref elfeed-newsletters :tangle no
     :end:
 
-   #+BEGIN_SRC emacs-lisp
-     (setq-default
-      elfeed-feeds
-      '(;; blog
-        ("https://irreal.org/blog/?feed=rss2" blog)
+    Configure the Elfeed RSS reader with an Org-mode file. Yet, I
+    tried to maintain my boring long list of feeds, but this does not
+    make sense at all. Hard to find info, not repeat yourself, and
+    even tagging.
 
-        ;; comics
-        ("https://www.exocomics.com/feed" comic)
-        ("https://xkcd.com/atom.xml" comic)
-
-        ;; blogs:dev
-        ("https://dendibakh.github.io/feed.xml" blog dev)
-        ("https://eli.thegreenplace.net/feeds/all.atom.xml" blog dev)
-        ("https://floooh.github.io/feed.xml" blog dev)
-        ("https://www.joelonsoftware.com/feed/" blog dev)
-        ("https://fabiensanglard.net/rss.xml" blog dev)
-        ("https://nickdesaulniers.github.io/atom.xml" blog dev)
-        ("https://geoff.greer.fm/feed.atom" blog dev)
-        ("https://lemire.me/blog/feed/" dev blog)
-        ("https://danluu.com/atom.xml" dev blog)
-        ("https://mortoray.com/feed/" blog dev)
-        ("https://arp242.net/feed.xml" blog dev)
-        ("https://begriffs.com/atom.xml" blog dev)
-        ("https://nullprogram.com/feed/" blog dev)
-        ("http://tonsky.me/blog/atom.xml" blog dev)
-        ("https://yogthos.net/feed.xml" blog dev)
-        ("http://insideclojure.org/feed.xml" blog dev)
-        ("https://oremacs.com/" emacs dev)
-        ("https://betweentwoparens.com/rss.xml" clojure dev)
-        ("http://emacsredux.com/atom.xml" emacs dev)
-
-        ;; blog:philosophy
-        ("https://danwang.co/feed/" blog philosophy)
-
-        ;; podcast
-        ("https://pinecast.com/feed/emacscast" audio podcast)
-        ("https://www.npr.org/rss/podcast.php?id=510289" audio podcast economics)
-        ("http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss" audio podcast)
-
-        ;; youtube
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" youtube protesilaos)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ" youtube akita)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA" youtube computerphile)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw" youtube screenplay)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCWXCrItCF6ZgXrdozUS-Idw" youtube cyanide)
-        ("https://www.youtube.com/feeds/videos.xml?channel_id=UCwWhs_6x42TyRM4Wstoq8HA" youtube trevor)))
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp
+      (use-package elfeed-org
+        :ensure t
+        :init
+        (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")
+              rmh-elfeed-org-tree-id "elfeed")
+        :config
+        (elfeed-org))
+    #+END_SRC
   
 *** Filter
     :properties:

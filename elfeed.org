@@ -1,0 +1,40 @@
+* Blogs                                                               :blogs:
+  :PROPERTIES:
+  :ID:       elfeed
+  :END:
+** Software Development                                                 :dev:
+*** General                                                         :general:
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCib793mnUOhWymCh2VJKplQ][Akita on Rails]]                                                 :youtube:
+**** [[https://eli.thegreenplace.net/feeds/all.atom.xml][The Green Place]]
+**** [[https://github.com/tmtxt/tmtxt.github.com/commits/master.atom%0A][Truong blog]]                                                     :dotnet:
+
+*** Emacs                                                    :emacs:mustread:
+**** [[http://planet.emacsen.org/atom.xml][Planet Emacsen]]
+**** [[https://nullprogram.com/feed/][Null Program]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos]]                                                    :youtube:
+
+**** [[https://notes.neeasade.net/rss.xml][Neeasade]]                                                          
+**** [[http://xenodium.com/][Alvaro Ramirez]]                                                   
+**** [[https://lchsk.com/posts.xml%0A][Maciej Lechowski]]                                                 
+**** [[https://bendersteed.tech/feed.xml][Bendersteed]]                                                      
+**** [[https://arenzana.org/feed/][Arenzana]]                                                         
+**** [[http://justinhj.github.io/feed.xml%0A][Justin]]                                                           
+**** [[http://sachachua.com/blog/category/emacs/feed][Sacha]]                                                            
+
+*** Clojure                                                         :clojure:
+**** [[http://feeds.soundcloud.com/users/soundcloud:users:220484243/sounds.rss][defn podcast]]                                                   :podcast:
+**** [[http://tonsky.me/blog/atom.xml][Nikita]]
+**** [[https://betweentwoparens.com/rss.xml][Between Two Parens]]
+
+** Comics                                                            :comics:
+*** [[https://xkcd.com/atom.xml][XKCD]]
+
+** Finance                                                          :finance:
+*** [[https://www.npr.org/rss/podcast.php?id=510289][Planet Money]]                                                    :podcast:
+
+** Cinema                                                           :cultura:
+*** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCErSSa3CaP_GJxmFpdjG9Jw][Lessons from the Screen Play]]                                    :youtube:
+
+** News                                                                :news:
+*** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCwWhs_6x42TyRM4Wstoq8HA][The Daily Show - Trevor Noah]]                                    :youtube:
+
