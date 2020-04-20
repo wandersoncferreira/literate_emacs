@@ -148,64 +148,64 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#google-this][Google this]]
 - [[#shell][Shell]]
 - [[#general-programming][General Programming]]
-  - [[#whitespaces][Whitespaces]]
-  - [[#parenthesis][Parenthesis]]
-  - [[#folding][Folding]]
+  - [[#whitespaces][whitespaces]]
+  - [[#parenthesis][parenthesis]]
+  - [[#folding][folding]]
     - [[#folding-based-on-indentation-and-syntax][folding based on indentation and syntax]]
     - [[#fold-regions-based-on-selection][fold regions based on selection]]
-  - [[#go-to-definition][Go to definition]]
+  - [[#go-to-definition][go to definition]]
     - [[#dumb-jump][dumb jump]]
-  - [[#documentation][Documentation]]
-  - [[#programming-languages][Programming Languages]]
+  - [[#documentation][documentation]]
+  - [[#programming-languages][programming languages]]
     - [[#clojure][Clojure]]
     - [[#python][Python]]
     - [[#sql][SQL]]
     - [[#latex][Latex]]
-  - [[#linters][Linters]]
-  - [[#unified-modeling-language][Unified Modeling Language]]
-  - [[#how-do-i-do-it][How do I do it?]]
-  - [[#custom-functions-2][Custom Functions]]
+  - [[#linters][linters]]
+  - [[#unified-modeling-language][unified modeling language]]
+  - [[#how-do-i-do-it][how do I do it?]]
+  - [[#custom-functions-2][custom functions]]
     - [[#align-blocks][align blocks]]
 - [[#additional-major-modes][Additional Major Modes]]
-  - [[#rest-client][Rest client]]
+  - [[#rest-client][rest client]]
     - [[#create-a-tmp-restclient-buffer][create a tmp restclient buffer]]
-  - [[#markdown][Markdown]]
-  - [[#json][Json]]
-  - [[#yaml][Yaml]]
-  - [[#makefile][Makefile]]
+  - [[#markdown][markdown]]
+  - [[#json][json]]
+  - [[#yaml][yaml]]
+  - [[#makefile][makefile]]
 - [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#org-mode][Org mode]]
-  - [[#literate-programming][Literate Programming]]
+  - [[#literate-programming][literate programming]]
     - [[#what-is-noweb][What is noweb?]]
-  - [[#table-of-contents][Table of Contents]]
-  - [[#configuration][Configuration]]
+  - [[#table-of-contents][table of contents]]
+  - [[#configuration][configuration]]
     - [[#defaults-2][Defaults]]
     - [[#capture][Capture]]
     - [[#babel][Babel]]
     - [[#structure-templates][Structure Templates]]
     - [[#revealjs][Reveal.js]]
-  - [[#journal][Journal]]
+  - [[#journal][journal]]
     - [[#what-is-a-personal-journal][What is a personal journal?]]
     - [[#writeroom][Writeroom]]
-  - [[#presentation][Presentation]]
-  - [[#agenda][Agenda]]
+  - [[#presentation][presentation]]
+  - [[#agenda][agenda]]
     - [[#gmail-agenda][Gmail Agenda]]
-  - [[#beamer][Beamer]]
-  - [[#tips-and-tricks][Tips and tricks]]
+  - [[#beamer][beamer]]
+  - [[#tips-and-tricks][tips and tricks]]
     - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
-  - [[#correct-your-spelling-errors-on-the-fly][Correct your spelling errors on the fly]]
-  - [[#using-a-grammar--style-checker][Using a Grammar & Style Checker]]
-  - [[#synonyms][Synonyms]]
-  - [[#translate][Translate]]
-  - [[#typing][Typing]]
-  - [[#custom-functions-3][Custom functions]]
+  - [[#correct-your-spelling-errors-on-the-fly][correct your spelling errors on the fly]]
+  - [[#using-a-grammar--style-checker][using a grammar & style checker]]
+  - [[#synonyms][synonyms]]
+  - [[#translate][translate]]
+  - [[#typing][typing]]
+  - [[#custom-functions-3][custom functions]]
 - [[#snippets][Snippets]]
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
-  - [[#rss-feed][RSS Feed]]
+  - [[#rss-feed][rss feed]]
     - [[#load-config][Load config]]
     - [[#elfeed-newsletters][Elfeed newsletters]]
     - [[#filter][Filter]]
@@ -213,48 +213,48 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#star-and-unstar][Star and unstar]]
     - [[#youtube][Youtube]]
     - [[#score][Score]]
-  - [[#slack][Slack]]
-  - [[#telegram][Telegram]]
-  - [[#spotify][Spotify]]
-  - [[#twitter][Twitter]]
+  - [[#slack][slack]]
+  - [[#telegram][telegram]]
+  - [[#spotify][spotify]]
+  - [[#twitter][twitter]]
 - [[#weather][Weather]]
 - [[#pomodoro][Pomodoro]]
 - [[#financial][Financial]]
-  - [[#ledger-explanation][Ledger explanation]]
+  - [[#ledger-explanation][ledger explanation]]
     - [[#plaintext-accounting-with-the-ledger-ecosystem][Plaintext accounting with the Ledger Ecosystem]]
 - [[#advice][Advice]]
-  - [[#pop-to-mark][Pop to mark]]
-  - [[#yank-indent][Yank indent]]
+  - [[#pop-to-mark][pop to mark]]
+  - [[#yank-indent][yank indent]]
 - [[#custom-functions-4][Custom Functions]]
-  - [[#eshell][Eshell]]
+  - [[#sshell][sshell]]
     - [[#kubernetes][kubernetes]]
-  - [[#http-based][HTTP-based]]
+  - [[#http-based][http-based]]
     - [[#find-my-current-ip][find my current ip]]
-  - [[#editing][Editing]]
+  - [[#editing][editing]]
     - [[#what-sudo][what? sudo!]]
     - [[#eval-and-replace][eval and replace]]
     - [[#insert-todays-date][insert today's date]]
     - [[#kill-all-the-comments][kill all the comments]]
-  - [[#buffer][Buffer]]
+  - [[#buffer][buffer]]
     - [[#go-to-scratch-buffer][go to scratch buffer]]
     - [[#kill-buffer-and-the-file-associated][kill buffer and the file associated]]
     - [[#rename-current-buffer-and-file-associated][rename current buffer and file associated]]
-  - [[#miscellaneous-1][Miscellaneous]]
+  - [[#miscellaneous-1][miscellaneous]]
     - [[#generate-password][generate password]]
 - [[#keys][Keys]]
-  - [[#hint][Hint]]
-  - [[#global-definitions][Global definitions]]
-  - [[#cast][Cast]]
+  - [[#hint][hint]]
+  - [[#global-definitions][global definitions]]
+  - [[#cast][cast]]
 - [[#emms][EMMS]]
-  - [[#mode-line-cycle][Mode line cycle]]
+  - [[#mode-line-cycle][mode line cycle]]
 - [[#exwm][EXWM]]
-  - [[#multiple-screens][Multiple Screens]]
-  - [[#system-package][System package]]
-  - [[#notification-daemon][Notification Daemon]]
-  - [[#window-behaviour][Window behaviour]]
-  - [[#key-bindings-1][Key Bindings]]
+  - [[#multiple-screens][multiple screens]]
+  - [[#system-package][system package]]
+  - [[#notification-daemon][notification daemon]]
+  - [[#window-behaviour][window behaviour]]
+  - [[#key-bindings-1][key bindings]]
     - [[#logging-out-with-lxde][Logging out with LXDE]]
-  - [[#important-commands][Important commands]]
+  - [[#important-commands][important commands]]
 - [[#references][References]]
 
 * Packages
@@ -803,6 +803,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
       (add-hook 'after-init-hook
                 (lambda ()
                   (interactive)
+                  (setq organic-green-boldless t)
                   (load-theme 'organic-green t)))
     #+END_SRC
 
@@ -2635,7 +2636,7 @@ the *winner-boring-buffers*.
       :commands (cycle-quotes))
   #+END_SRC
 
-** Whitespaces
+** whitespaces
 
 Control your whitespaces!
 
@@ -2657,7 +2658,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     (add-hook 'prog-mode-hook #'ws-butler-mode))
 #+END_SRC
 
-** Parenthesis
+** parenthesis
 
  #+begin_src emacs-lisp
    (use-package smartparens
@@ -2687,7 +2688,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 
        (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
  #+end_src
-** Folding
+** folding
 
 *** folding based on indentation and syntax
 
@@ -2765,7 +2766,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "C-c @") 'bk/hydra-vimish-fold/body)
     #+END_SRC
-** Go to definition
+** go to definition
 
    
 *** dumb jump
@@ -2781,7 +2782,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
         :config
         (dumb-jump-mode 1))
     #+END_SRC
-** Documentation
+** documentation
 
    [[https://zealdocs.org/][Zeal]] is a nice little app that stores documents offline for
    reference inspired by Dash which only works on Mac. Let's bring
@@ -2799,7 +2800,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
                  (lambda ()
                    (setq zeal-at-point-docset "clojure"))))
    #+END_SRC
-** Programming Languages
+** programming languages
 *** Clojure
 
   Unfortunately, Emacs does not have a builtin major mode for Clojure,
@@ -3091,7 +3092,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       (add-to-list 'safe-local-variable-values
                    '(TeX-command-extra-options . "-shell-escape")))
   #+END_SRC
-** Linters
+** linters
 
    =Flycheck= is a modern on-the-fly syntax checking extension for GNU
    Emacs, intended as replacement for the older Flymake.
@@ -3134,7 +3135,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        (flycheck-plantuml-setup))
    #+end_src
 
-** Unified Modeling Language
+** unified modeling language
 
    The UML is a general-purpose, developmental, modeling language in
    the field of software engineering that is intended to provide a
@@ -3180,7 +3181,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        (require 'ob-plantuml))
    #+end_src
 
-** How do I do it?
+** how do I do it?
 
    Do you find yourself constantly Googling for how to do basic
    programming tasks? Suppose you want to know how to format a date in
@@ -3205,7 +3206,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
    Do not forget to install the command line utility. 
    =yaourt -S howdoi=
 
-** Custom Functions
+** custom functions
 
 *** align blocks   
 
@@ -3270,7 +3271,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       :commands (rainbow-mode))
   #+END_SRC
 
-** Rest client
+** rest client
 
  #+begin_src emacs-lisp
    (use-package restclient
@@ -3296,7 +3297,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
           (pop-to-buffer (current-buffer))))
     #+END_SRC
 
-** Markdown
+** markdown
 
      #+BEGIN_SRC emacs-lisp
        (use-package markdown-mode
@@ -3322,7 +3323,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
          :defer t)
      #+END_SRC
 
-** Json
+** json
 
  #+begin_src emacs-lisp
    (use-package json-mode
@@ -3331,7 +3332,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
  #+end_src
 
-** Yaml
+** yaml
 
    Unfortunately, I have to deal with YAML files on my daily basis.
    #+BEGIN_SRC emacs-lisp
@@ -3342,7 +3343,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        (add-hook 'yaml-mode-hook 'subword-mode))
    #+END_SRC
 
-** Makefile
+** makefile
 
    #+BEGIN_SRC emacs-lisp
      (use-package make-mode
@@ -3399,7 +3400,7 @@ on-demand and stored in memory.
 
 * Org mode
 
-** Literate Programming
+** literate programming
 
    [[https://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] is the art of preparing programs for human
    readers.
@@ -3417,7 +3418,7 @@ on-demand and stored in memory.
     The gist of using =noweb= is that in your source blocks you have
     labels like =<<imports>>=, that refer to other named code blocks
     that get substituted in place of the label.
-** Table of Contents
+** table of contents
 
    #+begin_src emacs-lisp
      (use-package toc-org
@@ -3434,7 +3435,7 @@ on-demand and stored in memory.
      (setq org-src-window-setup 'current-window)
    #+END_SRC
 
-** Configuration
+** configuration
 *** Defaults
 
    When using =RET= over a link, please go to it.
@@ -3568,7 +3569,7 @@ on-demand and stored in memory.
         (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
     #+end_src
 
-** Journal
+** journal
 
    Let's use [[https://750words.com/][750words]] to write a personal journal. As part of the
    process, I want my journal entries to be fully encrypted because
@@ -3633,7 +3634,7 @@ on-demand and stored in memory.
         (setq writeroom-width 150))
     #+END_SRC
 
-** Presentation
+** presentation
 
    [[https://github.com/eschulte/epresent][epresent]] is a simple presentation mode for Emacs Org-mode. Epresent
    leverages exiting Org-mode features like inline image display,
@@ -3655,7 +3656,7 @@ on-demand and stored in memory.
      visibility
    - quit with =q=
 
-** Agenda
+** agenda
 *** Gmail Agenda
 
     I am following this post from [[http://pragmaticemacs.com/emacs/how-i-view-my-google-calendar-agenda-in-emacs/][pragmatic emacs]] to setup =gcalcli=
@@ -3709,7 +3710,7 @@ on-demand and stored in memory.
     full appointment entry with invitations, location, and correct
     duration. For now, I will keep using Google's UI to do that.
 
-** Beamer
+** beamer
 
    #+BEGIN_SRC emacs-lisp
      (require 'ox-beamer)
@@ -3729,7 +3730,7 @@ on-demand and stored in memory.
              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
    #+END_SRC
-** Tips and tricks
+** tips and tricks
 *** Compute difference between two dates.
     From M-x tpis (@iLemming) in Org-mode
     - use =C-c != to enter timestamps
@@ -3779,7 +3780,7 @@ on-demand and stored in memory.
 
 * Spelling
 
-** Correct your spelling errors on the fly
+** correct your spelling errors on the fly
 
    #+begin_src emacs-lisp
      (defun bk/spell-buffer-pt-BR ()
@@ -3824,7 +3825,7 @@ on-demand and stored in memory.
    back. Calling it with C-u gives ability to correct *multiple
    misspelled words* in one run. With C-u C-u changes direction and
    C-u C-u C-u changes direction and enables multiple corrections.
-** Using a Grammar & Style Checker
+** using a grammar & style checker
 
    Let's install [[https://github.com/mhayashi1120/Emacs-langtool][a grammar and style checker]]. We get the offline tool
    from the [[https://languagetool.org/download/LanguageTool-4.9.zip][link]], then relocate it as follows.
@@ -3866,7 +3867,7 @@ on-demand and stored in memory.
 
      ;; (global-set-key "\M-^" 'langtool-check)
    #+END_SRC
-** Synonyms
+** synonyms
 
    Synosaurus is a thesaurus frontend for Emacs with pluggable
    backends. It has basically three commands:
@@ -3917,7 +3918,7 @@ on-demand and stored in memory.
    | Space        | Page Down                                             |
    | b, Backspace | Page Up                                               |
 
-** Translate
+** translate
 
    To assist in language learning, it may be nice to have Emacs
    interface to Google translate e.g. invoke
@@ -3944,7 +3945,7 @@ on-demand and stored in memory.
 
    #+END_SRC
 
-** Typing
+** typing
 
    Practice touch typing using =speed-type=.
    #+BEGIN_SRC emacs-lisp
@@ -3966,7 +3967,7 @@ on-demand and stored in memory.
 
    There are a few external websites that can help you with that too,
    [[https://typing.io/][Typing.io]] is the most recommended for Programmers. Check it out!
-** Custom functions
+** custom functions
 * Snippets
 
   Yasnippet is a template system for Emacs. It allows you to type an
@@ -4065,7 +4066,7 @@ on-demand and stored in memory.
 #+end_src
 
 * Social Networks
-** RSS Feed
+** rss feed
 
    I like to read about programming, but Emacs and Clojure are by far
    the most interesting communities I know so far, therefore, my feeds
@@ -4376,7 +4377,7 @@ on-demand and stored in memory.
         (lambda () (interactive)
           (elfeed-search-set-filter "@6-months-ago +unread")))
     #+END_SRC
-** Slack
+** slack
 
    Slack from Emacs? :O Why not? I am having a terrible time
    configuring all my workspaces lately. Therefore, it sounds like a
@@ -4484,7 +4485,7 @@ on-demand and stored in memory.
  | slack-message-embed-mentio | use to mention to user                                                             |
  | slack-file-upload          | uploads a file                                                                     |
 
-** Telegram
+** telegram
 
    One more chat service that we need to stay in touch with friends and
    community.
@@ -4528,7 +4529,7 @@ on-demand and stored in memory.
               (telega-chatbuf-mode-line-pinned-msg 20))))
    #+END_SRC
 
-** Spotify
+** spotify
 
    #+BEGIN_SRC emacs-lisp
      (use-package helm-spotify-plus
@@ -4536,7 +4537,7 @@ on-demand and stored in memory.
        :defer t)
    #+END_SRC
 
-** Twitter
+** twitter
    
    The possible features includes:
    - viewing various timelines
@@ -4725,7 +4726,7 @@ on-demand and stored in memory.
     (set-register ?l '(file . "~/.ledger"))
   #+END_SRC
 
-** Ledger explanation
+** ledger explanation
 
    - Double entry system: All money has a source and destination account
    - Five accounts
@@ -4769,7 +4770,7 @@ on-demand and stored in memory.
   
 * Advice
 
-** Pop to mark
+** pop to mark
    When popping the mark, continue popping until the cursor actually
    moves. Also, if the last command was a copy - skip past all the
    expand-region craft.
@@ -4786,7 +4787,7 @@ on-demand and stored in memory.
      (setq set-mark-command-repeat-pop t)
    #+END_SRC
 
-** Yank indent
+** yank indent
 
    This was stolen from [[https://github.com/milkypostman/dotemacs/blob/master/init.el][here.]] The idea is to indent yanked regions in
    specific modes that you can define.
@@ -4824,7 +4825,7 @@ on-demand and stored in memory.
    #+END_SRC
 
 * Custom Functions
-** Eshell
+** sshell
 *** kubernetes
 
     #+BEGIN_SRC emacs-lisp
@@ -4851,7 +4852,7 @@ on-demand and stored in memory.
             (eshell-send-input))))
     #+END_SRC
 
-** HTTP-based
+** http-based
 *** find my current ip
 
    #+begin_src emacs-lisp
@@ -4866,7 +4867,7 @@ on-demand and stored in memory.
          (message "IP: %s" myip)))
    #+end_src
 
-** Editing
+** editing
 *** what? sudo!
 
    #+BEGIN_SRC emacs-lisp
@@ -4911,7 +4912,7 @@ on-demand and stored in memory.
                           (line-number-at-pos)))))
     #+END_SRC
     
-** Buffer
+** buffer
 *** go to scratch buffer
 
     #+BEGIN_SRC emacs-lisp
@@ -4959,7 +4960,7 @@ on-demand and stored in memory.
                      name (file-name-nondirectory new-name)))))
     #+END_SRC
 
-** Miscellaneous
+** miscellaneous
 *** generate password
 
     #+BEGIN_SRC emacs-lisp
@@ -4974,7 +4975,7 @@ on-demand and stored in memory.
 
 * Keys
 
-** Hint
+** hint
    #+begin_src emacs-lisp
      (use-package which-key
        :ensure t
@@ -4988,7 +4989,7 @@ on-demand and stored in memory.
        (which-key-mode))
    #+end_src
 
-** Global definitions
+** global definitions
 
    #+begin_src emacs-lisp
      (global-set-key "\C-x3" (lambda ()
@@ -5018,8 +5019,7 @@ on-demand and stored in memory.
                   (kill-buffer (current-buffer))))
    #+end_src
 
-
-** Cast
+** cast
 
    Show current command and its key in the mode line
    #+BEGIN_SRC emacs-lisp
@@ -5043,7 +5043,7 @@ on-demand and stored in memory.
       (emms-default-players))
   #+END_SRC
 
-** Mode line cycle
+** mode line cycle
 
    Display the emms mode line as a ticker. I am listening to several
    podcasts where the whole link of the podcast is displayed at the
@@ -5243,7 +5243,7 @@ on-demand and stored in memory.
      (setq exwm-manage-force-tiling t)
    #+END_SRC
 
-** Multiple Screens
+** multiple screens
 
    Stolen from [[https://www.reddit.com/r/emacs/comments/cyuqbp/exwm_multimonitor_setup/][reddit]] answer, however the original function is heavily
    customized to the authors setup, therefore I modified the
@@ -5281,7 +5281,7 @@ on-demand and stored in memory.
 
      (exwm-monitors-initial-setup)
    #+END_SRC
-** System package
+** system package
 
    Oh, this is nice! I can control =pacman= from Emacs.
 
@@ -5292,7 +5292,7 @@ on-demand and stored in memory.
        (setq system-packages-use-sudo t))
    #+END_SRC
 
-** Notification Daemon
+** notification daemon
 
    I need a notification daemon to alert me about all the statefull
    things changing around me. For now, I will use [[https://dunst-project.org/][Dunst]].
@@ -5310,7 +5310,7 @@ on-demand and stored in memory.
          (call-process-shell-command command nil 0)))
    #+END_SRC
 
-** Window behaviour
+** window behaviour
 
    In stock Emacs, EXWM uses =char mode= and =line mode= to
    distinguish between using the keyboard to control an application vs
@@ -5343,7 +5343,7 @@ on-demand and stored in memory.
 	 (set-face-foreground face color)))
      (window-divider-mode 1)
    #+END_SRC
-** Key Bindings
+** key bindings
 
    "Global key bindings" in EXWM work essentially anywhere, including
    buffers that are currently in char mode. The bindings below should
@@ -5458,7 +5458,7 @@ on-demand and stored in memory.
         (start-process-shell-command "logout" nil "lxsession-logout"))
     #+END_SRC
 
-** Important commands
+** important commands
 
    | Keys | Command                    | Description                                 |
    |------+----------------------------+---------------------------------------------|
