@@ -4628,14 +4628,13 @@ on-demand and stored in memory.
          (let* ((alist (mapcar #'(lambda (team) (cons (slack-team-name team)
                                                  (oref team token)))
                                (hash-table-values slack-teams-by-token)))
-                (token (cdar (-filter (lambda (v) (equalp (car v) team)) alist)))
+                (token (cdr (-first (lambda (v) (equalp (car v) team)) alist)))
                 (team (slack-team-find-by-token token))
-                (room (car (-filter (lambda (room) (equalp (slack-room-name room team) channel))
-                                    (slack-team-channels team)))))
+                (room (-first (lambda (room) (equalp (slack-room-name room team) channel))
+                              (slack-team-channels team))))
            (when team
              (slack-team-connect team)
              (slack-room-display room team))))
-
 
        (defun bk/slack-move-to-reitit ()
          "Take me to reitit discussions."
