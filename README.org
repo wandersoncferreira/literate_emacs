@@ -30,6 +30,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#initialization][initialization]]
   - [[#use-package][use-package]]
   - [[#custom-packages][custom packages]]
+  - [[#paradox][paradox]]
 - [[#dependencies][Dependencies]]
   - [[#extra][extra]]
     - [[#scrot][scrot]]
@@ -54,10 +55,12 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#buffer-based-theming][buffer based theming]]
     - [[#download-themes][download themes]]
     - [[#default-theme][default theme]]
+  - [[#golden-ratio][golden ratio]]
   - [[#time][time]]
   - [[#font][font]]
   - [[#mode-line][mode line]]
     - [[#menu][menu]]
+    - [[#simplification][simplification]]
   - [[#fringe][fringe]]
 - [[#defaults][Defaults]]
   - [[#ediff][ediff]]
@@ -73,6 +76,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#imenu][imenu]]
   - [[#ibuffer][ibuffer]]
   - [[#minibuffer][minibuffer]]
+    - [[#get-more-space-for-editing][get more space for editing]]
   - [[#help][help]]
   - [[#calendar][calendar]]
   - [[#webjump][webjump]]
@@ -115,6 +119,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#side-windows][side windows]]
     - [[#eshell-at-the-bottom][Eshell at the bottom]]
     - [[#dired-as-a-side-bar][Dired as a side bar]]
+  - [[#same-window][same window]]
   - [[#winner][winner]]
   - [[#resize][resize]]
 - [[#alerts][Alerts]]
@@ -139,6 +144,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#time-machine][time machine]]
   - [[#visual-identification][visual identification]]
   - [[#miscellaneous][miscellaneous]]
+  - [[#custom-functions-2][custom functions]]
+    - [[#visit-pull-request][visit pull request]]
 - [[#search][Search]]
   - [[#wgrep][wgrep]]
   - [[#grep-fullscreen][grep fullscreen]]
@@ -147,6 +154,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#occur][occur]]
   - [[#google-this][google this]]
 - [[#shell][Shell]]
+  - [[#eshell-mode][eshell mode]]
+  - [[#shell-mode][shell mode]]
 - [[#general-programming][General Programming]]
   - [[#whitespaces][whitespaces]]
   - [[#parenthesis][parenthesis]]
@@ -164,7 +173,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#linters][linters]]
   - [[#unified-modeling-language][unified modeling language]]
   - [[#how-do-i-do-it][how do I do it?]]
-  - [[#custom-functions-2][custom functions]]
+  - [[#custom-functions-3][custom functions]]
     - [[#align-blocks][align blocks]]
 - [[#additional-major-modes][Additional Major Modes]]
   - [[#rest-client][rest client]]
@@ -177,20 +186,20 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#pdf][PDF]]
 - [[#org-mode][Org mode]]
   - [[#literate-programming][literate programming]]
-    - [[#what-is-noweb][What is noweb?]]
+    - [[#what-is-noweb][what is noweb?]]
   - [[#table-of-contents][table of contents]]
   - [[#configuration][configuration]]
-    - [[#defaults-2][Defaults]]
-    - [[#capture][Capture]]
-    - [[#babel][Babel]]
-    - [[#structure-templates][Structure Templates]]
-    - [[#revealjs][Reveal.js]]
+    - [[#defaults-2][defaults]]
+    - [[#capture][capture]]
+    - [[#babel][babel]]
+    - [[#structure-templates][structure templates]]
+    - [[#revealjs][reveal.js]]
   - [[#journal][journal]]
-    - [[#what-is-a-personal-journal][What is a personal journal?]]
-    - [[#writeroom][Writeroom]]
+    - [[#what-is-a-personal-journal][what is a personal journal?]]
+    - [[#writeroom][writeroom]]
   - [[#presentation][presentation]]
   - [[#agenda][agenda]]
-    - [[#gmail-agenda][Gmail Agenda]]
+    - [[#gmail-agenda][gmail agenda]]
   - [[#beamer][beamer]]
   - [[#tips-and-tricks][tips and tricks]]
     - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
@@ -201,7 +210,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#synonyms][synonyms]]
   - [[#translate][translate]]
   - [[#typing][typing]]
-  - [[#custom-functions-3][custom functions]]
+  - [[#custom-functions-4][custom functions]]
 - [[#snippets][Snippets]]
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
@@ -225,7 +234,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#advice][Advice]]
   - [[#pop-to-mark][pop to mark]]
   - [[#yank-indent][yank indent]]
-- [[#custom-functions-4][Custom Functions]]
+- [[#custom-functions-5][Custom Functions]]
   - [[#shell-1][shell]]
     - [[#kubernetes][kubernetes]]
   - [[#http-based][http-based]]
@@ -352,6 +361,12 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (add-to-list 'load-path project)))
   #+END_SRC
 
+** paradox
+
+   It is an alternative / extension to the built-in package manager.
+   #+BEGIN_SRC emacs-lisp
+   #+END_SRC
+   
 * Dependencies
 
   List of external packages that I rely on in my daily basis
@@ -631,7 +646,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     #+BEGIN_SRC emacs-lisp
       (use-package gcmh
         :ensure t
-        :delight gcmh-mode
+        :disabled t
         :init
         (setq gcmh-verbose nil)
         :config
@@ -807,6 +822,25 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
                   (load-theme 'organic-green t)))
     #+END_SRC
 
+** golden ratio
+   
+   When working with many windows at the same time, each window has a
+   size that is not convenient for editing. =golden-ratio= helps on
+   this issue by resizing automatically the windows you are working on
+   to the size specified in the "Golden Ratio".
+
+   The window that has the main focus will have the perfect size for
+   editing, while the others are not being actively edited it will be
+   re-sized to a smaller size.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package golden-ratio
+       :ensure t
+       :init
+       (setq golden-ratio-exclude-modes '("ediff-mode"))
+       :config
+       (golden-ratio 1))
+   #+END_SRC
 ** time
 
    #+BEGIN_SRC emacs-lisp
@@ -849,6 +883,38 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (minions-mode 1))
     #+END_SRC
    
+*** simplification
+
+    I read a blog post some time ago about slim down the mode-line.
+    Usually I don't need much of the information there, therefore
+    let's make this experiment.
+    
+    #+begin_src emacs-lisp
+      (setq-default mode-line-format
+                    '("%e"
+                      mode-line-front-space
+                      ;; mode-line-mule-info
+                      ;; mode-line-client
+                      ;; mode-line-modified
+                      ;; mode-line-remote
+                      ;; mode-line-frame-identification
+                      mode-line-buffer-identification
+                      "   "
+                      ;; mode-line-position
+                      ;; (vc-mode vc-mode)
+                      ;; " "
+                      ;; mode-line-modes
+                      "   "
+                      ;; mode-line-misc-info
+                      ;; battery-mode-line-string
+                      mode-line-end-spaces))
+      (setq display-time-format "%a, %b %e %R"
+            global-mode-string (remove 'display-time-string global-mode-string)
+            mode-line-end-spaces (list (propertize " "
+                                                   'display
+                                                   '(space :align-to (- right 17)))
+                                       'display-time-string))
+    #+end_src
 ** fringe
 
     Control the fringe around the frame.
@@ -1278,6 +1344,20 @@ Clean all the registers you saved.
      (setq resize-mini-windows nil)
      (setq max-mini-window-height 1)
    #+end_src
+
+*** get more space for editing
+
+    Stole this from Sacha Chua's configuration, sometimes you want to
+    be able to do fancy things with the text that you are entering
+    into the minibuffer. Sometimes you just want to be able to read
+    it, specially when it comes to lots of text. This binds =C-M-e= in
+    a minibuffer.
+    #+begin_src emacs-lisp
+      (use-package miniedit
+        :ensure t
+        :config
+        (miniedit-install))
+    #+end_src
 
 ** help
 ** calendar
@@ -1777,22 +1857,20 @@ Adding urban dictionary to webjump.
      (use-package ido
        :ensure nil
        :init (setq ido-use-virtual-buffers t
-		   ido-use-faces t
-		   ido-case-fold nil
-		   ido-auto-merge-work-directories-length -1
-		   ;; speed up ido by using less candidates
-		   ido-max-prospects 10
-		   ;; don't try and guess if the string under point is a file
-		   ido-use-filename-at-point nil
-		   ;; match across entire string
-		   ido-enable-flex-matching t
-		   ido-create-new-buffer 'always)
+                   ido-use-faces t
+                   ido-case-fold nil
+                   ido-auto-merge-work-directories-length -1
+                   ido-max-prospects 10
+                   ido-enable-flex-matching t
+                   ido-use-filename-at-point 'guess
+                   ido-handle-duplicate-virtual-buffers 2
+                   ido-create-new-buffer 'always)
        :config
        (ido-mode t)
        (ido-everywhere t)
        :bind (:map ido-common-completion-map
-		   ("M-e" . ido-edit-input)
-		   ("M-r" . ido-toggle-regexp)))
+                   ("M-e" . ido-edit-input)
+                   ("M-r" . ido-toggle-regexp)))
    #+end_src
 
    More functionality
@@ -2024,6 +2102,16 @@ Adding urban dictionary to webjump.
         :bind
         ("C-c d" . bk/window-dired-vc-root-left))
     #+END_SRC
+
+** same window
+
+   Same window buffers
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'same-window-buffer-names "*SQL*")
+     (add-to-list 'same-window-buffer-names "*Help*")
+     (add-to-list 'same-window-buffer-names "*Apropos*")
+     (add-to-list 'same-window-buffer-names "*Process List*")
+   #+END_SRC
 
 ** winner
 
@@ -2415,6 +2503,23 @@ the *winner-boring-buffers*.
      (use-package gitignore-templates :ensure t)
 
    #+END_SRC
+** custom functions
+
+*** visit pull request
+
+    #+begin_src emacs-lisp
+      (defun bk/visit-pull-request-url ()
+        "Visit the current branch's PR on Github."
+        (interactive)
+        (browse-url
+         (format "https://github.com/%s/pull/new/%s"
+                 (replace-regexp-in-string
+                  "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+                  (magit-get "remote"
+                             (magit-get-remote)
+                             "url"))
+                 (magit-get-current-branch))))
+    #+end_src
 
 * Search
 
@@ -2570,6 +2675,7 @@ the *winner-boring-buffers*.
 
 * Shell
 
+** eshell mode
     #+begin_src emacs-lisp
       (use-package eshell-bookmark
         :ensure t
@@ -2598,6 +2704,21 @@ the *winner-boring-buffers*.
     	      (eshell/alias "ee" "find-file-other-window $1")))
     #+end_src
 
+** shell mode
+
+   #+begin_src emacs-lisp
+     (use-package shell
+       :bind (:map shell-mode-map
+                   ("<s-up>" . comint-previous-input)
+                   ("<s-down>" . comint-next-input))
+       :init
+       (dirtrack-mode)
+       (setq explicit-shell-file-name "/bin/bash")
+       :config
+       (add-hook 'after-save-hook
+                 'executable-make-buffer-file-executable-if-script-p))
+   #+end_src
+
 * General Programming 
 
   Sometimes I place some TODO and FIXME words in the middle of my code
@@ -2618,6 +2739,14 @@ the *winner-boring-buffers*.
       :ensure t
       :commands (cycle-quotes))
   #+END_SRC
+  
+  Hungry delete mode
+  #+begin_src emacs-lisp
+    (use-package hungry-delete
+      :ensure t
+      :config
+      (global-hungry-delete-mode t))
+  #+end_src
 
 ** whitespaces
 
@@ -2887,6 +3016,15 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     (use-package cider
       :ensure t
       :after (clojure-mode)
+      :init
+      (setq cider-mode-line " CIDER"
+            cider-repl-display-in-current-window t
+            cider-auto-select-error-buffer nil
+            cider-repl-pop-to-buffer-on-connect nil
+            cider-show-error-buffer nil
+            cider-repl-use-pretty-printing t
+            nrepl-hide-special-buffers t
+            nrepl-popup-stacktraces-in-repl t)
       :config
       (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
       (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
@@ -3382,7 +3520,7 @@ on-demand and stored in memory.
 #+end_src
 
 * Org mode
-
+  <s
 ** literate programming
 
    [[https://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] is the art of preparing programs for human
@@ -3393,7 +3531,7 @@ on-demand and stored in memory.
    /computer/ what to do, let us concentrate rather on explaining to
    /humans/ what we want the computer to do." - Donald E. Knuth, 1984.
    
-*** What is noweb?
+*** what is noweb?
 
     [[https://www.cs.tufts.edu/~nr/noweb/][noweb]] is designed to meet the needs of literate programmers while
     remaining as simple as possible.
@@ -3419,7 +3557,7 @@ on-demand and stored in memory.
    #+END_SRC
 
 ** configuration
-*** Defaults
+*** defaults
 
    When using =RET= over a link, please go to it.
 
@@ -3439,7 +3577,7 @@ on-demand and stored in memory.
    #+end_src
 
 
-**** Manipulating Sections
+**** manipulating sections
 
     Let's enable [[http://notesyoujustmightwanttosave.blogspot.com/2011/12/org-speed-keys.html][Org Speed Keys]]. The main purpose of Speed Keys is to
     speed up the execution of the most common tasks you do in Org
@@ -3471,7 +3609,7 @@ on-demand and stored in memory.
     | L/R   | recursively promote (move leftwards) or demote (more rightwards) |
     | 1,2,3 | to mark a heading with priority                                  |
 
-**** Seamless Navigation Between Source Blocks
+**** seamless Navigation Between Source Blocks
 
     Toggle editing org-mode source blocks.
     #+BEGIN_SRC emacs-lisp
@@ -3479,7 +3617,7 @@ on-demand and stored in memory.
       (define-key org-src-mode-map (kbd "s-e") #'org-edit-src-exit)
     #+END_SRC
 
-*** Capture
+*** capture
 
     #+begin_src emacs-lisp
       (require 'org-capture)
@@ -3513,7 +3651,7 @@ on-demand and stored in memory.
 
     #+end_src
 
-*** Babel
+*** babel
 
     #+BEGIN_SRC emacs-lisp
       (org-babel-do-load-languages
@@ -3523,7 +3661,7 @@ on-demand and stored in memory.
          (sql . t)
          (clojure . t)))
     #+END_SRC
-*** Structure Templates
+*** structure templates
 
     The "Easy Templates" as often is mentioned, is the standard way in
     Emacs to handle inline code blocks when writing in literate
@@ -3532,13 +3670,26 @@ on-demand and stored in memory.
     You can find all the different available templates by `C-h v
     org-structure-template-alist`.
 
+    This works in Emacs 26, but I am deprecating this now because of
+    my new usage of Emacs 27 and the new way of defining structure
+    templates.
+    #+BEGIN_SRC emacs-lisp
+      ;; (add-to-list 'org-structure-template-alist
+      ;;      (list "elisp" (concat "#+BEGIN_SRC emacs-lisp\n"
+      ;;                "?\n"
+      ;;                "#+END_SRC")))
+    #+END_SRC
+
+    We need to add =org-tempo= now too.
+    #+BEGIN_SRC emacs-lisp
+      (require 'org-tempo)
+    #+END_SRC
+
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'org-structure-template-alist
-		   (list "elisp" (concat "#+BEGIN_SRC emacs-lisp\n"
-					 "?\n"
-					 "#+END_SRC")))
+                   '("elisp" . "src emacs-lisp"))
     #+END_SRC
-*** Reveal.js
+*** reveal.js
 
     There an exhaustive documentation about Reveal.js in the github
     [[https://gitlab.com/oer/org-re-reveal][repository]], please follow the link if more is necessary.
@@ -3593,7 +3744,7 @@ on-demand and stored in memory.
        (setq wc-word-goal 750))
    #+END_SRC
 
-*** What is a personal journal?
+*** what is a personal journal?
 
     - This is between you and you
     - It's all about writing, and getting into your brain
@@ -3604,7 +3755,7 @@ on-demand and stored in memory.
       writing about them
     - It's a daily brain dump
    
-*** Writeroom
+*** writeroom
 
     A package to help us concentrate in the writing by removing
     everything from the screen and centralizing the text being
@@ -3640,7 +3791,7 @@ on-demand and stored in memory.
    - quit with =q=
 
 ** agenda
-*** Gmail Agenda
+*** gmail agenda
 
     I am following this post from [[http://pragmaticemacs.com/emacs/how-i-view-my-google-calendar-agenda-in-emacs/][pragmatic emacs]] to setup =gcalcli=
     to handle your google agenda. Let's see if I can make this
@@ -4094,7 +4245,7 @@ on-demand and stored in memory.
 
    #+BEGIN_SRC emacs-lisp :noweb yes
      (require 'elfeed)
-     (require 'cl)
+     (require 'cl-lib)
      (require 'elfeed-search)
      (require 'elfeed-db)
 
@@ -4228,6 +4379,7 @@ on-demand and stored in memory.
 
       (push '(starred elfeed-search-starred-title-face)
             elfeed-search-face-alist)
+
     #+END_SRC
 
     I bind these to the keys "*" to add a star and "8" to remove the
@@ -4308,7 +4460,7 @@ on-demand and stored in memory.
         (let ((title (elfeed-entry-title entry))
               (content (elfeed-deref (elfeed-entry-content entry)))
               (score 0))
-          (loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
+          (cl-loop for (pattern n) in '(("software\\|programming\\|design\\|systems" 1)
                                      ("clojure" 1)
                                      ("emacs.*clojure\\|clojure.*emacs" 2))
                 if (string-match pattern title)
