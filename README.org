@@ -194,6 +194,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#babel][babel]]
     - [[#structure-templates][structure templates]]
     - [[#revealjs][reveal.js]]
+  - [[#habits][habits]]
+    - [[#documentation-repeated-tasks][[documentation] repeated tasks]]
   - [[#journal][journal]]
     - [[#what-is-a-personal-journal][what is a personal journal?]]
     - [[#writeroom][writeroom]]
@@ -215,13 +217,13 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
   - [[#rss-feed][rss feed]]
-    - [[#load-config][Load config]]
-    - [[#elfeed-newsletters][Elfeed newsletters]]
-    - [[#filter][Filter]]
-    - [[#automatic-update][Automatic Update]]
-    - [[#star-and-unstar][Star and unstar]]
-    - [[#youtube][Youtube]]
-    - [[#score][Score]]
+    - [[#load-config][load config]]
+    - [[#elfeed-newsletters][elfeed newsletters]]
+    - [[#filter][filter]]
+    - [[#automatic-update][automatic Update]]
+    - [[#star-and-unstar][star and unstar]]
+    - [[#youtube][youtube]]
+    - [[#score][score]]
   - [[#slack][slack]]
     - [[#custom-functions-5][custom functions]]
   - [[#telegram][telegram]]
@@ -3702,6 +3704,50 @@ on-demand and stored in memory.
         (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
     #+end_src
 
+** habits
+
+   Emacs org-habits function enables you:
+
+   - to specify any number of habits, each with different, sometimes
+     less regular frequencies
+   - to track when you perform a habit and when you should next
+     perform it and finally
+   - to visualize if you are performing according to the
+     specifications you have set
+
+     #+begin_src emacs-lisp
+       (add-to-list 'org-modules 'org-habit t)
+
+       (setq org-treat-insert-todo-heading-as-state-change t
+             org-log-into-drawer t)
+
+     #+end_src
+
+
+*** [documentation] repeated tasks
+    
+    Highlights from the official documentation on [[https://orgmode.org/manual/Repeated-tasks.html][repeated tasks]]. Some
+    tasks need to be repeated again and again, Org helps to organize
+    such tasks using a so-called repeater in a =DEADLINE=, =SCHEDULE=
+    or plain timestamps.
+
+    #+begin_example
+      ** TODO Pay the rent
+         DEADLINE: <2020-04-21 Tue +1m>
+    #+end_example
+
+    The =+1m= is repeater; the intended interpretation is that the
+    task has a deadline on 2020/04/21 and repeats itself every (one)
+    month.
+
+    #+caption: table of different repeater
+    | repeater | periodicity |
+    |----------+-------------|
+    | y        | yearly      |
+    | w        | weekly      |
+    | d        | daily       |
+    | h        | hourly      |
+
 ** journal
 
    Let's use [[https://750words.com/][750words]] to write a personal journal. As part of the
@@ -4238,7 +4284,7 @@ on-demand and stored in memory.
      (add-hook 'elfeed-search-update-hook 'bk/elfeed-disable-mode-setup)
    #+END_SRC
 
-*** Load config
+*** load config
 
     Lazy loading all the parts of my elfeed setup.
 
@@ -4258,7 +4304,7 @@ on-demand and stored in memory.
      <<elfeed-youtube>>
    #+END_SRC
 
-*** Elfeed newsletters
+*** elfeed newsletters
     :properties:
     :header-args: :noweb-ref elfeed-newsletters :tangle no
     :end:
@@ -4279,7 +4325,7 @@ on-demand and stored in memory.
         (elfeed-org))
     #+END_SRC
   
-*** Filter
+*** filter
     :properties:
     :header-args: :noweb-ref elfeed-filters :tangle no
     :end:
@@ -4315,7 +4361,7 @@ on-demand and stored in memory.
      (add-hook 'elfeed-new-entry-hook #'ime-elfeed-pocast-tagger)
    #+END_SRC
 
-*** Automatic Update
+*** automatic Update
     :properties:
     :header-args: :noweb-ref elfeed-automatic-update :tangle no
     :end:
@@ -4346,7 +4392,7 @@ on-demand and stored in memory.
      (add-hook 'elfeed-show-mode-hook 'visual-line-mode)
    #+END_SRC
 
-*** Star and unstar
+*** star and unstar
     :properties:
     :header-args: :noweb-ref elfeed-starred :tangle no
     :end:
@@ -4396,7 +4442,7 @@ on-demand and stored in memory.
       (define-key elfeed-search-mode-map (kbd "S") #'elfeed-toggle-star)
     #+END_SRC
 
-*** Youtube
+*** youtube
     :properties:
     :header-args: :noweb-ref elfeed-youtube :tangle no
     :end:
@@ -4449,7 +4495,7 @@ on-demand and stored in memory.
       (define-key elfeed-show-mode-map "b" #'ambrevar/elfeed-visit-maybe-external)
     #+END_SRC
 
-*** Score
+*** score
     :properties:
     :header-args: :noweb-ref elfeed-scoring :tangle no
     :end:
