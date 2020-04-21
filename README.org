@@ -223,6 +223,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#youtube][Youtube]]
     - [[#score][Score]]
   - [[#slack][slack]]
+    - [[#custom-functions-5][custom functions]]
   - [[#telegram][telegram]]
   - [[#spotify][spotify]]
   - [[#twitter][twitter]]
@@ -234,7 +235,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#advice][Advice]]
   - [[#pop-to-mark][pop to mark]]
   - [[#yank-indent][yank indent]]
-- [[#custom-functions-5][Custom Functions]]
+- [[#custom-functions-6][Custom Functions]]
   - [[#shell-1][shell]]
     - [[#kubernetes][kubernetes]]
   - [[#http-based][http-based]]
@@ -836,8 +837,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
    #+BEGIN_SRC emacs-lisp
      (use-package golden-ratio
        :ensure t
-       :init
-       (setq golden-ratio-exclude-modes '("ediff-mode"))
        :config
        (golden-ratio 1))
    #+END_SRC
@@ -4620,6 +4619,35 @@ on-demand and stored in memory.
  | slack-message-embed-mentio | use to mention to user                                                             |
  | slack-file-upload          | uploads a file                                                                     |
 
+*** custom functions
+**** take me directly to a specific chat room
+
+     #+begin_src emacs-lisp
+       (defun bk/slack-move-direct-to-specific-room (team channel)
+         "Open the buffer of the specified CHANNEL in a TEAM, without leaving the current TEAM."
+         (let* ((alist (mapcar #'(lambda (team) (cons (slack-team-name team)
+                                                 (oref team token)))
+                               (hash-table-values slack-teams-by-token)))
+                (token (cdar (-filter (lambda (v) (equalp (car v) team)) alist)))
+                (team (slack-team-find-by-token token))
+                (room (car (-filter (lambda (room) (equalp (slack-room-name room team) channel))
+                                    (slack-team-channels team)))))
+           (when team
+             (slack-team-connect team)
+             (slack-room-display room team))))
+
+
+       (defun bk/slack-move-to-reitit ()
+         "Take me to reitit discussions."
+         (interactive)
+         (bk/slack-move-direct-to-specific-room "clojurians" "reitit"))
+
+       (defun bk/slack-move-to-beginners ()
+         "Take me to beginners discussions."
+         (interactive)
+         (bk/slack-move-direct-to-specific-room "clojurians" "beginners"))
+     #+end_src
+
 ** telegram
 
    One more chat service that we need to stay in touch with friends and
@@ -5127,16 +5155,6 @@ on-demand and stored in memory.
 ** global definitions
 
    #+begin_src emacs-lisp
-     (global-set-key "\C-x3" (lambda ()
-                (interactive)
-                (split-window-horizontally)
-                (other-window 1)))
-
-     (global-set-key "\C-x2" (lambda ()
-                (interactive)
-                (split-window-vertically)
-                (other-window 1)))
-
      (global-set-key (kbd "C-x C-m") 'smex)
      (global-set-key (kbd "M-x") 'smex)
      (global-set-key (kbd "M-i") 'change-inner)
