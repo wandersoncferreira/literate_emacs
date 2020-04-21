@@ -1,0 +1,35 @@
+#+TITLE: Meeting <name>
+
+# shortcut to insert date: C-u C-c .
+# shortcut to insert tag: C-c C-q
+# shortcut to insert deadline: C-c C-d
+# shortcut to update tables: C-c C-c (on source block)
+# shortcut to navigate in the calendar: S-<arrows> [daily] S-M-<arrows> [monthly]
+
+#+DATE: 
+#+AUTHOR: Wanderson Ferreira
+
+* Present at meeting
+  - [X] Wand
+
+* Agenda
+  - What about?
+
+* Notes
+** Important note
+** Worked as expected                                              :Decision:
+** TODO Need to do it                                                :@Wand:
+
+* Actions
+#+BEGIN: columnview :id global :match "/TODO|DONE" :format "%ITEM(What) %TAGS(Who) %DEADLINE(When) %TODO(State)"
+| What          | Who     | When | State |
+|---------------+---------+------+-------|
+| Need to do it | :@Wand: |      | TODO  |
+#+END:
+
+* Decisions
+#+BEGIN: columnview :id global :match "Decision" :format "%ITEM(Decisions)"
+| Decisions          |
+|--------------------|
+| Worked as expected |
+#+END:

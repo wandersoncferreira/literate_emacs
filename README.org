@@ -205,6 +205,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#beamer][beamer]]
   - [[#tips-and-tricks][tips and tricks]]
     - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
+    - [[#insert-template-for-documenting-a-meeting][insert template for documenting a meeting]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
   - [[#correct-your-spelling-errors-on-the-fly][correct your spelling errors on the fly]]
@@ -3911,6 +3912,7 @@ on-demand and stored in memory.
    #+END_SRC
 ** tips and tricks
 *** Compute difference between two dates.
+
     From M-x tpis (@iLemming) in Org-mode
     - use =C-c != to enter timestamps
     - use =S-<arrows>= to move between days
@@ -3918,6 +3920,15 @@ on-demand and stored in memory.
     - Place =-= between them (to make it a range)
     - =C-c C-y= to =org-evaluate-time-range=
     - with a prefix argument inserts it into the buffer.
+
+*** insert template for documenting a meeting
+
+    #+begin_src emacs-lisp
+      (defun bk/meeting-minute ()
+        "Insert Org template to create a meeting minute."
+        (interactive)
+        (insert-file "~/.emacs.d/docs/org-template-meeting.org"))
+    #+end_src
 
 * Projects
 
