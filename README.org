@@ -86,6 +86,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#customization-to-info-mode][customization to info-mode]]
     - [[#define-keys][define keys]]
     - [[#hydras-1][hydras]]
+  - [[#helpful][helpful]]
 - [[#editing-text][Editing Text]]
   - [[#defaults-1][defaults]]
     - [[#key-bindings][key bindings]]
@@ -99,13 +100,14 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#jump-to-char][jump to char]]
     - [[#move-through-edit-points][move through edit points]]
   - [[#highlights][highlights]]
+  - [[#regexp][regexp]]
   - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][multiple cursors]]
   - [[#custom-functions][custom functions]]
-    - [[#smart-move-to-beginning-of-visible-line-or-not][Smart move to beginning of visible line (or not)]]
-    - [[#unfill-paragraph][Unfill paragraph]]
-    - [[#unfill-region][Unfill region]]
-    - [[#duplicate-line-or-region][Duplicate line or region]]
+    - [[#smart-move-to-beginning-of-visible-line-or-not][smart move to beginning of visible line (or not)]]
+    - [[#unfill-paragraph][unfill paragraph]]
+    - [[#unfill-region][unfill region]]
+    - [[#duplicate-line-or-region][duplicate line or region]]
   - [[#hide-block-of-code][hide block of code]]
   - [[#web-paste][web paste]]
 - [[#completions][Completions]]
@@ -1477,7 +1479,21 @@ Adding urban dictionary to webjump.
           ("e" (ora-open-info "emacs" "*emacs info*"))
           ("h" (ora-open-info "gcl" "*hyperspec*")))
     #+END_SRC
+** helpful
 
+   #+BEGIN_QUOTE
+   Helpful is an alternative to the built-in Emacs help that provides much more contextual information. — [[https://github.com/Wilfred/helpful][helpful]]
+   #+END_QUOTE
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helpful
+       :ensure t
+       :config (progn
+                 (bind-key "C-h f" #'helpful-callable)
+                 (bind-key "C-h v" #'helpful-variable)
+                 (bind-key "C-h k" #'helpful-key)
+                 (bind-key "C-h ," #'helpful-at-point)))
+   #+END_SRC
 * Editing Text
 
 ** defaults
@@ -1657,6 +1673,33 @@ Adding urban dictionary to webjump.
        (highlight-symbol-on-navigation-p t))
    #+END_SRC
 
+** regexp
+
+   Use [[https://github.com/benma/visual-regexp.el][visual-regexp]] for visual regular expressions and use [[https://github.com/benma/visual-regexp-steroids.el/][visual-regexp-steroids]] for modern regexps. This makes Emacs regexp actually usable for me.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package visual-regexp
+       :ensure t
+       :bind (("M-%" . vr/query-replace)
+              ("C-S-s" . vr/isearch-forward)
+              ("C-S-r" . vr/isearch-backward)))
+
+     (use-package visual-regexp-steroids
+       :config (setq vr/engine 'pcre2el)
+       :ensure t)
+   #+END_SRC
+   
+   Sometimes visual-regexp bombs out, so we have a function to reset it:
+   
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/reset-visual-regexp ()
+       (interactive)
+       (unload-feature 'visual-regexp t)
+       (unload-feature 'visual-regexp-steroids t)
+       (require 'visual-regexp)
+       (require 'visual-regexp-steroids))
+   #+END_SRC
+
 ** UTF-8
 
    No one knows why this is not the default already.
@@ -1732,7 +1775,7 @@ Adding urban dictionary to webjump.
    Several helper functions to ease the day-to-day work of editing
    text.
 
-*** Smart move to beginning of visible line (or not)
+*** smart move to beginning of visible line (or not)
 
     Very nice default.
 
@@ -1756,7 +1799,7 @@ Adding urban dictionary to webjump.
       (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
     #+end_src
 
-*** Unfill paragraph
+*** unfill paragraph
 
     I used it sometimes when yanking text written in Emacs to paste in
     other external apps such as gmail and I don't want the "break
@@ -1770,7 +1813,7 @@ Adding urban dictionary to webjump.
           (fill-paragraph nil)))
     #+END_SRC
 
-*** Unfill region
+*** unfill region
 
     #+BEGIN_SRC emacs-lisp
       (defun unfill-region (beg end)
@@ -1780,7 +1823,7 @@ Adding urban dictionary to webjump.
           (fill-region beg end)))
     #+END_SRC
 
-*** Duplicate line or region
+*** duplicate line or region
 
     #+BEGIN_SRC emacs-lisp
       (defun duplicate-current-line-or-region (arg)
@@ -1906,14 +1949,16 @@ Adding urban dictionary to webjump.
        :delight company-mode
        :init
        (setq company-show-numbers t
+             company-echo-delay 0
+             company-idle-delay 0.6
+             company-require-match nil
              company-dabbrev-downcase nil
              company-dabbrev-ignore-case t
              company-tooltip-limit 10
              company-minimum-prefix-length 2
-             company-require-match 'never
              company-tooltip-align-annotations t
              company-transformers '(company-sort-by-occurrence)
-             company-idle-delay 0.5)
+             )
        :config
        (global-company-mode t))
    #+end_src
@@ -2015,6 +2060,27 @@ Adding urban dictionary to webjump.
     | 3   | aw-split-window-horz |
     | x   | aw-delete-window     |
     | ??  | aw-dispatch-help     |
+
+    
+    When splitting windows open the previous buffer in it.
+    #+begin_src emacs-lisp
+      (defun bk/vsplit-last-buffer ()
+        "Split the window vertically and display the previous buffer."
+        (interactive)
+        (split-window-vertically)
+        (other-window 1 nil)
+        (switch-to-next-buffer))
+
+      (defun bk/hsplit-last-buffer ()
+        "Split the window horizontally and display the previous buffer."
+        (interactive)
+        (split-window-horizontally)
+        (other-window 1 nil)
+        (switch-to-next-buffer))
+
+      (global-set-key (kbd "C-x 2") 'bk/vsplit-last-buffer)
+      (global-set-key (kbd "C-x 3") 'bk/hsplit-last-buffer)
+    #+end_src
 
 ** shackle
 
@@ -2721,7 +2787,7 @@ the *winner-boring-buffers*.
                  'executable-make-buffer-file-executable-if-script-p))
    #+end_src
 
-* General Programming 
+* General Programming
 
   Sometimes I place some TODO and FIXME words in the middle of my code
   so I can come back to it latter and work on the subjects. The
@@ -2773,35 +2839,59 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 #+END_SRC
 
 ** parenthesis
+   
+   [[https://github.com/Fuco1/smartparens][Smartparens]] is a minor mode that deals with parens pairs and tries
+   to be smart about it. I am a paredit user for a long time, I
+   decided to switch to smartparens to experiment this new package
+   which seems to have many more features than paredit. I've been here
+   for almost 6 months now, I am yet not sold out in the smartparens
+   idea, for some reason I like the feel of paredit. Still need to
+   dedicate more time to use this in its fullest.
 
- #+begin_src emacs-lisp
-   (use-package smartparens
-     :ensure t
-     :delight smartparens-strict-mode
-     :init
-     (setq sp-highlight-pair-overlay nil)
-     :config
-     (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
-     (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+   #+begin_src emacs-lisp
+     (use-package smartparens
+       :ensure t
+       :delight smartparens-strict-mode
+       :init
+       (setq sp-highlight-pair-overlay nil)
+       :config
+       (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+       (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
 
-     (with-eval-after-load "smartparens"
-       ;; remove some pairs
-       (sp-pair "'" nil :actions :rem)
-       (sp-pair "`" nil :actions :rem)
+       (with-eval-after-load "smartparens"
+         ;; remove some pairs
+         (sp-pair "'" nil :actions :rem)
+         (sp-pair "`" nil :actions :rem)
 
-       ;; include new wrap of pairs
-       (sp-pair "(" ")" :wrap "M-(")
-       (sp-pair "[" "]" :wrap "M-[")
+         ;; include new wrap of pairs
+         (sp-pair "(" ")" :wrap "M-(")
+         (sp-pair "[" "]" :wrap "M-[")
 
-       (sp-use-smartparens-bindings)		;enable default smartparens bindings
+         (sp-use-smartparens-bindings)		;enable default smartparens bindings
 
-       (sp-local-tag 'markdown-mode "c" "```clojure" "```")
-       (sp-local-tag 'markdown-mode "e" "```elisp" "```")
-       (sp-local-tag 'markdown-mode "b" "```bash" "```")
-       (sp-local-tag 'markdown-mode "p" "```python" "```")
+         (sp-local-tag 'markdown-mode "c" "```clojure" "```")
+         (sp-local-tag 'markdown-mode "e" "```elisp" "```")
+         (sp-local-tag 'markdown-mode "b" "```bash" "```")
+         (sp-local-tag 'markdown-mode "p" "```python" "```")
 
-       (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
- #+end_src
+         (define-key smartparens-mode-map (kbd "M-p") 'sp-prefix-pair-object)))
+   #+end_src
+
+   I stole this from [[http://xenodium.com/emacs-smartparens-auto-indent/index.html][here]], where Alvaro Ramirez is exemplifying a nice
+   feature of Xcode about auto-indent after opening parens. For sure we
+   should be able to do that in smartparens:
+ 
+   #+begin_src emacs-lisp
+     (defun indent-between-pair (&rest _ignored)
+       (newline)
+       (indent-according-to-mode)
+       (forward-line -1)
+       (indent-according-to-mode))
+  
+     (sp-local-pair 'prog-mode "{" nil :post-handlers '((indent-between-pair "RET")))
+     (sp-local-pair 'prog-mode "[" nil :post-handlers '((indent-between-pair "RET")))
+     (sp-local-pair 'prog-mode "(" nil :post-handlers '((indent-between-pair "RET")))
+   #+end_src
 ** folding
 
 *** folding based on indentation and syntax
@@ -3932,22 +4022,6 @@ on-demand and stored in memory.
 
 * Projects
 
-  #+begin_src emacs-lisp :noweb yes
-    (use-package projectile
-      :ensure t
-      :delight '(:eval (concat " " (projectile-project-name)))
-      :init
-      (setq projectile-completion-system 'ido)
-      :config
-      (projectile-mode t)
-
-      <<bk-hydra-projectile>>
-
-      :requires hydra
-      :bind
-      ("C-c p" . bk/hydra-projects/body))
-  #+end_src
-
   Let's define a nice hydra that I've been using for a while now.
   #+name bk-hydra-projectile
   #+BEGIN_SRC emacs-lisp :tangle no
@@ -3967,6 +4041,22 @@ on-demand and stored in memory.
       ("R" projectile-replace-regexp "regexp replace" :column "Search")
       ("g" bk/rgrep-fullscreen "grep" :column "Search"))
   #+END_SRC
+
+  #+begin_src emacs-lisp :noweb yes
+    (use-package projectile
+      :ensure t
+      :delight '(:eval (concat " " (projectile-project-name)))
+      :init
+      (setq projectile-completion-system 'ido)
+      :config
+      (projectile-mode t)
+
+      <<bk-hydra-projectile>>
+
+      :requires hydra
+      :bind
+      ("C-c p" . bk/hydra-projects/body))
+  #+end_src
 
 * Spelling
 
