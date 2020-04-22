@@ -1,4 +1,4 @@
-#+title: Emacs literate configuration
+6#+title: Emacs literate configuration
 #+author: Wanderson Ferreira
 #+EMAIL: wanderson.ferreira@protonmail.com
 #+date: 2020:04:02
@@ -100,7 +100,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#jump-to-char][jump to char]]
     - [[#move-through-edit-points][move through edit points]]
   - [[#highlights][highlights]]
-  - [[#regexp][regexp]]
   - [[#utf-8][UTF-8]]
   - [[#multiple-cursors][multiple cursors]]
   - [[#custom-functions][custom functions]]
@@ -1671,33 +1670,6 @@ Adding urban dictionary to webjump.
        (highlight-symbol-highlight-single-occurrence nil)
        (highlight-symbol-idle-delay 0.25)
        (highlight-symbol-on-navigation-p t))
-   #+END_SRC
-
-** regexp
-
-   Use [[https://github.com/benma/visual-regexp.el][visual-regexp]] for visual regular expressions and use [[https://github.com/benma/visual-regexp-steroids.el/][visual-regexp-steroids]] for modern regexps. This makes Emacs regexp actually usable for me.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package visual-regexp
-       :ensure t
-       :bind (("M-%" . vr/query-replace)
-              ("C-S-s" . vr/isearch-forward)
-              ("C-S-r" . vr/isearch-backward)))
-
-     (use-package visual-regexp-steroids
-       :config (setq vr/engine 'pcre2el)
-       :ensure t)
-   #+END_SRC
-   
-   Sometimes visual-regexp bombs out, so we have a function to reset it:
-   
-   #+BEGIN_SRC emacs-lisp
-     (defun bk/reset-visual-regexp ()
-       (interactive)
-       (unload-feature 'visual-regexp t)
-       (unload-feature 'visual-regexp-steroids t)
-       (require 'visual-regexp)
-       (require 'visual-regexp-steroids))
    #+END_SRC
 
 ** UTF-8
@@ -4023,37 +3995,31 @@ on-demand and stored in memory.
 * Projects
 
   Let's define a nice hydra that I've been using for a while now.
-  #+name bk-hydra-projectile
-  #+BEGIN_SRC emacs-lisp :tangle no
-    (defhydra bk/hydra-projects (:color blue)
-      ("q" nil "quit" :column "Projectile")
-
-      ("b" projectile-switch-to-buffer "list" :column "Buffers")
-      ("K" projectile-kill-buffers "kill all" :column "Buffers")
-      ("S" projectile-save-project-buffers "save all" :column "Buffers")
-
-      ("d" projectile-find-dir "directory" :column "Find")
-      ("D" projectile-dired "root" :column "Find")
-      ("f" projectile-find-file "file" :column "Find")
-      ("p" projectile-switch-project "project" :column "Find")
-
-      ("r" projectile-replace "replace" :column "Search")
-      ("R" projectile-replace-regexp "regexp replace" :column "Search")
-      ("g" bk/rgrep-fullscreen "grep" :column "Search"))
-  #+END_SRC
-
-  #+begin_src emacs-lisp :noweb yes
+  #+begin_src emacs-lisp
     (use-package projectile
       :ensure t
       :delight '(:eval (concat " " (projectile-project-name)))
+      :requires hydra
       :init
       (setq projectile-completion-system 'ido)
       :config
+      (defhydra bk/hydra-projects (:color blue)
+        ("q" nil "quit" :column "Projectile")
+
+        ("b" projectile-switch-to-buffer "list" :column "Buffers")
+        ("K" projectile-kill-buffers "kill all" :column "Buffers")
+        ("S" projectile-save-project-buffers "save all" :column "Buffers")
+
+        ("d" projectile-find-dir "directory" :column "Find")
+        ("D" projectile-dired "root" :column "Find")
+        ("f" projectile-find-file "file" :column "Find")
+        ("p" projectile-switch-project "project" :column "Find")
+
+        ("r" projectile-replace "replace" :column "Search")
+        ("R" projectile-replace-regexp "regexp replace" :column "Search")
+        ("g" bk/rgrep-fullscreen "grep" :column "Search"))
+
       (projectile-mode t)
-
-      <<bk-hydra-projectile>>
-
-      :requires hydra
       :bind
       ("C-c p" . bk/hydra-projects/body))
   #+end_src
