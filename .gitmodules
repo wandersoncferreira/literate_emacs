@@ -1,3 +1,6 @@
 [submodule "themes/organic-green-theme"]
 	path = themes/organic-green-theme
 	url = https://github.com/wandersoncferreira/organic-green-theme
+[submodule "lisps/pomidor"]
+	path = lisps/pomidor
+	url = https://github.com/wandersoncferreira/pomidor
