@@ -1,4 +1,4 @@
-6#+title: Emacs literate configuration
+#+title: Emacs literate configuration
 #+author: Wanderson Ferreira
 #+EMAIL: wanderson.ferreira@protonmail.com
 #+date: 2020:04:02
@@ -30,7 +30,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#initialization][initialization]]
   - [[#use-package][use-package]]
   - [[#custom-packages][custom packages]]
-  - [[#paradox][paradox]]
 - [[#dependencies][Dependencies]]
   - [[#extra][extra]]
     - [[#scrot][scrot]]
@@ -48,25 +47,21 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#garbage-collection][garbage Collection]]
     - [[#collector-magic-hack][Collector Magic Hack]]
   - [[#manage-external-services][manage external services]]
-  - [[#restart-emacs][restart Emacs]]
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][cleaning]]
   - [[#theme-and-faces][theme and faces]]
     - [[#buffer-based-theming][buffer based theming]]
     - [[#download-themes][download themes]]
     - [[#default-theme][default theme]]
-  - [[#golden-ratio][golden ratio]]
   - [[#time][time]]
   - [[#font][font]]
   - [[#mode-line][mode line]]
     - [[#menu][menu]]
-    - [[#simplification][simplification]]
   - [[#fringe][fringe]]
 - [[#defaults][Defaults]]
   - [[#ediff][ediff]]
   - [[#word-wrapping][word wrapping]]
   - [[#backup][backup]]
-  - [[#clean-stale-buffers][clean stale buffers]]
   - [[#recentf][recentf]]
   - [[#uniquify][uniquify]]
   - [[#extended-command][extended command]]
@@ -77,7 +72,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#ibuffer][ibuffer]]
   - [[#minibuffer][minibuffer]]
     - [[#get-more-space-for-editing][get more space for editing]]
-  - [[#help][help]]
   - [[#calendar][calendar]]
   - [[#webjump][webjump]]
   - [[#authentication-source][authentication source]]
@@ -107,7 +101,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#unfill-paragraph][unfill paragraph]]
     - [[#unfill-region][unfill region]]
     - [[#duplicate-line-or-region][duplicate line or region]]
-  - [[#hide-block-of-code][hide block of code]]
   - [[#web-paste][web paste]]
 - [[#completions][Completions]]
   - [[#minibuffer-1][minibuffer]]
@@ -133,7 +126,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#guidelines][guidelines]]
     - [[#mark-files-in-dired][Mark files in Dired]]
     - [[#replace-text-in-multiple-files][Replace text in multiple files]]
-  - [[#ranger][ranger]]
   - [[#functions][functions]]
 - [[#tramp][TRAMP]]
 - [[#version-control][Version Control]]
@@ -167,7 +159,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#dumb-jump][dumb jump]]
   - [[#documentation][documentation]]
   - [[#programming-languages][programming languages]]
-    - [[#clojure][Clojure]]
+    - [[#clojure][clojure]]
     - [[#python][Python]]
     - [[#sql][SQL]]
     - [[#latex][Latex]]
@@ -183,7 +175,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#json][json]]
   - [[#yaml][yaml]]
   - [[#makefile][makefile]]
-- [[#notes][Notes]]
 - [[#pdf][PDF]]
 - [[#org-mode][Org mode]]
   - [[#literate-programming][literate programming]]
@@ -239,9 +230,11 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#advice][Advice]]
   - [[#pop-to-mark][pop to mark]]
   - [[#yank-indent][yank indent]]
+- [[#recording][Recording]]
 - [[#custom-functions-6][Custom Functions]]
   - [[#shell-1][shell]]
     - [[#kubernetes][kubernetes]]
+    - [[#keys-i-use-to-work-with][keys i use to work with]]
   - [[#http-based][http-based]]
     - [[#find-my-current-ip][find my current ip]]
   - [[#editing][editing]]
@@ -366,12 +359,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (add-to-list 'load-path project)))
   #+END_SRC
 
-** paradox
-
-   It is an alternative / extension to the built-in package manager.
-   #+BEGIN_SRC emacs-lisp
-   #+END_SRC
-   
 * Dependencies
 
   List of external packages that I rely on in my daily basis
@@ -573,6 +560,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
 ** path
 
+   Teach Emacs about the PATH of the underlying OS.
+
    #+begin_src emacs-lisp
      (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
      (setq exec-path (append exec-path '("/home/wand/scripts")))
@@ -582,14 +571,13 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
      (setenv "LD_LIBRARY_PATH" (concat (getenv "LD_LIBRARY_PATH") ":/usr/local/lib"))
      (setq exec-path (append exec-path '("/usr/local/lib")))
-
    #+end_src
 
    I've been using qutebrowser as my main browser for more than one year
    now. Idk, I like keyboard centric products.
    #+BEGIN_SRC emacs-lisp
      (setq browse-url-browser-function 'browse-url-generic
-   	browse-url-generic-program "qutebrowser")
+           browse-url-generic-program "qutebrowser")
    #+END_SRC
 
 ** security
@@ -690,13 +678,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
        (prodigy-define-tag
          :name 'blog
          :ready-message "Started server on port 3000"))
-   #+END_SRC
-
-** restart Emacs
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package restart-emacs
-       :ensure t)
    #+END_SRC
 
 * Aesthetics
@@ -807,15 +788,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     source code. Right now, I am modernizing the structure and color
     pallets to be more organized and comprehensive.
 
-**** Jazz
-
-     Warm theme with dark colors
-     #+BEGIN_SRC emacs-lisp
-       (use-package jazz-theme
-         :ensure t
-         :defer t)
-     #+END_SRC
-     
 *** default theme
 
     Let's activate the default theme, I might change this very often.
@@ -827,23 +799,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
                   (load-theme 'organic-green t)))
     #+END_SRC
 
-** golden ratio
-   
-   When working with many windows at the same time, each window has a
-   size that is not convenient for editing. =golden-ratio= helps on
-   this issue by resizing automatically the windows you are working on
-   to the size specified in the "Golden Ratio".
-
-   The window that has the main focus will have the perfect size for
-   editing, while the others are not being actively edited it will be
-   re-sized to a smaller size.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package golden-ratio
-       :ensure t
-       :config
-       (golden-ratio 1))
-   #+END_SRC
 ** time
 
    #+BEGIN_SRC emacs-lisp
@@ -851,25 +806,19 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
        :ensure nil
        :init
        (setq display-time-default-load-average nil
-	     display-time-format "%Hh%M "
-	     display-time-day-and-date t)
+             display-time-format "%Hh%M "
+             display-time-day-and-date t)
        :config
        (display-time-mode t))
    #+END_SRC
 
 ** font
 
-    I like the default font, but why not change it towards a more
-    programming-friendlier one: Source Code Pro.
+   redefine the size of the font.
+   #+begin_src emacs-lisp
+     (set-face-attribute 'default nil :height 130)
+   #+end_src
 
-    #+begin_src emacs-lisp
-      (defun bk/font-family-size (family size)
-        "Set frame font to FAMILY at SIZE."
-        (set-frame-font
-         (concat family "-" (number-to-string size) ":hintstyle=hintfull") t t))
-
-      (bk/font-family-size "Source Code Pro Medium" 12)
-    #+end_src
 ** mode line
 
 *** menu
@@ -886,38 +835,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
         (minions-mode 1))
     #+END_SRC
    
-*** simplification
-
-    I read a blog post some time ago about slim down the mode-line.
-    Usually I don't need much of the information there, therefore
-    let's make this experiment.
-    
-    #+begin_src emacs-lisp
-      (setq-default mode-line-format
-                    '("%e"
-                      mode-line-front-space
-                      ;; mode-line-mule-info
-                      ;; mode-line-client
-                      ;; mode-line-modified
-                      ;; mode-line-remote
-                      ;; mode-line-frame-identification
-                      mode-line-buffer-identification
-                      "   "
-                      ;; mode-line-position
-                      ;; (vc-mode vc-mode)
-                      ;; " "
-                      ;; mode-line-modes
-                      "   "
-                      ;; mode-line-misc-info
-                      ;; battery-mode-line-string
-                      mode-line-end-spaces))
-      (setq display-time-format "%a, %b %e %R"
-            global-mode-string (remove 'display-time-string global-mode-string)
-            mode-line-end-spaces (list (propertize " "
-                                                   'display
-                                                   '(space :align-to (- right 17)))
-                                       'display-time-string))
-    #+end_src
 ** fringe
 
     Control the fringe around the frame.
@@ -1077,12 +994,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
            backup-by-copying t)
    #+END_SRC
 
-** clean stale buffers
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package midnight :ensure t)
-   #+END_SRC
-
 ** recentf
 
    This is a built-in mode that keeps track of the files you have
@@ -1120,25 +1031,25 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
    #+END_SRC
 ** extended command
 
-=smex= is an improved version of =extended-command= or =M-x=
+   =smex= is an improved version of =extended-command= or =M-x=
 
-#+begin_src emacs-lisp
-  (use-package smex
-    :ensure t
-    :config
-    (smex-initialize))
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package smex
+       :ensure t
+       :config
+       (smex-initialize))
+   #+end_src
 
 ** case switch
 
-#+begin_src emacs-lisp
-  (use-package fix-word
-    :ensure t
-    :config
-    (global-set-key (kbd "M-u") #'fix-word-upcase)
-    (global-set-key (kbd "M-l") #'fix-word-downcase)
-    (global-set-key (kbd "M-c") #'fix-word-capitalize))
-#+end_src
+   #+begin_src emacs-lisp
+     (use-package fix-word
+       :ensure t
+       :config
+       (global-set-key (kbd "M-u") #'fix-word-upcase)
+       (global-set-key (kbd "M-l") #'fix-word-downcase)
+       (global-set-key (kbd "M-c") #'fix-word-capitalize))
+   #+end_src
 
 ** registers
 
@@ -1362,7 +1273,6 @@ Clean all the registers you saved.
         (miniedit-install))
     #+end_src
 
-** help
 ** calendar
 
    #+BEGIN_SRC emacs-lisp
@@ -1645,19 +1555,6 @@ Adding urban dictionary to webjump.
     
 ** highlights
 
-   Visual feedback on some operations like yank, kill, undo. An
-   example is that if you paste the next key. This is just a small
-   tweak, but gives a nice bit of visual feedback.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package volatile-highlights
-       :ensure t
-       :delight volatile-highlights-mode
-       :defer t
-       :config
-       (volatile-highlights-mode t))
-   #+END_SRC
-
    Very often is useful to highlight some symbols.
    #+BEGIN_SRC emacs-lisp
      (use-package highlight-symbol
@@ -1762,11 +1659,11 @@ Adding urban dictionary to webjump.
         (setq arg (or arg 1))
         (when (/= arg 1)
           (let ((line-move-visual nil))
-    	(forward-line (1- arg))))
+            (forward-line (1- arg))))
         (let ((orig-point (point)))
           (back-to-indentation)
           (when (= orig-point (point))
-    	(move-beginning-of-line 1))))
+            (move-beginning-of-line 1))))
 
       (global-set-key [remap move-beginning-of-line] 'smarter-move-beginning-of-line)
     #+end_src
@@ -1833,20 +1730,6 @@ Adding urban dictionary to webjump.
     #+BEGIN_SRC emacs-lisp
       (global-set-key (kbd "C-c 2") 'duplicate-current-line-or-region)
     #+END_SRC
-
-** hide block of code
-
-   Enable hide definitions functions
-   #+BEGIN_SRC emacs-lisp
-     (use-package hideshow
-       :ensure nil
-       :defer t
-       :commands (hs-toggle-hiding)
-       :delight hs-minor-mode
-       :config
-       (add-hook 'prog-mode-hook 'hs-minor-mode)
-       (global-set-key (kbd "C-c h") 'hs-toggle-hiding))
-   #+END_SRC
 
 ** web paste
 
@@ -2205,8 +2088,6 @@ the *winner-boring-buffers*.
       :config
       (setq alert-default-style 'libnotify
             alert-log-messages t))
-
-    (require 'alert)
   #+END_SRC
 
 ** user configuration
@@ -2216,6 +2097,14 @@ the *winner-boring-buffers*.
 
 *** Slack notifications
     This was stolen from [[https://endlessparentheses.com/keep-your-slack-distractions-under-control-with-emacs.html][endless parentheses]] and adapt accordingly.
+
+    Shuts up!
+    #+begin_src emacs-lisp
+      (eval-after-load 'alert
+        '(add-to-list 'alert-user-configuration
+                      '(((:category . "slack"))
+                        log nil)))
+    #+end_src
 
     Channels that I wish to only log the messages in the *Alert*
     buffer.
@@ -2240,30 +2129,31 @@ the *winner-boring-buffers*.
     There are a few channel where I only need to pay attention if
     explicitly mentioned.
     #+BEGIN_SRC emacs-lisp
-      (add-to-list
-       'alert-user-configuration
-       '(((:message . "@bartuka\\|Wanderson")
-          (:title . "\\(beginners\\)")
-          (:category . "slack"))
-         libnotify nil))
+      (eval-after-load 'alert
+        '(add-to-list 'alert-user-configuration
+                      '(((:message . "@bartuka\\|Wanderson")
+                         (:title . "\\(beginners\\)")
+                         (:category . "slack"))
+                        libnotify nil)))
     #+END_SRC
 
 *** Telegram notifications
 
     Let's start by telling alert *not* to notify anything.
     #+BEGIN_SRC emacs-lisp
-      (add-to-list 'alert-user-configuration
-                   '(((:category . "telega"))
-                     log nil))
+      (eval-after-load 'alert
+        '(add-to-list 'alert-user-configuration
+                      '(((:category . "telega"))
+                        log nil)))
     #+END_SRC
 
     However, if someone explicitly mention me, tell me pls.
     #+BEGIN_SRC emacs-lisp
-      (add-to-list
-             'alert-user-configuration
-             '(((:message . "@bartuka\\|Wanderson")
-                (:category . "telega"))
-               libnotify nil))
+      (eval-after-load 'alert
+        '(add-to-list 'alert-user-configuration
+                      '(((:message . "@bartuka\\|Wanderson")
+                         (:category . "telega"))
+                        libnotify nil)))
     #+END_SRC
    
 ** custom functions
@@ -2333,26 +2223,6 @@ the *winner-boring-buffers*.
 
     Start dired and mark files as described in [[Mark files in Dired]],
     then use =Q= to run =query-replace= on all marked files.
-
-** ranger
-
-   The package [[https://github.com/Fuco1/dired-hacks#dired-ranger][dired-ranger]] provides a useful extension to dired,
-   allowing you to copy and paste files much like you can do in
-   traditional GUI file explorers.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package dired-ranger
-       :ensure t
-       :bind (:map dired-mode-map
-                   ("W" . dired-ranger-copy)
-                   ("X" . dired-ranger-move)
-                   ("Y" . dired-ranger-paste)))
-   #+END_SRC
-
-   Now in a dired buffer, you can mark multiple files and them hit =W=
-   to copy them. You could then optionally go to another directory and
-   mark more files and git =C-u W= to add those to the same entry in
-   the copy ring as the previous files.
 
 ** functions
 
@@ -2785,7 +2655,7 @@ the *winner-boring-buffers*.
     (use-package hungry-delete
       :ensure t
       :config
-      (global-hungry-delete-mode t))
+      (add-hook 'prog-mode-hook 'hungry-delete-mode))
   #+end_src
 
 ** whitespaces
@@ -2977,7 +2847,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
                    (setq zeal-at-point-docset "clojure"))))
    #+END_SRC
 ** programming languages
-*** Clojure
+*** clojure
 
   Unfortunately, Emacs does not have a builtin major mode for Clojure,
   however we have a great community that support any programming
@@ -2997,7 +2867,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       :ensure t
       :delight (clojure-mode "λ")
       :init
-      (setq clojure-align-forms-automatically t)
+      (setq clojure-align-forms-automatically nil)
       :config
       (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
       (add-hook 'clojure-mode-hook 'eldoc-mode)
@@ -3008,7 +2878,8 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
   following example a default behavior and you don't need to manually
   align the values. **NOTE**: this is an experiment, 90% of the time
   this happened to me, that was the default behavior I wanted. Let's see
-  how much the other 10% will annoy me now.
+  how much the other 10% will annoy me now. *EDIT*: These 10% are
+  really bad, I turned it off again.
 
   #+BEGIN_SRC clojure
     (def my-map
@@ -3084,8 +2955,10 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       (setq cider-mode-line " CIDER"
             cider-repl-display-in-current-window t
             cider-auto-select-error-buffer nil
+            cider-auto-select-test-report-buffer nil
+            cider-test-show-report-on-success t
             cider-repl-pop-to-buffer-on-connect nil
-            cider-show-error-buffer nil
+            cider-show-error-buffer t
             cider-repl-use-pretty-printing t
             nrepl-hide-special-buffers t
             nrepl-popup-stacktraces-in-repl t)
@@ -3535,25 +3408,6 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        :ensure t
        :mode (("Makefile" . makefile-gmake-mode)))
    #+END_SRC
-
-* Notes
-
-  #+BEGIN_SRC emacs-lisp
-    (use-package deft
-      :ensure t
-      :config
-      (setq deft-default-extension "org"
-	    deft-use-filename-as-title nil
-	    deft-use-filter-string-for-filename t
-	    deft-file-naming-rules '((noslash . "-")
-				     (nospace . "-")
-				     (case-fn . downcase))
-	    deft-extensions '("txt" "org")
-	    deft-directory "~/notes"
-	    deft-auto-save-interval 0
-	    deft-text-mode 'org-mode
-	    deft-recursive t))
-  #+END_SRC
 
 * PDF
 
@@ -4885,37 +4739,7 @@ on-demand and stored in memory.
   6. Every 4 pomodoros, *take a longer break* (15 minutes in my setup)
 
   #+BEGIN_SRC emacs-lisp
-    (use-package pomodoro
-      :ensure t
-      :bind ("C-c 0" . hydra-pomodoro/body)
-      :init
-      (setq pomodoro-play-sounds t)
-
-      (setq pomodoro-work-start-message "Let's get back to work"
-            pomodoro-work-cycle "w"
-            pomodoro-work-time 25)
-
-      (setq pomodoro-break-start-message "BREAK TIME <>"
-            pomodoro-break-cycle "b"
-            pomodoro-break-time 5)
-
-      (setq pomodoro-long-break-start-message "Time for a longer break!"
-            pomodoro-long-break-time 15
-            pomodoro-nth-for-longer-break 4)
-
-      (setq pomodoro-extra-time 2)
-
-      :config
-      (add-to-list 'mode-line-format
-                   '(pomodoro-mode-line-string pomodoro-mode-line-string))
-      (defhydra hydra-pomodoro (:color blue)
-        "pomodoro"
-        ("0" pomodoro-start "start")
-        ("s" pomodoro-start "start")
-        ("x" pomodoro-stop "stop")
-        ("p" pomodoro-pause "pause")
-        ("r" pomodoro-resume "resume")
-        ("q" nil "cancel")))
+    (require 'pomidor)
   #+END_SRC
 
 * Financial
@@ -5099,6 +4923,13 @@ on-demand and stored in memory.
        (yank 1))
    #+END_SRC
 
+* Recording
+
+  #+begin_src emacs-lisp
+    (use-package camcorder
+      :ensure t)
+  #+end_src
+
 * Custom Functions
 ** shell
 *** kubernetes
@@ -5126,6 +4957,21 @@ on-demand and stored in memory.
             (insert "kubectl logs -n " env " " pod-name " " pod "-" env " -f")
             (eshell-send-input))))
     #+END_SRC
+*** keys i use to work with
+
+    #+begin_src emacs-lisp
+      (defun bk/load-private-keys ()
+        "Personal keys I use to work and whatnot"
+        (interactive)
+        (let ((client-key (shell-command-to-string "base64 /home/wand/CaptalysPlatform.key"))
+              (qi-key (shell-command-to-string "base64 /home/wand/qitech_captalys_homolog.key.pub")))
+          (setenv "CLIENT_PRIVATE_KEY" client-key)
+          (setenv "QI_PUBLIC_KEY" qi-key))
+        (message "CLIENT_PRIVATE_KEY and QI_PUBLIC_KEY were loaded"))
+
+      ;; load them!!
+      (bk/load-private-keys)
+    #+end_src
 
 ** http-based
 *** find my current ip
@@ -5342,6 +5188,7 @@ on-demand and stored in memory.
   =~/.config/lxsession/LXDE/autostart=
   #+BEGIN_SRC conf
     @pcmanfm --desktop-off --profile LXDE
+    @compton -b &
   #+END_SRC
 
   =~/.config/lxsession/LXDE/desktop.conf=
@@ -5427,7 +5274,10 @@ on-demand and stored in memory.
           exwm-layout-show-all-buffers t)
     :config
     (display-battery-mode t)
-  
+
+    ;; setting floating window boarder
+    (setq exwm-floating-border-width 3)
+
     (require 'exwm)
     (exwm-input-set-simulation-keys
      '(([?\C-p] . [up])
@@ -5452,7 +5302,7 @@ on-demand and stored in memory.
     (exwm-input-set-key (kbd "s-p") #'bk/keepmenu)
     (exwm-input-set-key (kbd "s-d") #'dmenu)
     (exwm-input-set-key (kbd "C-c l") #'bk/lock-screen)
-  
+
     (exwm-enable)
 
     (require 'exwm-config)
