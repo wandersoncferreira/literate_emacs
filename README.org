@@ -198,6 +198,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#tips-and-tricks][tips and tricks]]
     - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
     - [[#insert-template-for-documenting-a-meeting][insert template for documenting a meeting]]
+    - [[#export-to-asciidoc][export to asciidoc]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
   - [[#correct-your-spelling-errors-on-the-fly][correct your spelling errors on the fly]]
@@ -296,7 +297,10 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   his team.
 
   #+begin_src emacs-lisp
-     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+    (add-to-list 'package-archives
+                 '("melpa" . "https://melpa.org/packages/") t)
+    (add-to-list 'package-archives
+                 '("melpa-stable" . "https://stable.melpa.org/packages/") t)
   #+end_src
 
   We need to refresh the archives to make this change to take place.
@@ -787,16 +791,24 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     I enjoyed so much this theme, that I started contributing to the
     source code. Right now, I am modernizing the structure and color
     pallets to be more organized and comprehensive.
+**** Cyberpunk
+
+     Real dark theme.
+     #+begin_src emacs-lisp
+       (use-package cyberpunk-theme
+         :ensure t
+         :defer t)
+     #+end_src
 
 *** default theme
 
     Let's activate the default theme, I might change this very often.
     #+BEGIN_SRC emacs-lisp
       (add-hook 'after-init-hook
-                (lambda ()
-                  (interactive)
-                  (setq organic-green-boldless t)
-                  (load-theme 'organic-green t)))
+		(lambda ()
+		  (interactive)
+		  (setq organic-green-boldless nil)
+		  (load-theme 'organic-green t)))
     #+END_SRC
 
 ** time
@@ -816,7 +828,11 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
    redefine the size of the font.
    #+begin_src emacs-lisp
-     (set-face-attribute 'default nil :height 130)
+     (set-face-attribute 'default nil
+                         :family "Source Code Pro"
+                         :height 120
+                         :weight 'normal
+                         :width 'normal)
    #+end_src
 
 ** mode line
@@ -2143,7 +2159,7 @@ the *winner-boring-buffers*.
     #+BEGIN_SRC emacs-lisp
       (eval-after-load 'alert
         '(add-to-list 'alert-user-configuration
-                      '(((:category . "telega"))
+                      '(((:mode . 'telega-chat-mode))
                         log nil)))
     #+END_SRC
 
@@ -2152,7 +2168,7 @@ the *winner-boring-buffers*.
       (eval-after-load 'alert
         '(add-to-list 'alert-user-configuration
                       '(((:message . "@bartuka\\|Wanderson")
-                         (:category . "telega"))
+                         (:mode . 'telega-chat-mode))
                         libnotify nil)))
     #+END_SRC
    
@@ -2602,16 +2618,16 @@ the *winner-boring-buffers*.
           (eshell-send-input)))
 
       (add-hook 'eshell-mode-hook (lambda ()
-    				(local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+                                    (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
     #+end_src
 
     #+begin_src emacs-lisp
       (require 'em-alias)
       (add-hook 'eshell-mode-hook
-    	    (lambda ()
-    	      (eshell/alias "e" "find-file $1")
-    	      (eshell/alias "ee" "find-file-other-window $1")))
+                (lambda ()
+                  (eshell/alias "e" "find-file $1")
+                  (eshell/alias "ee" "find-file-other-window $1")))
     #+end_src
 
 ** shell mode
@@ -2906,26 +2922,27 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
   #+begin_src emacs-lisp
     (use-package clj-refactor
       :ensure t
+      :pin "melpa-stable"
       :delight clj-refactor-mode
-      :after (clojure-mode)
+      :after clojure-mode
       :init
       (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
-					    ("set" . "clojure.set")
-					    ("walk" . "clojure.walk")
-					    ("zip" . "clojure.zip")
-					    ("time" . "clj-time.core")
-					    ("log" . "clojure.tools.logging")
-					    ("json" . "cheshire.core")
-					    ("client" . "org.httpkit.client")
-					    ("http" . "clj-http.core")
-					    ("a" . "clojure.core.async")
-					    ("jdbc" . "next.jdbc")
-					    ("s" . "clojure.spec.alpha")
-					    ("gen" . "clojure.spec.gen.alpha")))
+                        ("set" . "clojure.set")
+                        ("walk" . "clojure.walk")
+                        ("zip" . "clojure.zip")
+                        ("time" . "clj-time.core")
+                        ("log" . "clojure.tools.logging")
+                        ("json" . "cheshire.core")
+                        ("client" . "org.httpkit.client")
+                        ("http" . "clj-http.core")
+                        ("a" . "clojure.core.async")
+                        ("jdbc" . "next.jdbc")
+                        ("s" . "clojure.spec.alpha")
+                        ("gen" . "clojure.spec.gen.alpha")))
       :config
       (add-hook 'clojure-mode-hook (lambda ()
-				     (clj-refactor-mode t)
-				     (cljr-add-keybindings-with-prefix "C-c C-m"))))
+                     (clj-refactor-mode t)
+                     (cljr-add-keybindings-with-prefix "C-c C-m"))))
   #+end_src
 
 
@@ -2935,7 +2952,9 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
   #+begin_src emacs-lisp
     (use-package clojure-mode-extra-font-locking
       :ensure t
-      :after (clojure-mode))
+      :after clojure-mode
+      :config
+      (require 'clojure-mode-extra-font-locking))
   #+end_src
 
   Now comes the real deal for Clojure development, CIDER extends Emacs
@@ -2950,6 +2969,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
   #+begin_src emacs-lisp
     (use-package cider
       :ensure t
+      :pin melpa-stable
       :after (clojure-mode)
       :init
       (setq cider-mode-line " CIDER"
@@ -3438,7 +3458,11 @@ on-demand and stored in memory.
 #+end_src
 
 * Org mode
-  <s
+  
+  Org mode is for keeping notes, maintaining TODO lists, planning
+  projects, and authoring documents with a fast and effective
+  plain-text system.
+
 ** literate programming
 
    [[https://en.wikipedia.org/wiki/Literate_programming][Literate Programming]] is the art of preparing programs for human
@@ -3796,8 +3820,9 @@ on-demand and stored in memory.
     semi-automatically.
 
     #+BEGIN_SRC emacs-lisp
-      (advice-add 'org-gcal-sync :around #'suppress-messages)
-      (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+      ;; (advice-add 'org-gcal-sync :around #'suppress-messages)
+      ;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
+      ;;  not very good integration! many callback errors are getting back.
 
     #+END_SRC
     
@@ -3844,6 +3869,15 @@ on-demand and stored in memory.
         "Insert Org template to create a meeting minute."
         (interactive)
         (insert-file "~/.emacs.d/docs/org-template-meeting.org"))
+    #+end_src
+
+*** export to asciidoc
+
+    #+begin_src emacs-lisp
+      (use-package ox-asciidoc
+        :ensure t
+        :config
+        (require 'ox-asciidoc))
     #+end_src
 
 * Projects
@@ -4624,26 +4658,29 @@ on-demand and stored in memory.
        :ensure t
        :delight (telega-chat-mode "Telegram")
        :init
-       (setq telega-animation-play-inline nil)
+       (setq telega-animation-play-inline nil
+             telega-chat-reply-prompt "R>> "
+             telega-chat-use-markdown-formatting t)
        :config
-       (telega-notifications-mode 1))
+       (custom-set-faces
+        '(telega-msg-heading ((t (:overline t :weight bold))))))
    #+END_SRC
+
+   I will also enable the contrib packages provides in the github
+   repo. I copied the interesting ones to me in the =lisps/= folder.
+   #+begin_src emacs-lisp
+     (require 'telega-alert)
+     (telega-alert-mode t)
+
+     (require 'telega-dired-dwim)
+
+
+     (use-package all-the-icons :ensure t)
+     (require 'telega-url-shorten)
+     (add-hook 'telega-load-hook 'global-telega-url-shorten-mode)
+   #+end_src
 
    Enabling emoji completions in chat buffer
-
-   Emoji completions with =:<Emoji-name>:= syntax, uses nice company
-   mode.
-   #+BEGIN_SRC emacs-lisp
-     (add-hook 'telega-chat-mode-hook
-               (lambda ()
-                 (set (make-local-variable 'company-backends)
-                      (append '(telega-company-emoji
-                                telega-company-username
-                                telega-company-hashtag)
-                              (when (telega-chat-bot-p telega-chatbuf--chat)
-                                '(telega-company-botcmd))))
-                 (company-mode 1)))
-   #+END_SRC
 
    Take a look at the mode-line in chat buffers
    #+BEGIN_SRC emacs-lisp
@@ -4869,6 +4906,12 @@ on-demand and stored in memory.
   
 * Advice
 
+  When you need to modify a function defined in another library.
+
+  [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html][Adivice]] feature lets you add to the existing definition of a
+  function, by advising the function. This is a cleaner method than
+  redefining the whole function.
+  
 ** pop to mark
    When popping the mark, continue popping until the cursor actually
    moves. Also, if the last command was a copy - skip past all the
@@ -4924,6 +4967,15 @@ on-demand and stored in memory.
    #+END_SRC
 
 * Recording
+
+  Tool for capturing screen-casts directly from Emacs.
+  
+  1. To use it, simply call =M-x camcorder-record=
+  2. A new smaller frame will popup and recording starts
+  3. When you're finished, git =F12=
+
+  You can also convert the file to a =gif= by issuing the command 
+  =M-x comcorder-convert-to-gif=
 
   #+begin_src emacs-lisp
     (use-package camcorder
@@ -5141,6 +5193,10 @@ on-demand and stored in memory.
    #+END_SRC
 
 * Emms
+  
+  [[https://www.gnu.org/software/emms/][GNU/Emms]] is the Emacs multimedia system. Emms displays and plays
+  multimedia from within Emacs using a variety of external players and
+  from different sources.
 
   #+BEGIN_SRC emacs-lisp
     (use-package emms
