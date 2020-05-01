@@ -26,4 +26,8 @@ diary
 .org-id-locations
 emms/
 org-gcal/
-pomidor-session.el
+pomidor-session.json
+history
+forge-database.sqlite
+savehist
+layouts/

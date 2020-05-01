@@ -44,8 +44,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#path][path]]
   - [[#security][security]]
   - [[#system-monitor][system monitor]]
-  - [[#garbage-collection][garbage Collection]]
-    - [[#collector-magic-hack][Collector Magic Hack]]
+  - [[#garbage-collection][garbage collection]]
+    - [[#collector-magic-hack][collector magic hack]]
   - [[#manage-external-services][manage external services]]
 - [[#aesthetics][Aesthetics]]
   - [[#cleaning][cleaning]]
@@ -53,6 +53,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#buffer-based-theming][buffer based theming]]
     - [[#download-themes][download themes]]
     - [[#default-theme][default theme]]
+  - [[#cursor][cursor]]
   - [[#time][time]]
   - [[#font][font]]
   - [[#mode-line][mode line]]
@@ -63,6 +64,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#word-wrapping][word wrapping]]
   - [[#backup][backup]]
   - [[#recentf][recentf]]
+  - [[#save-place][save place]]
+  - [[#save-history][save history]]
   - [[#uniquify][uniquify]]
   - [[#extended-command][extended command]]
   - [[#case-switch][case switch]]
@@ -75,12 +78,13 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#calendar][calendar]]
   - [[#webjump][webjump]]
   - [[#authentication-source][authentication source]]
+  - [[#enable-the-disabled-commands][enable the disabled commands]]
 - [[#hydras][Hydras]]
 - [[#help-and-info][Help and Info]]
+  - [[#info][info]]
   - [[#customization-to-info-mode][customization to info-mode]]
     - [[#define-keys][define keys]]
     - [[#hydras-1][hydras]]
-  - [[#helpful][helpful]]
 - [[#editing-text][Editing Text]]
   - [[#defaults-1][defaults]]
     - [[#key-bindings][key bindings]]
@@ -94,7 +98,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#jump-to-char][jump to char]]
     - [[#move-through-edit-points][move through edit points]]
   - [[#highlights][highlights]]
-  - [[#utf-8][UTF-8]]
+    - [[#symbols][symbols]]
+    - [[#browse-kill-ring][browse kill ring]]
+  - [[#utf-8][utf-8]]
   - [[#multiple-cursors][multiple cursors]]
   - [[#custom-functions][custom functions]]
     - [[#smart-move-to-beginning-of-visible-line-or-not][smart move to beginning of visible line (or not)]]
@@ -104,43 +110,50 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#web-paste][web paste]]
 - [[#completions][Completions]]
   - [[#minibuffer-1][minibuffer]]
-    - [[#interactive-do][interactive do]]
-    - [[#auto-completion][auto completion]]
-  - [[#company-mode][company mode]]
+    - [[#disabled-interactive-do][DISABLED interactive do]]
+    - [[#icomplete][icomplete]]
+  - [[#disabled-company-mode][DISABLED company mode]]
+  - [[#in-buffer-completion][in-buffer completion]]
   - [[#hippie-expand][hippie expand]]
 - [[#window][Window]]
+  - [[#super-save][super save]]
+  - [[#ace-window][ace window]]
+  - [[#custom-functions-1][custom functions]]
   - [[#shackle][shackle]]
-  - [[#side-windows][side windows]]
-    - [[#eshell-at-the-bottom][Eshell at the bottom]]
-    - [[#dired-as-a-side-bar][Dired as a side bar]]
+  - [[#clean-it-up-after-some-time][clean it up after some time.]]
+  - [[#purpose][purpose]]
   - [[#same-window][same window]]
   - [[#winner][winner]]
   - [[#resize][resize]]
 - [[#alerts][Alerts]]
   - [[#alert][alert]]
   - [[#user-configuration][user configuration]]
-    - [[#slack-notifications][Slack notifications]]
-    - [[#telegram-notifications][Telegram notifications]]
-  - [[#custom-functions-1][custom functions]]
+    - [[#slack-notifications][slack notifications]]
+    - [[#telegram-notifications][telegram notifications]]
+  - [[#custom-functions-2][custom functions]]
 - [[#dired][Dired]]
+  - [[#hide-details][hide details]]
   - [[#guidelines][guidelines]]
-    - [[#mark-files-in-dired][Mark files in Dired]]
-    - [[#replace-text-in-multiple-files][Replace text in multiple files]]
+    - [[#mark-files-in-dired][mark files in dired]]
+    - [[#replace-text-in-multiple-files][replace text in multiple files]]
   - [[#functions][functions]]
+- [[#bookmark][Bookmark]]
 - [[#tramp][TRAMP]]
 - [[#version-control][Version Control]]
   - [[#magit][magit]]
     - [[#magit-setup][magit setup]]
     - [[#magit-hydra][magit hydra]]
+    - [[#forge][forge]]
   - [[#git-config][git config]]
   - [[#git-ignore][git ignore]]
   - [[#time-machine][time machine]]
   - [[#visual-identification][visual identification]]
   - [[#miscellaneous][miscellaneous]]
-  - [[#custom-functions-2][custom functions]]
+  - [[#custom-functions-3][custom functions]]
     - [[#visit-pull-request][visit pull request]]
 - [[#search][Search]]
   - [[#wgrep][wgrep]]
+  - [[#visual-regexp][visual regexp]]
   - [[#grep-fullscreen][grep fullscreen]]
   - [[#ripgrep][ripgrep]]
   - [[#isearch][isearch]]
@@ -150,8 +163,13 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#eshell-mode][eshell mode]]
   - [[#shell-mode][shell mode]]
 - [[#general-programming][General Programming]]
+  - [[#toggle-between-src-and-tests][toggle between src and tests]]
   - [[#whitespaces][whitespaces]]
+    - [[#highlight-escape][highlight escape]]
+    - [[#hungry-delete][hungry delete]]
   - [[#parenthesis][parenthesis]]
+    - [[#paredit][paredit]]
+    - [[#disabled-smartparens][DISABLED smartparens]]
   - [[#folding][folding]]
     - [[#folding-based-on-indentation-and-syntax][folding based on indentation and syntax]]
     - [[#fold-regions-based-on-selection][fold regions based on selection]]
@@ -160,19 +178,23 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#documentation][documentation]]
   - [[#programming-languages][programming languages]]
     - [[#clojure][clojure]]
-    - [[#python][Python]]
-    - [[#sql][SQL]]
-    - [[#latex][Latex]]
+    - [[#elisp][elisp]]
+    - [[#python][python]]
+    - [[#sql][sql]]
+    - [[#latex][latex]]
+    - [[#tla-plus][tla plus]]
   - [[#linters][linters]]
   - [[#unified-modeling-language][unified modeling language]]
   - [[#how-do-i-do-it][how do I do it?]]
-  - [[#custom-functions-3][custom functions]]
+  - [[#custom-functions-4][custom functions]]
     - [[#align-blocks][align blocks]]
 - [[#additional-major-modes][Additional Major Modes]]
   - [[#rest-client][rest client]]
     - [[#create-a-tmp-restclient-buffer][create a tmp restclient buffer]]
+  - [[#edn][edn]]
   - [[#markdown][markdown]]
   - [[#json][json]]
+  - [[#xml][xml]]
   - [[#yaml][yaml]]
   - [[#makefile][makefile]]
 - [[#pdf][PDF]]
@@ -196,9 +218,10 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#gmail-agenda][gmail agenda]]
   - [[#beamer][beamer]]
   - [[#tips-and-tricks][tips and tricks]]
-    - [[#compute-difference-between-two-dates][Compute difference between two dates.]]
+    - [[#compute-difference-between-two-dates][compute difference between two dates.]]
     - [[#insert-template-for-documenting-a-meeting][insert template for documenting a meeting]]
     - [[#export-to-asciidoc][export to asciidoc]]
+- [[#tip-of-the-day][Tip of the day]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
   - [[#correct-your-spelling-errors-on-the-fly][correct your spelling errors on the fly]]
@@ -206,7 +229,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#synonyms][synonyms]]
   - [[#translate][translate]]
   - [[#typing][typing]]
-  - [[#custom-functions-4][custom functions]]
 - [[#snippets][Snippets]]
 - [[#docker][Docker]]
 - [[#social-networks][Social Networks]]
@@ -227,11 +249,15 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#pomodoro][Pomodoro]]
 - [[#financial][Financial]]
   - [[#ledger-explanation][ledger explanation]]
-    - [[#plaintext-accounting-with-the-ledger-ecosystem][Plaintext accounting with the Ledger Ecosystem]]
+    - [[#plaintext-accounting-with-the-ledger-ecosystem][plaintext accounting with the ledger ecosystem]]
+- [[#guru][Guru]]
 - [[#advice][Advice]]
   - [[#pop-to-mark][pop to mark]]
   - [[#yank-indent][yank indent]]
 - [[#recording][Recording]]
+  - [[#timing][timing]]
+- [[#logs][Logs]]
+  - [[#commands-logs][commands logs]]
 - [[#custom-functions-6][Custom Functions]]
   - [[#shell-1][shell]]
     - [[#kubernetes][kubernetes]]
@@ -250,6 +276,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#miscellaneous-1][miscellaneous]]
     - [[#generate-password][generate password]]
 - [[#keys][Keys]]
+  - [[#free-keys][free keys?]]
   - [[#hint][hint]]
   - [[#global-definitions][global definitions]]
   - [[#cast][cast]]
@@ -611,15 +638,27 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
            proced-descend t)
    #+END_SRC
    
-** garbage Collection
+** garbage collection
 
    Garbage collection shouldn't happen during startup, as what will
    slow Emacs down. Do it later.
 
    Change the default values.
    #+BEGIN_SRC emacs-lisp
-     (setq-default gc-cons-threshold 100000000
-                   gc-cons-percentage 0.1)
+     (defvar file-name-handler-alist-old file-name-handler-alist)
+
+     (setq-default gc-cons-threshold 402653184
+                   file-name-handler-alist nil
+                   gc-cons-percentage 0.6
+                   auto-window-vscroll nil
+                   message-log-max 16384)
+
+     (add-hook 'after-init-hook
+               `(lambda ()
+                  (setq file-name-handler-alist file-name-handler-alist-old
+                        gc-cons-threshold 800000
+                        gc-cons-percentage 0.1)
+                  (garbage-collect)) t)
    #+END_SRC
 
    Ease the font caching during GC.
@@ -634,7 +673,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
      (setq garbage-collection-messages nil)
    #+END_SRC
 
-*** Collector Magic Hack
+*** collector magic hack
 
     Enforce a sneaky GC strategy to minimize GC interference with the
     activity. During normal use a high GC threshold is set, when
@@ -751,7 +790,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
     Change the highlight color for selection text.
     #+BEGIN_SRC emacs-lisp
-      (set-face-attribute 'region nil :background "#666")
+      (set-face-attribute 'region nil :background "#D5F0D5")
     #+END_SRC
 
     Make cursor the width of the character it is under.
@@ -784,18 +823,48 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     #+END_SRC
 
 *** download themes
-**** Organic Green
+**** organic green
 
     A light theme with a light-green background.
 
     I enjoyed so much this theme, that I started contributing to the
     source code. Right now, I am modernizing the structure and color
     pallets to be more organized and comprehensive.
-**** Cyberpunk
+
+**** cyberpunk
 
      Real dark theme.
      #+begin_src emacs-lisp
        (use-package cyberpunk-theme
+         :ensure t
+         :disabled t
+         :config
+         (load-theme 'cyberpunk t))
+     #+end_src
+
+**** zenburn
+     
+     #+begin_src emacs-lisp
+       (use-package zenburn-theme
+         :ensure t
+         :disabled t
+         :config
+         (load-theme 'zenburn t))
+     #+end_src
+
+**** monokai
+     
+     #+begin_src emacs-lisp
+       (use-package monokai-theme
+         :ensure t
+         :defer t)
+
+     #+end_src
+
+**** tomorrow night
+     
+     #+begin_src emacs-lisp
+       (use-package color-theme-sanityinc-tomorrow
          :ensure t
          :defer t)
      #+end_src
@@ -804,12 +873,22 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
     Let's activate the default theme, I might change this very often.
     #+BEGIN_SRC emacs-lisp
-      (add-hook 'after-init-hook
-		(lambda ()
-		  (interactive)
-		  (setq organic-green-boldless nil)
-		  (load-theme 'organic-green t)))
+      ;; (add-hook 'after-init-hook
+      ;;   (lambda ()
+      ;;     (interactive)
+      ;;     (setq organic-green-boldless nil)
+      ;;     (load-theme 'organic-green t)))
     #+END_SRC
+
+** cursor
+
+   #+begin_src emacs-lisp
+     (use-package cursor-chg
+       :ensure nil
+       :config
+       (change-cursor-mode 1)
+       (toggle-cursor-type-when-idle 1))
+   #+end_src
 
 ** time
 
@@ -828,11 +907,9 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
    redefine the size of the font.
    #+begin_src emacs-lisp
-     (set-face-attribute 'default nil
-                         :family "Source Code Pro"
-                         :height 120
-                         :weight 'normal
-                         :width 'normal)
+     (when (member "Monaco" (font-family-list))
+       (set-face-attribute 'default nil :font "Monaco" :height 120)
+       (setq default-frame-alist '((font . "Monaco-12"))))
    #+end_src
 
 ** mode line
@@ -916,7 +993,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   #+END_SRC
 
   #+begin_src emacs-lisp
-    (setq tab-always-indent 'complete)
     (setq custom-safe-themes t)
 
     (defalias 'cquit 'cider-quit)
@@ -927,9 +1003,13 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
   Don’t use tabs to indent and fix some indentation settings
   #+BEGIN_SRC emacs-lisp
-    (setq-default indent-tabs-mode nil
-                  tab-width 4
-                  fill-column 70)
+    (use-package emacs
+      :ensure nil
+      :config
+      (setq-default tab-always-indent 'complete)
+      (setq-default indent-tabs-mode nil
+                    tab-width 4
+                    fill-column 70))
   #+END_SRC
 
    Enable some built in modes to add critical functionality to
@@ -1028,6 +1108,34 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
        (recentf-mode t))
    #+END_SRC
 
+** save place
+
+   Save place remembers your location in a file when saving files.
+   #+begin_src emacs-lisp
+     (require 'saveplace)
+     (setq save-place-mode (expand-file-name "saveplace" user-emacs-directory))
+     (save-place-mode 1)
+   #+end_src
+
+** save history
+
+   Keeps a record of actions involving the minibuffer. This is of
+   paramount important to a fast and efficient workflow involving any
+   completion framework that leverages the built-in mechanisms.
+
+   #+begin_src emacs-lisp
+     (use-package savehist
+       :ensure nil
+       :config
+       (setq savehist-file "~/.emacs.d/savehist"
+             history-length 30000
+             history-delete-duplicates nil
+             savehist-additional-variables '(search-ring
+                                             regexp-search-ring)
+             savehist-save-minibuffer-history t)
+       (savehist-mode 1))
+   #+end_src
+   
 ** uniquify
 
    Uniquify buffer names dependent on file name. Emacs's traditional
@@ -1171,9 +1279,7 @@ Clean all the registers you saved.
 
    #+BEGIN_SRC emacs-lisp
      (use-package imenu-anywhere
-       :ensure t
-       :bind
-       ("C-." . imenu-anywhere))
+       :ensure t)
    #+END_SRC
 
 ** ibuffer
@@ -1203,6 +1309,7 @@ Clean all the registers you saved.
                 ("Programming" (or
                                 (mode . clojure-mode)
                                 (mode . emacs-lisp-mode)
+                                (mode . sql-mode)
                                 (mode . python-mode)))
                 ("Browser" (or
                             (name . "qutebrowser:\*")
@@ -1343,7 +1450,13 @@ Adding urban dictionary to webjump.
        (setq epa-pinentry-mode 'loopback)
        (pinentry-start))
    #+END_SRC
+** enable the disabled commands
 
+   #+begin_src emacs-lisp
+     (put 'downcase-region 'disabled nil)
+     (put 'upcase-region 'disabled nil)
+     (put 'narrow-to-region 'disabled nil)
+   #+end_src
 * Hydras
 
   This package has a very nice name once you know what it does! This
@@ -1356,6 +1469,20 @@ Adding urban dictionary to webjump.
   #+END_SRC
 
 * Help and Info
+
+** info 
+
+   #+begin_src emacs-lisp
+     (use-package info
+       :ensure t
+       :bind ("C-h C-i" . info-lookup-symbol)
+       :config
+       (add-hook 'Info-mode-hook
+                 #'(lambda ()
+                     (setq buffer-face-mode '(:family "Bookerly"))
+                     (buffer-face-mode)
+                     (text-scale-adjust 1))))
+   #+end_src
 
 ** customization to info-mode
 
@@ -1404,21 +1531,6 @@ Adding urban dictionary to webjump.
           ("e" (ora-open-info "emacs" "*emacs info*"))
           ("h" (ora-open-info "gcl" "*hyperspec*")))
     #+END_SRC
-** helpful
-
-   #+BEGIN_QUOTE
-   Helpful is an alternative to the built-in Emacs help that provides much more contextual information. — [[https://github.com/Wilfred/helpful][helpful]]
-   #+END_QUOTE
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package helpful
-       :ensure t
-       :config (progn
-                 (bind-key "C-h f" #'helpful-callable)
-                 (bind-key "C-h v" #'helpful-variable)
-                 (bind-key "C-h k" #'helpful-key)
-                 (bind-key "C-h ," #'helpful-at-point)))
-   #+END_SRC
 * Editing Text
 
 ** defaults
@@ -1505,10 +1617,13 @@ Adding urban dictionary to webjump.
         :about Extension to increase selected region by semantic units
         :ensure t
         :requires hydra
+        :init
+        (setq er--show-expansion-message t
+              expand-region-fast-keys-enabled nil)
         :bind (("C-=" . er/expand-region)
                ("C-c =" . bk/expand-region/body))
         :config
-  
+
         (defhydra bk/expand-region (:color pink :hint nil)
           "
        ^Expand/Discard^                ^Mark^
@@ -1540,14 +1655,18 @@ Adding urban dictionary to webjump.
        :homepage https://github.com/abo-abo/avy
        :about Jump to things in Emacs tree-style
        :ensure t
-       :init
-       (setq avy-all-windows t
-             avy-all-windows-alt nil
-             avy-styles-alist '((avy-goto-char-2 . post)
-                                (avy-goto-line . pre)))
        :config
        (avy-setup-default)
-       (global-set-key (kbd "C-c ;") 'avy-goto-char))
+       :bind (("C-." . avy-goto-char-timer)))
+   #+end_src
+
+   [[https://github.com/cute-jumper/avy-zap][avy-zap]] is a nice package to use zap to char with avy. Basically
+   deleting everything from point to another char.
+   #+begin_src emacs-lisp
+     (use-package avy-zap
+       :ensure t
+       :bind (("M-z" . avy-zap-to-char-dwim)
+              ("M-Z" . avy-zap-up-to-char-dwim)))
    #+end_src
 
 *** move through edit points
@@ -1570,7 +1689,7 @@ Adding urban dictionary to webjump.
     undo history without undoing anything.
     
 ** highlights
-
+*** symbols
    Very often is useful to highlight some symbols.
    #+BEGIN_SRC emacs-lisp
      (use-package highlight-symbol
@@ -1585,7 +1704,15 @@ Adding urban dictionary to webjump.
        (highlight-symbol-on-navigation-p t))
    #+END_SRC
 
-** UTF-8
+*** browse kill ring
+
+    #+begin_src emacs-lisp
+      (use-package browse-kill-ring
+        :ensure t
+        :commands browse-kill-ring)
+    #+end_src
+
+** utf-8
 
    No one knows why this is not the default already.
 
@@ -1759,7 +1886,85 @@ Adding urban dictionary to webjump.
 * Completions
 ** minibuffer
 
-*** interactive do
+   The optimal way of using Emacs is through searching and narrowing
+   selection candidates. Spend less time worrying about where things
+   are on the screen and more on how fast you can bring them into
+   focus.
+
+   Minibuffer is the place for extended command interaction. Whether
+   it is about input to a prompt, performing search, executing
+   functions or dealing with buffers.
+
+   General config for the minibuffers
+   #+BEGIN_SRC emacs-lisp
+     (use-package minibuffer
+       :ensure nil
+       :init
+       (setq completion-styles '(basic partial-completion initials orderless)
+             completion-category-defaults nil
+             completion-cycle-threshold 3
+             completion-flex-nospace nil
+             completion-ignore-case t
+             read-buffer-completion-ignore-case t
+             read-file-name-completion-ignore-case t
+             completions-format 'vertical
+             enable-recursive-minibuffers t
+             read-answer-short t
+             resize-mini-windows t)
+       :config
+       ;; aggressive completion style for out-of-order groups of matches
+       (use-package orderless
+         :ensure t
+         :config
+         (setq orderless-component-matching-styles
+               '(orderless-regexp
+                 orderless-flex))
+         :bind (:map minibuffer-local-completion-map
+                     ("SPC" . nil)))
+
+       (defun bk/describe-symbol-at-point (&optional arg)
+         "Get help (documentation) for the symbol at point."
+         (interactive "P")
+         (let ((symbol (symbol-at-point)))
+           (when symbol
+             (describe-symbol symbol)))
+         (when arg
+           (let ((help (get-buffer-window "*Help*")))
+             (when help
+               (if (not (eq (selected-window) help))
+                   (select-window help)
+                 (select-window (get-mru-window)))))))
+  
+       (defun bk/focus-minibuffer ()
+         "Focus the active minibuffer."
+         (interactive)
+         (let ((mini (active-minibuffer-window)))
+           (when mini
+             (select-window mini))))
+
+       (defun bk/completions-kill-save-symbol ()
+         "Add symbol-at-point to the kill ring."
+         (interactive)
+         (kill-new (thing-at-point 'symbol)))
+
+       (file-name-shadow-mode t)
+       (minibuffer-depth-indicate-mode t)
+       (minibuffer-electric-default-mode t)
+
+       :bind (:map completion-list-mode-map
+                   ("h" . bk/describe-symbol-at-point)
+                   ("w" . bk/completions-kill-save-symbol)
+                   ("n" . next-line)
+                   ("p" . previous-line)
+                   ("f" . next-completion)
+                   ("b" . previous-completion)
+                   ("M-v" . bk/focus-minibuffer)))
+   #+END_SRC
+
+*** DISABLED interactive do
+
+    Note: I disabled =ido= for a while because I wanted to experience
+    the built-in completion framework =icomplete=.
 
    Ido - interactive do - help us with switching between buffers, opening
    files and directories with a minimum of keystrokes. As you type in a
@@ -1772,6 +1977,7 @@ Adding urban dictionary to webjump.
    #+begin_src emacs-lisp
      (use-package ido
        :ensure nil
+       :disabled t
        :init (setq ido-use-virtual-buffers t
                    ido-use-faces t
                    ido-case-fold nil
@@ -1802,13 +2008,39 @@ Adding urban dictionary to webjump.
    A very interesting guide to Ido is from [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Mastering Emacs]]. I read it
    very often.
 
-*** auto completion
-    
-    #+BEGIN_SRC emacs-lisp
-      (icomplete-mode 1)
-    #+END_SRC
+*** icomplete
 
-** company mode
+    Icomplete is the tool that offers incremental completion feedback
+    for what the minibuffer is doing.
+    
+    #+begin_src emacs-lisp
+      (use-package icomplete
+        :ensure nil
+        :demand
+        :after minibuffer
+        :init
+        (setq ;; icomplete-delay-completions-threshold 100
+              ;; icomplete-max-delay-chars 2
+              ;; icomplete-compute-delay 0.2
+              ;; icomplete-show-matches-on-no-input t
+              ;; icomplete-prospects-height 1
+              icomplete-separator (propertize " ┆ " 'face 'shadow)
+              ;; icomplete-in-buffer t
+              ;; icomplete-tidy-shadowed-file-names nil
+              )
+        :bind (:map icomplete-minibuffer-map
+                    ("C-j" . exit-minibuffer)
+                    ("C-n" . icomplete-forward-completions)
+                    ("C-p" . icomplete-backward-completions))
+        :config
+        (fido-mode -1)
+        (icomplete-mode t))
+    #+end_src
+
+** DISABLED company mode
+
+   Note: I disabled the company mode to experiment with other
+   approach: using the minibuffer to in-buffer completion.
 
    Company is a text completion framework for Emacs. The name stands for
    "complete anything". It uses pluggable back-ends and front-ends to
@@ -1818,6 +2050,7 @@ Adding urban dictionary to webjump.
      (use-package company
        :ensure t
        :delight company-mode
+       :disabled t
        :init
        (setq company-show-numbers t
              company-echo-delay 0
@@ -1857,18 +2090,44 @@ Adding urban dictionary to webjump.
           (lambda (x)
             (define-key map (format "%d" x) 'ora-company-number))
           (number-sequence 0 9))
-         ;; (define-key map " " (lambda ()
-         ;; 			  (interactive)
-         ;; 			  (company-abort)
-         ;; 			  (self-insert-command 1)))
          (define-key map (kbd "<return>") nil)))
 
      (eval-after-load 'company
        '(ora-activate-number))
    #+end_src
 
-** hippie expand
+** in-buffer completion
 
+   Stolen from Protesilaos emacs configuration.
+
+   #+begin_src emacs-lisp
+     (use-package emacs
+       :after (minibuffer icomplete icomplete-vertical) ; review those first
+       :config
+       (defun contrib/completing-read-in-region (start end collection &optional predicate)
+         "Prompt for completion of region in the minibuffer if non-unique.
+      Use as a value for `completion-in-region-function'."
+         (let* ((initial (buffer-substring-no-properties start end))
+                (all (completion-all-completions initial collection predicate
+                                                 (length initial)))
+                (completion (cond
+                             ((atom all) nil)
+                             ((and (consp all) (atom (cdr all))) (car all))
+                             (t (let ((completion-in-region-function
+                                       #'completion--in-region))
+                                  (icomplete-vertical-do (:height (/ (window-height) 5))
+                                    (completing-read
+                                     "Completion: " collection predicate t initial)))))))
+           (if (null completion)
+               (progn (message "No completion") nil)
+             (delete-region start end)
+             (insert completion)
+             t)))
+
+       (setq completion-in-region-function #'contrib/completing-read-in-region))
+   #+end_src
+
+** hippie expand
    [[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] is a more feature complete completion engine than the
    default dabbrev engine. The main feature I use over =dabbrev= is
    that is supports a wide range of backends for finding completions -
@@ -1896,24 +2155,40 @@ Adding urban dictionary to webjump.
 
 * Window
 
+  A window is an area of the screen that is used to display a buffer.
+  In Emacs Lisp, windows are represented by a special Lisp object
+  type.
+
+  Windows are grouped into frames. Each frame contains at least one
+  window; the user can subdivide it into multiple, non-overlapping
+  windows to view several buffers at once.
+
+  Emacs uses the word "window" with a different meaning than in
+  graphical desktop environments and window systems, such as the X
+  Window System. When Emacs is run on X, each of its graphical X
+  windows is an Emacs frame. When Emacs is run on a text terminal, the
+  frame fills the entire terminal screen.
+
+** super save
+  automatically save buffers associated with files on buffer switch
+  and on windows switch.
+  #+begin_src emacs-lisp
+    (use-package super-save
+      :ensure t
+      :config
+      (add-to-list 'super-save-triggers 'ace-window)
+      (super-save-mode +1))
+  #+end_src
+
+** ace window
+
     Ease the task of changing window quickly.
 
     #+begin_src emacs-lisp
       (use-package ace-window
         :ensure t
-        :init
-        (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p)
-              aw-background nil
-              aw-scope 'frame
-              aw-dispatch-alist
-              '((?s aw-swap-window "swap window")
-                (?2 aw-split-window-vert "split window vertically")
-                (?3 aw-split-window-horz "split window horizontally")
-                (?x aw-delete-window "delete window")
-                (?? aw-show-dispatch-help)))
         :config
-        (ace-window-display-mode 1)
-        (global-set-key (kbd "C-x o") 'ace-window))
+        (global-set-key (kbd "<C-return>") 'ace-window))
     #+end_src
 
     Don't popup certain buffers
@@ -1932,26 +2207,66 @@ Adding urban dictionary to webjump.
     | x   | aw-delete-window     |
     | ??  | aw-dispatch-help     |
 
-    
-    When splitting windows open the previous buffer in it.
-    #+begin_src emacs-lisp
-      (defun bk/vsplit-last-buffer ()
-        "Split the window vertically and display the previous buffer."
-        (interactive)
-        (split-window-vertically)
-        (other-window 1 nil)
-        (switch-to-next-buffer))
+** custom functions    
 
-      (defun bk/hsplit-last-buffer ()
-        "Split the window horizontally and display the previous buffer."
-        (interactive)
-        (split-window-horizontally)
-        (other-window 1 nil)
-        (switch-to-next-buffer))
+   Toggle window from:
 
-      (global-set-key (kbd "C-x 2") 'bk/vsplit-last-buffer)
-      (global-set-key (kbd "C-x 3") 'bk/hsplit-last-buffer)
-    #+end_src
+   =Window A=
+   =++++++++=
+   =Window B=
+
+   to
+
+   =Window A : Window B=
+
+   #+begin_src emacs-lisp
+     (defun toggle-window-split ()
+       (interactive)
+       (if (= (count-windows) 2)
+           (let* ((this-win-buffer (window-buffer))
+              (next-win-buffer (window-buffer (next-window)))
+              (this-win-edges (window-edges (selected-window)))
+              (next-win-edges (window-edges (next-window)))
+              (this-win-2nd (not (and (<= (car this-win-edges)
+                          (car next-win-edges))
+                          (<= (cadr this-win-edges)
+                          (cadr next-win-edges)))))
+              (splitter
+               (if (= (car this-win-edges)
+                  (car (window-edges (next-window))))
+               'split-window-horizontally
+             'split-window-vertically)))
+         (delete-other-windows)
+         (let ((first-win (selected-window)))
+           (funcall splitter)
+           (if this-win-2nd (other-window 1))
+           (set-window-buffer (selected-window) this-win-buffer)
+           (set-window-buffer (next-window) next-win-buffer)
+           (select-window first-win)
+           (if this-win-2nd (other-window 1))))))
+
+     (global-set-key (kbd "C-x |") 'toggle-window-split)
+   #+end_src
+
+   When splitting windows open the previous buffer in it.
+   #+begin_src emacs-lisp
+     (defun bk/vsplit-last-buffer ()
+       "Split the window vertically and display the previous buffer."
+       (interactive)
+       (split-window-vertically)
+       (other-window 1 nil)
+       (switch-to-next-buffer))
+
+     (defun bk/hsplit-last-buffer ()
+       "Split the window horizontally and display the previous buffer."
+       (interactive)
+       (split-window-horizontally)
+       (other-window 1 nil)
+       (switch-to-next-buffer))
+
+     (global-set-key (kbd "C-x 2") 'bk/vsplit-last-buffer)
+     (global-set-key (kbd "C-x 3") 'bk/hsplit-last-buffer)
+   #+end_src
 
 ** shackle
 
@@ -1970,78 +2285,48 @@ Adding urban dictionary to webjump.
        :init
        (setq shackle-default-alignment 'below
              shackle-default-size 0.4
-             shackle-rules '(("*Ledger Report*" :same t)
+             shackle-rules '(("*Ledger.*" :same t :inhibit-window-quit t :regexp t)
+                             ("*docker.*" :align bottom :size 0.5 :select nil :regexp t)
                              (magit-status-mode :align bottom
-                                                :size 00.5
+                                                :size 0.5
                                                 :inhibit-window-quit t)
-                             (magit-log-mode    :same t
-                                                :inhibit-window-quit t)
-                             (magit-diff-mode   :select nil
-                                                :align left
-                                                :size 0.5)
-                             (compilation-mode  :select nil
-                                                :align below
-                                                :size 0.25)
-                             (git-commit-mode   :same t)
-                             (magit-commit-mode :ignore t)))
+                             (compilation-mode :ignore t)))
        :config
        (shackle-mode 1))
    #+END_SRC
+
+** clean it up after some time.
    
-** side windows
+   #+begin_src emacs-lisp
+     (use-package midnight
+       :ensure t
+       :config
+       (midnight-delay-set 'midnight-delay "4:00am")
+       (midnight-mode +1))
+   #+end_src
 
-   What are side windows? These windows is a place to put
-   complementary information to the main buffers. You can split or
-   toggle fullscreen for side windows. The builtin function
-   *window-toggle-side-windows* will record the current state of your
-   side windows and toggle it when you call the function again.
+** purpose
 
-*** Eshell at the bottom
+   Purpose offers a new way to manage the display of windows and
+   buffers, and was originally inspired by E2WM.
 
-    This is very useful if you want to keep some default windows around
-    while you edit in your main programming environment. For example,
-    to keep a eshell and dired buffer around.
+   #+begin_src emacs-lisp
+     (use-package window-purpose
+       :ensure t
+       :config
+       (purpose-mode)
+       (setq purpose-user-mode-purposes
+             '((term-mode . terminal)
+               (shell-mode . terminal)
+               (eshell-mode . terminal)
+               (clojure-mode . coding)
+               (cider-test-report-mode . test)
+               (cider-mode . repl)
+               (dired-mode . dirs)))
+       (purpose-compile-user-configuration))
 
-    #+BEGIN_SRC emacs-lisp
-      (use-package emacs
-        :custom
-        (display-buffer-alist
-         '(("\\*e?shell\\*"
-            (display-buffer-in-side-window)
-            (window-height . 0.30)
-            (side . bottom)
-            (slot . -1))))
-        :bind
-        ("<f8>" . window-toggle-side-windows))
-    #+END_SRC
-
-*** Dired as a side bar
-
-    I like the idea of providing dired buffer as my sidebar. Usually I
-    use =dired-jump= to get into the dired buffer and make my changes
-    this function is inspired by Prot version for teaching purposes.
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package emacs
-        :config
-        (defun bk/window-dired-vc-root-left ()
-          "Open root directory of current version-controlled repository
-      or the present working directory with `dired' and bespoke window
-      parametersg."
-          (interactive)
-          (let ((dir (if (eq (vc-root-dir) nil)
-                         (dired-noselect default-directory)
-                       (dired-noselect (vc-root-dir)))))
-            (display-buffer-in-side-window
-             dir `((side . left)
-                   (slot . 0)
-                   (window-width . 0.15)))
-            (with-current-buffer dir
-              (rename-buffer "*Dired-Side*"))))
-        :bind
-        ("C-c d" . bk/window-dired-vc-root-left))
-    #+END_SRC
-
+   #+end_src
+   
 ** same window
 
    Same window buffers
@@ -2111,7 +2396,7 @@ the *winner-boring-buffers*.
    Several packages uses Alert for sending notifications, so you have
    full control over them by customizing =alert-user-configuration=.
 
-*** Slack notifications
+*** slack notifications
     This was stolen from [[https://endlessparentheses.com/keep-your-slack-distractions-under-control-with-emacs.html][endless parentheses]] and adapt accordingly.
 
     Shuts up!
@@ -2153,13 +2438,13 @@ the *winner-boring-buffers*.
                         libnotify nil)))
     #+END_SRC
 
-*** Telegram notifications
+*** telegram notifications
 
     Let's start by telling alert *not* to notify anything.
     #+BEGIN_SRC emacs-lisp
       (eval-after-load 'alert
         '(add-to-list 'alert-user-configuration
-                      '(((:mode . 'telega-chat-mode))
+                      '(((:mode . "telega-chat-mode"))
                         log nil)))
     #+END_SRC
 
@@ -2168,7 +2453,7 @@ the *winner-boring-buffers*.
       (eval-after-load 'alert
         '(add-to-list 'alert-user-configuration
                       '(((:message . "@bartuka\\|Wanderson")
-                         (:mode . 'telega-chat-mode))
+                         (:mode . "telega-chat-mode"))
                         libnotify nil)))
     #+END_SRC
    
@@ -2209,11 +2494,20 @@ the *winner-boring-buffers*.
                   (seq bol "." eol))))
   #+END_SRC
 
+** hide details
+
+   #+begin_src emacs-lisp
+     (add-hook 'dired-mode-hook
+               (lambda ()
+                 (dired-hide-details-mode)
+                 (dired-sort-toggle-or-edit)))
+   #+end_src
+
 ** guidelines
 
    Group of guidelines to help me remember dired functionalities
 
-*** Mark files in Dired
+*** mark files in dired
 
     A very nice feature is to be able to edit Dired buffers as regular
     Emacs buffers. You can make several activities bearable using it,
@@ -2235,7 +2529,7 @@ the *winner-boring-buffers*.
     | i     | list the content of a sub-directory |
     | C-x u | dired undo                          |
 
-*** Replace text in multiple files
+*** replace text in multiple files
 
     Start dired and mark files as described in [[Mark files in Dired]],
     then use =Q= to run =query-replace= on all marked files.
@@ -2302,6 +2596,13 @@ the *winner-boring-buffers*.
           (define-key dired-mode-map (kbd "M-n") 'dired-back-to-bottom)
           (define-key dired-mode-map (kbd "C-a") 'dired-back-to-start-of-files)))
    #+END_SRC
+* Bookmark
+
+  #+begin_src emacs-lisp
+    (require 'bookmark)
+    (setq bookmark-default-file (expand-file-name "bookmarks" user-emacs-directory)
+          bookmark-save-flag 1)
+  #+end_src
 
 * TRAMP
 
@@ -2374,6 +2675,15 @@ the *winner-boring-buffers*.
 
       (global-set-key (kbd "C-c g") 'hydra-magit/body)
     #+END_SRC
+
+*** forge
+
+    Very detailed [[https://magit.vc/manual/forge/][manual]] about working with Github and Gitlab from
+    Magit.
+    #+begin_src emacs-lisp
+      (use-package forge
+        :ensure t)
+    #+end_src
 
 ** git config
 
@@ -2455,6 +2765,16 @@ the *winner-boring-buffers*.
      (use-package wgrep
        :ensure t)
    #+END_SRC
+
+** visual regexp
+
+   #+begin_src emacs-lisp
+     (use-package visual-regexp
+       :ensure t
+       :bind (("C-c r" . vr/replace)
+              ("C-c %" . vr/query-replace)
+              ("<C-m> /" . vr/mark)))
+   #+end_src
 
 ** grep fullscreen
    
@@ -2665,39 +2985,114 @@ the *winner-boring-buffers*.
       :ensure t
       :commands (cycle-quotes))
   #+END_SRC
-  
-  Hungry delete mode
-  #+begin_src emacs-lisp
-    (use-package hungry-delete
-      :ensure t
-      :config
-      (add-hook 'prog-mode-hook 'hungry-delete-mode))
-  #+end_src
 
+** toggle between src and tests
+
+   Toggle Test allows you to quickly switch between test and test
+   subject. This is very useful tool to have when you are TDDing.
+   
+   - Allows you to quickly navigate between test and source files
+   - It creates the test or source file if it not exists
+   - If there are many choices, the package present them to us
+   - This is language agnostic, therefore you need to configure it.
+   - You can work with multiple projects at the same time.
+
+   #+begin_src emacs-lisp
+     (use-package toggle-test
+       :ensure t
+       :init
+       (setq tgt-open-in-new-window nil)
+       :config
+       (global-set-key (kbd "s-t") 'tgt-toggle)
+
+       ;; the setup lives in a .dir-locals.el now.
+       ;;(put 'tgt-projects 'safe-local-variable #'listp)
+       (add-to-list 'tgt-projects '((:root-dir "/home/wand/platform/banker")
+                                    (:src-dirs "src")
+                                    (:test-dirs "test")
+                                    (:test-suffixes "_test"))))
+
+
+   #+end_src
+
+   This is an example of =.dir-locals.el= content file.
+   #+begin_example
+     ((nil . ((tgt-projects . (((:root-dir "~/foo/bar") (:src-dirs "src") (:test-dirs "test") (:test-suffixes "_test")))))))
+   #+end_example
+   
 ** whitespaces
 
-Control your whitespaces!
+   Control your whitespaces!
 
-#+BEGIN_SRC emacs-lisp
-  (require 'whitespace)
-  (setq whitespace-style '(trailing lines space-before-tab
-                    indentation space-after-tab))
-  (setq whitespace-line-column 100)
-  (whitespace-mode +1)
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (require 'whitespace)
+     (setq whitespace-style '(trailing lines space-before-tab
+                       indentation space-after-tab))
+     (setq whitespace-line-column 100)
+     (whitespace-mode +1)
+   #+END_SRC
 
-A less intrusive ‘delete-trailing-whitespaces’ on save.
+   A less intrusive ‘delete-trailing-whitespaces’ on save.
 
-#+BEGIN_SRC emacs-lisp
-  (use-package ws-butler
-    :ensure t
-    :delight ws-butler-mode
-    :config
-    (add-hook 'prog-mode-hook #'ws-butler-mode))
-#+END_SRC
+   #+BEGIN_SRC emacs-lisp
+     (use-package ws-butler
+       :ensure t
+       :delight ws-butler-mode
+       :config
+       (add-hook 'prog-mode-hook #'ws-butler-mode))
+   #+END_SRC
+
+*** highlight escape
+
+    Highlight the escape sequences
+    #+begin_src emacs-lisp
+      (use-package highlight-escape-sequences
+        :ensure t
+        :config
+        (hes-mode t)
+        (put 'font-lock-regexp-grouping-backslash 'face-alias 'font-lock-builtin-face))
+    #+end_src
+
+*** hungry delete
+
+    Hungry delete mode
+    #+begin_src emacs-lisp
+      (use-package hungry-delete
+        :ensure t
+        :config
+        (add-hook 'prog-mode-hook 'hungry-delete-mode))
+    #+end_src
 
 ** parenthesis
-   
+*** paredit
+
+    Paredit is great, it brings structural editing to lisps,
+    maintaining the syntactical correctness of your code.
+    
+
+    Follow [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][this]] animated guide to paredit to learn more.
+    
+    #+begin_src emacs-lisp
+      (use-package paredit
+        :ensure t
+        :pin melpa
+        :bind (:map paredit-mode-map
+                    ("[")
+                    ("M-k" . paredit-raise-sexp)
+                    ("M-I" . paredit-splice-sexp)
+                    ("C-c ( n" . paredit-add-to-next-list)
+                    ("C-c ( p" . paredit-add-to-previous-list))
+        :bind (:map emacs-lisp-mode-map ("<return>" . paredit-newline))
+        :bind (:map lisp-mode-map ("<return>" . paredit-newline))
+        :config
+        (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+        (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+        (add-hook 'cider-mode-hook 'enable-paredit-mode))
+
+    #+end_src
+
+*** DISABLED smartparens
+
    [[https://github.com/Fuco1/smartparens][Smartparens]] is a minor mode that deals with parens pairs and tries
    to be smart about it. I am a paredit user for a long time, I
    decided to switch to smartparens to experiment this new package
@@ -2710,8 +3105,12 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      (use-package smartparens
        :ensure t
        :delight smartparens-strict-mode
+       :disabled t
        :init
-       (setq sp-highlight-pair-overlay nil)
+       (setq sp-highlight-pair-overlay nil
+             sp-base-key-bindings 'paredit
+             sp-autoskip-closing-pair 'always
+             sp-hybrid-kill-entire-symbol nil)
        :config
        (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
        (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
@@ -2725,7 +3124,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
          (sp-pair "(" ")" :wrap "M-(")
          (sp-pair "[" "]" :wrap "M-[")
 
-         (sp-use-smartparens-bindings)		;enable default smartparens bindings
+         (sp-use-paredit-bindings)
 
          (sp-local-tag 'markdown-mode "c" "```clojure" "```")
          (sp-local-tag 'markdown-mode "e" "```elisp" "```")
@@ -2745,10 +3144,12 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        (indent-according-to-mode)
        (forward-line -1)
        (indent-according-to-mode))
-  
-     (sp-local-pair 'prog-mode "{" nil :post-handlers '((indent-between-pair "RET")))
-     (sp-local-pair 'prog-mode "[" nil :post-handlers '((indent-between-pair "RET")))
-     (sp-local-pair 'prog-mode "(" nil :post-handlers '((indent-between-pair "RET")))
+
+     (eval-after-load 'smartparens-strict-mode
+       '(progn
+          (sp-local-pair 'prog-mode "{" nil :post-handlers '((indent-between-pair "RET")))
+          (sp-local-pair 'prog-mode "[" nil :post-handlers '((indent-between-pair "RET")))
+          (sp-local-pair 'prog-mode "(" nil :post-handlers '((indent-between-pair "RET")))))
    #+end_src
 ** folding
 
@@ -2873,6 +3274,33 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
   indentation, navigation and refactoring for the target programming
   language.
 
+**** prettify symbols
+
+     Pretty symbols for Clojure removed from spacemacs clojure layer.
+     #+begin_src emacs-lisp
+       (defun clojure/fancify-symbols (mode)
+         "Pretty symbols for Clojure's anonymous functions and sets,
+          like (λ [a] (+ a 5)), ƒ(+ % 5), and ∈{2 4 6}."
+         (font-lock-add-keywords mode
+           `(("(\\(fn\\)[\[[:space:]]"
+              (0 (progn (compose-region (match-beginning 1)
+                                        (match-end 1) "λ"))))
+             ("(\\(partial\\)[\[[:space:]]"
+              (0 (progn (compose-region (match-beginning 1)
+                                        (match-end 1) "Ƥ"))))
+             ("(\\(comp\\)[\[[:space:]]"
+              (0 (progn (compose-region (match-beginning 1)
+                                        (match-end 1) "∘"))))
+             ("\\(#\\)("
+              (0 (progn (compose-region (match-beginning 1)
+                                        (match-end 1) "ƒ"))))
+             ("\\(#\\){"
+              (0 (progn (compose-region (match-beginning 1)
+                                        (match-end 1) "∈")))))))
+     #+end_src
+
+**** clojure mode
+
   At the =clojure-mode= website recommends us to use the MELBA Stable
   bundle because the MELPA version is following a development branch of
   the library. As this mode is very important for me right now, I would
@@ -2885,9 +3313,20 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       :init
       (setq clojure-align-forms-automatically nil)
       :config
-      (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
-      (add-hook 'clojure-mode-hook 'eldoc-mode)
-      (add-hook 'clojure-mode-hook 'subword-mode))
+
+      (defadvice clojure-test-run-tests (before save-first activate)
+        (save-buffer))
+
+      (defadvice nrepl-load-current-buffer (before save-first activate)
+        (save-buffer))
+
+      (add-hook 'clojure-mode-hook #'eldoc-mode)
+      (add-hook 'clojure-mode-hook #'subword-mode)
+
+      (dolist (m '(clojure-mode clojurescript-mode
+                                clojurec-mode
+                                clojurex-mode))
+        (clojure/fancify-symbols m)))
   #+end_src
 
   The previous setting =clojure-align-forms-automatically= makes the
@@ -2908,7 +3347,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
        :other-key 2})
   #+END_SRC
 
-
+**** clojure refactor
   There are several incredible examples of refactoring in the
   [[https://github.com/clojure-emacs/clojure-mode][clojure-mode]] website.
 
@@ -2922,29 +3361,41 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
   #+begin_src emacs-lisp
     (use-package clj-refactor
       :ensure t
-      :pin "melpa-stable"
       :delight clj-refactor-mode
       :after clojure-mode
       :init
+      (setq cljr-favor-prefix-notation nil
+            cljr-auto-sort-ns nil)
       (setq cljr-magic-require-namespaces '(("io" . "clojure.java.io")
-                        ("set" . "clojure.set")
-                        ("walk" . "clojure.walk")
-                        ("zip" . "clojure.zip")
-                        ("time" . "clj-time.core")
-                        ("log" . "clojure.tools.logging")
-                        ("json" . "cheshire.core")
-                        ("client" . "org.httpkit.client")
-                        ("http" . "clj-http.core")
-                        ("a" . "clojure.core.async")
-                        ("jdbc" . "next.jdbc")
-                        ("s" . "clojure.spec.alpha")
-                        ("gen" . "clojure.spec.gen.alpha")))
+                                            ("set" . "clojure.set")
+                                            ("walk" . "clojure.walk")
+                                            ("zip" . "clojure.zip")
+                                            ("time" . "clj-time.core")
+                                            ("log" . "clojure.tools.logging")
+                                            ("json" . "cheshire.core")
+                                            ("client" . "org.httpkit.client")
+                                            ("http" . "clj-http.core")
+                                            ("a" . "clojure.core.async")
+                                            ("jdbc" . "next.jdbc")
+                                            ("s" . "clojure.spec.alpha")
+                                            ("gen" . "clojure.spec.gen.alpha")))
       :config
       (add-hook 'clojure-mode-hook (lambda ()
-                     (clj-refactor-mode t)
-                     (cljr-add-keybindings-with-prefix "C-c C-m"))))
+                                     (clj-refactor-mode t)
+                                     (cljr-add-keybindings-with-prefix "C-c C-m"))))
   #+end_src
 
+**** eval sexp fu
+
+     #+begin_src emacs-lisp
+       (use-package eval-sexp-fu
+         :ensure t
+         :config
+         (use-package cider-eval-sexp-fu
+           :ensure t))
+     #+end_src
+
+**** additional font lock
 
   We also improved the font-locking for built-in methods and macros of
   clojure.
@@ -2965,25 +3416,28 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
 
      1. TODO:  Study cider mode
 
+**** cider
 
   #+begin_src emacs-lisp
     (use-package cider
       :ensure t
       :pin melpa-stable
-      :after (clojure-mode)
+      :after clojure-mode
       :init
       (setq cider-mode-line " CIDER"
+            cider-repl-result-prefix ";; => "
+            cider-save-file-on-load nil
+            cider-prompt-for-symbol nil
+            cider-repl-use-clojure-font-lock t
             cider-repl-display-in-current-window t
-            cider-auto-select-error-buffer nil
+            cider-repl-use-pretty-printing t
+            cider-auto-select-error-buffer t
             cider-auto-select-test-report-buffer nil
             cider-test-show-report-on-success t
             cider-repl-pop-to-buffer-on-connect nil
-            cider-show-error-buffer t
-            cider-repl-use-pretty-printing t
-            nrepl-hide-special-buffers t
-            nrepl-popup-stacktraces-in-repl t)
+            cider-stacktrace-default-filters '(tooling dup))
       :config
-      (add-hook 'cider-repl-mode-hook #'smartparens-strict-mode)
+      (add-hook 'cider-mode-hook #'eldoc-mode)
       (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
       (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion))
   #+end_src
@@ -3010,31 +3464,79 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
     (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
   #+end_src
 
+**** popwin
 
-  Often I need to fire a repl and investigate some properties better, I
-  have a =temp= project setup in my machine a simple =lein new temp=
-  where I have some libraries already in the =project.clj= dependency
-  available. The following function helps me get there quickly and
-  require some frequent namespaces.
+     [[https://github.com/emacsorphanage/popwin][popwin]] is a popup window manager for Emacs which makes you free
+     from the hell of annoying buffers such like =*Help*=,
+     =*Completions*=, and etc.
 
-  #+begin_src emacs-lisp
-    (defun bk/repl ()
-      "Start an interactive repl in a temp project"
-      (interactive)
-      (cider-jack-in '(:project-dir "/home/wand/temp"))
-      (add-hook 'cider-connected-hook
-	        (lambda ()
-		  (cider-repl-set-ns "user")
-		  (cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
-		  (cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
-		  (cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
-		  (cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
-		  (cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
-  #+end_src
+     #+begin_src emacs-lisp
+       (use-package popwin
+         :ensure t
+         :config
+         (push '("*cider-error*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
+               popwin:special-display-config)
+         (push '("*cider-doc*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
+               popwin:special-display-config)
+         (global-set-key (kbd "C-z") popwin:keymap)
+         (popwin-mode 1))
+     #+end_src
 
-    Let's make a nice usage of =babashka= scripting for clojure and
-    print a random doc-string message in the initial of my Emacs
-    session.
+     | Key    | Command                             |
+     |--------+-------------------------------------|
+     | b      | popwin:popup-buffer                 |
+     | l      | popwin:popup-last-buffer            |
+     | o      | popwin:display-buffer               |
+     | C-b    | popwin:switch-to-last-buffer        |
+     | C-p    | popwin:original-pop-to-last-buffer  |
+     | C-o    | popwin:original-display-last-buffer |
+     | SPC    | popwin:select-popup-window          |
+     | s      | popwin:stick-popup-window           |
+     | 0      | popwin:close-popup-window           |
+     | f, C-f | popwin:find-file                    |
+     | e      | popwin:messages                     |
+     | C-u    | popwin:universal-display            |
+     | 1      | popwin:one-window                   |
+
+
+**** kaocha runner
+
+     Package for running Kaocha tests via CIDER
+     #+begin_src emacs-lisp
+       (use-package kaocha-runner
+         :ensure t
+         :after clojure-mode)
+     #+end_src
+
+**** custom functions
+     
+***** bk/repl for testing ideas fast
+
+      Often I need to fire a repl and investigate some properties better, I
+      have a =temp= project setup in my machine a simple =lein new temp=
+      where I have some libraries already in the =project.clj= dependency
+      available. The following function helps me get there quickly and
+      require some frequent namespaces.
+
+      #+begin_src emacs-lisp
+        (defun bk/repl ()
+          "Start an interactive repl in a temp project"
+          (interactive)
+          (cider-jack-in '(:project-dir "/home/wand/temp"))
+          (add-hook 'cider-connected-hook
+                (lambda ()
+              (cider-repl-set-ns "user")
+              (cider-nrepl-sync-request:eval "(require '[clj-time.core :as t])")
+              (cider-nrepl-sync-request:eval "(require '[clj-http.core :as client])")
+              (cider-nrepl-sync-request:eval "(require '[org.httpkit.client :as http])")
+              (cider-nrepl-sync-request:eval "(require '[clojure.core.async :as a])")
+              (cider-nrepl-sync-request:eval "(require '[cheshire.core :as json])"))))
+      #+end_src
+
+***** great users with a nice random clojure docstring
+      Let's make a nice usage of =babashka= scripting for clojure and
+      print a random doc-string message in the initial of my Emacs
+      session.
     #+begin_src emacs-lisp
       (let ((clj-docstring (shell-command-to-string "docstring.clj")))
         (when clj-docstring
@@ -3074,9 +3576,57 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
           (special-mode)))
     #+end_src
 
+***** clojure display error buffer
+      
+      #+begin_src emacs-lisp
+        (defun bk/cider-display-error-buffer (&optional arg)
+          "Displays the *cider-error* buffer in the current window.
+        If called with a prefix argument, uses the other window instead."
+          (interactive "P")
+          (let ((buffer (get-buffer cider-error-buffer)))
+            (when buffer
+              (funcall (if (equal arg '(4))
+                           'switch-to-buffer-other-window
+                         'switch-to-buffer)
+                       buffer))))
+      #+end_src
 
   Clojure rocks!
-*** Python
+*** elisp
+
+    Some general packages to improve the already great experience with
+    Elisp. There are already incredible advice's on code development
+    in Elisp at the official documentation: [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Tips.html#Tips][here]].
+
+**** nameless
+     
+     Hide package namespace in your emacs-lisp code. Check the github
+     page from [[https://github.com/Malabarba/Nameless][Malabarba]].
+     
+     #+begin_src emacs-lisp
+       (use-package nameless
+         :ensure t
+         :config
+         (add-hook 'emacs-lisp-mode-hook #'nameless-mode))
+     #+end_src
+
+**** tips and tricks
+
+     Most of this section was stolen from John Wiegley [[https://youtu.be/QRBcm6jFJ3Q][talk]]:
+
+     1. master =paredit=
+     2. =C-M-x= will evaluate the definition while your cursor is
+        anywhere inside the forms
+     3. M-; will open an eval option in the minibuffer
+     4. =C-x C-e= pp-eval-last-sexp
+     5. Enable, debug-on-error if necessary
+        1. enable edebug
+           1. SPC move you forward
+           2. ? will provide which keys you have available
+           3. you can call (debug) inside any form
+     6. 
+
+*** python
 
     #+BEGIN_SRC emacs-lisp
       (defun bk/elpy-setup ()
@@ -3098,7 +3648,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
         :config
         (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save))
     #+END_SRC
-*** SQL
+*** sql
 
   #+begin_src emacs-lisp
     (use-package sqlup-mode
@@ -3133,7 +3683,7 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       (add-hook 'sql-mode-hook 'sqlind-minor-mode))
   #+end_src
 
-*** Latex
+*** latex
 
   #+BEGIN_SRC emacs-lisp
     (use-package tex
@@ -3170,6 +3720,17 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
       (add-to-list 'safe-local-variable-values
                    '(TeX-command-extra-options . "-shell-escape")))
   #+END_SRC
+*** tla plus
+
+    Using formal math to specify programs? I have to check this out!!
+
+    #+begin_src emacs-lisp
+      (use-package tla-mode
+        :ensure nil
+        :mode "\.tla$")
+
+    #+end_src
+
 ** linters
 
    =Flycheck= is a modern on-the-fly syntax checking extension for GNU
@@ -3178,12 +3739,9 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
    #+begin_src emacs-lisp
      (use-package flycheck
        :ensure t
-       :init
-       (setq flycheck-check-syntax-automatically '(mode-enabled save)
-             flycheck-display-errors-delay .3)
        :config
-       (add-hook 'prog-mode-hook 'flycheck-mode))
-  
+       (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+
      (use-package flycheck-clj-kondo :ensure t)
    #+end_src
 
@@ -3375,6 +3933,14 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
           (pop-to-buffer (current-buffer))))
     #+END_SRC
 
+** edn
+
+   Emacs lisp library for reading and writing the data format edn.
+   #+begin_src emacs-lisp
+     (use-package edn
+       :ensure t)
+   #+end_src
+
 ** markdown
 
      #+BEGIN_SRC emacs-lisp
@@ -3409,6 +3975,23 @@ A less intrusive ‘delete-trailing-whitespaces’ on save.
      :config
      (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode)))
  #+end_src
+
+** xml
+
+   #+begin_src emacs-lisp
+     (require 'nxml-mode)
+
+     (push '("<\\?xml" . nxml-mode) magic-mode-alist)
+
+     ;; pom files should be treated as xml files
+     (add-to-list 'auto-mode-alist '("\\.pom$" . nxml-mode))
+
+     (setq nxml-child-indent 4
+           nxml-attribute-indent 4
+           nxml-auto-insert-xml-declaration-flag nil
+           nxml-bind-meta-tab-to-complete-flag t
+           nxml-slash-auto-complete-flag t)
+   #+end_src
 
 ** yaml
 
@@ -3852,7 +4435,7 @@ on-demand and stored in memory.
              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
    #+END_SRC
 ** tips and tricks
-*** Compute difference between two dates.
+*** compute difference between two dates.
 
     From M-x tpis (@iLemming) in Org-mode
     - use =C-c != to enter timestamps
@@ -3880,6 +4463,33 @@ on-demand and stored in memory.
         (require 'ox-asciidoc))
     #+end_src
 
+* Tip of the day
+
+  I really like this idea from Prelude, about giving the user some
+  useful tip about Emacs. I will try to reproduce some here.
+
+  First, the list of useful tips.
+  #+begin_src emacs-lisp
+    (defvar bk-tips
+      '("Press <C-c ;> to activate avy char-based navigation."
+        ))
+  #+end_src
+
+  Then the function to display it.
+  #+begin_src emacs-lisp
+    (defun bk-tip-of-the-day ()
+      "Display a random entry from `bk-tips'."
+      (interactive)
+      (when (and bk-tips (not (window-minibuffer-p)))
+        (random t)
+        (message
+         (concat "Bartuka tip: " (nth (random (length bk-tips)) bk-tips)))))
+  #+end_src
+
+  Run from time to time.
+  #+begin_src emacs-lisp
+    (run-at-time 10 (* 10 60) #'bk-tip-of-the-day)
+  #+end_src
 * Projects
 
   Let's define a nice hydra that I've been using for a while now.
@@ -3888,8 +4498,6 @@ on-demand and stored in memory.
       :ensure t
       :delight '(:eval (concat " " (projectile-project-name)))
       :requires hydra
-      :init
-      (setq projectile-completion-system 'ido)
       :config
       (defhydra bk/hydra-projects (:color blue)
         ("q" nil "quit" :column "Projectile")
@@ -4101,7 +4709,7 @@ on-demand and stored in memory.
 
    There are a few external websites that can help you with that too,
    [[https://typing.io/][Typing.io]] is the most recommended for Programmers. Check it out!
-** custom functions
+
 * Snippets
 
   Yasnippet is a template system for Emacs. It allows you to type an
@@ -4124,6 +4732,7 @@ on-demand and stored in memory.
    #+begin_src emacs-lisp
        ;;; a snippet collection maintained by AndreaCrotti.
      (use-package yasnippet-snippets :ensure t)
+     (use-package clojure-snippets :ensure t :defer t)
    #+end_src
 
 
@@ -4660,7 +5269,7 @@ on-demand and stored in memory.
        :init
        (setq telega-animation-play-inline nil
              telega-chat-reply-prompt "R>> "
-             telega-chat-use-markdown-formatting t)
+             telega-chat-use-markdown-version 2)
        :config
        (custom-set-faces
         '(telega-msg-heading ((t (:overline t :weight bold))))))
@@ -4790,8 +5399,11 @@ on-demand and stored in memory.
     (use-package ledger-mode
       :ensure t
       :mode ("\\.dat\\'"
-             "\\.ledger\\'")
-      :custom (ledger-clear-whole-transactions t))
+             "\\.ledger\\'"
+             "\\ledger\\'")
+      :custom (ledger-clear-whole-transactions t)
+      :config
+      (require 'ledger-mode))
   #+END_SRC
 
   NOTE: in order to use this mode, =ledger= must be installed in your
@@ -4874,7 +5486,7 @@ on-demand and stored in memory.
    - Net worth  = Assets - Liabilities
    - Net income = Income - Expenses
 
-*** Plaintext accounting with the Ledger Ecosystem
+*** plaintext accounting with the ledger ecosystem
 
     [[https://youtu.be/FJtaM43PgXQ][Youtube]]
     
@@ -4904,6 +5516,20 @@ on-demand and stored in memory.
       - track everything
       - its just text
   
+* Guru
+
+  Let's force learning proper Emacs
+  #+begin_src emacs-lisp
+    (use-package guru-mode
+      :ensure t
+      :config
+      (guru-mode 1))
+  #+end_src
+
+  If you think that this is too aggressive, please don't! rsrs I am
+  kidding, you can use the option =guru-warn-only= to =t= and be
+  ashamed of yourself.
+
 * Advice
 
   When you need to modify a function defined in another library.
@@ -4981,6 +5607,25 @@ on-demand and stored in memory.
     (use-package camcorder
       :ensure t)
   #+end_src
+
+** timing
+   
+   Count up time and show remainder time at mode-line.
+
+   #+begin_src emacs-lisp
+     ;; (use-package stopwatch
+     ;;     :ensure nil)
+   #+end_src
+
+* Logs
+
+** commands logs
+
+   #+begin_src emacs-lisp
+     (use-package command-log-mode
+       :ensure t
+       :commands command-log-mode)
+   #+end_src
 
 * Custom Functions
 ** shell
@@ -5148,11 +5793,21 @@ on-demand and stored in memory.
 
 * Keys
 
+** free keys?
+
+   Which keys are free?
+   #+begin_src emacs-lisp
+     (use-package free-keys
+       :ensure t
+       :commands free-keys)
+   #+end_src
+
 ** hint
    #+begin_src emacs-lisp
      (use-package which-key
        :ensure t
        :delight which-key-mode
+       :disabled t
        :init
        (setq which-key-use-C-h-commands t
              which-key-separator " - "
@@ -5452,6 +6107,7 @@ on-demand and stored in memory.
 
      (exwm-monitors-initial-setup)
    #+END_SRC
+
 ** system package
 
    Oh, this is nice! I can control =pacman= from Emacs.

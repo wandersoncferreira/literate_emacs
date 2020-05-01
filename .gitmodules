@@ -4,3 +4,6 @@
 [submodule "lisps/pomidor"]
 	path = lisps/pomidor
 	url = https://github.com/wandersoncferreira/pomidor
+[submodule "lisps/tla-mode"]
+	path = lisps/tla-mode
+	url = git@github.com:wandersoncferreira/tla-mode.git

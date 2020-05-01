@@ -8,6 +8,7 @@
 **** [[https://eli.thegreenplace.net/feeds/all.atom.xml][The Green Place]]
 **** [[https://github.com/tmtxt/tmtxt.github.com/commits/master.atom%0A][Truong blog]]                                                     :dotnet:
 
+**** [[https://rss.simplecast.com/podcasts/1486/rss][SimpleCast]]                                                     :podcast:
 *** Emacs                                                    :emacs:mustread:
 **** [[http://planet.emacsen.org/atom.xml][Planet Emacsen]]
 **** [[https://nullprogram.com/feed/][Null Program]]
