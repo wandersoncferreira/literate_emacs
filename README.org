@@ -110,10 +110,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#web-paste][web paste]]
 - [[#completions][Completions]]
   - [[#minibuffer-1][minibuffer]]
-    - [[#disabled-interactive-do][DISABLED interactive do]]
-    - [[#icomplete][icomplete]]
-  - [[#disabled-company-mode][DISABLED company mode]]
-  - [[#in-buffer-completion][in-buffer completion]]
+    - [[#interactive-do][interactive do]]
+  - [[#company-mode][company mode]]
   - [[#hippie-expand][hippie expand]]
 - [[#window][Window]]
   - [[#super-save][super save]]
@@ -1900,7 +1898,7 @@ Adding urban dictionary to webjump.
      (use-package minibuffer
        :ensure nil
        :init
-       (setq completion-styles '(basic partial-completion initials orderless)
+       (setq completion-styles '(basic partial-completion)
              completion-category-defaults nil
              completion-cycle-threshold 3
              completion-flex-nospace nil
@@ -1912,16 +1910,6 @@ Adding urban dictionary to webjump.
              read-answer-short t
              resize-mini-windows t)
        :config
-       ;; aggressive completion style for out-of-order groups of matches
-       (use-package orderless
-         :ensure t
-         :config
-         (setq orderless-component-matching-styles
-               '(orderless-regexp
-                 orderless-flex))
-         :bind (:map minibuffer-local-completion-map
-                     ("SPC" . nil)))
-
        (defun bk/describe-symbol-at-point (&optional arg)
          "Get help (documentation) for the symbol at point."
          (interactive "P")
@@ -1961,10 +1949,7 @@ Adding urban dictionary to webjump.
                    ("M-v" . bk/focus-minibuffer)))
    #+END_SRC
 
-*** DISABLED interactive do
-
-    Note: I disabled =ido= for a while because I wanted to experience
-    the built-in completion framework =icomplete=.
+*** interactive do
 
    Ido - interactive do - help us with switching between buffers, opening
    files and directories with a minimum of keystrokes. As you type in a
@@ -1977,7 +1962,6 @@ Adding urban dictionary to webjump.
    #+begin_src emacs-lisp
      (use-package ido
        :ensure nil
-       :disabled t
        :init (setq ido-use-virtual-buffers t
                    ido-use-faces t
                    ido-case-fold nil
@@ -2008,39 +1992,7 @@ Adding urban dictionary to webjump.
    A very interesting guide to Ido is from [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Mastering Emacs]]. I read it
    very often.
 
-*** icomplete
-
-    Icomplete is the tool that offers incremental completion feedback
-    for what the minibuffer is doing.
-    
-    #+begin_src emacs-lisp
-      (use-package icomplete
-        :ensure nil
-        :demand
-        :after minibuffer
-        :init
-        (setq ;; icomplete-delay-completions-threshold 100
-              ;; icomplete-max-delay-chars 2
-              ;; icomplete-compute-delay 0.2
-              ;; icomplete-show-matches-on-no-input t
-              ;; icomplete-prospects-height 1
-              icomplete-separator (propertize " ┆ " 'face 'shadow)
-              ;; icomplete-in-buffer t
-              ;; icomplete-tidy-shadowed-file-names nil
-              )
-        :bind (:map icomplete-minibuffer-map
-                    ("C-j" . exit-minibuffer)
-                    ("C-n" . icomplete-forward-completions)
-                    ("C-p" . icomplete-backward-completions))
-        :config
-        (fido-mode -1)
-        (icomplete-mode t))
-    #+end_src
-
-** DISABLED company mode
-
-   Note: I disabled the company mode to experiment with other
-   approach: using the minibuffer to in-buffer completion.
+** company mode
 
    Company is a text completion framework for Emacs. The name stands for
    "complete anything". It uses pluggable back-ends and front-ends to
@@ -2050,7 +2002,6 @@ Adding urban dictionary to webjump.
      (use-package company
        :ensure t
        :delight company-mode
-       :disabled t
        :init
        (setq company-show-numbers t
              company-echo-delay 0
@@ -2094,37 +2045,6 @@ Adding urban dictionary to webjump.
 
      (eval-after-load 'company
        '(ora-activate-number))
-   #+end_src
-
-** in-buffer completion
-
-   Stolen from Protesilaos emacs configuration.
-
-   #+begin_src emacs-lisp
-     (use-package emacs
-       :after (minibuffer icomplete icomplete-vertical) ; review those first
-       :config
-       (defun contrib/completing-read-in-region (start end collection &optional predicate)
-         "Prompt for completion of region in the minibuffer if non-unique.
-      Use as a value for `completion-in-region-function'."
-         (let* ((initial (buffer-substring-no-properties start end))
-                (all (completion-all-completions initial collection predicate
-                                                 (length initial)))
-                (completion (cond
-                             ((atom all) nil)
-                             ((and (consp all) (atom (cdr all))) (car all))
-                             (t (let ((completion-in-region-function
-                                       #'completion--in-region))
-                                  (icomplete-vertical-do (:height (/ (window-height) 5))
-                                    (completing-read
-                                     "Completion: " collection predicate t initial)))))))
-           (if (null completion)
-               (progn (message "No completion") nil)
-             (delete-region start end)
-             (insert completion)
-             t)))
-
-       (setq completion-in-region-function #'contrib/completing-read-in-region))
    #+end_src
 
 ** hippie expand
@@ -3497,7 +3417,6 @@ the *winner-boring-buffers*.
      | e      | popwin:messages                     |
      | C-u    | popwin:universal-display            |
      | 1      | popwin:one-window                   |
-
 
 **** kaocha runner
 
