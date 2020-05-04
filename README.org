@@ -43,6 +43,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#async][async]]
   - [[#path][path]]
   - [[#security][security]]
+  - [[#compilation][compilation]]
   - [[#system-monitor][system monitor]]
   - [[#garbage-collection][garbage collection]]
     - [[#collector-magic-hack][collector magic hack]]
@@ -53,7 +54,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#buffer-based-theming][buffer based theming]]
     - [[#download-themes][download themes]]
     - [[#default-theme][default theme]]
-  - [[#cursor][cursor]]
   - [[#time][time]]
   - [[#font][font]]
   - [[#mode-line][mode line]]
@@ -92,7 +92,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#eldoc][eldoc]]
     - [[#subword][subword]]
   - [[#extra-features][extra features]]
-    - [[#smart-shift][smart shift]]
     - [[#change-inner][change inner]]
     - [[#expand-region][expand region]]
     - [[#jump-to-char][jump to char]]
@@ -111,10 +110,11 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#completions][Completions]]
   - [[#minibuffer-1][minibuffer]]
     - [[#interactive-do][interactive do]]
+    - [[#icomplete][icomplete]]
   - [[#company-mode][company mode]]
   - [[#hippie-expand][hippie expand]]
 - [[#window][Window]]
-  - [[#super-save][super save]]
+  - [[#popwin][popwin]]
   - [[#ace-window][ace window]]
   - [[#custom-functions-1][custom functions]]
   - [[#shackle][shackle]]
@@ -159,11 +159,14 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#google-this][google this]]
 - [[#shell][Shell]]
   - [[#eshell-mode][eshell mode]]
+    - [[#change-defaults][change defaults]]
+    - [[#clear-buffer][clear buffer]]
+    - [[#bookmark-1][bookmark]]
+    - [[#aliases][aliases]]
   - [[#shell-mode][shell mode]]
 - [[#general-programming][General Programming]]
   - [[#toggle-between-src-and-tests][toggle between src and tests]]
   - [[#whitespaces][whitespaces]]
-    - [[#highlight-escape][highlight escape]]
     - [[#hungry-delete][hungry delete]]
   - [[#parenthesis][parenthesis]]
     - [[#paredit][paredit]]
@@ -176,6 +179,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#documentation][documentation]]
   - [[#programming-languages][programming languages]]
     - [[#clojure][clojure]]
+    - [[#common-lisp][common lisp]]
     - [[#elisp][elisp]]
     - [[#python][python]]
     - [[#sql][sql]]
@@ -213,7 +217,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#writeroom][writeroom]]
   - [[#presentation][presentation]]
   - [[#agenda][agenda]]
-    - [[#gmail-agenda][gmail agenda]]
+    - [[#defaults-3][defaults]]
+    - [[#disabled---gmail-agenda][DISABLED - gmail agenda]]
   - [[#beamer][beamer]]
   - [[#tips-and-tricks][tips and tricks]]
     - [[#compute-difference-between-two-dates][compute difference between two dates.]]
@@ -281,6 +286,12 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 - [[#emms][Emms]]
   - [[#mode-line-cycle][mode line cycle]]
 - [[#exwm][Exwm]]
+  - [[#lxde][lxde]]
+  - [[#additional-functions][additional Functions]]
+  - [[#exwm-basics][exwm basics]]
+    - [[#window-manager][window manager]]
+  - [[#edit-text-fields][edit text fields]]
+  - [[#app-runner][app runner]]
   - [[#multiple-screens][multiple screens]]
   - [[#system-package][system package]]
   - [[#notification-daemon][notification daemon]]
@@ -618,6 +629,19 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
           (list start end)))
    #+END_SRC
 
+** TODO compilation
+
+   #+begin_src emacs-lisp
+     (use-package emacs
+       :ensure nil
+       :config
+       (setq compilation-always-kill t
+             compilation-ask-about-save nil
+             compilation-context-lines 10
+             compilation-window-height 100
+             compilation-scroll-output 'first-error))
+   #+end_src
+
 ** system monitor
 
    A tiny system monitor that can be enabled or disabled at runtime,
@@ -871,22 +895,11 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
 
     Let's activate the default theme, I might change this very often.
     #+BEGIN_SRC emacs-lisp
-      ;; (add-hook 'after-init-hook
-      ;;   (lambda ()
-      ;;     (interactive)
-      ;;     (setq organic-green-boldless nil)
-      ;;     (load-theme 'organic-green t)))
+      (add-hook 'after-init-hook
+        (lambda ()
+          (interactive)
+          (load-theme 'organic-green t)))
     #+END_SRC
-
-** cursor
-
-   #+begin_src emacs-lisp
-     (use-package cursor-chg
-       :ensure nil
-       :config
-       (change-cursor-mode 1)
-       (toggle-cursor-type-when-idle 1))
-   #+end_src
 
 ** time
 
@@ -1403,8 +1416,8 @@ Clean all the registers you saved.
        :config
        (setq calendar-latitude -23.5475
              calendar-longitude -46.63611
-             calendar-location-name "Sao_Paulo, Brazil")
-       (setq calendar-holiday-marker t))
+             calendar-location-name "Sao_Paulo, Brazil"
+             calendar-mark-holidays-flag t))
    #+END_SRC
 
 ** webjump
@@ -1584,16 +1597,6 @@ Adding urban dictionary to webjump.
     #+END_SRC
 
 ** extra features
-
-*** smart shift
-   #+begin_src emacs-lisp
-     (use-package smart-shift
-       :homepage https://github.com/hbin/smart-shift
-       :about Shift the line/region to the left/right by the current major mode indentation
-       :ensure t
-       :config
-       (global-smart-shift-mode t))
-   #+end_src
 
 *** change inner
 
@@ -1965,7 +1968,9 @@ Adding urban dictionary to webjump.
        :init (setq ido-use-virtual-buffers t
                    ido-use-faces t
                    ido-case-fold nil
-                   ido-auto-merge-work-directories-length -1
+                   ido-auto-merge-work-directories-length 0
+                   ido-cannot-complete-command 'ido-exit-minibuffer
+                   ido-enable-tramp-completion nil
                    ido-max-prospects 10
                    ido-enable-flex-matching t
                    ido-use-filename-at-point 'guess
@@ -1992,6 +1997,15 @@ Adding urban dictionary to webjump.
    A very interesting guide to Ido is from [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Mastering Emacs]]. I read it
    very often.
 
+*** icomplete
+
+    #+begin_src emacs-lisp
+      (use-package icomplete
+        :ensure nil
+        :config
+        (icomplete-mode 1))
+    #+end_src
+
 ** company mode
 
    Company is a text completion framework for Emacs. The name stands for
@@ -2004,18 +2018,14 @@ Adding urban dictionary to webjump.
        :delight company-mode
        :init
        (setq company-show-numbers t
-             company-echo-delay 0
-             company-idle-delay 0.6
+             company-idle-delay 0.5
              company-require-match nil
              company-dabbrev-downcase nil
              company-dabbrev-ignore-case t
-             company-tooltip-limit 10
              company-minimum-prefix-length 2
-             company-tooltip-align-annotations t
-             company-transformers '(company-sort-by-occurrence)
-             )
+             company-transformers '(company-sort-by-occurrence))
        :config
-       (global-company-mode t))
+       (add-hook 'after-init-hook 'global-company-mode))
    #+end_src
 
    Also, we numbered all the candidates and the following code will
@@ -2041,13 +2051,15 @@ Adding urban dictionary to webjump.
           (lambda (x)
             (define-key map (format "%d" x) 'ora-company-number))
           (number-sequence 0 9))
-         (define-key map (kbd "<return>") nil)))
+         ;; (define-key map (kbd "<return>") nil)
+         ))
 
      (eval-after-load 'company
        '(ora-activate-number))
    #+end_src
 
 ** hippie expand
+
    [[https://www.emacswiki.org/emacs/HippieExpand][Hippie Expand]] is a more feature complete completion engine than the
    default dabbrev engine. The main feature I use over =dabbrev= is
    that is supports a wide range of backends for finding completions -
@@ -2089,17 +2101,39 @@ Adding urban dictionary to webjump.
   windows is an Emacs frame. When Emacs is run on a text terminal, the
   frame fills the entire terminal screen.
 
-** super save
-  automatically save buffers associated with files on buffer switch
-  and on windows switch.
-  #+begin_src emacs-lisp
-    (use-package super-save
-      :ensure t
-      :config
-      (add-to-list 'super-save-triggers 'ace-window)
-      (super-save-mode +1))
-  #+end_src
+** popwin
 
+     [[https://github.com/emacsorphanage/popwin][popwin]] is a popup window manager for Emacs which makes you free
+     from the hell of annoying buffers such like =*Help*=,
+     =*Completions*=, and etc.
+
+     #+begin_src emacs-lisp
+       (use-package popwin
+         :ensure t
+         :config
+         (push '("*cider-error*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
+               popwin:special-display-config)
+         (push '("*cider-doc*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
+               popwin:special-display-config)
+         (global-set-key (kbd "C-z") popwin:keymap)
+         (popwin-mode 1))
+     #+end_src
+
+     | Key    | Command                             |
+     |--------+-------------------------------------|
+     | b      | popwin:popup-buffer                 |
+     | l      | popwin:popup-last-buffer            |
+     | o      | popwin:display-buffer               |
+     | C-b    | popwin:switch-to-last-buffer        |
+     | C-p    | popwin:original-pop-to-last-buffer  |
+     | C-o    | popwin:original-display-last-buffer |
+     | SPC    | popwin:select-popup-window          |
+     | s      | popwin:stick-popup-window           |
+     | 0      | popwin:close-popup-window           |
+     | f, C-f | popwin:find-file                    |
+     | e      | popwin:messages                     |
+     | C-u    | popwin:universal-display            |
+     | 1      | popwin:one-window                   |
 ** ace window
 
     Ease the task of changing window quickly.
@@ -2108,7 +2142,7 @@ Adding urban dictionary to webjump.
       (use-package ace-window
         :ensure t
         :config
-        (global-set-key (kbd "<C-return>") 'ace-window))
+        (global-set-key (kbd "C-c o") 'ace-window))
     #+end_src
 
     Don't popup certain buffers
@@ -2533,7 +2567,6 @@ the *winner-boring-buffers*.
   #+END_SRC
 
 * Version Control
-
   Sane config for =ediff= which is basically removing noisy
   highlights, avoiding crazy multi-frames setup, ignoring some
   whitespaces and windows should be side-by-side.
@@ -2547,7 +2580,7 @@ the *winner-boring-buffers*.
       (setq ediff-split-window-function 'split-window-horizontally))
   #+END_SRC
 
-** magit
+** TODO magit
 
    A git porcelain inside Emacs. Magit is an interface to the version
    control system Git, implemented as an Emacs package. Magit aspires
@@ -2568,17 +2601,10 @@ the *winner-boring-buffers*.
     :end:
 
     #+BEGIN_SRC emacs-lisp
-      ;; highlight individual word and letter changes when hunk diff displays
-      (setq magit-diff-refine-hunk t)
-
-      ;; don't tell me when magit reverts buffers
-      (setq magit-revert-buffers 'silent)
-
-      ;; always show the verbose diff in commit windows
-      (setq magit-commit-arguments '("--verbose"))
-
-      ;; timeout when magit takes a while to call out to git
-      (setq magit-process-popup-time 10)
+      (setq magit-diff-refine-hunk t
+            magit-revert-buffers 'silent
+            magit-commit-arguments '("--verbose")
+            magit-process-popup-time 10)
     #+END_SRC
 
 *** magit hydra
@@ -2841,15 +2867,21 @@ the *winner-boring-buffers*.
 
 * Shell
 
-** eshell mode
+** TODO eshell mode
+
+*** change defaults
+
     #+begin_src emacs-lisp
-      (use-package eshell-bookmark
-        :ensure t
+      (use-package eshell
+        :ensure nil
         :config
-        (add-hook 'eshell-mode-hook 'eshell-bookmark-setup))
+        (setq eshell-hist-ignoredups t
+              eshell-ls-initial-args "-h"))
+    #+end_src
 
-      (setenv "PAGER" "cat")
+*** clear buffer
 
+    #+begin_src emacs-lisp
       (defun eshell-clear-buffer ()
         "Clear the terminal buffer."
         (interactive)
@@ -2857,10 +2889,20 @@ the *winner-boring-buffers*.
           (erase-buffer)
           (eshell-send-input)))
 
-      (add-hook 'eshell-mode-hook (lambda ()
-                                    (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+      (add-hook 'eshell-mode-hook
+                (lambda ()
+                  (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
     #+end_src
+*** bookmark
+    #+begin_src emacs-lisp
+      (use-package eshell-bookmark
+        :ensure t
+        :config
+        (add-hook 'eshell-mode-hook 'eshell-bookmark-setup))
+    #+end_src
+
+*** aliases
 
     #+begin_src emacs-lisp
       (require 'em-alias)
@@ -2962,17 +3004,6 @@ the *winner-boring-buffers*.
        (add-hook 'prog-mode-hook #'ws-butler-mode))
    #+END_SRC
 
-*** highlight escape
-
-    Highlight the escape sequences
-    #+begin_src emacs-lisp
-      (use-package highlight-escape-sequences
-        :ensure t
-        :config
-        (hes-mode t)
-        (put 'font-lock-regexp-grouping-backslash 'face-alias 'font-lock-builtin-face))
-    #+end_src
-
 *** hungry delete
 
     Hungry delete mode
@@ -3006,6 +3037,7 @@ the *winner-boring-buffers*.
         :bind (:map lisp-mode-map ("<return>" . paredit-newline))
         :config
         (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+        (add-hook 'lisp-mode-hook 'enable-paredit-mode)
         (add-hook 'clojure-mode-hook 'enable-paredit-mode)
         (add-hook 'cider-mode-hook 'enable-paredit-mode))
 
@@ -3384,40 +3416,6 @@ the *winner-boring-buffers*.
     (define-key clojure-mode-map (kbd "C-c C-z") 'bk/nrepl-warn-when-not-connected)
   #+end_src
 
-**** popwin
-
-     [[https://github.com/emacsorphanage/popwin][popwin]] is a popup window manager for Emacs which makes you free
-     from the hell of annoying buffers such like =*Help*=,
-     =*Completions*=, and etc.
-
-     #+begin_src emacs-lisp
-       (use-package popwin
-         :ensure t
-         :config
-         (push '("*cider-error*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
-               popwin:special-display-config)
-         (push '("*cider-doc*" :dedicated t :position bottom :stick t :noselect nil :height 0.4)
-               popwin:special-display-config)
-         (global-set-key (kbd "C-z") popwin:keymap)
-         (popwin-mode 1))
-     #+end_src
-
-     | Key    | Command                             |
-     |--------+-------------------------------------|
-     | b      | popwin:popup-buffer                 |
-     | l      | popwin:popup-last-buffer            |
-     | o      | popwin:display-buffer               |
-     | C-b    | popwin:switch-to-last-buffer        |
-     | C-p    | popwin:original-pop-to-last-buffer  |
-     | C-o    | popwin:original-display-last-buffer |
-     | SPC    | popwin:select-popup-window          |
-     | s      | popwin:stick-popup-window           |
-     | 0      | popwin:close-popup-window           |
-     | f, C-f | popwin:find-file                    |
-     | e      | popwin:messages                     |
-     | C-u    | popwin:universal-display            |
-     | 1      | popwin:one-window                   |
-
 **** kaocha runner
 
      Package for running Kaocha tests via CIDER
@@ -3511,6 +3509,16 @@ the *winner-boring-buffers*.
       #+end_src
 
   Clojure rocks!
+*** common lisp
+
+    #+begin_src emacs-lisp
+      (use-package slime
+        :ensure t
+        :config
+        (setq inferior-lisp-program "sbcl")
+        (slime-setup '(slime-fancy slime-quicklisp slime-asdf)))
+    #+end_src
+
 *** elisp
 
     Some general packages to improve the already great experience with
@@ -4279,7 +4287,21 @@ on-demand and stored in memory.
    - quit with =q=
 
 ** agenda
-*** gmail agenda
+   
+*** defaults
+    #+begin_src emacs-lisp
+      (with-eval-after-load "org"
+        (require 'org-agenda)
+        (setq org-agenda-fontify-priorities t
+              org-agenda-include-diary t
+              org-agenda-inhibit-startup t
+              org-agenda-log-mode-items '(closed clock state)
+              org-agenda-ndays 1
+              org-agenda-persistent-filter t
+              org-agenda-show-all-dates t))
+    #+end_src
+
+*** DISABLED - gmail agenda
 
     I am following this post from [[http://pragmaticemacs.com/emacs/how-i-view-my-google-calendar-agenda-in-emacs/][pragmatic emacs]] to setup =gcalcli=
     to handle your google agenda. Let's see if I can make this
@@ -5053,9 +5075,10 @@ on-demand and stored in memory.
      :init
      (setq slack-buffer-emojify t
            slack-prefer-current-team t
+           slack-request-timeout 30
+           slack-buffer-create-on-notify t
            slack-buffer-function #'switch-to-buffer
-           slack-completing-read-function #'ido-completing-read
-           slack-display-team-name nil)
+           slack-completing-read-function #'ido-completing-read)
      :config
      (slack-register-team
       :name "captalysdev"
@@ -5812,9 +5835,10 @@ on-demand and stored in memory.
   halting. oO yes, complete halt for no reason whatsoever, seems like
   XKB and this firmware is not getting along nicely.
 
-  I found an alternative to fix this issue by using EXWM alongside
-  with LXDE. There are two files:
+** lxde
 
+   I found an alternative to fix this issue by using EXWM alongside
+   with LXDE. There are two files:
   =~/.config/lxsession/LXDE/autostart=
   #+BEGIN_SRC conf
     @pcmanfm --desktop-off --profile LXDE
@@ -5878,8 +5902,9 @@ on-demand and stored in memory.
   And don't forget to change the content of =~/.xinitrc= to =exec
   startlxde=.
 
-  Ok, now let's start with EXWM configuration.
+** additional Functions
 
+  Ok, now let's start with EXWM configuration.
   #+BEGIN_SRC emacs-lisp
     (defun bk/keepmenu ()
       "Call password manager."
@@ -5895,6 +5920,7 @@ on-demand and stored in memory.
       (start-process-shell-command "browser" nil "qutebrowser"))
   #+END_SRC
 
+** exwm basics
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
     :ensure t
@@ -5943,9 +5969,11 @@ on-demand and stored in memory.
     (exwm-input-set-key (kbd "C-g") #'keyboard-quit))
 #+END_SRC
 
-   Now that I am using Emacs as my window manager I can use the meta keys
-   to provide operations over the windows itself, in other days, there
-   were reserved to i3wm operations.
+*** window manager
+
+    Now that I am using Emacs as my window manager I can use the meta
+    keys to provide operations over the windows itself, in other days,
+    there were reserved to i3wm operations.
 
    #+BEGIN_SRC emacs-lisp
      (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
@@ -5953,26 +5981,6 @@ on-demand and stored in memory.
      (exwm-input-set-key (kbd "s-j") #'windmove-down)
      (exwm-input-set-key (kbd "s-k") #'windmove-up)
      (exwm-input-set-key (kbd "s-l") #'windmove-right)
-   #+END_SRC
-
-   Ag has a very nice package to help us out in EXWM, the feature is
-   similar in usage to Org-SRC-Blocks, therefore you press =C-c '= on
-   input text boxes of other external apps and another window pops up so
-   you can have all the Emacs under the finger while editing.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package exwm-edit
-       :ensure t
-       :after (exwm)
-       :config
-       (exwm-input-set-key (kbd "C-s-e") #'exwm-edit--compose))
-   #+END_SRC
-
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package dmenu
-       :ensure t
-       :commands (dmenu))
    #+END_SRC
 
    I made a change in =qutebrowser= so every tab open is a new window of
@@ -5986,6 +5994,29 @@ on-demand and stored in memory.
    Disabling floating window
    #+BEGIN_SRC emacs-lisp
      (setq exwm-manage-force-tiling t)
+   #+END_SRC
+
+** edit text fields
+
+   Ag has a very nice package to help us out in EXWM, the feature is
+   similar in usage to Org-SRC-Blocks, therefore you press =C-c '= on
+   input text boxes of other external apps and another window pops up
+   so you can have all the Emacs under the finger while editing.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package exwm-edit
+       :ensure t
+       :after (exwm)
+       :config
+       (exwm-input-set-key (kbd "C-s-e") #'exwm-edit--compose))
+   #+END_SRC
+
+** app runner   
+
+      #+BEGIN_SRC emacs-lisp
+     (use-package dmenu
+       :ensure t
+       :commands (dmenu))
    #+END_SRC
 
 ** multiple screens
