@@ -5802,11 +5802,11 @@ on-demand and stored in memory.
    #+end_src
 
 ** hint
+
    #+begin_src emacs-lisp
      (use-package which-key
        :ensure t
        :delight which-key-mode
-       :disabled t
        :init
        (setq which-key-use-C-h-commands t
              which-key-separator " - "
