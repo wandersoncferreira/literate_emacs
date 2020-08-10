@@ -7,3 +7,6 @@
 [submodule "lisps/tla-mode"]
 	path = lisps/tla-mode
 	url = git@github.com:wandersoncferreira/tla-mode.git
+[submodule "lisps/org-roam-server"]
+	path = lisps/org-roam-server
+	url = git@github.com:wandersoncferreira/org-roam-server.git
