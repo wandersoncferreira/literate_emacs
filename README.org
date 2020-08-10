@@ -119,7 +119,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#custom-functions-1][custom functions]]
   - [[#shackle][shackle]]
   - [[#clean-it-up-after-some-time][clean it up after some time.]]
-  - [[#purpose][purpose]]
+  - [[#perspective][perspective]]
   - [[#same-window][same window]]
   - [[#winner][winner]]
   - [[#resize][resize]]
@@ -2259,26 +2259,18 @@ Adding urban dictionary to webjump.
        (midnight-mode +1))
    #+end_src
 
-** purpose
+** perspective
 
-   Purpose offers a new way to manage the display of windows and
-   buffers, and was originally inspired by E2WM.
+   Perspective offers a new way to manage the display of windows and
+   buffers.
 
    #+begin_src emacs-lisp
-     (use-package window-purpose
+     (use-package perspective
        :ensure t
+       :init
+       (setq persp-sort 'access)
        :config
-       (purpose-mode)
-       (setq purpose-user-mode-purposes
-             '((term-mode . terminal)
-               (shell-mode . terminal)
-               (eshell-mode . terminal)
-               (clojure-mode . coding)
-               (cider-test-report-mode . test)
-               (cider-mode . repl)
-               (dired-mode . dirs)))
-       (purpose-compile-user-configuration))
-
+       (persp-mode +1))
    #+end_src
    
 ** same window
