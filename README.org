@@ -606,8 +606,8 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
    Teach Emacs about the PATH of the underlying OS.
 
    #+begin_src emacs-lisp
-     (setenv "PATH" (concat (getenv "PATH") ":/home/wand/scripts"))
-     (setq exec-path (append exec-path '("/home/wand/scripts")))
+     (setenv "PATH" (concat (getenv "PATH") ":/home/wand/private/scripts"))
+     (setq exec-path (append exec-path '("/home/wand/private/scripts")))
 
      (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
      (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -5080,6 +5080,7 @@ on-demand and stored in memory.
  #+BEGIN_SRC emacs-lisp
    (use-package slack
      :ensure t
+     :disabled t
      :init
      (setq slack-buffer-emojify t
            slack-prefer-current-team t
