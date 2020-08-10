@@ -112,8 +112,11 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#interactive-do][interactive do]]
     - [[#icomplete][icomplete]]
   - [[#company-mode][company mode]]
+    - [[#completion-help][completion help]]
+    - [[#company-roam-backend][company roam backend]]
   - [[#hippie-expand][hippie expand]]
 - [[#window][Window]]
+  - [[#scrolling][scrolling]]
   - [[#popwin][popwin]]
   - [[#ace-window][ace window]]
   - [[#custom-functions-1][custom functions]]
@@ -2018,12 +2021,14 @@ Adding urban dictionary to webjump.
        :delight company-mode
        :init
        (setq company-show-numbers t
-             company-idle-delay 0.5
-             company-require-match nil
+             company-idle-delay 0.25
+             company-require-match 'never
              company-dabbrev-downcase nil
              company-dabbrev-ignore-case t
              company-minimum-prefix-length 2
              company-transformers '(company-sort-by-occurrence))
+       :bind (:map company-active-map
+                   ("C-s" . company-filter-candidates))
        :config
        (add-hook 'after-init-hook 'global-company-mode))
    #+end_src
@@ -2057,6 +2062,30 @@ Adding urban dictionary to webjump.
      (eval-after-load 'company
        '(ora-activate-number))
    #+end_src
+
+*** completion help
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package company-quickhelp
+        :ensure t
+        :after company
+        :init
+        (setq company-quickhelp-delay nil)
+        :config
+        (company-quickhelp-mode t)
+        :bind (:map company-active-map
+                    ("M-h" . company-quickhelp-manual-begin)))
+    #+END_SRC
+
+*** company roam backend
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package company-org-roam
+        :ensure t
+        :after company
+        :config
+        (push 'company-org-roam company-backends))
+    #+END_SRC
 
 ** hippie expand
 
@@ -2101,6 +2130,24 @@ Adding urban dictionary to webjump.
   windows is an Emacs frame. When Emacs is run on a text terminal, the
   frame fills the entire terminal screen.
 
+** scrolling
+
+   Improve the scroll experience on Emacs
+   #+BEGIN_SRC emacs-lisp
+     (defun bk/scroll-up ()
+       "Scroll only specific amount of lines. I don't like the defaults of whole screen."
+       (interactive)
+       (scroll-up-command 8))
+
+     (defun bk/scroll-down ()
+       "Scroll only specific amount of lines. I don't like the defaults of whole screen."
+       (interactive)
+       (scroll-down-command 8))
+
+     (global-set-key (kbd "C-v") #'bk/scroll-up)
+     (global-set-key (kbd "M-v") #'bk/Scroll-Down)
+   #+END_SRC
+   
 ** popwin
 
      [[https://github.com/emacsorphanage/popwin][popwin]] is a popup window manager for Emacs which makes you free
@@ -5765,7 +5812,7 @@ on-demand and stored in memory.
        (keyfreq-mode +1)
        (keyfreq-autosave-mode +1))
    #+END_SRC
-   
+
 * Emms
   
   [[https://www.gnu.org/software/emms/][GNU/Emms]] is the Emacs multimedia system. Emms displays and plays
