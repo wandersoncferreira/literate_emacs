@@ -282,6 +282,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#hint][hint]]
   - [[#global-definitions][global definitions]]
   - [[#cast][cast]]
+  - [[#key-frequency][key frequency]]
 - [[#emms][Emms]]
   - [[#mode-line-cycle][mode line cycle]]
 - [[#exwm][Exwm]]
@@ -5743,6 +5744,28 @@ on-demand and stored in memory.
        :defer t)
    #+END_SRC
 
+   #+RESULTS:
+
+** key frequency
+
+   Monitor my new habits key-wise.
+   #+BEGIN_SRC emacs-lisp
+     (use-package keyfreq
+       :ensure t
+       :init
+       (setq keyfreq-excluded-commands
+             '(self-insert-command
+               abort-recursive-edit
+               forward-char
+               backward-char
+               previous-line
+               next-line
+               org-self-insert-command))
+       :config
+       (keyfreq-mode +1)
+       (keyfreq-autosave-mode +1))
+   #+END_SRC
+   
 * Emms
   
   [[https://www.gnu.org/software/emms/][GNU/Emms]] is the Emacs multimedia system. Emms displays and plays
