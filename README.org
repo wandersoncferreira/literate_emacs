@@ -2003,7 +2003,7 @@ Adding urban dictionary to webjump.
       (use-package icomplete
         :ensure nil
         :config
-        (icomplete-mode 1))
+        (icomplete-mode +1))
     #+end_src
 
 ** company mode
@@ -4132,11 +4132,6 @@ on-demand and stored in memory.
       ;;                "#+END_SRC")))
     #+END_SRC
 
-    We need to add =org-tempo= now too.
-    #+BEGIN_SRC emacs-lisp
-      (require 'org-tempo)
-    #+END_SRC
-
     #+BEGIN_SRC emacs-lisp
       (add-to-list 'org-structure-template-alist
                    '("elisp" . "src emacs-lisp"))
@@ -4317,6 +4312,7 @@ on-demand and stored in memory.
     #+BEGIN_SRC emacs-lisp
       (use-package org-gcal
         :ensure t
+        :disabled true
         :config
         (setq org-gcal-client-id (auth-source-pick-first-password
                                   :host "gcal.com"
@@ -5100,12 +5096,6 @@ on-demand and stored in memory.
               :user "clojurians")
       :subscribed-channels '(beginners reitit sql))
 
-     (slack-register-team
-      :name "captalys-oficial"
-      :token (auth-source-pick-first-password
-              :host "slack.com"
-              :user "captalys-oficial")
-      :full-and-display-names t)
      :config
      ;; go to any channel with `C-x j`
      (define-key ctl-x-map "j" #'slack-select-rooms)
@@ -5924,6 +5914,7 @@ on-demand and stored in memory.
 #+BEGIN_SRC emacs-lisp
   (use-package exwm
     :ensure t
+    :disabled true
     :init
     (setq exwm-workspace-number 4
           exwm-workspace-show-all-buffers nil
@@ -5976,11 +5967,13 @@ on-demand and stored in memory.
     there were reserved to i3wm operations.
 
    #+BEGIN_SRC emacs-lisp
-     (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
-     (exwm-input-set-key (kbd "s-h") #'windmove-left)
-     (exwm-input-set-key (kbd "s-j") #'windmove-down)
-     (exwm-input-set-key (kbd "s-k") #'windmove-up)
-     (exwm-input-set-key (kbd "s-l") #'windmove-right)
+     (eval-after-load "exwm"
+       '(progn
+          (exwm-input-set-key (kbd "s-x") #'exwm-input-toggle-keyboard)
+          (exwm-input-set-key (kbd "s-h") #'windmove-left)
+          (exwm-input-set-key (kbd "s-j") #'windmove-down)
+          (exwm-input-set-key (kbd "s-k") #'windmove-up)
+          (exwm-input-set-key (kbd "s-l") #'windmove-right)))
    #+END_SRC
 
    I made a change in =qutebrowser= so every tab open is a new window of
@@ -5993,7 +5986,8 @@ on-demand and stored in memory.
 
    Disabling floating window
    #+BEGIN_SRC emacs-lisp
-     (setq exwm-manage-force-tiling t)
+     (eval-after-load "exwm"
+       '(setq exwm-manage-force-tiling t))
    #+END_SRC
 
 ** edit text fields
@@ -6014,9 +6008,10 @@ on-demand and stored in memory.
 ** app runner   
 
       #+BEGIN_SRC emacs-lisp
-     (use-package dmenu
-       :ensure t
-       :commands (dmenu))
+        (use-package dmenu
+          :ensure t
+          :after (exwm)
+          :commands (dmenu))
    #+END_SRC
 
 ** multiple screens
@@ -6032,30 +6027,32 @@ on-demand and stored in memory.
    Work in Progress nevertheless...
 
    #+BEGIN_SRC emacs-lisp
-     (require 'exwm-monitors)
+     (eval-after-load "exwm"
+       '(progn
+          (require 'exwm-monitors)
 
-     (exwm-monitors-define-screen-info
-      :name "eDP1"
-      :width 1600
-      :height 900)
+          (exwm-monitors-define-screen-info
+           :name "eDP1"
+           :width 1600
+           :height 900)
 
-     (exwm-monitors-define-spec
-      :name "home"
-      :pred (list :only '("eDP1" "HDMI1"))
-      :action (list '("eDP1" :off)
-                    '("HDMI1" :right)))
+          (exwm-monitors-define-spec
+           :name "home"
+           :pred (list :only '("eDP1" "HDMI1"))
+           :action (list '("eDP1" :off)
+                         '("HDMI1" :right)))
 
-     (defun bk/turn-x1-carbon-on ()
-       (interactive)
-       (exwm-monitors-define-spec
-        :name "home"
-        :pred (list :only '("eDP1" "HDMI1"))
-        :action (list '("eDP1" :auto)
+          (defun bk/turn-x1-carbon-on ()
+            (interactive)
+            (exwm-monitors-define-spec
+             :name "home"
+             :pred (list :only '("eDP1" "HDMI1"))
+             :action (list '("eDP1" :auto)
 
-                      '("HDMI1" :right)))
-       (exwm-monitors-initial-setup))
+                           '("HDMI1" :right)))
+            (exwm-monitors-initial-setup))
 
-     (exwm-monitors-initial-setup)
+          (exwm-monitors-initial-setup)))
    #+END_SRC
 
 ** system package
@@ -6112,13 +6109,15 @@ on-demand and stored in memory.
    divisions between windows that are significantly more visible.
    The color is grabbed from the mode line for consistency.
    #+BEGIN_SRC emacs-lisp
-     (setq window-divider-default-right-width 3)
-     (let ((color (face-background 'mode-line)))
-       (dolist (face '(window-divider-first-pixel
-		       window-divider-last-pixel
-		       window-divider))
-	 (set-face-foreground face color)))
-     (window-divider-mode 1)
+     (eval-after-load "exwm"
+       '(progn
+          (setq window-divider-default-right-width 3)
+          (let ((color (face-background 'mode-line)))
+            (dolist (face '(window-divider-first-pixel
+                            window-divider-last-pixel
+                            window-divider))
+              (set-face-foreground face color)))
+          (window-divider-mode 1)))
    #+END_SRC
 ** key bindings
 
@@ -6135,16 +6134,16 @@ on-demand and stored in memory.
        :after (exwm)
        :config
        (exwm-input-set-key
-	(kbd "<XF86AudioLowerVolume>")
-	#'pulseaudio-control-decrease-volume)
+        (kbd "<XF86AudioLowerVolume>")
+        #'pulseaudio-control-decrease-volume)
 
        (exwm-input-set-key
-	(kbd "<XF86AudioRaiseVolume>")
-	#'pulseaudio-control-increase-volume)
+        (kbd "<XF86AudioRaiseVolume>")
+        #'pulseaudio-control-increase-volume)
 
        (exwm-input-set-key
-	(kbd "<XF86AudioMute>")
-	#'pulseaudio-control-toggle-current-sink-mute))
+        (kbd "<XF86AudioMute>")
+        #'pulseaudio-control-toggle-current-sink-mute))
    #+END_SRC
 
    Control the backlight level
@@ -6154,14 +6153,14 @@ on-demand and stored in memory.
        :after (exwm)
        :config
        (exwm-input-set-key
-	(kbd "<XF86MonBrightnessDown>")
-	(lambda () (interactive)
-	  (start-process-shell-command "bdown" nil "xbacklight -dec 10")))
+        (kbd "<XF86MonBrightnessDown>")
+        (lambda () (interactive)
+          (start-process-shell-command "bdown" nil "xbacklight -dec 10")))
 
        (exwm-input-set-key
-	(kbd "<XF86MonBrightnessUp>")
-	(lambda () (interactive)
-	  (start-process-shell-command "bdown" nil "xbacklight -inc 10"))))
+        (kbd "<XF86MonBrightnessUp>")
+        (lambda () (interactive)
+          (start-process-shell-command "bdown" nil "xbacklight -inc 10"))))
    #+END_SRC
 
    More binding definitions
@@ -6191,22 +6190,22 @@ on-demand and stored in memory.
      (defun exwm-bk/nm-applet ()
        (interactive)
        (start-process-shell-command "applt" nil
-                    "nm-applet"))
+                                    "nm-applet"))
 
      (defun exwm-bk/bluetooth ()
        (interactive)
        (start-process-shell-command "bl-applt" nil
-                    "blueman-applet"))
+                                    "blueman-applet"))
 
      (defun exwm-bk/xscreensaver ()
        (interactive)
        (start-process-shell-command "xs" nil
-                    "xscreensaver -no-splash"))
+                                    "xscreensaver -no-splash"))
 
      (defun exwm-bk/key-rate ()
        (interactive)
        (start-process-shell-command "key-rate" nil
-                    "xset r rate 300 50"))
+                                    "xset r rate 300 50"))
 
      (defun exwm-bk/nocaps ()
        (interactive)
@@ -6215,6 +6214,7 @@ on-demand and stored in memory.
 
      (use-package exwm-systemtray
        :ensure nil
+       :after (exwm)
        :init
        (setq exwm-systemtray-height 20)
        :config
