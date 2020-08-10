@@ -109,7 +109,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#web-paste][web paste]]
 - [[#completions][Completions]]
   - [[#minibuffer-1][minibuffer]]
-    - [[#interactive-do][interactive do]]
+    - [[#ivy][ivy]]
     - [[#icomplete][icomplete]]
   - [[#company-mode][company mode]]
     - [[#completion-help][completion help]]
@@ -1960,50 +1960,43 @@ Adding urban dictionary to webjump.
                    ("M-v" . bk/focus-minibuffer)))
    #+END_SRC
 
-*** interactive do
+*** ivy
 
-   Ido - interactive do - help us with switching between buffers, opening
-   files and directories with a minimum of keystrokes. As you type in a
-   substring, the list of buffers or files currently matching the
-   substring are displayed as you type.
+    Yeah, I migrated from Ido to Ivy. Let's enjoy new features, speed,
+    and comfort that Ivy provides. 
 
-   There is an amazing [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Ido]] about Ido contains more details about how
-   to leverage its functionalities to improve your productivity.
+    #+BEGIN_SRC emacs-lisp
+      (use-package ivy
+        :ensure t
+        :init
+        (setq ivy-use-virtual-buffers t
+            ivy-height 13
+            ivy-wrap t
+            ivy-magic-slash-non-match-action nil
+            ivy-initial-inputs-alist nil
+            ivy-on-del-error-function #'ignore
+            ivy-use-selectable-prompt t
+            ivy-display-style 'fancy
+            ivy-count-format "%d/%d "
+            ivy-virtual-abbreviate 'full
+            ivy-extra-directories '("./"))
+        :config
+        (ivy-mode +1))
+    #+END_SRC
 
-   #+begin_src emacs-lisp
-     (use-package ido
-       :ensure nil
-       :init (setq ido-use-virtual-buffers t
-                   ido-use-faces t
-                   ido-case-fold nil
-                   ido-auto-merge-work-directories-length 0
-                   ido-cannot-complete-command 'ido-exit-minibuffer
-                   ido-enable-tramp-completion nil
-                   ido-max-prospects 10
-                   ido-enable-flex-matching t
-                   ido-use-filename-at-point 'guess
-                   ido-handle-duplicate-virtual-buffers 2
-                   ido-create-new-buffer 'always)
-       :config
-       (ido-mode t)
-       (ido-everywhere t)
-       :bind (:map ido-common-completion-map
-                   ("M-e" . ido-edit-input)
-                   ("M-r" . ido-toggle-regexp)))
-   #+end_src
+**** Counsel
 
-   More functionality
+     #+BEGIN_SRC emacs-lisp
+       (use-package counsel
+         :ensure t
+         :bind
+         (("M-x". counsel-M-x)
+          ("C-x C-m" . counsel-M-x)
+          ("C-x C-i" . counsel-imenu)
+          ("C-c g p" . counsel-git-grep)
+          ("C-x C-r" . counsel-recentf)))
+     #+END_SRC
 
-      1. After =C-x b=, the buffer at the head of the list can be killed
-         by pressing =C-k=.
-      2. After =C-x C-f=, you can delete (i.e. physically remove) the
-         file at the head of the list with =C-k=
-
-
-   Nice description of ido at the help page on [[help:ido][C-h P ido]].
-
-   A very interesting guide to Ido is from [[https://www.masteringemacs.org/article/introduction-to-ido-mode][Mastering Emacs]]. I read it
-   very often.
 
 *** icomplete
 
@@ -2032,8 +2025,6 @@ Adding urban dictionary to webjump.
              company-dabbrev-ignore-case t
              company-minimum-prefix-length 2
              company-transformers '(company-sort-by-occurrence))
-       :bind (:map company-active-map
-                   ("C-s" . company-filter-candidates))
        :config
        (add-hook 'after-init-hook 'global-company-mode))
    #+end_src
@@ -2636,7 +2627,7 @@ the *winner-boring-buffers*.
         ("s" magit-status "status" :column "Do")
         ("t" git-timemachine "time-travel" :column "TimeMachine"))
 
-      (global-set-key (kbd "C-c g") 'hydra-magit/body)
+      (global-set-key (kbd "C-c g g") 'hydra-magit/body)
     #+END_SRC
 
 *** forge
@@ -4505,6 +4496,11 @@ on-demand and stored in memory.
       :ensure t
       :delight '(:eval (concat " " (projectile-project-name)))
       :requires hydra
+      :init
+      (setq projectile-completion-system 'ivy
+            projectile-indexing-method 'hybrid
+            projectile-enable-caching t
+            projectile-sort-order 'access-time)
       :config
       (defhydra bk/hydra-projects (:color blue)
         ("q" nil "quit" :column "Projectile")
@@ -5823,8 +5819,6 @@ on-demand and stored in memory.
 ** global definitions
 
    #+begin_src emacs-lisp
-     (global-set-key (kbd "C-x C-m") 'smex)
-     (global-set-key (kbd "M-x") 'smex)
      (global-set-key (kbd "M-i") 'change-inner)
      (global-set-key (kbd "M-o") 'change-outer)
      (global-set-key (kbd "C-c e") 'eshell)
