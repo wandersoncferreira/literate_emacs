@@ -226,6 +226,10 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
     - [[#compute-difference-between-two-dates][compute difference between two dates.]]
     - [[#insert-template-for-documenting-a-meeting][insert template for documenting a meeting]]
     - [[#export-to-asciidoc][export to asciidoc]]
+- [[#second-brain][Second brain]]
+  - [[#org-roam][Org Roam]]
+  - [[#protocol][Protocol]]
+  - [[#enable-local-files][Enable local files]]
 - [[#tip-of-the-day][Tip of the day]]
 - [[#projects][Projects]]
 - [[#spelling][Spelling]]
@@ -893,6 +897,7 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
          :ensure t
          :defer t)
      #+end_src
+
 
 *** default theme
 
@@ -2145,7 +2150,7 @@ Adding urban dictionary to webjump.
        (scroll-down-command 8))
 
      (global-set-key (kbd "C-v") #'bk/scroll-up)
-     (global-set-key (kbd "M-v") #'bk/Scroll-Down)
+     (global-set-key (kbd "M-v") #'bk/scroll-down)
    #+END_SRC
    
 ** popwin
@@ -4411,6 +4416,59 @@ on-demand and stored in memory.
         :config
         (require 'ox-asciidoc))
     #+end_src
+
+* Second brain
+
+** Org Roam  
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-roam
+       :ensure t
+       :hook (after-init . org-roam-mode)
+       :init
+       (setq org-roam-directory "/home/wand/all/permanent")
+       (setq org-roam-dailies-capture-templates
+             '(("d" "daily" plain (function org-roam-capture--get-point) ""
+                :file-name "dailies/%<%Y-%m-%d>"
+                :unnarrowed t
+                :head "#+TITLE: %<%Y-%m-%d>\n#+STARTUP: showall\n#+roam_tags: fleeting")))
+
+       (setq org-roam-capture-templates
+             '(("l" "literature" plain #'org-roam-capture--get-point "%?"
+                :file-name "literature/%<%Y%m%d%H%M%S>-${slug}"
+                :head "#+title: ${title}\n#+created_at: %U\n#+STARTUP: showall\n#+roam_tags: literature"
+                :unnarrowed t)
+
+               ("p" "permanent" plain #'org-roam-capture--get-point "%?"
+                :file-name "%<%Y%m%d%H%M%S>-${slug}"
+                :head "#+title: ${title}\n#+created_at: %U\n#+STARTUP: showall\n#+roam_tags: permanent"
+                :unnarrowed t)))
+       :bind (("C-c n c" . org-roam-capture)
+              ("C-c n t" . org-roam-dailies-today)
+              :map org-roam-mode-map
+              ("C-c n f" . org-roam-find-file)
+              :map org-mode-map
+              ("C-c n i" . org-roam-insert)
+              ("C-c n I" . org-roam-insert-immediate)))
+   #+END_SRC
+
+** Protocol
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-roam-server
+       :ensure nil
+       :config
+       (require 'org-roam-protocol))
+   #+END_SRC
+
+** Enable local files
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-roam-server-enable-access-to-local-files t
+           org-roam-server-webserver-prefix "/home/wand"
+           org-roam-server-webserver-address "127.0.0.1:8887/"
+           org-roam-server-webserver-supported-extensions '("pdf" "mp4" "ogv" "mkv"))
+   #+END_SRC
 
 * Tip of the day
 
