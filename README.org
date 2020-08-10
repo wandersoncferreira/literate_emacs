@@ -117,7 +117,6 @@ Really trying to avoid another [[https://www.emacswiki.org/emacs/DotEmacsBankrup
   - [[#popwin][popwin]]
   - [[#ace-window][ace window]]
   - [[#custom-functions-1][custom functions]]
-  - [[#shackle][shackle]]
   - [[#clean-it-up-after-some-time][clean it up after some time.]]
   - [[#perspective][perspective]]
   - [[#same-window][same window]]
@@ -2221,33 +2220,6 @@ Adding urban dictionary to webjump.
      (global-set-key (kbd "C-x 2") 'bk/vsplit-last-buffer)
      (global-set-key (kbd "C-x 3") 'bk/hsplit-last-buffer)
    #+end_src
-
-** shackle
-
-   https://www.reddit.com/r/emacs/comments/7au3hj/how_do_you_manage_your_emacs_windows_and_stay_sane/
-   https://github.com/Alexander-Miller/dotfiles/blob/master/.config/spacemacs/user-config.org#shackle
-
-
-   Gives you the means to put an end to popped up buffers not behaving
-   the way you'd like them to. By setting up simple rules you can for
-   instance make Emacs always select help buffers for you or make
-   everything reuse your currently selected window.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package shackle
-       :ensure t
-       :init
-       (setq shackle-default-alignment 'below
-             shackle-default-size 0.4
-             shackle-rules '(("*Ledger.*" :same t :inhibit-window-quit t :regexp t)
-                             ("*docker.*" :align bottom :size 0.5 :select nil :regexp t)
-                             (magit-status-mode :align bottom
-                                                :size 0.5
-                                                :inhibit-window-quit t)
-                             (compilation-mode :ignore t)))
-       :config
-       (shackle-mode 1))
-   #+END_SRC
 
 ** clean it up after some time.
    
